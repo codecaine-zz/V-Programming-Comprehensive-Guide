@@ -7,6 +7,7 @@ Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers every
 This tutorial and all code examples have been updated and tested for **V version 0.5.1**.
 
 ### V-Analyzer Setup for ARM Mac OS (Homebrew)
+
 If you are using an ARM-based Mac (Apple Silicon) and installed V via Homebrew, you may encounter standard library resolution issues when using the `v-analyzer` extension in VSCode or the Antigravity IDE. To fix this, you need to point the analyzer to the correct V root directory.
 
 Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings) to set the `custom_vroot` to the Homebrew installation path (e.g., `/opt/homebrew/Cellar/vlang/0.5.1/libexec/v` or `/opt/homebrew/opt/vlang/libexec/v`). This ensures the analyzer correctly locates the `vlib` standard library.
@@ -88,7 +89,7 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
 
 #### Programm Commented All Places
 
-*File location: `variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v`*
+_File location: `variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v`_
 
 This example demonstrates the concepts of **programm commented all places**.
 
@@ -133,7 +134,7 @@ fn main() {
 
 #### Single Line Comments
 
-*File location: `variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v`*
+_File location: `variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v`_
 
 This example demonstrates the concepts of **single line comments**.
 
@@ -153,7 +154,7 @@ fn main() {
 
 #### Multi Line Comments
 
-*File location: `variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v`*
+_File location: `variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v`_
 
 This example demonstrates the concepts of **multi line comments**.
 
@@ -182,7 +183,7 @@ fn main() {
 
 #### Define Constant Of Type Function
 
-*File location: `variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v`*
+_File location: `variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v`_
 
 This example demonstrates the concepts of **define constant of type function**.
 
@@ -214,7 +215,7 @@ fn main() {
 
 #### Define Constant Of Type Struct
 
-*File location: `variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v`*
+_File location: `variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v`_
 
 This example demonstrates the concepts of **define constant of type struct**.
 
@@ -242,7 +243,7 @@ fn main() {
 
 #### Define Single Constant
 
-*File location: `variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v`*
+_File location: `variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v`_
 
 This example demonstrates the concepts of **define single constant**.
 
@@ -256,7 +257,7 @@ fn main() {
 
 #### Define Multiple Constants
 
-*File location: `variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v`*
+_File location: `variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v`_
 
 This example demonstrates the concepts of **define multiple constants**.
 
@@ -277,7 +278,7 @@ fn main() {
 
 #### Define Module Level Constants
 
-*File location: `variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v`*
+_File location: `variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v`_
 
 This example demonstrates the concepts of **define module level constants**.
 
@@ -294,7 +295,7 @@ fn main() {
 
 #### Cannot Define Constants Inside Functions
 
-*File location: `variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v`*
+_File location: `variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v`_
 
 This example demonstrates the concepts of **cannot define constants inside functions**.
 
@@ -312,7 +313,7 @@ fn main() {
 
 #### Main
 
-*File location: `variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v`*
+_File location: `variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v`_
 
 This example demonstrates the concepts of **main**.
 
@@ -329,7 +330,7 @@ fn main() {
 
 #### File1
 
-*File location: `variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v`*
+_File location: `variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -348,7 +349,7 @@ pub fn do_work() {
 
 #### Variable Shadowing Not Allowed
 
-*File location: `variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v`*
+_File location: `variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v`_
 
 This example demonstrates the concepts of **variable shadowing not allowed**.
 
@@ -373,7 +374,7 @@ fn main() {
 
 #### Global Variables Not Allowed
 
-*File location: `variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v`*
+_File location: `variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v`_
 
 This example demonstrates the concepts of **global variables not allowed**.
 
@@ -394,7 +395,7 @@ fn main() {
 
 #### Global Variables Not Allowed
 
-*File location: `variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v`*
+_File location: `variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v`_
 
 This example demonstrates the concepts of **global variables not allowed**.
 
@@ -417,7 +418,7 @@ fn main() {
 
 #### Variable Redeclaration
 
-*File location: `variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v`*
+_File location: `variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v`_
 
 This example demonstrates the concepts of **variable redeclaration**.
 
@@ -435,7 +436,7 @@ fn main() {
 
 #### Variable Scope For Same Variable Names
 
-*File location: `variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v`*
+_File location: `variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v`_
 
 This example demonstrates the concepts of **variable scope for same variable names**.
 
@@ -461,7 +462,7 @@ fn main() {
 
 #### Declare Mutable Variable
 
-*File location: `variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v`*
+_File location: `variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v`_
 
 This example demonstrates the concepts of **declare mutable variable**.
 
@@ -476,7 +477,7 @@ fn main() {
 
 #### Cannot Update Mutable With Another Type
 
-*File location: `variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v`*
+_File location: `variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v`_
 
 This example demonstrates the concepts of **cannot update mutable with another type**.
 
@@ -491,7 +492,7 @@ fn main() {
 
 #### Declare Immutable Variable
 
-*File location: `variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v`*
+_File location: `variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v`_
 
 This example demonstrates the concepts of **declare immutable variable**.
 
@@ -505,7 +506,7 @@ fn main() {
 
 #### Cannot Update Immutable Variables
 
-*File location: `variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v`*
+_File location: `variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v`_
 
 This example demonstrates the concepts of **cannot update immutable variables**.
 
@@ -519,7 +520,7 @@ fn main() {
 
 #### Unused Variables Will Be Warned
 
-*File location: `variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v`*
+_File location: `variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v`_
 
 This example demonstrates the concepts of **unused variables will be warned**.
 
@@ -535,7 +536,7 @@ fn main() {
 
 #### Declared And Assigned
 
-*File location: `variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v`*
+_File location: `variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v`_
 
 This example demonstrates the concepts of **declared and assigned**.
 
@@ -550,7 +551,7 @@ fn main() {
 
 #### Declared And Not Assigned
 
-*File location: `variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v`*
+_File location: `variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v`_
 
 This example demonstrates the concepts of **declared and not assigned**.
 
@@ -563,7 +564,7 @@ fn main() {
 
 #### Parallel Declaration Immutable Variables
 
-*File location: `variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v`*
+_File location: `variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v`_
 
 This example demonstrates the concepts of **parallel declaration immutable variables**.
 
@@ -579,11 +580,11 @@ fn main() {
 
 ```
 
-#### Parallel  Declaration Mutable Variables
+#### Parallel Declaration Mutable Variables
 
-*File location: `variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v`*
+_File location: `variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v`_
 
-This example demonstrates the concepts of **parallel  declaration mutable variables**.
+This example demonstrates the concepts of **parallel declaration mutable variables**.
 
 ```v
 // mutable variables parallel assignment
@@ -601,7 +602,7 @@ fn main() {
 
 #### Parallel Declaration Mut And Immutable Vars
 
-*File location: `variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v`*
+_File location: `variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v`_
 
 This example demonstrates the concepts of **parallel declaration mut and immutable vars**.
 
@@ -619,7 +620,7 @@ fn main() {
 
 #### Augmented Assignment String
 
-*File location: `variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v`*
+_File location: `variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v`_
 
 This example demonstrates the concepts of **augmented assignment string**.
 
@@ -639,7 +640,7 @@ fn main() {
 
 #### Augmented Assignment Integer
 
-*File location: `variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v`*
+_File location: `variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v`_
 
 This example demonstrates the concepts of **augmented assignment integer**.
 
@@ -661,7 +662,7 @@ fn main() {
 
 #### Relational Operators
 
-*File location: `primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v`*
+_File location: `primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v`_
 
 This example demonstrates the concepts of **relational operators**.
 
@@ -703,7 +704,7 @@ fn main() {
 
 #### Logical Operators
 
-*File location: `primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v`*
+_File location: `primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v`_
 
 This example demonstrates the concepts of **logical operators**.
 
@@ -755,7 +756,7 @@ fn main() {
 
 #### Shift Operators
 
-*File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators.v`*
+_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators.v`_
 
 This example demonstrates the concepts of **shift operators**.
 
@@ -781,7 +782,7 @@ fn main() {
 
 #### Shift Operator On Range Of Integers
 
-*File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers.v`*
+_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers.v`_
 
 This example demonstrates the concepts of **shift operator on range of integers**.
 
@@ -805,7 +806,7 @@ fn main() {
 
 #### Bitwise Operators
 
-*File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v`*
+_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v`_
 
 This example demonstrates the concepts of **bitwise operators**.
 
@@ -837,7 +838,7 @@ fn main() {
 
 #### Arithmetic Operators
 
-*File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v`*
+_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v`_
 
 This example demonstrates the concepts of **arithmetic operators**.
 
@@ -874,7 +875,7 @@ fn main() {
 
 #### Promoting Numeric Types
 
-*File location: `primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v`*
+_File location: `primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v`_
 
 This example demonstrates the concepts of **promoting numeric types**.
 
@@ -922,7 +923,7 @@ fn main() {
 
 #### Declaring Integers
 
-*File location: `primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers.v`*
+_File location: `primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers.v`_
 
 This example demonstrates the concepts of **declaring integers**.
 
@@ -940,7 +941,7 @@ println(i == j) // true
 
 #### Hex Binary Octa Notation Of Declaring Integers
 
-*File location: `primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation_of_declaring_integers.v`*
+_File location: `primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation_of_declaring_integers.v`_
 
 This example demonstrates the concepts of **hex binary octa notation of declaring integers**.
 
@@ -969,7 +970,7 @@ fn main() {
 
 #### Declare Rune
 
-*File location: `primitive_types/04_rune_type/01_declare_rune.v`*
+_File location: `primitive_types/04_rune_type/01_declare_rune.v`_
 
 This example demonstrates the concepts of **declare rune**.
 
@@ -984,7 +985,7 @@ fn main() {
 
 #### Rune Operations With Strings
 
-*File location: `primitive_types/04_rune_type/02_rune_operations_with_strings.v`*
+_File location: `primitive_types/04_rune_type/02_rune_operations_with_strings.v`_
 
 This example demonstrates the concepts of **rune operations with strings**.
 
@@ -1003,7 +1004,7 @@ fn main() {
 
 #### Declare String
 
-*File location: `primitive_types/03_string_type/01_declare_string.v`*
+_File location: `primitive_types/03_string_type/01_declare_string.v`_
 
 This example demonstrates the concepts of **declare string**.
 
@@ -1022,7 +1023,7 @@ fn main() {
 
 #### String Read Only Array Of Bytes
 
-*File location: `primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes.v`*
+_File location: `primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes.v`_
 
 This example demonstrates the concepts of **string read only array of bytes**.
 
@@ -1039,7 +1040,7 @@ fn main() {
 
 #### Strings Immurable By Default
 
-*File location: `primitive_types/03_string_type/01_working_with_strings/02_strings_immurable_by_default.v`*
+_File location: `primitive_types/03_string_type/01_working_with_strings/02_strings_immurable_by_default.v`_
 
 This example demonstrates the concepts of **strings immurable by default**.
 
@@ -1055,7 +1056,7 @@ fn main() {
 
 #### Declaring Mutable Strings
 
-*File location: `primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings.v`*
+_File location: `primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings.v`_
 
 This example demonstrates the concepts of **declaring mutable strings**.
 
@@ -1074,7 +1075,7 @@ fn main() {
 
 #### Cannot Mutate String Elements
 
-*File location: `primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements.v`*
+_File location: `primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements.v`_
 
 This example demonstrates the concepts of **cannot mutate string elements**.
 
@@ -1089,7 +1090,7 @@ fn main() {
 
 #### Escape Special Characters
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters.v`_
 
 This example demonstrates the concepts of **escape special characters**.
 
@@ -1101,7 +1102,7 @@ println(sen)
 
 #### Declare Raw Strings
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings.v`_
 
 This example demonstrates the concepts of **declare raw strings**.
 
@@ -1113,7 +1114,7 @@ println(i)
 
 #### String Concatenation Using Plus Sign
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign.v`_
 
 This example demonstrates the concepts of **string concatenation using plus sign**.
 
@@ -1127,7 +1128,7 @@ println(a + b)
 
 #### String Concatenation Using Interpolation
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation.v`_
 
 This example demonstrates the concepts of **string concatenation using interpolation**.
 
@@ -1140,7 +1141,7 @@ println('${i} ${j}')
 
 #### Extract Substring From String Literal
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal.v`_
 
 This example demonstrates the concepts of **extract substring from string literal**.
 
@@ -1154,7 +1155,7 @@ println(b)
 
 #### Split String
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string.v`_
 
 This example demonstrates the concepts of **split string**.
 
@@ -1171,7 +1172,7 @@ println(res)
 
 #### String To Runes Array
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array.v`_
 
 This example demonstrates the concepts of **string to runes array**.
 
@@ -1185,7 +1186,7 @@ println(typeof(doge_moon_runes).name) // []rune
 
 #### Count Sub String Occurences
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences.v`_
 
 This example demonstrates the concepts of **count sub string occurences**.
 
@@ -1204,7 +1205,7 @@ println(sp.count('-'))
 
 #### Check String Contains Substring
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring.v`_
 
 This example demonstrates the concepts of **check string contains substring**.
 
@@ -1225,7 +1226,7 @@ fn main() {
 
 #### String Contains Is Case Sensitive
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive.v`_
 
 This example demonstrates the concepts of **string contains is case sensitive**.
 
@@ -1246,7 +1247,7 @@ fn main() {
 
 #### String Interpolation
 
-*File location: `primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v`*
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v`_
 
 This example demonstrates the concepts of **string interpolation**.
 
@@ -1266,7 +1267,7 @@ fn main() {
 
 #### Working With Array Properties
 
-*File location: `arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v`*
+_File location: `arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v`_
 
 This example demonstrates the concepts of **working with array properties**.
 
@@ -1295,7 +1296,7 @@ fn main() {
 
 #### In Operator With Array
 
-*File location: `arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array.v`*
+_File location: `arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array.v`_
 
 This example demonstrates the concepts of **in operator with array**.
 
@@ -1313,7 +1314,7 @@ fn main() {
 
 #### Append Array
 
-*File location: `arrays_and_maps/01_arrays/04_array_operators/02_append_array.v`*
+_File location: `arrays_and_maps/01_arrays/04_array_operators/02_append_array.v`_
 
 This example demonstrates the concepts of **append array**.
 
@@ -1332,7 +1333,7 @@ fn main() {
 
 #### Clone Array
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array.v`_
 
 This example demonstrates the concepts of **clone array**.
 
@@ -1348,7 +1349,7 @@ fn main() {
 
 #### Copy Array
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array.v`_
 
 This example demonstrates the concepts of **copy array**.
 
@@ -1363,7 +1364,7 @@ fn main() {
 
 #### Map Array Items
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items.v`_
 
 This example demonstrates the concepts of **map array items**.
 
@@ -1378,7 +1379,7 @@ fn main() {
 
 #### Map Using Anonymous Funcs On Array
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array.v`_
 
 This example demonstrates the concepts of **map using anonymous funcs on array**.
 
@@ -1397,7 +1398,7 @@ fn main() {
 
 #### Filter Array
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array.v`_
 
 This example demonstrates the concepts of **filter array**.
 
@@ -1413,7 +1414,7 @@ fn main() {
 
 #### Filter With Anonymous Funcs On Array
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array.v`_
 
 This example demonstrates the concepts of **filter with anonymous funcs on array**.
 
@@ -1432,7 +1433,7 @@ fn main() {
 
 #### Sort Integer Array
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array.v`_
 
 This example demonstrates the concepts of **sort integer array**.
 
@@ -1451,7 +1452,7 @@ fn main() {
 
 #### Sort String Array
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array.v`_
 
 This example demonstrates the concepts of **sort string array**.
 
@@ -1471,7 +1472,7 @@ fn main() {
 
 #### Sort Struct Array
 
-*File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v`*
+_File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v`_
 
 This example demonstrates the concepts of **sort struct array**.
 
@@ -1532,7 +1533,7 @@ fn main() {
 
 #### Declare And Initialize
 
-*File location: `arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize.v`*
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize.v`_
 
 This example demonstrates the concepts of **declare and initialize**.
 
@@ -1546,7 +1547,7 @@ fn main() {
 
 #### Declare Empty Array
 
-*File location: `arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array.v`*
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array.v`_
 
 This example demonstrates the concepts of **declare empty array**.
 
@@ -1565,7 +1566,7 @@ fn main() {
 
 #### Declare Array With Len
 
-*File location: `arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len.v`*
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len.v`_
 
 This example demonstrates the concepts of **declare array with len**.
 
@@ -1579,7 +1580,7 @@ fn main() {
 
 #### Declare Array With Init And Len
 
-*File location: `arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len.v`*
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len.v`_
 
 This example demonstrates the concepts of **declare array with init and len**.
 
@@ -1593,7 +1594,7 @@ fn main() {
 
 #### Declare Array With Cap
 
-*File location: `arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap.v`*
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap.v`_
 
 This example demonstrates the concepts of **declare array with cap**.
 
@@ -1607,7 +1608,7 @@ fn main() {
 
 #### Define Fixed Size Array
 
-*File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array.v`*
+_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array.v`_
 
 This example demonstrates the concepts of **define fixed size array**.
 
@@ -1622,7 +1623,7 @@ fn main() {
 
 #### Update Fixed Size Array Elements
 
-*File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements.v`*
+_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements.v`_
 
 This example demonstrates the concepts of **update fixed size array elements**.
 
@@ -1638,7 +1639,7 @@ fn main() {
 
 #### Determining Type Of Fixed Array
 
-*File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array.v`*
+_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array.v`_
 
 This example demonstrates the concepts of **determining type of fixed array**.
 
@@ -1652,7 +1653,7 @@ fn main() {
 
 #### Slicing Fixed Size Array Results In Ordinary Array
 
-*File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array.v`*
+_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array.v`_
 
 This example demonstrates the concepts of **slicing fixed size array results in ordinary array**.
 
@@ -1670,7 +1671,7 @@ fn main() {
 
 #### Declaring Multi Dimensional Arrays
 
-*File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v`*
+_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v`_
 
 This example demonstrates the concepts of **declaring multi dimensional arrays**.
 
@@ -1687,7 +1688,7 @@ fn main() {
 
 #### Updating Multi Dimensional Arrays
 
-*File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v`*
+_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v`_
 
 This example demonstrates the concepts of **updating multi dimensional arrays**.
 
@@ -1712,7 +1713,7 @@ fn main() {
 
 #### Updating Multi Dimensional Arrays
 
-*File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v`*
+_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v`_
 
 This example demonstrates the concepts of **updating multi dimensional arrays**.
 
@@ -1733,7 +1734,7 @@ fn main() {
 
 #### Access Array Elements Using Index
 
-*File location: `arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index.v`*
+_File location: `arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index.v`_
 
 This example demonstrates the concepts of **access array elements using index**.
 
@@ -1748,7 +1749,7 @@ fn main() {
 
 #### Access Array Elements Using Slices
 
-*File location: `arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices.v`*
+_File location: `arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices.v`_
 
 This example demonstrates the concepts of **access array elements using slices**.
 
@@ -1764,7 +1765,7 @@ fn main() {
 
 #### Explicit Map Initialization
 
-*File location: `arrays_and_maps/02_maps/01_explicit_map_initialization.v`*
+_File location: `arrays_and_maps/02_maps/01_explicit_map_initialization.v`_
 
 This example demonstrates the concepts of **explicit map initialization**.
 
@@ -1781,7 +1782,7 @@ fn main() {
 
 #### Short Syntax Initialization Of Map
 
-*File location: `arrays_and_maps/02_maps/02_short_syntax_initialization_of_map.v`*
+_File location: `arrays_and_maps/02_maps/02_short_syntax_initialization_of_map.v`_
 
 This example demonstrates the concepts of **short syntax initialization of map**.
 
@@ -1800,7 +1801,7 @@ fn main() {
 
 #### Count Key Value Pairs In Map
 
-*File location: `arrays_and_maps/02_maps/03_count_key_value_pairs_in_map.v`*
+_File location: `arrays_and_maps/02_maps/03_count_key_value_pairs_in_map.v`_
 
 This example demonstrates the concepts of **count key value pairs in map**.
 
@@ -1820,7 +1821,7 @@ fn main() {
 
 #### Value Given Key Of Map
 
-*File location: `arrays_and_maps/02_maps/04_value_given_key_of_map.v`*
+_File location: `arrays_and_maps/02_maps/04_value_given_key_of_map.v`_
 
 This example demonstrates the concepts of **value given key of map**.
 
@@ -1840,7 +1841,7 @@ fn main() {
 
 #### Value Given Non Existent Key Of Map
 
-*File location: `arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map.v`*
+_File location: `arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map.v`_
 
 This example demonstrates the concepts of **value given non existent key of map**.
 
@@ -1860,7 +1861,7 @@ fn main() {
 
 #### Handling Missing Keys In Map
 
-*File location: `arrays_and_maps/02_maps/06_handling_missing_keys_in_map.v`*
+_File location: `arrays_and_maps/02_maps/06_handling_missing_keys_in_map.v`_
 
 This example demonstrates the concepts of **handling missing keys in map**.
 
@@ -1881,7 +1882,7 @@ fn main() {
 
 #### Update Value Given A Key In Map
 
-*File location: `arrays_and_maps/02_maps/07_update_value_given_a_key_in_map.v`*
+_File location: `arrays_and_maps/02_maps/07_update_value_given_a_key_in_map.v`_
 
 This example demonstrates the concepts of **update value given a key in map**.
 
@@ -1901,7 +1902,7 @@ fn main() {
 
 #### Delete Key Value Pair From Map
 
-*File location: `arrays_and_maps/02_maps/08_delete_key_value_pair_from_map.v`*
+_File location: `arrays_and_maps/02_maps/08_delete_key_value_pair_from_map.v`_
 
 This example demonstrates the concepts of **delete key value pair from map**.
 
@@ -1927,7 +1928,7 @@ fn main() {
 
 #### If With Goto
 
-*File location: `control_flow/01_If_Statement/if_with_goto/if_with_goto.v`*
+_File location: `control_flow/01_If_Statement/if_with_goto/if_with_goto.v`_
 
 This example demonstrates the concepts of **if with goto**.
 
@@ -1965,7 +1966,7 @@ fn main() {
 
 #### Chaining Else If
 
-*File location: `control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v`*
+_File location: `control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v`_
 
 This example demonstrates the concepts of **chaining else if**.
 
@@ -2002,7 +2003,7 @@ fn main() {
 
 #### Continue For
 
-*File location: `control_flow/03_Iterative_statements/continue_for/continue_for.v`*
+_File location: `control_flow/03_Iterative_statements/continue_for/continue_for.v`_
 
 This example demonstrates the concepts of **continue for**.
 
@@ -2022,7 +2023,7 @@ fn main() {
 
 #### For On Maps Ignore Key
 
-*File location: `control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v`*
+_File location: `control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v`_
 
 This example demonstrates the concepts of **for on maps ignore key**.
 
@@ -2046,7 +2047,7 @@ fn main() {
 
 #### For On Maps
 
-*File location: `control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v`*
+_File location: `control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v`_
 
 This example demonstrates the concepts of **for on maps**.
 
@@ -2069,7 +2070,7 @@ fn main() {
 
 #### For On Array Without Index
 
-*File location: `control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v`*
+_File location: `control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v`_
 
 This example demonstrates the concepts of **for on array without index**.
 
@@ -2091,7 +2092,7 @@ fn main() {
 
 #### For On Arrays
 
-*File location: `control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v`*
+_File location: `control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v`_
 
 This example demonstrates the concepts of **for on arrays**.
 
@@ -2109,7 +2110,7 @@ fn main() {
 
 #### Reverse For
 
-*File location: `control_flow/03_Iterative_statements/reverse_for/reverse_for.v`*
+_File location: `control_flow/03_Iterative_statements/reverse_for/reverse_for.v`_
 
 This example demonstrates the concepts of **reverse for**.
 
@@ -2128,7 +2129,7 @@ fn main() {
 
 #### Bare For
 
-*File location: `control_flow/03_Iterative_statements/bare_for/bare_for.v`*
+_File location: `control_flow/03_Iterative_statements/bare_for/bare_for.v`_
 
 This example demonstrates the concepts of **bare for**.
 
@@ -2147,7 +2148,7 @@ fn main() {
 
 #### For C Style
 
-*File location: `control_flow/03_Iterative_statements/for_c_style/for_c_style.v`*
+_File location: `control_flow/03_Iterative_statements/for_c_style/for_c_style.v`_
 
 This example demonstrates the concepts of **for c style**.
 
@@ -2165,7 +2166,7 @@ fn main() {
 
 #### For With Continue Break And Labels
 
-*File location: `control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v`*
+_File location: `control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v`_
 
 This example demonstrates the concepts of **for with continue break and labels**.
 
@@ -2197,7 +2198,7 @@ fn main() {
 
 #### For On Range
 
-*File location: `control_flow/03_Iterative_statements/for_on_range/for_on_range.v`*
+_File location: `control_flow/03_Iterative_statements/for_on_range/for_on_range.v`_
 
 This example demonstrates the concepts of **for on range**.
 
@@ -2214,7 +2215,7 @@ fn main() {
 
 #### Break For
 
-*File location: `control_flow/03_Iterative_statements/break_for/break_for.v`*
+_File location: `control_flow/03_Iterative_statements/break_for/break_for.v`_
 
 This example demonstrates the concepts of **break for**.
 
@@ -2243,7 +2244,7 @@ fn main() {
 
 #### Match As Switch Case
 
-*File location: `control_flow/02_Match/match_as_switch_case/match_as_switch_case.v`*
+_File location: `control_flow/02_Match/match_as_switch_case/match_as_switch_case.v`_
 
 This example demonstrates the concepts of **match as switch case**.
 
@@ -2271,7 +2272,7 @@ fn main() {
 
 #### Cascade Match Conditions
 
-*File location: `control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v`*
+_File location: `control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v`_
 
 This example demonstrates the concepts of **cascade match conditions**.
 
@@ -2319,7 +2320,7 @@ fn main() {
 
 #### Match With Enum
 
-*File location: `control_flow/02_Match/match_with_enum/match_with_enum.v`*
+_File location: `control_flow/02_Match/match_with_enum/match_with_enum.v`_
 
 This example demonstrates the concepts of **match with enum**.
 
@@ -2374,7 +2375,7 @@ fn main() {
 
 #### Match With Enum And Else
 
-*File location: `control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v`*
+_File location: `control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v`_
 
 This example demonstrates the concepts of **match with enum and else**.
 
@@ -2417,7 +2418,7 @@ fn main() {
 
 #### Match Pattern Matching
 
-*File location: `control_flow/02_Match/match_pattern_matching/match_pattern_matching.v`*
+_File location: `control_flow/02_Match/match_pattern_matching/match_pattern_matching.v`_
 
 This example demonstrates the concepts of **match pattern matching**.
 
@@ -2442,7 +2443,7 @@ fn main() {
 
 #### Basic Functions
 
-*File location: `functions/01_function_types/01_basic_functions/basic_functions.v`*
+_File location: `functions/01_function_types/01_basic_functions/basic_functions.v`_
 
 This example demonstrates the concepts of **basic functions**.
 
@@ -2459,7 +2460,7 @@ fn main() {
 
 #### Anonymous Functions
 
-*File location: `functions/01_function_types/02_anonymous_functions/anonymous_functions.v`*
+_File location: `functions/01_function_types/02_anonymous_functions/anonymous_functions.v`_
 
 This example demonstrates the concepts of **anonymous functions**.
 
@@ -2478,7 +2479,7 @@ fn main() {
 
 #### Hello
 
-*File location: `functions/01_function_types/00_main_function/hello.v`*
+_File location: `functions/01_function_types/00_main_function/hello.v`_
 
 This example demonstrates the concepts of **hello**.
 
@@ -2493,7 +2494,7 @@ fn main() {
 
 #### Functions As Input Arguments
 
-*File location: `functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v`*
+_File location: `functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v`_
 
 This example demonstrates the concepts of **functions as input arguments**.
 
@@ -2533,7 +2534,7 @@ fn main() {
 
 #### Functions That Return Other Functions
 
-*File location: `functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v`*
+_File location: `functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v`_
 
 This example demonstrates the concepts of **functions that return other functions**.
 
@@ -2593,7 +2594,7 @@ fn main() {
 
 #### Functions With Optional Return Types Example 1
 
-*File location: `functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v`*
+_File location: `functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v`_
 
 This example demonstrates the concepts of **functions with optional return types example 1**.
 
@@ -2619,7 +2620,7 @@ fn main() {
 
 #### Function With Optional Return Type Example 2
 
-*File location: `functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v`*
+_File location: `functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v`_
 
 This example demonstrates the concepts of **function with optional return type example 2**.
 
@@ -2645,7 +2646,7 @@ fn main() {
 
 #### Function With Defer Block
 
-*File location: `functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v`*
+_File location: `functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v`_
 
 This example demonstrates the concepts of **function with defer block**.
 
@@ -2670,7 +2671,7 @@ fn main() {
 
 #### Function Calls Other Function
 
-*File location: `functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v`*
+_File location: `functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v`_
 
 This example demonstrates the concepts of **function calls other function**.
 
@@ -2695,7 +2696,7 @@ fn main() {
 
 #### Function Return Multiple Values
 
-*File location: `functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v`*
+_File location: `functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v`_
 
 This example demonstrates the concepts of **function return multiple values**.
 
@@ -2715,7 +2716,7 @@ fn main() {
 
 #### Functions As Elements Of Array Or Map
 
-*File location: `functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v`*
+_File location: `functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v`_
 
 This example demonstrates the concepts of **functions as elements of array or map**.
 
@@ -2760,7 +2761,7 @@ fn main() {
 
 #### Public Function Demo1
 
-*File location: `functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v`*
+_File location: `functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v`_
 
 This example demonstrates the concepts of **public function demo1**.
 
@@ -2777,7 +2778,7 @@ fn main() {
 
 #### Public Function Demo2
 
-*File location: `functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v`*
+_File location: `functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v`_
 
 This example demonstrates the concepts of **public function demo2**.
 
@@ -2794,7 +2795,7 @@ fn main() {
 
 #### Public Function Demo3
 
-*File location: `functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v`*
+_File location: `functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v`_
 
 This example demonstrates the concepts of **public function demo3**.
 
@@ -2811,7 +2812,7 @@ fn main() {
 
 #### Mod1
 
-*File location: `functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v`*
+_File location: `functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v`_
 
 This example demonstrates the concepts of **mod1**.
 
@@ -2836,7 +2837,7 @@ pub fn greet_and_wish() string {
 
 #### Example 1
 
-*File location: `functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v`*
+_File location: `functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v`_
 
 This example demonstrates the concepts of **example 1**.
 
@@ -2862,7 +2863,7 @@ fn main() {
 
 #### Example 2
 
-*File location: `functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v`*
+_File location: `functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v`_
 
 This example demonstrates the concepts of **example 2**.
 
@@ -2884,7 +2885,7 @@ fn main() {
 
 #### Ignore Function Return Value
 
-*File location: `functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v`*
+_File location: `functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v`_
 
 This example demonstrates the concepts of **ignore function return value**.
 
@@ -2903,7 +2904,7 @@ fn main() {
 
 #### Function With Input Arguments
 
-*File location: `functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v`*
+_File location: `functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v`_
 
 This example demonstrates the concepts of **function with input arguments**.
 
@@ -2922,7 +2923,7 @@ fn main() {
 
 #### Main
 
-*File location: `functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v`*
+_File location: `functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v`_
 
 This example demonstrates the concepts of **main**.
 
@@ -2941,7 +2942,7 @@ fn main() {
 
 #### Mymod
 
-*File location: `functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v`*
+_File location: `functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v`_
 
 This example demonstrates the concepts of **mymod**.
 
@@ -2957,7 +2958,7 @@ __global (
 
 #### Function Returns Value Example 1
 
-*File location: `functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v`*
+_File location: `functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v`_
 
 This example demonstrates the concepts of **function returns value example 1**.
 
@@ -2974,7 +2975,7 @@ fn main() {
 
 #### Function Returns Value Example 2
 
-*File location: `functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v`*
+_File location: `functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v`_
 
 This example demonstrates the concepts of **function returns value example 2**.
 
@@ -2994,7 +2995,7 @@ fn main() {
 
 #### Funtions Without Return Type
 
-*File location: `functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v`*
+_File location: `functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v`_
 
 This example demonstrates the concepts of **funtions without return type**.
 
@@ -3016,7 +3017,7 @@ fn main() {
 
 #### Struct With Multiple Fields
 
-*File location: `structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v`*
+_File location: `structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v`_
 
 This example demonstrates the concepts of **struct with multiple fields**.
 
@@ -3035,7 +3036,7 @@ fn main() {
 
 #### Grouping Struct Fields Based On Access Modifiers
 
-*File location: `structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v`*
+_File location: `structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v`_
 
 This example demonstrates the concepts of **grouping struct fields based on access modifiers**.
 
@@ -3055,7 +3056,7 @@ fn main() {
 
 #### Struct Fields With Default Values
 
-*File location: `structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v`*
+_File location: `structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v`_
 
 This example demonstrates the concepts of **struct fields with default values**.
 
@@ -3084,7 +3085,7 @@ fn main() {
 
 #### Required Fields Example 01
 
-*File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01.v`*
+_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01.v`_
 
 This example demonstrates the concepts of **required fields example 01**.
 
@@ -3107,7 +3108,7 @@ _ := Note{
 
 #### Required Fields Example 02
 
-*File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02.v`*
+_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02.v`_
 
 This example demonstrates the concepts of **required fields example 02**.
 
@@ -3137,7 +3138,7 @@ fn main() {
 
 #### Access Struct Fields
 
-*File location: `structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v`*
+_File location: `structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v`_
 
 This example demonstrates the concepts of **access struct fields**.
 
@@ -3156,7 +3157,7 @@ fn main() {
 
 #### Heap Structs
 
-*File location: `structs/01_introducing_structs/03_heap_structs/01_heap_structs.v`*
+_File location: `structs/01_introducing_structs/03_heap_structs/01_heap_structs.v`_
 
 This example demonstrates the concepts of **heap structs**.
 
@@ -3175,7 +3176,7 @@ fn main() {
 
 #### Defining Struct
 
-*File location: `structs/01_introducing_structs/01_defining_struct/01_defining_struct.v`*
+_File location: `structs/01_introducing_structs/01_defining_struct/01_defining_struct.v`_
 
 This example demonstrates the concepts of **defining struct**.
 
@@ -3192,7 +3193,7 @@ fn main() {
 
 #### Initialize Struct Example 1
 
-*File location: `structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1.v`*
+_File location: `structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1.v`_
 
 This example demonstrates the concepts of **initialize struct example 1**.
 
@@ -3212,7 +3213,7 @@ fn main() {
 
 #### Initialize Struct Example 2
 
-*File location: `structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2.v`*
+_File location: `structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2.v`_
 
 This example demonstrates the concepts of **initialize struct example 2**.
 
@@ -3238,7 +3239,7 @@ fn main() {
 
 #### Methods For Struct
 
-*File location: `structs/04_methods_for_struct/01_methods_for_struct.v`*
+_File location: `structs/04_methods_for_struct/01_methods_for_struct.v`_
 
 This example demonstrates the concepts of **methods for struct**.
 
@@ -3281,7 +3282,7 @@ fn main() {
 
 #### Adding Struct As Struct Field
 
-*File location: `structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v`*
+_File location: `structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v`_
 
 This example demonstrates the concepts of **adding struct as struct field**.
 
@@ -3319,7 +3320,7 @@ fn main() {
 
 #### Updating Fields Of Type Struct
 
-*File location: `structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v`*
+_File location: `structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v`_
 
 This example demonstrates the concepts of **updating fields of type struct**.
 
@@ -3369,7 +3370,7 @@ fn main() {
 
 #### Struct As Trailing Literal Arguments To Function
 
-*File location: `structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v`*
+_File location: `structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v`_
 
 This example demonstrates the concepts of **struct as trailing literal arguments to function**.
 
@@ -3427,7 +3428,7 @@ fn main() {
 
 #### Updating Mutable Fields Of Struct
 
-*File location: `structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v`*
+_File location: `structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v`_
 
 This example demonstrates the concepts of **updating mutable fields of struct**.
 
@@ -3454,7 +3455,7 @@ fn main() {
 
 #### Updating Struct With Unspecified Fields Are Zeroed
 
-*File location: `structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v`*
+_File location: `structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v`_
 
 This example demonstrates the concepts of **updating struct with unspecified fields are zeroed**.
 
@@ -3491,7 +3492,7 @@ fn main() {
 
 #### Updating Immutable Fields Throws Error
 
-*File location: `structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v`*
+_File location: `structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v`_
 
 This example demonstrates the concepts of **updating immutable fields throws error**.
 
@@ -3513,7 +3514,7 @@ fn main() {
 
 #### Updating Immutable Struct Variable Throws Error
 
-*File location: `structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v`*
+_File location: `structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v`_
 
 This example demonstrates the concepts of **updating immutable struct variable throws error**.
 
@@ -3541,7 +3542,7 @@ fn main() {
 
 #### Modulebasics
 
-*File location: `modules/09_accessing_constants_of_module/modulebasics/modulebasics.v`*
+_File location: `modules/09_accessing_constants_of_module/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3558,7 +3559,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/09_accessing_constants_of_module/modulebasics/mod1/file1.v`*
+_File location: `modules/09_accessing_constants_of_module/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3573,7 +3574,7 @@ pub const greet_msg = 'Greeting from mod1!'
 
 #### Modulebasics
 
-*File location: `modules/04_accessing_members_of_module/modulebasics/modulebasics.v`*
+_File location: `modules/04_accessing_members_of_module/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3591,7 +3592,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/04_accessing_members_of_module/modulebasics/mod1/file1.v`*
+_File location: `modules/04_accessing_members_of_module/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3608,7 +3609,7 @@ pub fn hello() {
 
 #### Modulebasics
 
-*File location: `modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v`*
+_File location: `modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3630,7 +3631,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v`*
+_File location: `modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3663,7 +3664,7 @@ pub mut:
 
 #### Modulebasics
 
-*File location: `modules/02_creating_modue/modulebasics/modulebasics.v`*
+_File location: `modules/02_creating_modue/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3678,7 +3679,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/02_creating_modue/modulebasics/mod1/file1.v`*
+_File location: `modules/02_creating_modue/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3695,7 +3696,7 @@ pub fn hello() {
 
 #### Modulebasics
 
-*File location: `modules/01_creating_simple_v_project/modulebasics/modulebasics.v`*
+_File location: `modules/01_creating_simple_v_project/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3712,7 +3713,7 @@ fn main() {
 
 #### Modulebasics
 
-*File location: `modules/07_cyclic_imports/modulebasics/modulebasics.v`*
+_File location: `modules/07_cyclic_imports/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3731,7 +3732,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/07_cyclic_imports/modulebasics/m1/file1.v`*
+_File location: `modules/07_cyclic_imports/modulebasics/m1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3750,7 +3751,7 @@ pub fn hello() {
 
 #### File1
 
-*File location: `modules/07_cyclic_imports/modulebasics/m2/file1.v`*
+_File location: `modules/07_cyclic_imports/modulebasics/m2/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3771,7 +3772,7 @@ pub fn hello() {
 
 #### Modulebasics
 
-*File location: `modules/03_importing_module/modulebasics/modulebasics.v`*
+_File location: `modules/03_importing_module/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3788,7 +3789,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/03_importing_module/modulebasics/mod1/file1.v`*
+_File location: `modules/03_importing_module/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3805,7 +3806,7 @@ pub fn hello() {
 
 #### Modulebasics
 
-*File location: `modules/08_init_function_for_module/modulebasics/modulebasics.v`*
+_File location: `modules/08_init_function_for_module/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3822,7 +3823,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/08_init_function_for_module/modulebasics/mod1/file1.v`*
+_File location: `modules/08_init_function_for_module/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3843,7 +3844,7 @@ fn init() {
 
 #### Modulebasics
 
-*File location: `modules/06_member_scope_in_module/before/modulebasics/modulebasics.v`*
+_File location: `modules/06_member_scope_in_module/before/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3861,7 +3862,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/06_member_scope_in_module/before/modulebasics/mod1/file1.v`*
+_File location: `modules/06_member_scope_in_module/before/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3876,7 +3877,7 @@ pub fn hello() {
 
 #### File2
 
-*File location: `modules/06_member_scope_in_module/before/modulebasics/mod1/file2.v`*
+_File location: `modules/06_member_scope_in_module/before/modulebasics/mod1/file2.v`_
 
 This example demonstrates the concepts of **file2**.
 
@@ -3891,7 +3892,7 @@ fn hello2() {
 
 #### Modulebasics
 
-*File location: `modules/06_member_scope_in_module/after/modulebasics/modulebasics.v`*
+_File location: `modules/06_member_scope_in_module/after/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3908,7 +3909,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/06_member_scope_in_module/after/modulebasics/mod1/file1.v`*
+_File location: `modules/06_member_scope_in_module/after/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3925,7 +3926,7 @@ pub fn hello() {
 
 #### File2
 
-*File location: `modules/06_member_scope_in_module/after/modulebasics/mod1/file2.v`*
+_File location: `modules/06_member_scope_in_module/after/modulebasics/mod1/file2.v`_
 
 This example demonstrates the concepts of **file2**.
 
@@ -3942,7 +3943,7 @@ fn hello2() {
 
 #### Modulebasics
 
-*File location: `modules/05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v`*
+_File location: `modules/05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -3960,7 +3961,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v`*
+_File location: `modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -3975,7 +3976,7 @@ pub fn hello() {
 
 #### File2
 
-*File location: `modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v`*
+_File location: `modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v`_
 
 This example demonstrates the concepts of **file2**.
 
@@ -3991,7 +3992,7 @@ fn main() {
 
 #### Modulebasics
 
-*File location: `modules/05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v`*
+_File location: `modules/05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -4009,7 +4010,7 @@ fn main() {
 
 #### File1
 
-*File location: `modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v`*
+_File location: `modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -4024,7 +4025,7 @@ pub fn hello() {
 
 #### File2
 
-*File location: `modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v`*
+_File location: `modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v`_
 
 This example demonstrates the concepts of **file2**.
 
@@ -4043,7 +4044,7 @@ fn hello2() {
 
 #### Running Multiple Tasks In Sequence
 
-*File location: `concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v`*
+_File location: `concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v`_
 
 This example demonstrates the concepts of **running multiple tasks in sequence**.
 
@@ -4082,7 +4083,7 @@ fn main() {
 
 #### Spawning Multiple Tasks Concurrently
 
-*File location: `concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v`*
+_File location: `concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v`_
 
 This example demonstrates the concepts of **spawning multiple tasks concurrently**.
 
@@ -4125,7 +4126,7 @@ fn main() {
 
 #### Spawn Anonymous Funcs With Input Args
 
-*File location: `concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v`*
+_File location: `concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v`_
 
 This example demonstrates the concepts of **spawn anonymous funcs with input args**.
 
@@ -4149,7 +4150,7 @@ fn main() {
 
 #### Spawn Anonymous Funcs Without Input Args
 
-*File location: `concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v`*
+_File location: `concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v`_
 
 This example demonstrates the concepts of **spawn anonymous funcs without input args**.
 
@@ -4169,7 +4170,7 @@ fn main() {
 
 #### Functions With Return Values
 
-*File location: `concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v`*
+_File location: `concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v`_
 
 This example demonstrates the concepts of **functions with return values**.
 
@@ -4220,7 +4221,7 @@ fn main() {
 
 #### Sharing Data Main And Concurrent Tasks
 
-*File location: `concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v`*
+_File location: `concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v`_
 
 This example demonstrates the concepts of **sharing data main and concurrent tasks**.
 
@@ -4279,7 +4280,7 @@ fn main() {
 
 #### Waiting On Concurrent Thread
 
-*File location: `concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v`*
+_File location: `concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v`_
 
 This example demonstrates the concepts of **waiting on concurrent thread**.
 
@@ -4300,7 +4301,7 @@ fn main() {
 
 #### Spawn Void Function
 
-*File location: `concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v`*
+_File location: `concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v`_
 
 This example demonstrates the concepts of **spawn void function**.
 
@@ -4322,7 +4323,7 @@ fn main() {
 
 #### Stopwatch Demo
 
-*File location: `concurrency/01_time_module_overview/stopwatch_demo.v`*
+_File location: `concurrency/01_time_module_overview/stopwatch_demo.v`_
 
 This example demonstrates the concepts of **stopwatch demo**.
 
@@ -4348,7 +4349,7 @@ fn main() {
 
 #### Close
 
-*File location: `channels/04_channel_methods/03_close/01_close/01_close.v`*
+_File location: `channels/04_channel_methods/03_close/01_close/01_close.v`_
 
 This example demonstrates the concepts of **close**.
 
@@ -4377,7 +4378,7 @@ fn main() {
 
 #### Defer Close
 
-*File location: `channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v`*
+_File location: `channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v`_
 
 This example demonstrates the concepts of **defer close**.
 
@@ -4408,7 +4409,7 @@ fn main() {
 
 #### Try Pop
 
-*File location: `channels/04_channel_methods/02_try_pop/01_try_pop.v`*
+_File location: `channels/04_channel_methods/02_try_pop/01_try_pop.v`_
 
 This example demonstrates the concepts of **try pop**.
 
@@ -4427,7 +4428,7 @@ fn main() {
 
 #### Try Push Unbuffered
 
-*File location: `channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v`*
+_File location: `channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v`_
 
 This example demonstrates the concepts of **try push unbuffered**.
 
@@ -4443,7 +4444,7 @@ fn main() {
 
 #### Try Push Buffered
 
-*File location: `channels/04_channel_methods/01_try_push/02_try_push_buffered.v`*
+_File location: `channels/04_channel_methods/01_try_push/02_try_push_buffered.v`_
 
 This example demonstrates the concepts of **try push buffered**.
 
@@ -4468,7 +4469,7 @@ fn main() {
 
 #### Push Buffered
 
-*File location: `channels/02_channel_operations/01_push_buffered.v`*
+_File location: `channels/02_channel_operations/01_push_buffered.v`_
 
 This example demonstrates the concepts of **push buffered**.
 
@@ -4483,7 +4484,7 @@ fn main() {
 
 #### Push Unbuffered
 
-*File location: `channels/02_channel_operations/02_push_unbuffered.v`*
+_File location: `channels/02_channel_operations/02_push_unbuffered.v`_
 
 This example demonstrates the concepts of **push unbuffered**.
 
@@ -4498,7 +4499,7 @@ fn main() {
 
 #### Pop
 
-*File location: `channels/02_channel_operations/03_pop.v`*
+_File location: `channels/02_channel_operations/03_pop.v`_
 
 This example demonstrates the concepts of **pop**.
 
@@ -4520,7 +4521,7 @@ fn main() {
 
 #### Channel Properties
 
-*File location: `channels/03_channel_properties/01_channel_properties.v`*
+_File location: `channels/03_channel_properties/01_channel_properties.v`_
 
 This example demonstrates the concepts of **channel properties**.
 
@@ -4539,7 +4540,7 @@ fn main() {
 
 #### Channel Select Before
 
-*File location: `channels/07_channel_select/01_before/01_channel_select_before.v`*
+_File location: `channels/07_channel_select/01_before/01_channel_select_before.v`_
 
 This example demonstrates the concepts of **channel select before**.
 
@@ -4583,7 +4584,7 @@ fn main() {
 
 #### Channel Select
 
-*File location: `channels/07_channel_select/02_after/01_channel_select.v`*
+_File location: `channels/07_channel_select/02_after/01_channel_select.v`_
 
 This example demonstrates the concepts of **channel select**.
 
@@ -4647,7 +4648,7 @@ fn main() {
 
 #### Unbuffered Channel
 
-*File location: `channels/01_define_channels/01_unbuffered_channel.v`*
+_File location: `channels/01_define_channels/01_unbuffered_channel.v`_
 
 This example demonstrates the concepts of **unbuffered channel**.
 
@@ -4662,7 +4663,7 @@ fn main() {
 
 #### Buffered Channel
 
-*File location: `channels/01_define_channels/02_buffered_channel.v`*
+_File location: `channels/01_define_channels/02_buffered_channel.v`_
 
 This example demonstrates the concepts of **buffered channel**.
 
@@ -4679,7 +4680,7 @@ fn main() {
 
 #### Sync Before
 
-*File location: `channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v`*
+_File location: `channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v`_
 
 This example demonstrates the concepts of **sync before**.
 
@@ -4715,7 +4716,7 @@ fn main() {
 
 #### Sync After
 
-*File location: `channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v`*
+_File location: `channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v`_
 
 This example demonstrates the concepts of **sync after**.
 
@@ -4753,7 +4754,7 @@ fn main() {
 
 #### Coroutines Communication
 
-*File location: `channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v`*
+_File location: `channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v`_
 
 This example demonstrates the concepts of **coroutines communication**.
 
@@ -4787,7 +4788,7 @@ fn main() {
 
 #### Buffered Channel
 
-*File location: `channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v`*
+_File location: `channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v`_
 
 This example demonstrates the concepts of **buffered channel**.
 
@@ -4811,7 +4812,7 @@ fn main() {
 
 #### Blocking Channels
 
-*File location: `channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v`*
+_File location: `channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v`_
 
 This example demonstrates the concepts of **blocking channels**.
 
@@ -4833,7 +4834,7 @@ fn main() {
 
 #### Dealing Before
 
-*File location: `channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v`*
+_File location: `channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v`_
 
 This example demonstrates the concepts of **dealing before**.
 
@@ -4858,7 +4859,7 @@ fn main() {
 
 #### Dealing After
 
-*File location: `channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v`*
+_File location: `channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v`_
 
 This example demonstrates the concepts of **dealing after**.
 
@@ -4884,7 +4885,7 @@ fn main() {
 
 #### Sync Before
 
-*File location: `channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v`*
+_File location: `channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v`_
 
 This example demonstrates the concepts of **sync before**.
 
@@ -4919,7 +4920,7 @@ fn main() {
 
 #### Sync After
 
-*File location: `channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v`*
+_File location: `channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v`_
 
 This example demonstrates the concepts of **sync after**.
 
@@ -4960,7 +4961,7 @@ fn main() {
 
 #### Assert Demo
 
-*File location: `testing/01_assert/assert_demo.v`*
+_File location: `testing/01_assert/assert_demo.v`_
 
 This example demonstrates the concepts of **assert demo**.
 
@@ -4982,7 +4983,7 @@ fn main() {
 
 #### Demo Test
 
-*File location: `testing/02_simple_test/01_before/demo_test.v`*
+_File location: `testing/02_simple_test/01_before/demo_test.v`_
 
 This example demonstrates the concepts of **demo test**.
 
@@ -4995,7 +4996,7 @@ fn test_first() {
 
 #### Demo Test
 
-*File location: `testing/02_simple_test/02_after/demo_test.v`*
+_File location: `testing/02_simple_test/02_after/demo_test.v`_
 
 This example demonstrates the concepts of **demo test**.
 
@@ -5010,7 +5011,7 @@ fn test_first() {
 
 #### Demo Test
 
-*File location: `testing/05_test_optional_return_functions/demo_test.v`*
+_File location: `testing/05_test_optional_return_functions/demo_test.v`_
 
 This example demonstrates the concepts of **demo test**.
 
@@ -5042,7 +5043,7 @@ fn test_greet_when_empty() {
 
 #### Greet
 
-*File location: `testing/06_testing_program_file/greet.v`*
+_File location: `testing/06_testing_program_file/greet.v`_
 
 This example demonstrates the concepts of **greet**.
 
@@ -5062,7 +5063,7 @@ fn main() {
 
 #### Greet Test
 
-*File location: `testing/06_testing_program_file/greet_test.v`*
+_File location: `testing/06_testing_program_file/greet_test.v`_
 
 This example demonstrates the concepts of **greet test**.
 
@@ -5088,7 +5089,7 @@ fn test_greet() {
 
 #### Main Test
 
-*File location: `testing/07_testing_program_with_modules/modulebasics/main_test.v`*
+_File location: `testing/07_testing_program_with_modules/modulebasics/main_test.v`_
 
 This example demonstrates the concepts of **main test**.
 
@@ -5113,7 +5114,7 @@ fn test_hello() {
 
 #### Modulebasics
 
-*File location: `testing/07_testing_program_with_modules/modulebasics/modulebasics.v`*
+_File location: `testing/07_testing_program_with_modules/modulebasics/modulebasics.v`_
 
 This example demonstrates the concepts of **modulebasics**.
 
@@ -5131,7 +5132,7 @@ fn main() {
 
 #### File1
 
-*File location: `testing/07_testing_program_with_modules/modulebasics/mod1/file1.v`*
+_File location: `testing/07_testing_program_with_modules/modulebasics/mod1/file1.v`_
 
 This example demonstrates the concepts of **file1**.
 
@@ -5146,7 +5147,7 @@ pub fn hello() string {
 
 #### Mod1 Test
 
-*File location: `testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v`*
+_File location: `testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v`_
 
 This example demonstrates the concepts of **mod1 test**.
 
@@ -5170,7 +5171,7 @@ fn test_hello() {
 
 #### Testsuite Demo Test
 
-*File location: `testing/04_testsuite/testsuite_demo_test.v`*
+_File location: `testing/04_testsuite/testsuite_demo_test.v`_
 
 This example demonstrates the concepts of **testsuite demo test**.
 
@@ -5209,7 +5210,7 @@ fn testsuite_end() {
 
 #### Encode
 
-*File location: `json_and_orm/01_json/02_encode/encode.v`*
+_File location: `json_and_orm/01_json/02_encode/encode.v`_
 
 This example demonstrates the concepts of **encode**.
 
@@ -5237,7 +5238,7 @@ fn main() {
 
 #### Decode
 
-*File location: `json_and_orm/01_json/01_decode/decode.v`*
+_File location: `json_and_orm/01_json/01_decode/decode.v`_
 
 This example demonstrates the concepts of **decode**.
 
@@ -5264,7 +5265,7 @@ fn main() {
 
 #### Orm Demo
 
-*File location: `json_and_orm/02_orm/orm_demo.v`*
+_File location: `json_and_orm/02_orm/orm_demo.v`_
 
 This example demonstrates the concepts of **orm demo**.
 
@@ -5371,7 +5372,7 @@ fn main() {
 
 #### Main
 
-*File location: `notes_api/notes_api/main.v`*
+_File location: `notes_api/notes_api/main.v`_
 
 This example demonstrates the concepts of **main**.
 
@@ -5404,7 +5405,7 @@ fn main() {
 
 #### Note
 
-*File location: `notes_api/notes_api/note.v`*
+_File location: `notes_api/notes_api/note.v`_
 
 This example demonstrates the concepts of **note**.
 
@@ -5549,7 +5550,7 @@ fn (mut app App) delete(id int) vweb.Result {
 
 #### Util
 
-*File location: `notes_api/notes_api/util.v`*
+_File location: `notes_api/notes_api/util.v`_
 
 This example demonstrates the concepts of **util**.
 
@@ -5581,7 +5582,7 @@ const (
 
 #### Sum Types
 
-*File location: `language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v`*
+_File location: `language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v`_
 
 This example demonstrates the concepts of **sum types**.
 
@@ -5658,7 +5659,7 @@ fn main() {
 
 #### Generics
 
-*File location: `language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v`*
+_File location: `language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v`_
 
 This example demonstrates the concepts of **generics**.
 
@@ -5715,7 +5716,7 @@ fn main() {
 
 #### Interfaces
 
-*File location: `language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v`*
+_File location: `language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v`_
 
 This example demonstrates the concepts of **interfaces**.
 
@@ -5774,7 +5775,7 @@ fn main() {
 
 #### Options And Results
 
-*File location: `language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v`*
+_File location: `language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v`_
 
 This example demonstrates the concepts of **options and results**.
 
@@ -5833,7 +5834,7 @@ fn main() {
 
 #### Attributes
 
-*File location: `language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v`*
+_File location: `language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v`_
 
 This example demonstrates the concepts of **attributes**.
 
@@ -5897,7 +5898,7 @@ fn main() {
 
 #### Regex Matching
 
-*File location: `language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v`*
+_File location: `language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v`_
 
 This example demonstrates the concepts of **regex matching**.
 
@@ -5941,7 +5942,7 @@ fn main() {
 
 #### Strings Builder
 
-*File location: `language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v`*
+_File location: `language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v`_
 
 This example demonstrates the concepts of **strings builder**.
 
@@ -5984,7 +5985,7 @@ fn main() {
 
 #### Http Client
 
-*File location: `language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v`*
+_File location: `language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v`_
 
 This example demonstrates the concepts of **http client**.
 
@@ -6023,7 +6024,7 @@ fn main() {
 
 #### Os Operations
 
-*File location: `language_updates_and_stdlib/02_standard_library/02_os_operations/os_operations.v`*
+_File location: `language_updates_and_stdlib/02_standard_library/02_os_operations/os_operations.v`_
 
 This example demonstrates the concepts of **os operations**.
 
@@ -6095,7 +6096,7 @@ fn main() {
 
 #### Datatypes Collections
 
-*File location: `language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v`*
+_File location: `language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v`_
 
 This example demonstrates the concepts of **datatypes collections**.
 
@@ -6170,7 +6171,7 @@ fn main() {
 
 #### Command Line Flags
 
-*File location: `language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v`*
+_File location: `language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v`_
 
 This example demonstrates the concepts of **command line flags**.
 
@@ -6222,7 +6223,7 @@ fn main() {
 
 #### Time And Stopwatch
 
-*File location: `language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v`*
+_File location: `language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v`_
 
 This example demonstrates the concepts of **time and stopwatch**.
 
@@ -6260,3 +6261,10 @@ fn main() {
 
 ```
 
+---
+
+## Official Documentation
+
+For comprehensive and up-to-date information about V, please refer to the official documentation:
+
+- **[V Official Documentation](https://github.com/vlang/v/blob/master/doc/docs.md)** - Complete reference guide for the V programming language
