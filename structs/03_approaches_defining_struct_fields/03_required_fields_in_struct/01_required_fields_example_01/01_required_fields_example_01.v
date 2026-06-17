@@ -6,8 +6,10 @@ pub mut:
 	status  bool
 }
 
-_ := Note{
-	id:     1
-	status: false
+fn main() {
+	_ := Note{
+		id:     1
+		status: false
+	}
 }
 // throws error

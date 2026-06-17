@@ -3088,7 +3088,7 @@ fn main() {
 
 #### Required Fields Example 01
 
-_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01.v`_
+_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v`_
 
 This example demonstrates the concepts of **required fields example 01**.
 
@@ -3101,17 +3101,18 @@ pub mut:
     status  bool
 }
 
-_ := Note{
-    id:     1
-    status: false
+fn main() {
+    _ := Note{
+        id:     1
+        status: false
+    }
 }
 // throws error
-
 ```
 
 #### Required Fields Example 02
 
-_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02.v`_
+_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v`_
 
 This example demonstrates the concepts of **required fields example 02**.
 
@@ -3179,7 +3180,7 @@ fn main() {
 
 #### Defining Struct
 
-_File location: `structs/01_introducing_structs/01_defining_struct/01_defining_struct.v`_
+_File location: `structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v`_
 
 This example demonstrates the concepts of **defining struct**.
 
@@ -3196,7 +3197,7 @@ fn main() {
 
 #### Initialize Struct Example 1
 
-_File location: `structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1.v`_
+_File location: `structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v`_
 
 This example demonstrates the concepts of **initialize struct example 1**.
 
@@ -3216,7 +3217,7 @@ fn main() {
 
 #### Initialize Struct Example 2
 
-_File location: `structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2.v`_
+_File location: `structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v`_
 
 This example demonstrates the concepts of **initialize struct example 2**.
 
