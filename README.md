@@ -973,7 +973,7 @@ fn main() {
 
 #### Declare Rune
 
-_File location: `primitive_types/04_rune_type/01_declare_rune.v`_
+_File location: `primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v`_
 
 This example demonstrates the concepts of **declare rune**.
 
@@ -988,7 +988,7 @@ fn main() {
 
 #### Rune Operations With Strings
 
-_File location: `primitive_types/04_rune_type/02_rune_operations_with_strings.v`_
+_File location: `primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v`_
 
 This example demonstrates the concepts of **rune operations with strings**.
 
