@@ -4217,6 +4217,1914 @@ fn main() {
 }
 ```
 
+#### Redis GUI Explorer Demo
+
+_File location: `modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v`_
+
+This example demonstrates a complete desktop GUI application that combines the `ttytm.webview` bindings with the external `xiusin.vredis` client to construct a beautiful, dark-themed Redis GUI Dashboard.
+
+It features:
+*   Bidirectional communication between JavaScript (running inside the Webview) and the V backend.
+*   Full CRUD operations: listing, filtering, viewing details, creating, modifying, and deleting keys of multiple types (Strings, Lists, Hashes, and Sets).
+*   Live connection status tracking and DB stats displaying.
+*   Resource embedding using `$embed_file` to keep the compiled executable entirely self-contained.
+
+##### HTML, CSS, and JS Layout (`index.html`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_webview_demo/index.html`_
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V + Redis GUI Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0c0d14;
+            --bg-card: #131520;
+            --bg-sidebar: #10111a;
+            --border-color: rgba(255, 255, 255, 0.08);
+            
+            --text-main: #f8f9fa;
+            --text-muted: #8a8f9f;
+            
+            --color-primary: #8b5cf6;
+            --color-primary-hover: #a78bfa;
+            --color-success: #10b981;
+            --color-danger: #ef4444;
+            --color-warning: #f59e0b;
+            --color-info: #3b82f6;
+            
+            --tag-string: #3b82f6;
+            --tag-list: #10b981;
+            --tag-hash: #8b5cf6;
+            --tag-set: #f59e0b;
+            
+            --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 340px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-danger);
+            box-shadow: 0 0 8px var(--color-danger);
+        }
+
+        .status-dot.connected {
+            background-color: var(--color-success);
+            box-shadow: 0 0 8px var(--color-success);
+        }
+
+        .server-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .server-meta-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sidebar-actions {
+            padding: 16px 24px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-danger-outline {
+            background-color: transparent;
+            border-color: rgba(239, 68, 68, 0.3);
+            color: var(--color-danger);
+        }
+
+        .btn-danger-outline:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: var(--color-danger);
+        }
+
+        .btn-icon {
+            padding: 10px;
+        }
+
+        .search-container {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px 10px 36px;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+            background-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 36px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .keys-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .key-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .key-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .key-item.active {
+            background-color: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .key-info-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            flex-grow: 1;
+            margin-right: 8px;
+        }
+
+        .key-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: var(--font-mono);
+        }
+
+        .key-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .type-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        .type-tag.string { background-color: var(--tag-string); }
+        .type-tag.list { background-color: var(--tag-list); }
+        .type-tag.hash { background-color: var(--tag-hash); }
+        .type-tag.set { background-color: var(--tag-set); }
+
+        .key-ttl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .key-ttl.expiring {
+            color: var(--color-warning);
+        }
+
+        /* Main Workspace Styling */
+        .workspace {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: var(--bg-main);
+            position: relative;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            gap: 16px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.05);
+        }
+
+        .empty-text {
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .detail-view {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            height: 100%;
+            overflow-y: auto;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+        }
+
+        .detail-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .detail-key-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            word-break: break-all;
+        }
+
+        .detail-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .ttl-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-text {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-text:focus {
+            border-color: var(--color-primary);
+        }
+
+        .input-mono {
+            font-family: var(--font-mono);
+        }
+
+        .textarea-value {
+            width: 100%;
+            height: 200px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            outline: none;
+            resize: vertical;
+            transition: border-color 0.2s;
+            user-select: text;
+        }
+
+        .textarea-value:focus {
+            border-color: var(--color-primary);
+        }
+
+        /* List/Set Values Editor */
+        .list-editor {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .list-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .list-index {
+            width: 32px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .list-item-input {
+            flex-grow: 1;
+            user-select: text;
+        }
+
+        /* Hash Values Editor */
+        .hash-editor {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .hash-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .hash-key-input {
+            width: 30%;
+            user-select: text;
+        }
+
+        .hash-val-input {
+            flex-grow: 1;
+            user-select: text;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+            transform: scale(0.95);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .modal-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .select-input {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .select-input option {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border-left-color: var(--color-primary);
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(12, 13, 20, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .loader-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-section">
+                <div class="brand-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    Redis Explorer
+                </div>
+                <div class="status-badge">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Connecting</span>
+                </div>
+            </div>
+            <div class="server-meta">
+                <div class="server-meta-item">
+                    <span>Host:</span>
+                    <span id="metaHost" style="font-family: var(--font-mono);">127.0.0.1:6379</span>
+                </div>
+                <div class="server-meta-item">
+                    <span>Version:</span>
+                    <span id="metaVersion">-</span>
+                </div>
+                <div class="server-meta-item">
+                    <span>Keys Total:</span>
+                    <span id="metaKeys">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-actions">
+            <button class="btn btn-secondary btn-icon" id="btnRefresh" title="Refresh Key List">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            </button>
+            <button class="btn btn-primary" style="flex-grow: 1;" id="btnNewKey">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                New Key
+            </button>
+            <button class="btn btn-danger-outline btn-icon" id="btnFlush" title="Flush DB">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+        </div>
+
+        <div class="search-container">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" class="search-input" id="searchKeys" placeholder="Filter keys...">
+        </div>
+
+        <div class="keys-list" id="keysList">
+            <!-- Dynamic Keys go here -->
+        </div>
+    </div>
+
+    <!-- Workspace -->
+    <div class="workspace">
+        <div class="loader-overlay" id="loader">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <svg class="empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+            <div class="empty-text">Select a key to view details or create a new key</div>
+        </div>
+
+        <!-- Detail View -->
+        <div class="detail-view" id="detailView" style="display: none;">
+            <div class="detail-header">
+                <div class="detail-header-left">
+                    <div class="detail-title-row">
+                        <span class="detail-key-name" id="detailKeyName">user:info</span>
+                        <span class="type-tag string" id="detailKeyType">string</span>
+                    </div>
+                    <div class="detail-meta-row">
+                        <div class="ttl-input-group">
+                            <span>TTL (seconds):</span>
+                            <input type="number" class="input-text" id="detailKeyTTL" style="width: 80px;" value="-1">
+                            <span class="key-ttl" id="detailKeyTTLDisplay"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-actions">
+                    <button class="btn btn-secondary" id="btnSaveKey">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        Save
+                    </button>
+                    <button class="btn btn-danger-outline" id="btnDeleteKey">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        Delete
+                    </button>
+                </div>
+            </div>
+
+            <!-- Value Editor Card -->
+            <div class="card">
+                <div class="card-title" id="valueEditorTitle">Value Editor</div>
+                
+                <!-- String Content -->
+                <div id="editorString" style="display: none;">
+                    <textarea class="textarea-value" id="stringValueInput" placeholder="String value..."></textarea>
+                </div>
+
+                <!-- List / Set Content -->
+                <div id="editorList" style="display: none;">
+                    <div class="list-editor" id="listEditorContainer">
+                        <!-- Dynamic rows of list elements -->
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 12px; width: fit-content;" id="btnAddListRow">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Item
+                    </button>
+                </div>
+
+                <!-- Hash Content -->
+                <div id="editorHash" style="display: none;">
+                    <div class="hash-editor" id="hashEditorContainer">
+                        <!-- Dynamic rows of hash field:values -->
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 12px; width: fit-content;" id="btnAddHashRow">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Field
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Key Modal -->
+    <div class="modal-overlay" id="newKeyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Create New Redis Key</div>
+                <button class="modal-close" id="btnModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="newKeyName">Key Name</label>
+                    <input type="text" class="input-text input-mono" id="newKeyName" placeholder="e.g. user:session:1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="newKeyType">Key Type</label>
+                    <select class="select-input" id="newKeyType">
+                        <option value="string">String</option>
+                        <option value="list">List</option>
+                        <option value="set">Set</option>
+                        <option value="hash">Hash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="newKeyTTL">TTL (seconds, -1 for persistent)</label>
+                    <input type="number" class="input-text" id="newKeyTTL" value="-1">
+                </div>
+                <div class="form-group" id="newKeyInitialValueContainer">
+                    <label class="form-label" for="newKeyInitialValue" id="newKeyValLabel">Initial Value</label>
+                    
+                    <!-- Dynamic inputs based on type selected -->
+                    <div id="newValString">
+                        <textarea class="textarea-value" id="newKeyInitialValue" style="height: 120px;" placeholder="Enter string value..."></textarea>
+                    </div>
+                    
+                    <div id="newValList" style="display: none;">
+                        <div class="list-editor" id="newValListContainer">
+                            <div class="list-row">
+                                <span class="list-index">0</span>
+                                <input type="text" class="input-text list-item-input" value="">
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-top: 8px; font-size: 0.8rem; padding: 6px 12px;" id="btnModalAddListRow">Add Item</button>
+                    </div>
+
+                    <div id="newValHash" style="display: none;">
+                        <div class="hash-editor" id="newValHashContainer">
+                            <div class="hash-row">
+                                <input type="text" class="input-text hash-key-input" placeholder="Field" value="">
+                                <input type="text" class="input-text hash-val-input" placeholder="Value" value="">
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-top: 8px; font-size: 0.8rem; padding: 6px 12px;" id="btnModalAddHashRow">Add Field</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnModalCancel">Cancel</button>
+                <button class="btn btn-primary" id="btnModalCreate">Create Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Dialog Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal" style="width: 420px;">
+            <div class="modal-header">
+                <div class="modal-title" id="confirmTitle" style="color: var(--color-danger);">Confirm Action</div>
+                <button class="modal-close" id="btnConfirmClose">&times;</button>
+            </div>
+            <div class="modal-body" id="confirmMessage" style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main); user-select: text;">
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnConfirmCancel">Cancel</button>
+                <button class="btn btn-primary" id="btnConfirmOK" style="background: linear-gradient(135deg, var(--color-danger) 0%, #dc2626 100%); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Dialog Modal -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal" style="width: 420px;">
+            <div class="modal-header">
+                <div class="modal-title" id="alertTitle" style="color: var(--color-primary);">Notice</div>
+                <button class="modal-close" id="btnAlertClose">&times;</button>
+            </div>
+            <div class="modal-body" id="alertMessage" style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main); user-select: text;">
+                Message body.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btnAlertOK">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script logic -->
+    <script>
+        // Global error tracking for webview
+        window.addEventListener('error', function(event) {
+            if (typeof showAlert === 'function') {
+                showAlert("JavaScript Error", event.message + " (" + event.filename + ":" + event.lineno + ")");
+            } else {
+                alert("JavaScript Error: " + event.message);
+            }
+        });
+        window.addEventListener('unhandledrejection', function(event) {
+            if (typeof showAlert === 'function') {
+                showAlert("Unhandled Rejection", event.reason ? event.reason.toString() : "Unknown promise rejection");
+            } else {
+                alert("Unhandled Rejection: " + event.reason);
+            }
+        });
+
+        let currentKeys = [];
+        let selectedKey = null;
+        let isConnected = false;
+
+        // UI Elements
+        const statusDot = document.getElementById("statusDot");
+        const statusText = document.getElementById("statusText");
+        const metaVersion = document.getElementById("metaVersion");
+        const metaKeys = document.getElementById("metaKeys");
+        const keysList = document.getElementById("keysList");
+        const searchInput = document.getElementById("searchKeys");
+        const emptyState = document.getElementById("emptyState");
+        const detailView = document.getElementById("detailView");
+        const loader = document.getElementById("loader");
+
+        // Detail elements
+        const detailKeyName = document.getElementById("detailKeyName");
+        const detailKeyType = document.getElementById("detailKeyType");
+        const detailKeyTTL = document.getElementById("detailKeyTTL");
+        const detailKeyTTLDisplay = document.getElementById("detailKeyTTLDisplay");
+        const valueEditorTitle = document.getElementById("valueEditorTitle");
+        const btnSaveKey = document.getElementById("btnSaveKey");
+        const btnDeleteKey = document.getElementById("btnDeleteKey");
+
+        // Detail Editors
+        const editorString = document.getElementById("editorString");
+        const stringValueInput = document.getElementById("stringValueInput");
+        
+        const editorList = document.getElementById("editorList");
+        const listEditorContainer = document.getElementById("listEditorContainer");
+        const btnAddListRow = document.getElementById("btnAddListRow");
+
+        const editorHash = document.getElementById("editorHash");
+        const hashEditorContainer = document.getElementById("hashEditorContainer");
+        const btnAddHashRow = document.getElementById("btnAddHashRow");
+
+        // Modal Elements
+        const newKeyModal = document.getElementById("newKeyModal");
+        const btnNewKey = document.getElementById("btnNewKey");
+        const btnModalClose = document.getElementById("btnModalClose");
+        const btnModalCancel = document.getElementById("btnModalCancel");
+        const btnModalCreate = document.getElementById("btnModalCreate");
+        const selectNewKeyType = document.getElementById("newKeyType");
+        
+        const newValString = document.getElementById("newValString");
+        const newValList = document.getElementById("newValList");
+        const newValListContainer = document.getElementById("newValListContainer");
+        const newValHash = document.getElementById("newValHash");
+        const newValHashContainer = document.getElementById("newValHashContainer");
+
+        // Set Loading State
+        function setLoading(loading) {
+            if (loading) {
+                loader.classList.add("active");
+            } else {
+                loader.classList.remove("active");
+            }
+        }
+
+        // Custom Alert Modal
+        function showAlert(title, message) {
+            document.getElementById("alertTitle").innerText = title;
+            document.getElementById("alertMessage").innerText = message;
+            document.getElementById("alertModal").classList.add("active");
+        }
+
+        function closeAlert() {
+            document.getElementById("alertModal").classList.remove("active");
+        }
+
+        document.getElementById("btnAlertClose").onclick = closeAlert;
+        document.getElementById("btnAlertOK").onclick = closeAlert;
+
+        // Custom Confirm Modal
+        let confirmCallback = null;
+
+        function showConfirm(title, message, onConfirm) {
+            document.getElementById("confirmTitle").innerText = title;
+            document.getElementById("confirmMessage").innerText = message;
+            confirmCallback = onConfirm;
+            document.getElementById("confirmModal").classList.add("active");
+        }
+
+        function closeConfirm() {
+            document.getElementById("confirmModal").classList.remove("active");
+            confirmCallback = null;
+        }
+
+        document.getElementById("btnConfirmClose").onclick = closeConfirm;
+        document.getElementById("btnConfirmCancel").onclick = closeConfirm;
+        document.getElementById("btnConfirmOK").onclick = () => {
+            if (confirmCallback) confirmCallback();
+            closeConfirm();
+        };
+
+        // Initialize Status Connection
+        async function checkStatus() {
+            try {
+                const infoStr = await window.redis_connect_status();
+                const info = JSON.parse(infoStr);
+                
+                if (info.status === "connected") {
+                    isConnected = true;
+                    statusDot.className = "status-dot connected";
+                    statusText.innerText = "Online";
+                    metaVersion.innerText = info.version;
+                    metaKeys.innerText = info.keys_count;
+                } else {
+                    isConnected = false;
+                    statusDot.className = "status-dot";
+                    statusText.innerText = "Offline";
+                    metaVersion.innerText = "-";
+                    metaKeys.innerText = "-";
+                }
+            } catch (err) {
+                console.error("Failed to check status", err);
+                statusDot.className = "status-dot";
+                statusText.innerText = "Error";
+            }
+        }
+
+        // Load keys and render list
+        async function fetchAndRenderKeys() {
+            setLoading(true);
+            await checkStatus();
+            if (!isConnected) {
+                keysList.innerHTML = `<div style="text-align: center; color: var(--color-danger); padding: 20px 0; font-size: 0.9rem;">Redis server offline.<br>Ensure Redis is running on port 6379.</div>`;
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const keysStr = await window.redis_get_keys();
+                currentKeys = JSON.parse(keysStr);
+                renderKeys(currentKeys);
+            } catch (err) {
+                console.error("Failed to fetch keys", err);
+                keysList.innerHTML = `<div style="color: var(--color-danger); padding: 10px;">Error fetching keys: ${err}</div>`;
+            }
+            setLoading(false);
+        }
+
+        function renderKeys(keys) {
+            keysList.innerHTML = "";
+            if (keys.length === 0) {
+                keysList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 20px 0;">No keys found</div>`;
+                return;
+            }
+
+            keys.forEach(k => {
+                const item = document.createElement("div");
+                item.className = `key-item ${selectedKey && selectedKey.name === k.name ? "active" : ""}`;
+                item.onclick = () => selectKey(k.name);
+
+                const left = document.createElement("div");
+                left.className = "key-info-left";
+
+                const name = document.createElement("div");
+                name.className = "key-name";
+                name.innerText = k.name;
+
+                const meta = document.createElement("div");
+                meta.className = "key-meta-row";
+
+                const type = document.createElement("span");
+                type.className = `type-tag ${k.type}`;
+                type.innerText = k.type;
+
+                meta.appendChild(type);
+
+                if (k.ttl > 0) {
+                    const ttl = document.createElement("span");
+                    ttl.className = "key-ttl" + (k.ttl < 30 ? " expiring" : "");
+                    ttl.innerText = `TTL: ${k.ttl}s`;
+                    meta.appendChild(ttl);
+                }
+
+                left.appendChild(name);
+                left.appendChild(meta);
+
+                const deleteBtn = document.createElement("div");
+                deleteBtn.style.color = "var(--text-muted)";
+                deleteBtn.style.cursor = "pointer";
+                deleteBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteKeyConfirm(k.name);
+                };
+
+                item.appendChild(left);
+                item.appendChild(deleteBtn);
+                keysList.appendChild(item);
+            });
+        }
+
+        // Search filter
+        searchInput.oninput = () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = currentKeys.filter(k => k.name.toLowerCase().includes(query));
+            renderKeys(filtered);
+        };
+
+        // Select and display key details
+        async function selectKey(name) {
+            setLoading(true);
+            try {
+                const detailStr = await window.redis_get_key_detail(name);
+                selectedKey = JSON.parse(detailStr);
+                
+                // Show detail pane
+                emptyState.style.display = "none";
+                detailView.style.display = "flex";
+
+                // Setup header
+                detailKeyName.innerText = selectedKey.name;
+                detailKeyType.className = `type-tag ${selectedKey.type}`;
+                detailKeyType.innerText = selectedKey.type;
+                detailKeyTTL.value = selectedKey.ttl;
+                
+                if (selectedKey.ttl === -1) {
+                    detailKeyTTLDisplay.innerText = "(Persistent)";
+                } else {
+                    detailKeyTTLDisplay.innerText = "(" + selectedKey.ttl + "s remaining)";
+                }
+
+                // Hide all editors first
+                editorString.style.display = "none";
+                editorList.style.display = "none";
+                editorHash.style.display = "none";
+
+                // Setup active keys selection highlighting
+                document.querySelectorAll(".key-item").forEach(item => {
+                    if (item.querySelector(".key-name").innerText === name) {
+                        item.classList.add("active");
+                    } else {
+                        item.classList.remove("active");
+                    }
+                });
+
+                // Configure editor based on type
+                if (selectedKey.type === "string") {
+                    editorString.style.display = "block";
+                    stringValueInput.value = selectedKey.value;
+                    valueEditorTitle.innerText = "Edit String Value";
+                } else if (selectedKey.type === "list" || selectedKey.type === "set") {
+                    editorList.style.display = "block";
+                    valueEditorTitle.innerText = `Edit ${selectedKey.type === 'list' ? 'List' : 'Set'} Elements`;
+                    renderListEditor(selectedKey.list_val);
+                } else if (selectedKey.type === "hash") {
+                    editorHash.style.display = "block";
+                    valueEditorTitle.innerText = "Edit Hash Fields";
+                    renderHashEditor(selectedKey.hash_val);
+                }
+
+            } catch (err) {
+                console.error("Failed to load key detail", err);
+                showAlert("Error Loading Key", "Failed to load key detail: " + err);
+            }
+            setLoading(false);
+        }
+
+        // Render List Elements
+        function renderListEditor(elements) {
+            listEditorContainer.innerHTML = "";
+            if (!elements || elements.length === 0) {
+                addListRow("");
+                return;
+            }
+            elements.forEach((val, idx) => {
+                addListRow(val, idx);
+            });
+        }
+
+        function addListRow(val = "", idx = null) {
+            const rowIdx = idx !== null ? idx : listEditorContainer.children.length;
+            const row = document.createElement("div");
+            row.className = "list-row";
+            
+            // Build elements explicitly to avoid quotes and backtick issues
+            const idxSpan = document.createElement("span");
+            idxSpan.className = "list-index";
+            idxSpan.innerText = rowIdx;
+            
+            const itemInput = document.createElement("input");
+            itemInput.type = "text";
+            itemInput.className = "input-text list-item-input";
+            itemInput.value = val;
+            
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn btn-secondary btn-icon";
+            delBtn.style.padding = "8px";
+            delBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            delBtn.onclick = () => {
+                row.remove();
+                reindexListRows();
+            };
+            
+            row.appendChild(idxSpan);
+            row.appendChild(itemInput);
+            row.appendChild(delBtn);
+            
+            listEditorContainer.appendChild(row);
+        }
+
+        function reindexListRows() {
+            document.querySelectorAll("#listEditorContainer .list-row").forEach((row, i) => {
+                row.querySelector(".list-index").innerText = i;
+            });
+        }
+
+        btnAddListRow.onclick = () => addListRow("");
+
+        // Render Hash Editor
+        function renderHashEditor(hashData) {
+            hashEditorContainer.innerHTML = "";
+            const keys = Object.keys(hashData);
+            if (keys.length === 0) {
+                addHashRow("", "");
+                return;
+            }
+            keys.forEach(k => {
+                addHashRow(k, hashData[k]);
+            });
+        }
+
+        function addHashRow(field = "", value = "") {
+            const row = document.createElement("div");
+            row.className = "hash-row";
+            
+            const fieldInput = document.createElement("input");
+            fieldInput.type = "text";
+            fieldInput.className = "input-text hash-key-input";
+            fieldInput.placeholder = "Field";
+            fieldInput.value = field;
+            
+            const valInput = document.createElement("input");
+            valInput.type = "text";
+            valInput.className = "input-text hash-val-input";
+            valInput.placeholder = "Value";
+            valInput.value = value;
+            
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn btn-secondary btn-icon";
+            delBtn.style.padding = "8px";
+            delBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            delBtn.onclick = () => {
+                row.remove();
+            };
+            
+            row.appendChild(fieldInput);
+            row.appendChild(valInput);
+            row.appendChild(delBtn);
+            
+            hashEditorContainer.appendChild(row);
+        }
+
+        btnAddHashRow.onclick = () => addHashRow("", "");
+
+        // Save active key edits
+        async function saveKey() {
+            if (!selectedKey) return;
+            setLoading(true);
+            const name = selectedKey.name;
+            const type = selectedKey.type;
+            const ttl = parseInt(detailKeyTTL.value) || -1;
+
+            try {
+                if (type === "string") {
+                    const val = stringValueInput.value;
+                    await window.redis_set_string(name, val, ttl);
+                } else if (type === "list") {
+                    const vals = Array.from(document.querySelectorAll("#listEditorContainer .list-item-input")).map(i => i.value);
+                    await window.redis_set_list(name, JSON.stringify(vals), ttl);
+                } else if (type === "set") {
+                    const vals = Array.from(document.querySelectorAll("#listEditorContainer .list-item-input")).map(i => i.value);
+                    await window.redis_set_set(name, JSON.stringify(vals), ttl);
+                } else if (type === "hash") {
+                    const fvs = {};
+                    document.querySelectorAll("#hashEditorContainer .hash-row").forEach(row => {
+                        const f = row.querySelector(".hash-key-input").value.trim();
+                        const v = row.querySelector(".hash-val-input").value;
+                        if (f) {
+                            fvs[f] = v;
+                        }
+                    });
+                    await window.redis_set_hash(name, JSON.stringify(fvs), ttl);
+                }
+
+                // Reload and re-select
+                await fetchAndRenderKeys();
+                await selectKey(name);
+            } catch (err) {
+                console.error("Failed to save key", err);
+                showAlert("Error Saving Key", "Failed to save key: " + err);
+            }
+            setLoading(false);
+        }
+
+        // Delete active key
+        async function deleteKeyConfirm(name) {
+            showConfirm("Delete Key", "Are you sure you want to delete key \"" + name + "\"?", async () => {
+                setLoading(true);
+                try {
+                    await window.redis_del_key(name);
+                    selectedKey = null;
+                    detailView.style.display = "none";
+                    emptyState.style.display = "flex";
+                    await fetchAndRenderKeys();
+                } catch (err) {
+                    showAlert("Error Deleting Key", "Failed to delete key: " + err);
+                }
+                setLoading(false);
+            });
+        }
+
+        btnDeleteKey.onclick = () => {
+            if (selectedKey) deleteKeyConfirm(selectedKey.name);
+        };
+        btnSaveKey.onclick = saveKey;
+
+        // Modal functionality
+        btnNewKey.onclick = () => {
+            // reset fields
+            document.getElementById("newKeyName").value = "";
+            document.getElementById("newKeyTTL").value = "-1";
+            document.getElementById("newKeyInitialValue").value = "";
+            newValListContainer.innerHTML = "";
+            addModalListRow("");
+            newValHashContainer.innerHTML = "";
+            addModalHashRow("", "");
+            
+            newKeyModal.classList.add("active");
+        };
+
+        function closeModal() {
+            newKeyModal.classList.remove("active");
+        }
+
+        btnModalClose.onclick = closeModal;
+        btnModalCancel.onclick = closeModal;
+
+        // Modal type change view switcher
+        selectNewKeyType.onchange = () => {
+            const type = selectNewKeyType.value;
+            newValString.style.display = "none";
+            newValList.style.display = "none";
+            newValHash.style.display = "none";
+
+            if (type === "string") {
+                newValString.style.display = "block";
+            } else if (type === "list" || type === "set") {
+                newValList.style.display = "block";
+            } else if (type === "hash") {
+                newValHash.style.display = "block";
+            }
+        };
+
+        // Modal dynamic list / hash rows adders
+        function addModalListRow(val = "") {
+            const idx = newValListContainer.children.length;
+            const row = document.createElement("div");
+            row.className = "list-row";
+            
+            const idxSpan = document.createElement("span");
+            idxSpan.className = "list-index";
+            idxSpan.innerText = idx;
+            
+            const itemInput = document.createElement("input");
+            itemInput.type = "text";
+            itemInput.className = "input-text list-item-input";
+            itemInput.value = val;
+            
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn btn-secondary btn-icon";
+            delBtn.style.padding = "6px";
+            delBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            delBtn.onclick = () => {
+                row.remove();
+                reindexModalListRows();
+            };
+            
+            row.appendChild(idxSpan);
+            row.appendChild(itemInput);
+            row.appendChild(delBtn);
+            
+            newValListContainer.appendChild(row);
+        }
+
+        function reindexModalListRows() {
+            document.querySelectorAll("#newValListContainer .list-row").forEach((row, i) => {
+                row.querySelector(".list-index").innerText = i;
+            });
+        }
+
+        document.getElementById("btnModalAddListRow").onclick = () => addModalListRow("");
+
+        function addModalHashRow(field = "", val = "") {
+            const row = document.createElement("div");
+            row.className = "hash-row";
+            
+            const fieldInput = document.createElement("input");
+            fieldInput.type = "text";
+            fieldInput.className = "input-text hash-key-input";
+            fieldInput.placeholder = "Field";
+            fieldInput.value = field;
+            
+            const valInput = document.createElement("input");
+            valInput.type = "text";
+            valInput.className = "input-text hash-val-input";
+            valInput.placeholder = "Value";
+            valInput.value = val;
+            
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn btn-secondary btn-icon";
+            delBtn.style.padding = "6px";
+            delBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            delBtn.onclick = () => {
+                row.remove();
+            };
+            
+            row.appendChild(fieldInput);
+            row.appendChild(valInput);
+            row.appendChild(delBtn);
+            
+            newValHashContainer.appendChild(row);
+        }
+
+        document.getElementById("btnModalAddHashRow").onclick = () => addModalHashRow("", "");
+
+        btnModalCreate.onclick = async () => {
+            const name = document.getElementById("newKeyName").value.trim();
+            if (!name) {
+                showAlert("Validation Error", "Key name is required!");
+                return;
+            }
+
+            const type = selectNewKeyType.value;
+            const ttl = parseInt(document.getElementById("newKeyTTL").value) || -1;
+            setLoading(true);
+
+            try {
+                if (type === "string") {
+                    const val = document.getElementById("newKeyInitialValue").value;
+                    await window.redis_set_string(name, val, ttl);
+                } else if (type === "list") {
+                    const vals = Array.from(document.querySelectorAll("#newValListContainer .list-item-input")).map(i => i.value);
+                    await window.redis_set_list(name, JSON.stringify(vals), ttl);
+                } else if (type === "set") {
+                    const vals = Array.from(document.querySelectorAll("#newValListContainer .list-item-input")).map(i => i.value);
+                    await window.redis_set_set(name, JSON.stringify(vals), ttl);
+                } else if (type === "hash") {
+                    const fvs = {};
+                    document.querySelectorAll("#newValHashContainer .hash-row").forEach(row => {
+                        const f = row.querySelector(".hash-key-input").value.trim();
+                        const v = row.querySelector(".hash-val-input").value;
+                        if (f) fvs[f] = v;
+                    });
+                    await window.redis_set_hash(name, JSON.stringify(fvs), ttl);
+                }
+
+                closeModal();
+                await fetchAndRenderKeys();
+                await selectKey(name);
+            } catch (err) {
+                showAlert("Error Creating Key", "Failed to create key: " + err);
+            }
+            setLoading(false);
+        };
+
+        // Refresh Button
+        document.getElementById("btnRefresh").onclick = fetchAndRenderKeys;
+
+        // Flush Database
+        document.getElementById("btnFlush").onclick = async () => {
+            const warning = "WARNING: Are you absolutely sure you want to delete ALL keys in the current database?";
+            showConfirm("Flush Database", warning, async () => {
+                setLoading(true);
+                try {
+                    await window.redis_flush_db();
+                    selectedKey = null;
+                    detailView.style.display = "none";
+                    emptyState.style.display = "flex";
+                    await fetchAndRenderKeys();
+                } catch (err) {
+                    showAlert("Error Flushing DB", "Failed to flush DB: " + err);
+                }
+                setLoading(false);
+            });
+        };
+
+        // Initial Load
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(fetchAndRenderKeys, 100);
+        });
+    </script>
+</body>
+</html>
+```
+
+##### V Entrypoint (`redis_webview_demo.v`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v`_
+
+```v
+module main
+
+import json
+import ttytm.webview
+import xiusin.vredis
+
+struct KeyInfo {
+	name  string
+	@type string
+	ttl   int
+}
+
+struct KeyDetail {
+mut:
+	name     string
+	@type    string
+	ttl      int
+	value    string
+	list_val []string
+	hash_val map[string]string
+}
+
+struct ConnectStatus {
+	status     string
+	host       string
+	port       int
+	version    string
+	keys_count int
+}
+
+// Embed the HTML, CSS, and JS file directly into the binary
+const html_file = $embed_file('index.html')
+const html = html_file.to_string()
+
+fn connect_redis() !&vredis.Redis {
+	return vredis.new_client(host: '127.0.0.1', port: 6379)
+}
+
+fn redis_connect_status(e &webview.Event) !string {
+	mut client := connect_redis() or {
+		status_info := ConnectStatus{
+			status: 'disconnected'
+			host: '127.0.0.1'
+			port: 6379
+			version: ''
+			keys_count: 0
+		}
+		return json.encode(status_info)
+	}
+	defer {
+		client.close() or {}
+	}
+	
+	mut version := 'Unknown'
+	info := client.send('INFO', 'server') or {
+		count := client.dbsize() or { 0 }
+		status_info := ConnectStatus{
+			status: 'connected'
+			host: '127.0.0.1'
+			port: 6379
+			version: 'Unknown'
+			keys_count: count
+		}
+		return json.encode(status_info)
+	}
+	if info.bytestr().len > 0 {
+		lines := info.bytestr().split('\n')
+		for line in lines {
+			if line.starts_with('redis_version:') {
+				version = line.split(':')[1].trim_space()
+				break
+			}
+		}
+	}
+	
+	count := client.dbsize() or { 0 }
+	
+	status_info := ConnectStatus{
+		status: 'connected'
+		host: '127.0.0.1'
+		port: 6379
+		version: version
+		keys_count: count
+	}
+	return json.encode(status_info)
+}
+
+fn redis_get_keys(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	keys := client.keys('*') or { []string{} }
+	mut items := []KeyInfo{}
+	for key in keys {
+		t := client.@type(key) or { 'unknown' }
+		ttl := client.ttl(key) or { -1 }
+		items << KeyInfo{
+			name: key
+			@type: t
+			ttl: ttl
+		}
+	}
+	return json.encode(items)
+}
+
+fn redis_get_key_detail(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	t := client.@type(key)!
+	ttl := client.ttl(key)!
+	
+	mut detail := KeyDetail{
+		name: key
+		@type: t
+		ttl: ttl
+		value: ''
+		list_val: []string{}
+		hash_val: map[string]string{}
+	}
+	
+	match t {
+		'string' {
+			detail.value = client.get(key) or { '' }
+		}
+		'list' {
+			detail.list_val = client.lrange(key, 0, -1) or { []string{} }
+		}
+		'set' {
+			detail.list_val = client.smembers(key) or { []string{} }
+		}
+		'hash' {
+			detail.hash_val = client.hgetall(key) or { map[string]string{} }
+		}
+		else {}
+	}
+	return json.encode(detail)
+}
+
+fn redis_set_string(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	val := e.get_arg[string](1)!
+	ttl := e.get_arg[int](2)!
+	
+	client.set(key, val)!
+	if ttl > 0 {
+		client.expire(key, ttl)!
+	} else if ttl == -1 {
+		client.persist(key) or {}
+	}
+	return 'ok'
+}
+
+fn redis_set_list(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	vals_json := e.get_arg[string](1)!
+	ttl := e.get_arg[int](2)!
+	
+	vals := json.decode([]string, vals_json)!
+	client.del(key) or {}
+	for val in vals {
+		client.rpush(key, val)!
+	}
+	if ttl > 0 {
+		client.expire(key, ttl)!
+	} else if ttl == -1 {
+		client.persist(key) or {}
+	}
+	return 'ok'
+}
+
+fn redis_set_hash(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	hash_json := e.get_arg[string](1)!
+	ttl := e.get_arg[int](2)!
+	
+	fvs := json.decode(map[string]string, hash_json)!
+	client.del(key) or {}
+	for field, val in fvs {
+		client.hset(key, field, val)!
+	}
+	if ttl > 0 {
+		client.expire(key, ttl)!
+	} else if ttl == -1 {
+		client.persist(key) or {}
+	}
+	return 'ok'
+}
+
+fn redis_set_set(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	vals_json := e.get_arg[string](1)!
+	ttl := e.get_arg[int](2)!
+	
+	vals := json.decode([]string, vals_json)!
+	client.del(key) or {}
+	for val in vals {
+		client.sadd(key, val)!
+	}
+	if ttl > 0 {
+		client.expire(key, ttl)!
+	} else if ttl == -1 {
+		client.persist(key) or {}
+	}
+	return 'ok'
+}
+
+fn redis_del_key(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	client.del(key)!
+	return 'ok'
+}
+
+fn redis_flush_db(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	client.flushdb()!
+	return 'ok'
+}
+
+fn main() {
+	mut w := webview.create(debug: true)
+	w.set_title('V + Redis GUI Dashboard')
+	w.set_size(1080, 720, .@none)
+
+	// Bindings
+	w.bind_opt[string]('redis_connect_status', redis_connect_status)
+	w.bind_opt[string]('redis_get_keys', redis_get_keys)
+	w.bind_opt[string]('redis_get_key_detail', redis_get_key_detail)
+	w.bind_opt[string]('redis_set_string', redis_set_string)
+	w.bind_opt[string]('redis_set_list', redis_set_list)
+	w.bind_opt[string]('redis_set_hash', redis_set_hash)
+	w.bind_opt[string]('redis_set_set', redis_set_set)
+	w.bind_opt[string]('redis_del_key', redis_del_key)
+	w.bind_opt[string]('redis_flush_db', redis_flush_db)
+
+	w.set_html(html)
+	w.run()
+}
+```
+
+##### Redis Console Demo (`redis_console_demo.v`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v`_
+
+This example demonstrates how to use the external `xiusin.vredis` client package in a console application. It covers:
+*   Establishing a connection and handling errors gracefully.
+*   Basic String operations (`set`, `get`, `incr`, `expire`, `ttl`, `del`).
+*   List operations (`rpush`, `llen`, `lrange`, `lpop`).
+*   Hash operations (`hset`, `hget`, `hgetall`).
+*   Set operations (`sadd`, `sismember`, `smembers`).
+*   Cleaning up created keys on application exit.
+
+```v
+module main
+
+import xiusin.vredis
+
+fn main() {
+	println('==================================================')
+	println('       V + Redis Console API Learning Demo        ')
+	println('==================================================')
+
+	println('Connecting to local Redis at 127.0.0.1:6379...')
+	mut r := vredis.new_client(host: '127.0.0.1', port: 6379) or {
+		eprintln('\n[ERROR] Failed to connect to Redis server: ${err}')
+		eprintln('Please make sure Redis is running locally on port 6379.')
+		return
+	}
+	defer {
+		r.close() or {}
+		println('\n==================================================')
+		println('Demo completed. Redis connection closed.')
+		println('==================================================')
+	}
+
+	println('Connected successfully!\n')
+
+	// Clean up any old test keys first
+	r.del('demo:string') or {}
+	r.del('demo:counter') or {}
+	r.del('demo:list') or {}
+	r.del('demo:hash') or {}
+	r.del('demo:set') or {}
+
+	// --- 1. String Operations ---
+	println('--- 1. String Operations ---')
+	println('Setting "demo:string" to "Hello V + Redis!"...')
+	r.set('demo:string', 'Hello V + Redis!') or { panic(err) }
+
+	val := r.get('demo:string') or { panic(err) }
+	println('GET "demo:string" -> "${val}"')
+
+	// Increment demo
+	r.incr('demo:counter') or { panic(err) }
+	r.incr('demo:counter') or { panic(err) }
+	counter_val := r.get('demo:counter') or { panic(err) }
+	println('Counter INCR twice -> "${counter_val}"')
+
+	// TTL Demo
+	println('Setting expiry of 5 seconds on "demo:string"...')
+	r.expire('demo:string', 5) or { panic(err) }
+	ttl_val := r.ttl('demo:string') or { panic(err) }
+	println('TTL remaining: ${ttl_val} seconds\n')
+
+	// --- 2. List Operations ---
+	println('--- 2. List Operations ---')
+	println('Pushing items to "demo:list" (item_a, item_b, item_c)...')
+	r.rpush('demo:list', 'item_a') or { panic(err) }
+	r.rpush('demo:list', 'item_b') or { panic(err) }
+	r.rpush('demo:list', 'item_c') or { panic(err) }
+
+	list_len := r.llen('demo:list') or { panic(err) }
+	println('List length: ${list_len}')
+
+	list_items := r.lrange('demo:list', 0, -1) or { panic(err) }
+	println('List elements: ${list_items}')
+
+	popped := r.lpop('demo:list') or { panic(err) }
+	println('Popped from left (LPOP): "${popped}"')
+
+	list_items_after := r.lrange('demo:list', 0, -1) or { panic(err) }
+	println('List elements after LPOP: ${list_items_after}\n')
+
+	// --- 3. Hash Operations ---
+	println('--- 3. Hash Operations ---')
+	println('Setting fields in "demo:hash"...')
+	r.hset('demo:hash', 'name', 'V Programming Language') or { panic(err) }
+	r.hset('demo:hash', 'year', '2019') or { panic(err) }
+	r.hset('demo:hash', 'creator', 'Alex Medvednikov') or { panic(err) }
+
+	name_field := r.hget('demo:hash', 'name') or { panic(err) }
+	println('HGET "demo:hash" "name" -> "${name_field}"')
+
+	hash_all := r.hgetall('demo:hash') or { panic(err) }
+	println('HGETALL "demo:hash" fields & values:')
+	for k, v in hash_all {
+		println('  - ${k}: ${v}')
+	}
+	println('')
+
+	// --- 4. Set Operations ---
+	println('--- 4. Set Operations ---')
+	println('Adding members to "demo:set"...')
+	r.sadd('demo:set', 'apple') or { panic(err) }
+	r.sadd('demo:set', 'banana') or { panic(err) }
+	r.sadd('demo:set', 'apple') or { panic(err) } // Duplicate (should be ignored)
+
+	is_banana := r.sismember('demo:set', 'banana') or { panic(err) }
+	is_cherry := r.sismember('demo:set', 'cherry') or { panic(err) }
+	println('SISMEMBER "demo:set" "banana": ${is_banana}')
+	println('SISMEMBER "demo:set" "cherry": ${is_cherry}')
+
+	set_members := r.smembers('demo:set') or { panic(err) }
+	println('SMEMBERS "demo:set": ${set_members}\n')
+
+	// Clean up test keys
+	println('Cleaning up created keys...')
+	r.del('demo:string') or {}
+	r.del('demo:counter') or {}
+	r.del('demo:list') or {}
+	r.del('demo:hash') or {}
+	r.del('demo:set') or {}
+	println('Cleanup done.')
+}
+```
+
 ## Concurrency
 
 ### Concurrency Real Life Scenario
