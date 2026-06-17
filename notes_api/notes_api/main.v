@@ -1,12 +1,15 @@
 module main
 
-import vweb
+import veb
 import db.sqlite
 
 struct App {
-	vweb.Context
 mut:
 	db sqlite.DB
+}
+
+struct Context {
+	veb.Context
 }
 
 fn main() {
@@ -16,8 +19,8 @@ fn main() {
 		create table Note
 	} or { panic(err) }
 	http_port := 8000
-	app := &App{
+	mut app := &App{
 		db: db
 	}
-	vweb.run(app, http_port)
+	veb.run[App, Context](mut app, http_port)
 }

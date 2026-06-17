@@ -11,11 +11,9 @@ fn (c NotesResponse) to_json() string {
 	return json.encode(c)
 }
 
-const (
-	invalid_json   = 'Invalid JSON Payload'
-	note_not_found = 'Note not found'
-	unique_message = 'Please provide a unique message for Note'
-)
+const invalid_json = 'Invalid JSON Payload'
+const note_not_found = 'Note not found'
+const unique_message = 'Please provide a unique message for Note'
 
 fn error_response(status int, message string) string {
 	er := NotesResponse{status, message}

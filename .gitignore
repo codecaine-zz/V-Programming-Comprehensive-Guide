@@ -4,3 +4,6 @@
 # Do not ignore .gitignore files
 !.gitignore
 !**/.gitignore
+
+# Ignore SQLite databases
+*.db
