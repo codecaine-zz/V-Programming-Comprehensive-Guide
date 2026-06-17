@@ -49,6 +49,7 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
   - [Cyclic Imports](#cyclic-imports)
   - [Importing Module](#importing-module)
   - [Init Function For Module](#init-function-for-module)
+  - [Installing External Packages and Webview](#installing-external-packages-and-webview)
   - [Member Scope In Module](#member-scope-in-module)
   - [Working With Multiple Files In Module](#working-with-multiple-files-in-module)
 - [Concurrency](#concurrency)
@@ -4040,6 +4041,180 @@ fn hello2() {
     println('Hello 2 from mod1!')
 }
 
+### Installing External Packages and Webview
+
+#### Installing External Packages (`vpm`)
+
+V features a built-in package manager called `vpm` (V Package Manager). You can install community-maintained external modules directly from the command line using:
+
+```bash
+v install ttytm.webview
+```
+
+V will download and place the package under the global V modules directory `~/.vmodules/` (e.g. `~/.vmodules/ttytm/webview`).
+
+#### System Dependencies
+
+Since `webview` binds to a native C++ webview library, you need the proper platform-specific C++ toolchains and WebKit libraries installed on your machine:
+* **macOS**: Install Xcode Command Line Tools (`xcode-select --install`).
+* **Linux (Debian/Ubuntu)**: Install GTK and WebKit2 development libraries:
+  ```bash
+  sudo apt install build-essential libgtk-3-dev libwebkit2gtk-4.0-dev
+  ```
+* **Windows**: Set up a GCC compiler environment (e.g., MinGW-w64 via MSYS2) and compile using `v -cc gcc run .`.
+
+#### Compiling the C++ Webview Library (Workaround for macOS Bug)
+
+After installing the V module, you normally run the build script `build.vsh` located in the module directory to compile the underlying C++ dependency (`webview.o`).
+
+However, on macOS, running the script directly or compiling it via V might result in a bus error (**Signal 10**) due to thread/spinner channel operations.
+
+To bypass this issue, you can compile the dependency manually:
+
+```bash
+# For macOS / Linux: Compile the C++ object file directly using clang++ or g++
+clang++ -c ~/.vmodules/ttytm/webview/src/webview.cc -DWEBVIEW_STATIC -o ~/.vmodules/ttytm/webview/src/webview.o -std=c++11
+```
+
+Once `webview.o` is compiled in the `.vmodules/ttytm/webview/src` directory, you can build any V application importing `ttytm.webview` without errors.
+
+#### Binding V Functions to Webview (Bidirectional Communication)
+
+Exchanging data bidirectionally between V and Javascript inside the Webview is simple:
+1. **Define the V Function**: Create a V function with a parameter of type `&webview.Event`.
+2. **Access Arguments**: Retrieve inputs passed from the JavaScript call by calling `e.get_arg[T](index)`.
+3. **Register the Binding**: Call `w.bind('js_func_name', v_func_name)` on your webview instance.
+4. **Call from JS**: In your frontend JavaScript, call the function asynchronously via `await window.js_func_name(args...)`.
+
+#### Webview Demo
+
+_File location: `modules/11_install_external_packages_and_webview/webview_demo/webview_demo.v`_
+
+This example demonstrates the concepts of **installing external packages and webview bindings**.
+
+```v
+module main
+
+import ttytm.webview
+
+const html = '
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%);
+            color: #f8f8f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            user-select: none;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+            color: #50fa7b;
+        }
+        input {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #6272a4;
+            background-color: #282a36;
+            color: #f8f8f2;
+            margin-right: 10px;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #282a36;
+            background-color: #50fa7b;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            background-color: #8be9fd;
+            transform: translateY(-1px);
+        }
+        #result {
+            margin-top: 25px;
+            font-size: 1.1rem;
+            min-height: 25px;
+            color: #f1fa8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>V + Webview Binding</h1>
+        <input type="text" id="userInput" placeholder="Enter message for V..." value="Hello from JS!">
+        <button onclick="sendToV()">Send to V</button>
+        <div id="result">Waiting for action...</div>
+    </div>
+
+    <script>
+        async function sendToV() {
+            const input = document.getElementById("userInput").value;
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerText = "Calling V function...";
+            try {
+                // Call the bound V function "greet_from_v" asynchronously
+                const res = await window.greet_from_v(input);
+                resultDiv.innerText = res;
+            } catch (err) {
+                resultDiv.innerText = "Error: " + err;
+            }
+        }
+    </script>
+</body>
+</html>
+'
+
+// V binding function. Must take &webview.Event and can return a type (like string).
+fn greet_from_v(e &webview.Event) string {
+    // 1. Retrieve the argument passed from JavaScript (at index 0)
+    msg := e.get_arg[string](0) or { 'No arguments passed' }
+    println('V side: Received from JS: ${msg}')
+
+    // 2. We can run custom JavaScript on the webview page from V
+    e.eval('console.log("V successfully invoked eval in JS context!");')
+
+    // 3. Return string back to the JS Promise resolver
+    return 'V responds: "Message received: ${msg}"'
+}
+
+fn main() {
+    // Initialize Webview
+    mut w := webview.create(debug: true)
+    w.set_title('V Webview Binding Demo')
+    w.set_size(600, 450, .@none)
+
+    // Bind V function "greet_from_v" to JS window.greet_from_v
+    w.bind('greet_from_v', greet_from_v)
+
+    // Load the HTML content
+    w.set_html(html)
+
+    // Run the main loop
+    w.run()
+}
 ```
 
 ## Concurrency
