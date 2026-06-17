@@ -1,7 +1,7 @@
 module main
 
 import vweb
-import sqlite
+import db.sqlite
 
 struct App {
 	vweb.Context
@@ -11,10 +11,10 @@ mut:
 
 fn main() {
 	db := sqlite.connect('notes.db') or { panic(err) }
-	db.exec('drop table if exists Notes')
+	db.exec('drop table if exists Notes') or { panic(err) }
 	sql db {
 		create table Note
-	}
+	} or { panic(err) }
 	http_port := 8000
 	app := &App{
 		db: db

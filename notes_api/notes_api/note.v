@@ -3,39 +3,43 @@ module main
 import json
 import vweb
 
-[table: 'Notes']
+@[table: 'Notes']
 struct Note {
-	id      int    [primary; sql: serial]
-	message string [sql: 'detail'; unique]
-	status  bool   [nonull]
+	id      int    @[primary; sql: serial]
+	message string @[sql: 'detail'; unique]
+	status  bool
 }
 
 fn (n Note) to_json() string {
 	return json.encode(n)
 }
 
-['/notes'; post]
+@['/notes'; post]
 fn (mut app App) create() vweb.Result {
 	// malformed json
 	n := json.decode(Note, app.req.data) or {
 		app.set_status(400, 'Bad Request')
-		er := CustomResponse{400, invalid_json}
-		return app.json(er.to_json())
+		return app.json(error_response(400, invalid_json))
 	}
 
 	// before we save, we must ensure the note's message is unique
 	notes_found := sql app.db {
 		select from Note where message == n.message
+	} or {
+		app.set_status(500, 'Internal Server Error')
+		return app.json(error_response(500, err.msg()))
 	}
 	if notes_found.len > 0 {
 		app.set_status(400, 'Bad Request')
-		er := CustomResponse{400, unique_message}
-		return app.json(er.to_json())
+		return app.json(error_response(400, unique_message))
 	}
 
 	// save to db
 	sql app.db {
 		insert n into Note
+	} or {
+		app.set_status(500, 'Internal Server Error')
+		return app.json(error_response(500, err.msg()))
 	}
 
 	// retrieve the last id from the db to build full Note object
@@ -48,29 +52,34 @@ fn (mut app App) create() vweb.Result {
 	return app.json(note_created.to_json())
 }
 
-['/notes/:id'; get]
+@['/notes/:id'; get]
 fn (mut app App) read(id int) vweb.Result {
 	n := sql app.db {
 		select from Note where id == id
+	} or {
+		app.set_status(500, 'Internal Server Error')
+		return app.json(error_response(500, err.msg()))
 	}
 
 	// check if note exists
-	if n.id != id {
+	if n.len == 0 {
 		app.set_status(404, 'Not Found')
-		er := CustomResponse{400, note_not_found}
-		return app.json(er.to_json())
+		return app.json(error_response(400, note_not_found))
 	}
 
 	// found note, return it
-	ret := json.encode(n)
+	ret := json.encode(n[0])
 	app.set_status(200, 'OK')
 	return app.json(ret)
 }
 
-['/notes/'; get]
+@['/notes/'; get]
 fn (mut app App) read_all() vweb.Result {
 	n := sql app.db {
 		select from Note
+	} or {
+		app.set_status(500, 'Internal Server Error')
+		return app.json(error_response(500, err.msg()))
 	}
 
 	ret := json.encode(n)
@@ -78,24 +87,25 @@ fn (mut app App) read_all() vweb.Result {
 	return app.json(ret)
 }
 
-['/notes/:id'; put]
+@['/notes/:id'; put]
 fn (mut app App) update(id int) vweb.Result {
 	// malformed json
 	n := json.decode(Note, app.req.data) or {
 		app.set_status(400, 'Bad Request')
-		er := CustomResponse{400, invalid_json}
-		return app.json(er.to_json())
+		return app.json(error_response(400, invalid_json))
 	}
 
 	// check if note to be updated exists
 	note_to_update := sql app.db {
 		select from Note where id == id
+	} or {
+		app.set_status(500, 'Internal Server Error')
+		return app.json(error_response(500, err.msg()))
 	}
 
-	if note_to_update.id != id {
+	if note_to_update.len == 0 {
 		app.set_status(404, 'Not Found')
-		er := CustomResponse{404, note_not_found}
-		return app.json(er.to_json())
+		return app.json(error_response(404, note_not_found))
 	}
 
 	// before update, we must ensure the note's message is unique
@@ -103,17 +113,22 @@ fn (mut app App) update(id int) vweb.Result {
 	// message == n.message for unique check
 	res := sql app.db {
 		select from Note where message == n.message && id != id
+	} or {
+		app.set_status(500, 'Internal Server Error')
+		return app.json(error_response(500, err.msg()))
 	}
 
 	if res.len > 0 {
 		app.set_status(400, 'Bad Request')
-		er := CustomResponse{400, unique_message}
-		return app.json(er.to_json())
+		return app.json(error_response(400, unique_message))
 	}
 
 	// update the note
 	sql app.db {
 		update Note set message = n.message, status = n.status where id == id
+	} or {
+		app.set_status(500, 'Internal Server Error')
+		return app.json(error_response(500, err.msg()))
 	}
 
 	// build the updated note using the :id and request body
@@ -125,10 +140,13 @@ fn (mut app App) update(id int) vweb.Result {
 	return app.json(ret)
 }
 
-['/notes/:id'; delete]
+@['/notes/:id'; delete]
 fn (mut app App) delete(id int) vweb.Result {
 	sql app.db {
 		delete from Note where id == id
+	} or {
+		app.set_status(500, 'Internal Server Error')
+		return app.json(error_response(500, err.msg()))
 	}
 	app.set_status(204, 'No Content')
 	return app.ok('')

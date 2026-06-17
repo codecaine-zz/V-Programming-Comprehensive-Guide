@@ -5275,25 +5275,25 @@ This example demonstrates the concepts of **orm demo**.
 ```v
 module main
 
-import sqlite
+import db.sqlite
 
-[table: 'Notes']
+@[table: 'Notes']
 struct Note {
-    id      int    [primary; sql: serial]
-    message string [sql: 'detail'; unique]
-    status  bool   [nonull]
+    id      int    @[primary; sql: serial]
+    message string @[sql: 'detail'; unique]
+    status  bool
 }
 
 fn main() {
     // Establishing a connection to the database
 
     db := sqlite.connect('NotesDB.db') or { panic(err) }
-    db.exec('drop table if exists Notes')
+    db.exec('drop table if exists Notes') or { panic(err) }
 
     // Creating a table
     sql db {
         create table Note
-    }
+    } or { panic(err) }
 
     // Inserting record(s)
     n1 := Note{
@@ -5308,14 +5308,14 @@ fn main() {
     sql db {
         insert n1 into Note
         insert n2 into Note
-    }
+    } or { panic(err) }
 
     println(db.last_id() as int)
 
     // Select records
     all_notes := sql db {
         select from Note
-    }
+    } or { panic(err) }
 
     println(all_notes)
     println('Type of all_notes is : ${typeof(all_notes).name}')
@@ -5323,13 +5323,13 @@ fn main() {
     // Select using order by clause
     notes_sorted := sql db {
         select from Note order by id desc
-    }
+    } or { panic(err) }
     println(notes_sorted)
 
     // Select using the limit clause
     notes_limited := sql db {
         select from Note order by id desc limit 1
-    }
+    } or { panic(err) }
 
     println(notes_limited)
     println('Type returned by select when limit is 1:  ${typeof(notes_limited).name}')
@@ -5337,36 +5337,35 @@ fn main() {
     // Select using where clause
     notes_latest := sql db {
         select from Note where id > 1
-    }
+    } or { panic(err) }
 
     println(notes_latest)
 
     // Update record(s)
     sql db {
         update Note set status = true where id == 2
-    }
+    } or { panic(err) }
 
     notes_updated := sql db {
         select from Note where id == 2
-    }
+    } or { panic(err) }
     println(notes_updated)
 
     // Delete record(s)
     sql db {
         delete from Note where id == 2
-    }
+    } or { panic(err) }
 
     notes_leftover := sql db {
         select from Note
-    }
+    } or { panic(err) }
     println(notes_leftover)
 
     sql db {
         drop table Note
-    }
+    } or { panic(err) }
     println('Dropped the Note table from database!')
 }
-
 ```
 
 ### Sqlite Raw Crud
@@ -5498,7 +5497,7 @@ This example demonstrates the concepts of **main**.
 module main
 
 import vweb
-import sqlite
+import db.sqlite
 
 struct App {
     vweb.Context
@@ -5508,17 +5507,16 @@ mut:
 
 fn main() {
     db := sqlite.connect('notes.db') or { panic(err) }
-    db.exec('drop table if exists Notes')
+    db.exec('drop table if exists Notes') or { panic(err) }
     sql db {
         create table Note
-    }
+    } or { panic(err) }
     http_port := 8000
     app := &App{
         db: db
     }
     vweb.run(app, http_port)
 }
-
 ```
 
 #### Note
@@ -5533,39 +5531,43 @@ module main
 import json
 import vweb
 
-[table: 'Notes']
+@[table: 'Notes']
 struct Note {
-    id      int    [primary; sql: serial]
-    message string [sql: 'detail'; unique]
-    status  bool   [nonull]
+    id      int    @[primary; sql: serial]
+    message string @[sql: 'detail'; unique]
+    status  bool
 }
 
 fn (n Note) to_json() string {
     return json.encode(n)
 }
 
-['/notes'; post]
+@['/notes'; post]
 fn (mut app App) create() vweb.Result {
     // malformed json
     n := json.decode(Note, app.req.data) or {
         app.set_status(400, 'Bad Request')
-        er := CustomResponse{400, invalid_json}
-        return app.json(er.to_json())
+        return app.json(error_response(400, invalid_json))
     }
 
     // before we save, we must ensure the note's message is unique
     notes_found := sql app.db {
         select from Note where message == n.message
+    } or {
+        app.set_status(500, 'Internal Server Error')
+        return app.json(error_response(500, err.msg()))
     }
     if notes_found.len > 0 {
         app.set_status(400, 'Bad Request')
-        er := CustomResponse{400, unique_message}
-        return app.json(er.to_json())
+        return app.json(error_response(400, unique_message))
     }
 
     // save to db
     sql app.db {
         insert n into Note
+    } or {
+        app.set_status(500, 'Internal Server Error')
+        return app.json(error_response(500, err.msg()))
     }
 
     // retrieve the last id from the db to build full Note object
@@ -5578,29 +5580,34 @@ fn (mut app App) create() vweb.Result {
     return app.json(note_created.to_json())
 }
 
-['/notes/:id'; get]
+@['/notes/:id'; get]
 fn (mut app App) read(id int) vweb.Result {
     n := sql app.db {
         select from Note where id == id
+    } or {
+        app.set_status(500, 'Internal Server Error')
+        return app.json(error_response(500, err.msg()))
     }
 
     // check if note exists
-    if n.id != id {
+    if n.len == 0 {
         app.set_status(404, 'Not Found')
-        er := CustomResponse{400, note_not_found}
-        return app.json(er.to_json())
+        return app.json(error_response(400, note_not_found))
     }
 
     // found note, return it
-    ret := json.encode(n)
+    ret := json.encode(n[0])
     app.set_status(200, 'OK')
     return app.json(ret)
 }
 
-['/notes/'; get]
+@['/notes/'; get]
 fn (mut app App) read_all() vweb.Result {
     n := sql app.db {
         select from Note
+    } or {
+        app.set_status(500, 'Internal Server Error')
+        return app.json(error_response(500, err.msg()))
     }
 
     ret := json.encode(n)
@@ -5608,24 +5615,25 @@ fn (mut app App) read_all() vweb.Result {
     return app.json(ret)
 }
 
-['/notes/:id'; put]
+@['/notes/:id'; put]
 fn (mut app App) update(id int) vweb.Result {
     // malformed json
     n := json.decode(Note, app.req.data) or {
         app.set_status(400, 'Bad Request')
-        er := CustomResponse{400, invalid_json}
-        return app.json(er.to_json())
+        return app.json(error_response(400, invalid_json))
     }
 
     // check if note to be updated exists
     note_to_update := sql app.db {
         select from Note where id == id
+    } or {
+        app.set_status(500, 'Internal Server Error')
+        return app.json(error_response(500, err.msg()))
     }
 
-    if note_to_update.id != id {
+    if note_to_update.len == 0 {
         app.set_status(404, 'Not Found')
-        er := CustomResponse{404, note_not_found}
-        return app.json(er.to_json())
+        return app.json(error_response(404, note_not_found))
     }
 
     // before update, we must ensure the note's message is unique
@@ -5633,17 +5641,22 @@ fn (mut app App) update(id int) vweb.Result {
     // message == n.message for unique check
     res := sql app.db {
         select from Note where message == n.message && id != id
+    } or {
+        app.set_status(500, 'Internal Server Error')
+        return app.json(error_response(500, err.msg()))
     }
 
     if res.len > 0 {
         app.set_status(400, 'Bad Request')
-        er := CustomResponse{400, unique_message}
-        return app.json(er.to_json())
+        return app.json(error_response(400, unique_message))
     }
 
     // update the note
     sql app.db {
         update Note set message = n.message, status = n.status where id == id
+    } or {
+        app.set_status(500, 'Internal Server Error')
+        return app.json(error_response(500, err.msg()))
     }
 
     // build the updated note using the :id and request body
@@ -5655,15 +5668,17 @@ fn (mut app App) update(id int) vweb.Result {
     return app.json(ret)
 }
 
-['/notes/:id'; delete]
+@['/notes/:id'; delete]
 fn (mut app App) delete(id int) vweb.Result {
     sql app.db {
         delete from Note where id == id
+    } or {
+        app.set_status(500, 'Internal Server Error')
+        return app.json(error_response(500, err.msg()))
     }
     app.set_status(204, 'No Content')
     return app.ok('')
 }
-
 ```
 
 #### Util
@@ -5677,12 +5692,12 @@ module main
 
 import json
 
-struct CustomResponse {
+struct NotesResponse {
     status  int
     message string
 }
 
-fn (c CustomResponse) to_json() string {
+fn (c NotesResponse) to_json() string {
     return json.encode(c)
 }
 
@@ -5692,6 +5707,10 @@ const (
     unique_message = 'Please provide a unique message for Note'
 )
 
+fn error_response(status int, message string) string {
+    er := NotesResponse{status, message}
+    return er.to_json()
+}
 ```
 
 ## Language Updates And Stdlib
