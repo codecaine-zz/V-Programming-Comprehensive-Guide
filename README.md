@@ -1261,11 +1261,11 @@ fn main() {
 
 ```
 
-#### Strings Immurable By Default
+#### Strings Immutable By Default
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/02_strings_immurable_by_default/02_strings_immurable_by_default.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v`_
 
-This example demonstrates the concepts of **strings immurable by default**.
+This example demonstrates the concepts of **strings immutable by default**.
 
 ```v
 fn main() {
