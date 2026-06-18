@@ -10250,6 +10250,1047 @@ MindSpace Journal is a sleek, local-first personal journaling application built 
 
 Check out the full repository and source code on GitHub: [MindSpace Journal Repository](https://github.com/codecaine-zz/MindSpace-Journal).
 
+#### TOML Parser
+
+_File location: `language_updates_and_stdlib/02_standard_library/15_toml/toml.v`_
+
+This example demonstrates how to parse and query TOML configuration files using V's built-in `toml` module.
+
+```v
+module main
+
+import toml
+
+const toml_content = '
+# TOML configuration example
+title = "V TOML Demo"
+
+[owner]
+name = "Antigravity AI"
+organization = "Google DeepMind"
+
+[database]
+server = "127.0.0.1"
+ports = [ 5432, 5433 ]
+connection_max = 1000
+enabled = true
+'
+
+fn main() {
+	println('=== TOML Module Demo ===')
+	doc := toml.parse_text(toml_content) or {
+		println('Failed to parse TOML: ${err}')
+		return
+	}
+
+	// 1. Reading basic values using value() and type converters
+	title := doc.value('title').string()
+	println('Project Title: ${title}')
+
+	// 2. Accessing nested tables
+	owner_name := doc.value('owner.name').string()
+	org := doc.value('owner.organization').string()
+	println('Owner: ${owner_name} (${org})')
+
+	// 3. Accessing primitive values
+	server := doc.value('database.server').string()
+	conn_max := doc.value('database.connection_max').int()
+	enabled := doc.value('database.enabled').bool()
+	println('DB Server: ${server} | Connection Max: ${conn_max} | Enabled: ${enabled}')
+
+	// 4. Retrieving array values
+	ports_any := doc.value('database.ports')
+	println('Ports Any: ${ports_any}')
+	
+	// Accessing array elements with query syntax
+	port_0 := doc.value('database.ports[0]').int()
+	port_1 := doc.value('database.ports[1]').int()
+	println('Primary Port: ${port_0} | Secondary Port: ${port_1}')
+
+	// 5. Using default values for non-existing keys
+	db_timeout := doc.value('database.timeout').default_to(30).int()
+	println('Database Timeout (Default): ${db_timeout} seconds')
+
+	// 6. Optional retrieval using value_opt()
+	if db_server := doc.value_opt('database.server') {
+		println('Optional check: Database server key exists. Value = ${db_server.string()}')
+	} else {
+		println('Optional check: Database server key does not exist.')
+	}
+}
+```
+
+#### Strconv (String Conversion)
+
+_File location: `language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v`_
+
+This example demonstrates how to convert strings to numbers, parse numbers in different bases and bit-sizes, and convert numbers back to base string representations using the `strconv` module.
+
+```v
+module main
+
+import strconv
+
+fn main() {
+	println('=== strconv Module Demo ===')
+
+	// 1. Convert string to integer types (with error propagation/handling)
+	val_int := strconv.atoi('12345') or {
+		println('Error parsing int: ${err}')
+		0
+	}
+	println('Parsed int: ${val_int}')
+
+	val_i64 := strconv.atoi64('9223372036854775807') or {
+		println('Error parsing i64: ${err}')
+		0
+	}
+	println('Parsed i64: ${val_i64}')
+
+	// 2. Parse unsigned and specific bases/bit-sizes
+	// parse_int(s string, base int, bit_size int) !i64
+	val_hex := strconv.parse_int('0xff', 0, 64) or {
+		println('Error parsing hex: ${err}')
+		0
+	}
+	println('Parsed hex (0xff in base 0): ${val_hex}')
+
+	val_bin := strconv.parse_uint('101010', 2, 32) or {
+		println('Error parsing binary: ${err}')
+		0
+	}
+	println('Parsed binary (101010 in base 2): ${val_bin}')
+
+	// 3. Convert string to float (atof64)
+	val_f64 := strconv.atof64('3.14159265') or {
+		println('Error parsing f64: ${err}')
+		0.0
+	}
+	println('Parsed float64: ${val_f64}')
+
+	// 4. Convert number to base string representation
+	// format_int(n i64, radix int) string
+	binary_str := strconv.format_int(42, 2)
+	hex_str := strconv.format_int(255, 16)
+	println('42 in binary: ${binary_str}')
+	println('255 in hex:   ${hex_str}')
+}
+```
+
+#### Terminal Styling
+
+_File location: `language_updates_and_stdlib/02_standard_library/17_term/term.v`_
+
+This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, and retrieving the terminal size using the `term` module.
+
+```v
+module main
+
+import term
+
+fn main() {
+	println('=== term Module Demo ===')
+
+	// 1. Get terminal size
+	width, height := term.get_terminal_size()
+	println('Terminal size: ${width} columns x ${height} rows')
+
+	// 2. Colored text helpers
+	println(term.green('This text is green!'))
+	println(term.red('This text is red!'))
+	println(term.yellow('This text is yellow!'))
+	println(term.blue('This text is blue!'))
+
+	// 3. Text styling modifiers
+	println(term.bold('This text is bold!'))
+	println(term.underline('This text is underlined!'))
+	println(term.strikethrough('This text has a strikethrough!'))
+
+	// 4. Background styling
+	println(term.bg_blue(' This has a blue background! '))
+
+	// 5. Message box helper formats
+	println(term.ok_message('Operation succeeded!'))
+	println(term.warn_message('This is a warning!'))
+	println(term.fail_message('Operation failed!'))
+}
+```
+
+#### Benchmark Testing
+
+_File location: `language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v`_
+
+This example demonstrates timing code execution chunks and step-by-step progress benchmarking using the `benchmark` module.
+
+```v
+module main
+
+import benchmark
+import time
+
+fn main() {
+	println('=== benchmark Module Demo ===')
+
+	// Example 1: Using benchmark.start() and measure()
+	println('--- Simple Measurement ---')
+	mut b := benchmark.start()
+	
+	// Simulate work chunk 1
+	time.sleep(50 * time.millisecond)
+	b.measure('Simulated task 1 (50ms sleep)')
+
+	// Simulate work chunk 2
+	time.sleep(100 * time.millisecond)
+	b.measure('Simulated task 2 (100ms sleep)')
+
+	// Example 2: Using structured new_benchmark()
+	println('\n--- Structured Step-by-Step Benchmarking ---')
+	mut bmark := benchmark.new_benchmark()
+	
+	// Step 1: Ok step
+	bmark.step()
+	time.sleep(30 * time.millisecond)
+	bmark.ok()
+	println(bmark.step_message('Step 1 (successful arithmetic)'))
+
+	// Step 2: Failed step demo
+	bmark.step()
+	time.sleep(10 * time.millisecond)
+	bmark.fail()
+	println(bmark.step_message('Step 2 (simulated failure verification)'))
+
+	// Finalize and print results summary
+	bmark.stop()
+	println(bmark.total_message('Final summary of execution stages'))
+}
+```
+
+#### Clipboard Access
+
+_File location: `language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v`_
+
+This example demonstrates writing to and reading from the system clipboard on macOS using the `clipboard` module, including a backup and restore mechanism.
+
+```v
+module main
+
+import clipboard
+
+fn main() {
+	println('=== clipboard Module Demo ===')
+
+	// 1. Initialize clipboard
+	mut cb := clipboard.new()
+	defer {
+		cb.destroy()
+	}
+
+	if !cb.is_available() {
+		println('Clipboard is not available on this platform/session.')
+		return
+	}
+
+	// 2. Backup current clipboard content so we do not overwrite user data permanently
+	original_text := cb.paste()
+	println('Backed up original clipboard text (length: ${original_text.len})')
+
+	// 3. Copy new text to clipboard
+	test_message := 'Hello from Vlang standard library!'
+	println('Copying text to clipboard: "${test_message}"')
+	if cb.copy(test_message) {
+		println('Text successfully copied!')
+	} else {
+		println('Failed to copy text.')
+	}
+
+	// 4. Paste back to verify
+	pasted_text := cb.paste()
+	println('Pasted text from clipboard:  "${pasted_text}"')
+
+	// 5. Restore original clipboard content
+	println('Restoring original clipboard content...')
+	cb.copy(original_text)
+	println('Clipboard restore completed successfully.')
+}
+```
+
+#### Semantic Versioning
+
+_File location: `language_updates_and_stdlib/02_standard_library/20_semver/semver.v`_
+
+This example demonstrates parsing semantic versions and checking constraint satisfaction using the `semver` module.
+
+```v
+module main
+
+import semver
+
+fn main() {
+	println('=== semver Module Demo ===')
+
+	// 1. Parsing semver strings
+	v1 := semver.from('1.5.0-beta.1+build.123') or {
+		println('Failed to parse version: ${err}')
+		return
+	}
+	v2 := semver.from('1.5.0') or {
+		println('Failed to parse version: ${err}')
+		return
+	}
+	v3 := semver.from('2.0.0-rc.1') or {
+		println('Failed to parse version: ${err}')
+		return
+	}
+
+	// 2. Accessing parts of the version struct
+	println('Version 1 components:')
+	println('  Raw string: ${v1.str()}')
+	println('  Major:      ${v1.major}')
+	println('  Minor:      ${v1.minor}')
+	println('  Patch:      ${v1.patch}')
+	println('  Prerelease: ${v1.prerelease}')
+	println('  Build info: ${v1.metadata}')
+
+	// 3. Comparisons using relational operators
+	println('\nVersion Comparisons:')
+	println('  ${v1} < ${v2} ? -> ${v1 < v2}')
+	println('  ${v2} > ${v1} ? -> ${v2 > v1}')
+	println('  ${v3} >= ${v2} ? -> ${v3 >= v2}')
+
+	// 4. Checking against version ranges (constraints)
+	println('\nVersion Constraint Satisfactions:')
+	// Range checking
+	println('  Is ${v2} in range ">=1.0.0 <2.0.0" ? -> ${v2.satisfies('>=1.0.0 <2.0.0')}')
+	println('  Is ${v3} in range ">=1.0.0 <2.0.0" ? -> ${v3.satisfies('>=1.0.0 <2.0.0')}')
+	
+	// Complex constraint checking using logical OR (||)
+	range_query := '^1.4.0 || >=2.0.0'
+	println('  Does ${v2} satisfy "${range_query}"? -> ${v2.satisfies(range_query)}')
+	println('  Does ${v3} satisfy "${range_query}"? -> ${v3.satisfies(range_query)}')
+}
+```
+
+#### Maps Utility
+
+_File location: `language_updates_and_stdlib/02_standard_library/21_maps/maps.v`_
+
+This example demonstrates map utility functions such as filtering, converting map keys and values to arrays, inverting maps, and merging maps using the `maps` module.
+
+```v
+module main
+
+import maps
+
+fn main() {
+	println('=== maps Module Demo ===')
+
+	m1 := {
+		'apple':  1
+		'banana': 2
+		'cherry': 3
+	}
+
+	// 1. Filter elements by condition
+	filtered := maps.filter(m1, fn (k string, v int) bool {
+		return v > 1
+	})
+	println('Filtered (values > 1): ${filtered}')
+
+	// 2. Transform map entries to an array
+	keys_upper := maps.to_array(m1, fn (k string, v int) string {
+		return k.to_upper()
+	})
+	println('Transformed keys to upper array: ${keys_upper}')
+
+	// 3. Invert map (swap keys and values)
+	inverted := maps.invert(m1)
+	println('Inverted map: ${inverted}')
+
+	// 4. Construct a map from an array
+	fruits := ['apple', 'banana', 'cherry']
+	map_from_arr := maps.from_array(fruits)
+	println('Map from array (index to element): ${map_from_arr}')
+
+	// 5. Merge two maps
+	m2 := {
+		'banana': 20
+		'date':   4
+	}
+	merged := maps.merge(m1, m2)
+	println('Merged map (m2 overwrites duplicates): ${merged}')
+
+	// 6. Merge in place (mutates the target map)
+	mut mut_map := {
+		'a': 1
+	}
+	maps.merge_in_place(mut mut_map, {'b': 2, 'c': 3})
+	println('In-place merged map: ${mut_map}')
+}
+```
+
+#### Context Propagation
+
+_File location: `language_updates_and_stdlib/02_standard_library/22_context/context.v`_
+
+This example demonstrates propagating request-scoped values, cancellation signals, and timeouts across thread boundaries using the `context` module.
+
+```v
+module main
+
+import context
+import time
+
+fn main() {
+	println('=== context Module Demo ===')
+
+	// 1. Context with Value
+	// Useful for passing metadata (e.g. Request ID) through call chains
+	mut ctx_bg := context.background()
+	mut ctx_val := context.with_value(ctx_bg, 'request_id', 'REQ-101')
+
+	if req_id := ctx_val.value('request_id') {
+		if req_id is string {
+			println('Request ID in context: ${req_id}')
+		}
+	}
+
+	// 2. Context with Cancellation
+	mut ctx_cancel, cancel := context.with_cancel(mut ctx_val)
+	
+	// Check if canceled
+	println('Before cancel - Done channel is open')
+	cancel() // trigger cancellation
+	
+	// Select block to read from done channel
+	done_ch := ctx_cancel.done()
+	select {
+		_ := <-done_ch {
+			println('Context cancellation detected successfully!')
+		}
+		1 * time.second {
+			println('Timeout waiting for cancellation.')
+		}
+	}
+
+	// 3. Context with Timeout
+	// Abandon execution after a duration
+	mut ctx_timeout, cancel_timeout := context.with_timeout(mut ctx_bg, 50 * time.millisecond)
+	defer {
+		cancel_timeout()
+	}
+
+	println('Waiting for context timeout (50ms)...')
+	start := time.now()
+	timeout_ch := ctx_timeout.done()
+	select {
+		_ := <-timeout_ch {
+			elapsed := time.since(start)
+			println('Timeout triggered after ${elapsed.milliseconds()} ms!')
+		}
+		1 * time.second {
+			println('Error: Timeout did not trigger in time.')
+		}
+	}
+}
+```
+
+#### Net URL Parsing
+
+_File location: `language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v`_
+
+This example demonstrates parsing URLs into components, escaping and unescaping query parameters, and encoding query parameters using the `net.urllib` module.
+
+```v
+module main
+
+import net.urllib
+
+fn main() {
+	println('=== net.urllib Module Demo ===')
+
+	// 1. Parsing a URL
+	raw_url := 'https://user:pass@vlang.io:8080/docs/stdlib?lang=v&version=0.5.1#intro'
+	println('Parsing URL: ${raw_url}')
+	
+	u := urllib.parse(raw_url) or {
+		println('Failed to parse URL: ${err}')
+		return
+	}
+
+	println('Parsed URL parts:')
+	println('  Scheme:   ${u.scheme}')
+	println('  Host:     ${u.host}')
+	println('  Path:     ${u.path}')
+	println('  Query:    ${u.raw_query}')
+	println('  Fragment: ${u.fragment}')
+
+	// 2. Query escaping and unescaping
+	original_query := 'V compiler version 0.5.1 & details'
+	escaped := urllib.query_escape(original_query)
+	unescaped := urllib.query_unescape(escaped) or { 'failed' }
+
+	println('\nQuery Escaping:')
+	println('  Original:  ${original_query}')
+	println('  Escaped:   ${escaped}')
+	println('  Unescaped: ${unescaped}')
+
+	// 3. Managing Query Parameters using urllib.Values
+	println('\nManaging Query Values:')
+	mut query_params := urllib.new_values()
+	query_params.add('format', 'json')
+	query_params.add('tags', 'programming')
+	query_params.add('tags', 'tutorial')
+	query_params.set('version', '0.5.1')
+
+	// Encode to raw query string
+	encoded_query := query_params.encode()
+	println('  Encoded query string: ${encoded_query}')
+
+	// Parse it back
+	parsed_params := urllib.parse_query(encoded_query) or { urllib.new_values() }
+	println('  Parsed format tag:    ${parsed_params.get('format') or { 'none' }}')
+	println('  Parsed tags:          ${parsed_params.get_all('tags')}')
+}
+```
+
+#### Net WebSockets
+
+_File location: `language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v`_
+
+This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly using the `net.websocket` module.
+
+```v
+module main
+
+import net.websocket
+import time
+
+fn main() {
+	println('=== net.websocket Module Demo ===')
+
+	port := 30099
+	uri := 'ws://localhost:${port}'
+
+	// 1. Initialize and run a local WebSocket server in a separate thread
+	mut ws_server := websocket.new_server(.ip, port, '/')
+	
+	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
+		println('Server: Client connecting from ${s.client_key}')
+		return true
+	})!
+
+	ws_server.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ! {
+		if msg.opcode == .text_frame {
+			payload := msg.payload.bytestr()
+			println('Server received text: "${payload}"')
+			
+			// Echo message back to client
+			ws.write_string('Echo: ' + payload)!
+		}
+	})
+
+	// Run the server listening loop in a background thread
+	spawn fn [mut ws_server] () {
+		ws_server.listen() or {
+			println('Server error: ${err}')
+		}
+	}()
+
+	// Allow the server a moment to start
+	time.sleep(100 * time.millisecond)
+
+	// 2. Initialize the WebSocket client
+	mut ws_client := websocket.new_client(uri) or {
+		println('Client init failed: ${err}')
+		return
+	}
+
+	ws_client.on_open(fn (mut c websocket.Client) ! {
+		println('Client: Connection opened!')
+	})
+
+	ws_client.on_message(fn (mut c websocket.Client, msg &websocket.Message) ! {
+		if msg.opcode == .text_frame {
+			payload := msg.payload.bytestr()
+			println('Client received text response: "${payload}"')
+		}
+	})
+
+	ws_client.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client error: ${error_msg}')
+	})
+
+	// 3. Connect and run the client
+	ws_client.connect() or {
+		println('Client failed to connect: ${err}')
+		return
+	}
+
+	// Start the client listen loop in a background thread
+	spawn ws_client.listen()
+
+	// 4. Send a test message
+	time.sleep(50 * time.millisecond)
+	msg_to_send := 'Hello WebSocket Server!'
+	println('Client sending: "${msg_to_send}"')
+	ws_client.write_string(msg_to_send) or {
+		println('Client failed to send: ${err}')
+	}
+
+	// Wait for echo to arrive
+	time.sleep(200 * time.millisecond)
+
+	// Clean close
+	println('Client closing connection...')
+	ws_client.close(1000, 'Done') or {
+		println('Client close error: ${err}')
+	}
+	time.sleep(50 * time.millisecond)
+	println('WebSocket Demo finished.')
+}
+```
+
+#### Tar Archiving
+
+_File location: `language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v`_
+
+This example demonstrates reading and inspecting the contents of `.tar.gz` files using the `archive.tar` module.
+
+```v
+module main
+
+import archive.tar
+import os
+
+// CustomReader implements the tar.Reader interface
+struct CustomReader {
+pub mut:
+	files_found int
+}
+
+fn (mut cr CustomReader) dir_block(mut read tar.Read, size u64) {
+	println('Directory in tar: ${read.get_path()}')
+}
+
+fn (mut cr CustomReader) file_block(mut read tar.Read, size u64) {
+	println('File in tar:      ${read.get_path()} (${size} bytes)')
+	cr.files_found++
+}
+
+fn (mut cr CustomReader) data_block(mut read tar.Read, data []u8, pending int) {
+	// Trim content bytes to display them cleanly
+	content := data.bytestr().trim_space()
+	println('  Content snippet: "${content}"')
+}
+
+fn (mut cr CustomReader) other_block(mut read tar.Read, details string) {
+	// Ignore details for this demo
+}
+
+fn main() {
+	println('=== archive.tar Module Demo ===')
+
+	// 1. Create a dummy file to archive
+	temp_file := 'temp_file_for_tar.txt'
+	os.write_file(temp_file, 'Hello standard archive tar from Vlang!') or {
+		println('Failed to write temp file: ${err}')
+		return
+	}
+	defer {
+		os.rm(temp_file) or {}
+	}
+
+	// 2. Create the tar.gz archive using system tar
+	tar_archive := 'temp_archive.tar.gz'
+	println('Creating tar archive using system tar...')
+	tar_cmd := if os.user_os() == 'macos' { 'COPYFILE_DISABLE=1 tar -czf' } else { 'tar -czf' }
+	os.execute('${tar_cmd} ${tar_archive} ${temp_file}')
+	defer {
+		os.rm(tar_archive) or {}
+	}
+
+	// 3. Read and parse the tar.gz archive using V's archive.tar module
+	println('Reading archive using vlib/archive/tar:')
+	mut reader := CustomReader{}
+	
+	// Read and parse
+	tar.read_tar_gz_file(tar_archive, reader) or {
+		println('Failed to read tar archive: ${err}')
+		return
+	}
+
+	println('Total files found in archive: ${reader.files_found}')
+}
+```
+
+#### Gzip Compression
+
+_File location: `language_updates_and_stdlib/02_standard_library/27_compress_gzip/compress_gzip.v`_
+
+This example demonstrates compressing and decompressing binary or text data using the `compress.gzip` module.
+
+```v
+module main
+
+import compress.gzip
+
+fn main() {
+	println('=== compress.gzip Module Demo ===')
+
+	// 1. Original text data
+	original_text := 'V programming language standard library gzip compression and decompression demonstration. This string is long enough to show compression.'
+	println('Original Text length: ${original_text.len} bytes')
+
+	// 2. Compress the data
+	compressed_bytes := gzip.compress(original_text.bytes()) or {
+		println('Compression failed: ${err}')
+		return
+	}
+	println('Compressed size:      ${compressed_bytes.len} bytes')
+
+	// 3. Decompress the data
+	decompressed_bytes := gzip.decompress(compressed_bytes) or {
+		println('Decompression failed: ${err}')
+		return
+	}
+	println('Decompressed size:    ${decompressed_bytes.len} bytes')
+
+	// 4. Convert back to string and verify
+	decompressed_text := decompressed_bytes.bytestr()
+	println('Decompressed text equals original? -> ${decompressed_text == original_text}')
+	println('Decompressed Text: "${decompressed_text}"')
+}
+```
+
+#### IO Stream Interfaces
+
+_File location: `language_updates_and_stdlib/02_standard_library/28_io/io.v`_
+
+This example demonstrates implementing custom Reader and Writer structs and using the `io.cp` utility to copy data between streams using the `io` module.
+
+```v
+module main
+
+import io
+
+// SimpleReader implements the io.Reader interface
+struct SimpleReader {
+	data string
+mut:
+	pos int
+}
+
+fn (mut sr SimpleReader) read(mut buf []u8) !int {
+	if sr.pos >= sr.data.len {
+		// Return io.Eof when the end of the stream is reached
+		return io.Eof{}
+	}
+	mut bytes_read := 0
+	for sr.pos < sr.data.len && bytes_read < buf.len {
+		buf[bytes_read] = sr.data[sr.pos]
+		sr.pos++
+		bytes_read++
+	}
+	return bytes_read
+}
+
+// SimpleWriter implements the io.Writer interface
+struct SimpleWriter {
+mut:
+	buf []u8
+}
+
+fn (mut sw SimpleWriter) write(buf []u8) !int {
+	sw.buf << buf
+	return buf.len
+}
+
+fn main() {
+	println('=== io Module Demo ===')
+
+	// 1. Initialize Reader and Writer
+	mut reader := SimpleReader{
+		data: 'Vlang standard library: io package demo.'
+	}
+	mut writer := SimpleWriter{}
+
+	// 2. Use io.cp to copy data from Reader to Writer
+	println('Copying data from custom Reader to custom Writer via io.cp...')
+	io.cp(mut reader, mut writer) or {
+		println('Error copying data: ${err}')
+		return
+	}
+
+	// 3. Print the written data
+	written_str := writer.buf.bytestr()
+	println('Writer received: "${written_str}"')
+}
+```
+
+#### Hash Functions
+
+_File location: `language_updates_and_stdlib/02_standard_library/29_hash/hash.v`_
+
+This example demonstrates calculating FNV-1a (32-bit and 64-bit) hashes and CRC32 checksums using the `hash` module.
+
+```v
+module main
+
+import hash.fnv1a
+import hash.crc32
+
+fn main() {
+	println('=== hash Module Demo ===')
+
+	input := 'V language standard library'
+	println('Input string: "${input}"')
+
+	// 1. FNV-1a 32-bit and 64-bit string hashing
+	fnv_32 := fnv1a.sum32_string(input)
+	fnv_64 := fnv1a.sum64_string(input)
+	println('FNV-1a 32-bit hash: ${fnv_32}')
+	println('FNV-1a 64-bit hash: ${fnv_64}')
+
+	// 2. CRC32 IEEE checksum
+	crc_val := crc32.sum(input.bytes())
+	println('CRC32 checksum:     ${crc_val}')
+}
+```
+
+#### Bitfield Manipulation
+
+_File location: `language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v`_
+
+This example demonstrates creating bitfields, getting/setting individual bits, performing logical operations (AND, OR, XOR, NOT), and converting to string representation using the `bitfield` module.
+
+```v
+module main
+
+import bitfield
+
+fn main() {
+	println('=== bitfield Module Demo ===')
+
+	// 1. Create bitfield from string
+	mut bf1 := bitfield.from_str('101100')
+	println('BitField 1 (from str):  ${bf1.str()}')
+	println('Size of BitField 1:      ${bf1.get_size()}')
+	println('Number of 1s (pop_count): ${bf1.pop_count()}')
+
+	// 2. Accessing and modifying individual bits
+	println('\nModifying individual bits:')
+	println('  Bit at index 1 before:  ${bf1.get_bit(1)}')
+	bf1.set_bit(1)
+	println('  Bit at index 1 after set: ${bf1.get_bit(1)}')
+	bf1.clear_bit(0)
+	println('  Bitfield after changes: ${bf1.str()}')
+
+	// 3. Logical bitwise operations
+	mut bf2 := bitfield.from_str('011010')
+	println('\nLogical operations on ${bf1.str()} and ${bf2.str()}:')
+	
+	and_result := bitfield.bf_and(bf1, bf2)
+	or_result  := bitfield.bf_or(bf1, bf2)
+	xor_result := bitfield.bf_xor(bf1, bf2)
+	not_result := bitfield.bf_not(bf1)
+
+	println('  AND: ${and_result.str()}')
+	println('  OR:  ${or_result.str()}')
+	println('  XOR: ${xor_result.str()}')
+	println('  NOT: ${not_result.str()}')
+}
+```
+
+#### CLI Command Builder
+
+_File location: `language_updates_and_stdlib/02_standard_library/31_cli/cli.v`_
+
+This example demonstrates building structured CLI applications with commands, subcommands, and option flags in POSIX mode using the `cli` module.
+
+```v
+module main
+
+import cli
+
+fn main() {
+	println('=== cli Module Demo ===')
+
+	mut app := cli.Command{
+		name:        'tool'
+		description: 'A sample CLI tool showing V\'s cli package.'
+		version:     '1.0.0'
+		posix_mode:  true
+		execute:     fn (cmd cli.Command) ! {
+			println('Root command execution. Use --help to see subcommands.')
+		}
+		commands:    [
+			cli.Command{
+				name:        'greet'
+				description: 'Greet a user with custom options'
+				posix_mode:  true
+				execute:     fn (cmd cli.Command) ! {
+					name := cmd.flags.get_string('name') or { 'Guest' }
+					verbose := cmd.flags.get_bool('verbose') or { false }
+					
+					if verbose {
+						println('Log: Initiating greeting process...')
+					}
+					println('Hello, ${name}!')
+				}
+				flags: [
+					cli.Flag{
+						flag:        .string
+						name:        'name'
+						abbrev:      'n'
+						description: 'Name of person to greet'
+					},
+					cli.Flag{
+						flag:        .bool
+						name:        'verbose'
+						abbrev:      'v'
+						description: 'Enable verbose logging'
+					},
+				]
+			},
+		]
+	}
+
+	app.setup()
+	
+	// Test by parsing args mock
+	println('\nParsing args: tool greet --name Antigravity -v')
+	app.parse(['tool', 'greet', '--name', 'Antigravity', '-v'])
+}
+```
+
+#### Veb Web Framework
+
+_File location: `language_updates_and_stdlib/02_standard_library/32_veb/veb.v`_
+
+This example demonstrates building a web application with routes, starting it in a background thread, and testing requests using the modern `veb` web framework.
+
+```v
+module main
+
+import veb
+import net.http
+import time
+
+pub struct Context {
+	veb.Context
+}
+
+pub struct App {
+	secret_key string
+}
+
+// Route handler
+pub fn (app &App) index(mut ctx Context) veb.Result {
+	return ctx.text('Hello from veb web framework!')
+}
+
+fn main() {
+	println('=== veb Web Framework Demo ===')
+
+	mut app := &App{
+		secret_key: 'veb_secret_key'
+	}
+
+	port := 30088
+
+	// Run the web server in a separate thread to avoid blocking the main execution
+	spawn fn [mut app, port] () {
+		println('Starting veb server on port ${port}...')
+		veb.run[App, Context](mut app, port)
+	}()
+
+	// Wait for the server to spin up
+	time.sleep(200 * time.millisecond)
+
+	// Make an HTTP GET request to verify the server is running and responding
+	url := 'http://localhost:${port}/'
+	println('Sending request to: ${url}')
+	
+	resp := http.get(url) or {
+		println('HTTP request failed: ${err}')
+		return
+	}
+
+	println('Response Status Code: ${resp.status_code}')
+	println('Response Body:        "${resp.body}"')
+	println('veb server tested successfully.')
+}
+```
+
+#### Readline Prompt
+
+_File location: `language_updates_and_stdlib/02_standard_library/33_readline/readline.v`_
+
+This example demonstrates prompting users for text input from terminal lines in a structured manner using the `readline` module.
+
+```v
+module main
+
+import readline
+
+fn main() {
+	println('=== readline Module Demo ===')
+
+	mut r := readline.Readline{}
+	println('Simulating readline input (feed via stdin if non-interactive):')
+	
+	// Read a line from standard input
+	line := r.read_line('Enter text: ') or {
+		println('Error or EOF: ${err}')
+		return
+	}
+	println('You entered: "${line}"')
+}
+```
+
+#### Runtime System Info
+
+_File location: `language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v`_
+
+This example demonstrates inspecting hardware specifications, processor cores, system endianness, and memory usage statistics using the `runtime` module.
+
+```v
+module main
+
+import runtime
+
+fn main() {
+	println('=== runtime Module Demo ===')
+
+	// 1. CPU and job info
+	cpus := runtime.nr_cpus()
+	jobs := runtime.nr_jobs()
+	println('CPU Cores:              ${cpus}')
+	println('Concurrent Jobs (VJOBS): ${jobs}')
+
+	// 2. System architecture details
+	println('Is 64-bit architecture?  ${runtime.is_64bit()}')
+	println('Is 32-bit architecture?  ${runtime.is_32bit()}')
+	println('Is Little Endian?        ${runtime.is_little_endian()}')
+	println('Is Big Endian?           ${runtime.is_big_endian()}')
+
+	// 3. Memory statistics
+	total_mem := runtime.total_memory() or { 0 }
+	free_mem := runtime.free_memory() or { 0 }
+	used_mem := runtime.used_memory() or { 0 }
+
+	// Format to megabytes
+	total_mb := total_mem / (1024 * 1024)
+	free_mb := free_mem / (1024 * 1024)
+	used_mb := used_mem / (1024 * 1024)
+
+	println('\nPhysical Memory info:')
+	println('  Total Memory: ${total_mb} MB')
+	println('  Free Memory:  ${free_mb} MB')
+	println('  Used (by App): ${used_mb} MB')
+}
+```
+
 ---
 
 ## Error Handling
