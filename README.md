@@ -133,6 +133,69 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
     - [WebAssembly (wasm) Binary Generation](#webassembly-wasm-binary-generation)
 - [Error Handling](#error-handling)
   - [Error Handling](#error-handling-1)
+- [V Tooling & CLI Utilities](#v-tooling--cli-utilities)
+  - [Basic Build & Run](#basic-build--run)
+  - [Code Formatting & Vetting](#code-formatting--vetting)
+  - [Documentation Generator](#documentation-generator)
+  - [Live Reloading (Watch)](#live-reloading-watch)
+  - [Package & Installation Management](#package--installation-management)
+
+---
+
+## V Tooling & CLI Utilities
+
+V provides a powerful command-line interface with a rich set of built-in utilities for building, running, formatting, documenting, and managing V code. Below is a comprehensive guide to V's CLI commands.
+
+### Basic Build & Run
+
+*   **Compile and Run**: `v run main.v`
+    Compiles the target program to a temporary binary, executes it immediately, and cleans up the binary afterwards. Recommended for development.
+*   **Compile to Binary**: `v main.v`
+    Compiles the V code and outputs a native executable (`main` or `main.exe`) in the directory.
+*   **Cached Compilation (Scripting)**: `v crun script.v`
+    Compiles and runs the program. However, unlike `v run`, it caches the compiled executable. If you run the program again without modifying its source code, V runs the cached executable immediately, skipping compilation. Great for shell scripting.
+*   **Optimized Production Build**: `v -prod main.v`
+    Generates a highly optimized build. Enables C optimization flags (like `-O3`), turns off debugging helpers, and optimizes the compiled binary size and runtime speed.
+*   **Debug Compilation**: `v -g run main.v`
+    Compiles the code with debug symbols and sets up compiler helpers. If your program crashes, V will print a helpful backtrace showing the exact file name and line number of the crash.
+
+### Code Formatting & Vetting
+
+*   **Format Code**: `v fmt -w file.v`
+    Formats the V source file to conform to V's official style guide. The `-w` flag writes the formatted code directly back to the file (in-place). To preview changes without writing, run `v fmt file.v`.
+*   **Code Vetting**: `v vet file.v`
+    A static analysis tool that reports suspicious code constructs, style violations, or potential errors that compile but are not recommended.
+
+### Documentation Generator
+
+*   **Module Docs in Terminal**: `v doc module_name`
+    Generates and prints markdown documentation for any standard library module directly to the terminal.
+    *Example:* `v doc strings`
+*   **HTML Documentation**: `v doc -f html module_name`
+    Generates structured HTML documentation files inside a `_docs` folder.
+*   **Full Standard Library Docs**: `v vlib-docs`
+    Compiles the documentation for all of V's standard library modules (`vlib`) and opens it in your default web browser.
+
+### Live Reloading (Watch)
+
+*   **Watch and Compile**: `v watch main.v`
+    Instructs the compiler to watch files for changes and re-run compilation as soon as you save any V file. Useful to check for compiler errors in real time.
+*   **Watch and Run**: `v watch run main.v`
+    Watches files for changes, re-compiles, and immediately executes the program on save.
+
+### Package & Installation Management
+
+*   **Self-Updater**: `v up`
+    Updates your V installation to the latest master branch directly from Git.
+*   **Self-Compiler**: `v self`
+    Rebuilds the V compiler itself. Usually executed after running `v up` or manually making modifications to the compiler source. Use `v -prod self` to compile an optimized version.
+*   **Installing VPM Modules**: `v install package_name`
+    Downloads and installs external modules from the V Package Manager (VPM).
+    *Example:* `v install markdown`
+*   **Manage Modules**:
+    *   `v list` — Lists all installed external modules.
+    *   `v outdated` — Checks for and lists modules with updates available.
+    *   `v remove package_name` — Uninstalls the specified VPM module.
 
 ---
 
