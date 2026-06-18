@@ -6607,16 +6607,119 @@ fn main() {
 }
 ```
 
+##### Redis Helper Utility (`redis_helper.v`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_console_demo/redis_helper.v`_
+
+This helper provides a namespaced wrapper struct `NamespacedRedis` that automatically prefixes all Redis keys with a given namespace (e.g. `namespace:key`). This is a great pattern for keeping keys organized and avoiding collisions between multiple apps/environments.
+
+```v
+module main
+
+import xiusin.vredis
+
+// NamespacedRedis wraps a standard vredis.Redis client and prefixes all keys with a namespace.
+struct NamespacedRedis {
+mut:
+	client &vredis.Redis
+pub:
+	namespace string
+}
+
+fn new_namespaced_redis(client &vredis.Redis, namespace string) NamespacedRedis {
+	return NamespacedRedis{
+		client: client
+		namespace: namespace
+	}
+}
+
+fn (nr NamespacedRedis) key(name string) string {
+	if nr.namespace == '' {
+		return name
+	}
+	return '${nr.namespace}:${name}'
+}
+
+fn (mut nr NamespacedRedis) close() ! {
+	nr.client.close()!
+}
+
+fn (mut nr NamespacedRedis) set(key string, val string) ! {
+	nr.client.set(nr.key(key), val)!
+}
+
+fn (mut nr NamespacedRedis) get(key string) !string {
+	return nr.client.get(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) incr(key string) ! {
+	nr.client.incr(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) expire(key string, seconds int) ! {
+	nr.client.expire(nr.key(key), seconds)!
+}
+
+fn (mut nr NamespacedRedis) ttl(key string) !int {
+	return nr.client.ttl(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) del(key string) ! {
+	nr.client.del(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) rpush(key string, val string) ! {
+	nr.client.rpush(nr.key(key), val)!
+}
+
+fn (mut nr NamespacedRedis) lrange(key string, start int, stop int) ![]string {
+	return nr.client.lrange(nr.key(key), start, stop)!
+}
+
+fn (mut nr NamespacedRedis) lpop(key string) !string {
+	return nr.client.lpop(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) llen(key string) !int {
+	return nr.client.llen(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) hset(key string, field string, val string) ! {
+	nr.client.hset(nr.key(key), field, val)!
+}
+
+fn (mut nr NamespacedRedis) hget(key string, field string) !string {
+	return nr.client.hget(nr.key(key), field)!
+}
+
+fn (mut nr NamespacedRedis) hgetall(key string) !map[string]string {
+	return nr.client.hgetall(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) sadd(key string, member string) ! {
+	nr.client.sadd(nr.key(key), member)!
+}
+
+fn (mut nr NamespacedRedis) sismember(key string, member string) !bool {
+	return nr.client.sismember(nr.key(key), member)!
+}
+
+fn (mut nr NamespacedRedis) smembers(key string) ![]string {
+	return nr.client.smembers(nr.key(key))!
+}
+```
+
 ##### Redis Console Demo (`redis_console_demo.v`)
 
 _File location: `modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v`_
 
-This example demonstrates how to use the external `xiusin.vredis` client package in a console application. It covers:
+This example demonstrates how to use the external `xiusin.vredis` client package in a console application and demonstrates key namespacing with the custom `NamespacedRedis` helper. It covers:
 *   Establishing a connection and handling errors gracefully.
 *   Basic String operations (`set`, `get`, `incr`, `expire`, `ttl`, `del`).
 *   List operations (`rpush`, `llen`, `lrange`, `lpop`).
 *   Hash operations (`hset`, `hget`, `hgetall`).
 *   Set operations (`sadd`, `sismember`, `smembers`).
+*   Namespaced Redis helper operations using `NamespacedRedis`.
 *   Cleaning up created keys on application exit.
 
 ```v
@@ -6722,8 +6825,28 @@ fn main() {
 	set_members := r.smembers('demo:set') or { panic(err) }
 	println('SMEMBERS "demo:set": ${set_members}\n')
 
+	// --- 5. Namespaced Helper Demo ---
+	println('--- 5. Namespaced Helper Demo ---')
+	println('Creating a namespaced helper with namespace "app_v1"...')
+	mut nr := new_namespaced_redis(r, 'app_v1')
+
+	println('Setting namespaced key "user_token" (resolved key will be "app_v1:user_token")...')
+	nr.set('user_token', 'token_abc123') or { panic(err) }
+
+	token := nr.get('user_token') or { panic(err) }
+	println('GET "user_token" via helper -> "${token}"')
+
+	// Verify the actual key in Redis (without namespace helper) has the prefix
+	actual_key := 'app_v1:user_token'
+	actual_val := r.get(actual_key) or { panic(err) }
+	println('GET raw "${actual_key}" directly from client -> "${actual_val}"')
+
+	// Cleanup namespaced keys
+	println('Cleaning up namespaced keys...')
+	nr.del('user_token') or {}
+
 	// Clean up test keys
-	println('Cleaning up created keys...')
+	println('\nCleaning up created keys...')
 	r.del('demo:string') or {}
 	r.del('demo:counter') or {}
 	r.del('demo:list') or {}

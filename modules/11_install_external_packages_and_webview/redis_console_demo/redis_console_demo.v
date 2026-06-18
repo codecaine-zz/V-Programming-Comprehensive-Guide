@@ -100,8 +100,28 @@ fn main() {
 	set_members := r.smembers('demo:set') or { panic(err) }
 	println('SMEMBERS "demo:set": ${set_members}\n')
 
+	// --- 5. Namespaced Helper Demo ---
+	println('--- 5. Namespaced Helper Demo ---')
+	println('Creating a namespaced helper with namespace "app_v1"...')
+	mut nr := new_namespaced_redis(r, 'app_v1')
+
+	println('Setting namespaced key "user_token" (resolved key will be "app_v1:user_token")...')
+	nr.set('user_token', 'token_abc123') or { panic(err) }
+
+	token := nr.get('user_token') or { panic(err) }
+	println('GET "user_token" via helper -> "${token}"')
+
+	// Verify the actual key in Redis (without namespace helper) has the prefix
+	actual_key := 'app_v1:user_token'
+	actual_val := r.get(actual_key) or { panic(err) }
+	println('GET raw "${actual_key}" directly from client -> "${actual_val}"')
+
+	// Cleanup namespaced keys
+	println('Cleaning up namespaced keys...')
+	nr.del('user_token') or {}
+
 	// Clean up test keys
-	println('Cleaning up created keys...')
+	println('\nCleaning up created keys...')
 	r.del('demo:string') or {}
 	r.del('demo:counter') or {}
 	r.del('demo:list') or {}
