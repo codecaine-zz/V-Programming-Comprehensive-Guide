@@ -6605,6 +6605,9 @@ fn redis_flush_db(e &webview.Event) !string {
 
 fn main() {
 	mut w := webview.create(debug: true)
+	defer {
+		w.destroy()
+	}
 	w.set_title('V + Redis GUI Dashboard')
 	w.set_size(1080, 720, .@none)
 
@@ -8451,9 +8454,10 @@ struct Note {
 }
 
 fn main() {
-    // Establishing a connection to the database
-
-    db := sqlite.connect('NotesDB.db') or { panic(err) }
+    mut db := sqlite.connect('NotesDB.db') or { panic(err) }
+    defer {
+        db.close() or {}
+    }
     db.exec('drop table if exists Notes') or { panic(err) }
 
     // Creating a table
@@ -8675,7 +8679,10 @@ struct Context {
 }
 
 fn main() {
-    db := sqlite.connect('notes.db') or { panic(err) }
+    mut db := sqlite.connect('notes.db') or { panic(err) }
+    defer {
+        db.close() or {}
+    }
     db.exec('drop table if exists Notes') or { panic(err) }
     sql db {
         create table Note

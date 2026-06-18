@@ -12,7 +12,10 @@ struct Note {
 fn main() {
 	// Establishing a connection to the database
 
-	db := sqlite.connect('NotesDB.db') or { panic(err) }
+	mut db := sqlite.connect('NotesDB.db') or { panic(err) }
+	defer {
+		db.close() or {}
+	}
 	db.exec('drop table if exists Notes') or { panic(err) }
 
 	// Creating a table

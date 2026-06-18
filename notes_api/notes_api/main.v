@@ -13,7 +13,10 @@ struct Context {
 }
 
 fn main() {
-	db := sqlite.connect('notes.db') or { panic(err) }
+	mut db := sqlite.connect('notes.db') or { panic(err) }
+	defer {
+		db.close() or {}
+	}
 	db.exec('drop table if exists Notes') or { panic(err) }
 	sql db {
 		create table Note

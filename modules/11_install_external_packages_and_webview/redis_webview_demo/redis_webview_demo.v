@@ -256,6 +256,9 @@ fn redis_flush_db(e &webview.Event) !string {
 
 fn main() {
 	mut w := webview.create(debug: true)
+	defer {
+		w.destroy()
+	}
 	w.set_title('V + Redis GUI Dashboard')
 	w.set_size(1080, 720, .@none)
 
