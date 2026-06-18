@@ -756,11 +756,32 @@ fn main() {
 
 ```
 
+#### Boolean Methods
+
+_File location: `primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v`_
+
+This example demonstrates the concepts of **boolean methods**.
+
+```v
+module main
+
+fn main() {
+	t := true
+	f := false
+
+	// str() returns string representation ('true' or 'false')
+	println(t.str()) // true
+	println(f.str()) // false
+}
+```
+
+```
+
 ### Numeric Types
 
 #### Shift Operators
 
-_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators.v`_
+_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v`_
 
 This example demonstrates the concepts of **shift operators**.
 
@@ -786,7 +807,7 @@ fn main() {
 
 #### Shift Operator On Range Of Integers
 
-_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers.v`_
+_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v`_
 
 This example demonstrates the concepts of **shift operator on range of integers**.
 
@@ -927,25 +948,29 @@ fn main() {
 
 #### Declaring Integers
 
-_File location: `primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers.v`_
+_File location: `primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v`_
 
 This example demonstrates the concepts of **declaring integers**.
 
 ```v
-x := 1
-println(typeof(x).name)
-// int
+module main
 
-i := 1_000
-j := 1000
+fn main() {
+	x := 1
+	println(typeof(x).name)
+	// int
 
-println(i == j) // true
+	i := 1_000
+	j := 1000
 
+	println(i == j) // true
+}
+```
 ```
 
 #### Hex Binary Octa Notation Of Declaring Integers
 
-_File location: `primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation_of_declaring_integers.v`_
+_File location: `primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v`_
 
 This example demonstrates the concepts of **hex binary octa notation of declaring integers**.
 
@@ -968,6 +993,154 @@ fn main() {
     demo()
 }
 
+```
+
+#### Integer Methods
+
+_File location: `primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v`_
+
+This example demonstrates the concepts of **integer methods**.
+
+```v
+module main
+
+fn main() {
+	x := 42
+
+	// str() returns string representation of the integer
+	println(x.str()) // "42"
+
+	// hex() returns hexadecimal representation without prefix
+	println(x.hex()) // "2a"
+
+	// hex2() returns hexadecimal representation with "0x" prefix
+	println(x.hex2()) // "0x2a"
+
+	// hex_full() returns hexadecimal representation with full width padding for the type (8 digits for 32-bit int)
+	println(x.hex_full()) // "0000002a"
+}
+```
+
+#### Float Methods
+
+_File location: `primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v`_
+
+This example demonstrates the concepts of **float methods**.
+
+```v
+module main
+
+fn main() {
+	f := 12345.6789
+
+	// str() returns string representation of the float
+	println(f.str()) // "12345.6789"
+
+	// strg() returns string representation (often identical to str())
+	println(f.strg()) // "12345.6789"
+
+	// strlong() returns a full/long string representation of the float
+	println(f.strlong()) // "12345.6789"
+
+	// strsci(precision) returns scientific notation with specified precision/decimal places
+	println(f.strsci(4)) // "1.2346e+04"
+
+	// eq_epsilon(other) performs a comparison using machine epsilon (for near-equality)
+	f2 := 12345.678900000001
+	println(f.eq_epsilon(f2)) // true
+}
+```
+
+#### u8 Methods
+
+_File location: `primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v`_
+
+This example demonstrates the concepts of **u8 methods**.
+
+```v
+module main
+
+fn main() {
+	b := u8(65) // ASCII code for 'A'
+
+	// str() returns string representation of the numeric value
+	println(b.str()) // "65"
+
+	// ascii_str() returns string of length 1 containing the character
+	println(b.ascii_str()) // "A"
+
+	// hex() returns hexadecimal representation
+	println(b.hex()) // "41"
+
+	// hex_full() returns hexadecimal representation (same as hex() for u8)
+	println(b.hex_full()) // "41"
+
+	// is_alnum() checks if the character is alphanumeric
+	println(b.is_alnum()) // true
+
+	// is_bin_digit() checks if the character is a binary digit ('0' or '1')
+	println(b.is_bin_digit()) // false
+
+	// is_capital() checks if the character is an uppercase letter
+	println(b.is_capital()) // true
+
+	// is_digit() checks if the character is a decimal digit ('0'-'9')
+	println(b.is_digit()) // false
+
+	// is_hex_digit() checks if the character is a hexadecimal digit ('0'-'9', 'a'-'f', 'A'-'F')
+	println(b.is_hex_digit()) // true
+
+	// is_letter() checks if the character is an alphabetic letter
+	println(b.is_letter()) // true
+
+	// is_oct_digit() checks if the character is an octal digit ('0'-'7')
+	println(b.is_oct_digit()) // false
+
+	// is_space() checks if the character is a whitespace character
+	println(b.is_space()) // false
+
+	// repeat(count) repeats the character count times and returns a string
+	println(b.repeat(3)) // "AAA"
+
+	// str_escaped() returns an escaped string representation of the character
+	println(b.str_escaped()) // "A"
+}
+```
+
+#### Size And Pointer Methods
+
+_File location: `primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v`_
+
+This example demonstrates the concepts of **size and pointer methods**.
+
+```v
+module main
+
+fn main() {
+	// isize and usize methods
+	sz := isize(100)
+	usz := usize(200)
+
+	// str() returns string representation
+	println(sz.str())  // "100"
+	println(usz.str()) // "200"
+
+	// voidptr methods
+	x := 42
+	p := voidptr(&x)
+
+	// str() returns the memory address as string
+	println(p.str().starts_with('0x')) // true
+
+	// hex_full() returns full-width hex representation of address
+	println(p.hex_full().len > 0) // true
+
+	// vbytes(len) returns a byte array representation of the memory pointed to (must be called in unsafe block)
+	unsafe {
+		bytes := p.vbytes(int(sizeof(int)))
+		println(bytes) // [42, 0, 0, 0]
+	}
+}
 ```
 
 ### Rune Type
@@ -1004,11 +1177,57 @@ fn main() {
 
 ```
 
+#### Rune Methods
+
+_File location: `primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v`_
+
+This example demonstrates the concepts of **rune methods**.
+
+```v
+module main
+
+fn main() {
+	r := `A`
+
+	// bytes() returns the byte representation (UTF-8 bytes) of the rune
+	println(r.bytes()) // [65]
+
+	// hex() returns the hexadecimal representation of the rune code point
+	println(r.hex()) // "41"
+
+	// length_in_bytes() returns the size of the rune in bytes (1 to 4)
+	println(r.length_in_bytes()) // 1
+
+	// repeat(count) returns a string with the rune repeated count times
+	println(r.repeat(3)) // "AAA"
+
+	// str() returns the string representation of the rune
+	println(r.str()) // "A"
+
+	// to_lower() returns the lowercase rune
+	println(r.to_lower().str()) // "a"
+
+	// to_upper() returns the uppercase rune
+	println(r.to_upper().str()) // "A"
+
+	// to_title() returns the titlecase rune
+	println(r.to_title().str()) // "A"
+
+	// Testing with a multi-byte UTF-8 rune (dog emoji 🐕)
+	r2 := `🐕`
+	println(r2.bytes())           // [240, 159, 144, 149]
+	println(r2.hex())             // "1f415" (Unicode code point in hex)
+	println(r2.length_in_bytes()) // 4
+	println(r2.repeat(2))         // "🐕🐕"
+	println(r2.str())             // "🐕"
+}
+```
+
 ### String Type
 
 #### Declare String
 
-_File location: `primitive_types/03_string_type/01_declare_string.v`_
+_File location: `primitive_types/03_string_type/01_declare_string/01_declare_string.v`_
 
 This example demonstrates the concepts of **declare string**.
 
@@ -1027,7 +1246,7 @@ fn main() {
 
 #### String Read Only Array Of Bytes
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v`_
 
 This example demonstrates the concepts of **string read only array of bytes**.
 
@@ -1044,7 +1263,7 @@ fn main() {
 
 #### Strings Immurable By Default
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/02_strings_immurable_by_default.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/02_strings_immurable_by_default/02_strings_immurable_by_default.v`_
 
 This example demonstrates the concepts of **strings immurable by default**.
 
@@ -1060,7 +1279,7 @@ fn main() {
 
 #### Declaring Mutable Strings
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v`_
 
 This example demonstrates the concepts of **declaring mutable strings**.
 
@@ -1079,7 +1298,7 @@ fn main() {
 
 #### Cannot Mutate String Elements
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v`_
 
 This example demonstrates the concepts of **cannot mutate string elements**.
 
@@ -1094,122 +1313,146 @@ fn main() {
 
 #### Escape Special Characters
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v`_
 
 This example demonstrates the concepts of **escape special characters**.
 
 ```v
-sen := "It's my Daughter's birthday!"
-println(sen)
+module main
 
+fn main() {
+	sen := "It's my Daughter's birthday!"
+	println(sen)
+}
 ```
 
 #### Declare Raw Strings
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v`_
 
 This example demonstrates the concepts of **declare raw strings**.
 
 ```v
-i := r'hi \how are you/?'
-println(i)
+module main
 
+fn main() {
+	i := r'hi \how are you/?'
+	println(i)
+}
 ```
 
 #### String Concatenation Using Plus Sign
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v`_
 
 This example demonstrates the concepts of **string concatenation using plus sign**.
 
 ```v
-a := 'con'
-b := 'cat'
-println(a + b)
-// concat
+module main
 
+fn main() {
+	a := 'con'
+	b := 'cat'
+	println(a + b)
+	// concat
+}
 ```
 
 #### String Concatenation Using Interpolation
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v`_
 
 This example demonstrates the concepts of **string concatenation using interpolation**.
 
 ```v
-i := 1
-j := 'man army'
-println('${i} ${j}')
+module main
 
+fn main() {
+	i := 1
+	j := 'man army'
+	println('${i} ${j}')
+}
 ```
 
 #### Extract Substring From String Literal
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v`_
 
 This example demonstrates the concepts of **extract substring from string literal**.
 
 ```v
-a := 'Camel'
-b := a.substr(0, 3)
-println(b)
-// Cam
+module main
 
+fn main() {
+	a := 'Camel'
+	b := a.substr(0, 3)
+	println(b)
+	// Cam
+}
 ```
 
 #### Split String
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v`_
 
 This example demonstrates the concepts of **split string**.
 
 ```v
-sp := 'The tiny tiger tied the tie tighter to its tail'
-res := sp.split(' ')
-// split by space as delimiter
-println(typeof(res).name)
-// []string
-println(res)
-// ['The', 'tiny', 'tiger', 'tied', 'the', 'tie', 'tighter', 'to', 'its', 'tail']
+module main
 
+fn main() {
+	sp := 'The tiny tiger tied the tie tighter to its tail'
+	res := sp.split(' ')
+	// split by space as delimiter
+	println(typeof(res).name)
+	// []string
+	println(res)
+	// ['The', 'tiny', 'tiger', 'tied', 'the', 'tie', 'tighter', 'to', 'its', 'tail']
+}
 ```
 
 #### String To Runes Array
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v`_
 
 This example demonstrates the concepts of **string to runes array**.
 
 ```v
-doge_moon := '🐕+🚀=🌑'
-doge_moon_runes := doge_moon.runes()
-println(doge_moon_runes)
-println(typeof(doge_moon_runes).name) // []rune
+module main
 
+fn main() {
+	doge_moon := '🐕+🚀=🌑'
+	doge_moon_runes := doge_moon.runes()
+	println(doge_moon_runes)
+	println(typeof(doge_moon_runes).name) // []rune
+}
 ```
 
 #### Count Sub String Occurences
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v`_
 
 This example demonstrates the concepts of **count sub string occurences**.
 
 ```v
-sp := 'The tiny tiger tied the tie tighter to its tail'
-println(sp.count('t'))
-// 10
-println(sp.count('T'))
-// 1
-println(sp.count('tie'))
-// 2
-println(sp.count('-'))
-// 0
+module main
 
+fn main() {
+	sp := 'The tiny tiger tied the tie tighter to its tail'
+	println(sp.count('t'))
+	// 10
+	println(sp.count('T'))
+	// 1
+	println(sp.count('tie'))
+	// 2
+	println(sp.count('-'))
+	// 0
+}
 ```
 
 #### Check String Contains Substring
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v`_
 
 This example demonstrates the concepts of **check string contains substring**.
 
@@ -1230,7 +1473,7 @@ fn main() {
 
 #### String Contains Is Case Sensitive
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v`_
 
 This example demonstrates the concepts of **string contains is case sensitive**.
 
@@ -1247,6 +1490,62 @@ fn main() {
     }
 }
 
+```
+
+#### Common String Methods
+
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v`_
+
+This example demonstrates the concepts of **common string methods**.
+
+```v
+module main
+
+fn main() {
+	s := '  Hello, V!  '
+
+	// to_lower() returns the lowercase version of the string
+	println(s.to_lower()) // "  hello, v!  "
+
+	// to_upper() returns the uppercase version of the string
+	println(s.to_upper()) // "  HELLO, V!  "
+
+	// trim_space() trims leading and trailing whitespaces
+	println(s.trim_space()) // "Hello, V!"
+
+	// trim(cutset) trims leading and trailing characters that match any character in the cutset
+	println(s.trim(' ')) // "Hello, V!"
+
+	// replace(old, new) replaces all occurrences of old with new
+	println(s.replace('V', 'World')) // "  Hello, World!  "
+
+	// replace_once(old, new) replaces the first occurrence of old with new
+	println(s.replace_once('l', 'x')) // "  Hexlo, V!  "
+
+	// index(sub) returns the start index of the first occurrence of sub as an optional ?int
+	idx := s.index('Hello') or { -1 }
+	println(idx) // 2
+
+	// last_index(sub) returns the start index of the last occurrence of sub as an optional ?int
+	last_idx := s.last_index('l') or { -1 }
+	println(last_idx) // 5
+
+	// starts_with(prefix) checks if the string starts with the prefix
+	println(s.starts_with('  ')) // true
+
+	// ends_with(suffix) checks if the string ends with the suffix
+	println(s.ends_with('!')) // false (ends with spaces)
+
+	// is_pure_ascii() checks if all characters in the string are pure ASCII
+	println(s.is_pure_ascii()) // true
+
+	// split_into_lines() splits a string into an array of lines
+	multiline := "line 1\nline 2"
+	println(multiline.split_into_lines()) // ["line 1", "line 2"]
+
+	// split_by_space() splits a string by space as delimiter
+	println(s.split_by_space()) // ["Hello,", "V!"]
+}
 ```
 
 #### String Interpolation

@@ -1,4 +1,9 @@
-a := 'con'
-b := 'cat'
-println(a + b)
-// concat
+module main
+
+fn main() {
+	a := 'con'
+	b := 'cat'
+	println(a + b)
+	// concat
+}
+

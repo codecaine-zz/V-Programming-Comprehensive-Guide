@@ -1,8 +1,13 @@
-x := 1
-println(typeof(x).name)
-// int
+module main
 
-i := 1_000
-j := 1000
+fn main() {
+	x := 1
+	println(typeof(x).name)
+	// int
 
-println(i == j) // true
+	i := 1_000
+	j := 1000
+
+	println(i == j) // true
+}
+

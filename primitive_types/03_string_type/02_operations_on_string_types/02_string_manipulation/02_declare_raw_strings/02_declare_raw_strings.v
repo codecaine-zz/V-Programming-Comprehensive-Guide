@@ -1,2 +1,7 @@
-i := r'hi \how are you/?'
-println(i)
+module main
+
+fn main() {
+	i := r'hi \how are you/?'
+	println(i)
+}
+
