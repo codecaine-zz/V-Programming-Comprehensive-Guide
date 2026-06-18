@@ -139,6 +139,7 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
   - [Documentation Generator](#documentation-generator)
   - [Live Reloading (Watch)](#live-reloading-watch)
   - [Package & Installation Management](#package--installation-management)
+  - [Profiling & Timing](#profiling--timing)
 
 ---
 
@@ -200,6 +201,57 @@ V provides a powerful command-line interface with a rich set of built-in utiliti
     *   `v list` — Lists all installed external modules.
     *   `v outdated` — Checks for and lists modules with updates available.
     *   `v remove package_name` — Uninstalls the specified VPM module.
+
+### Profiling & Timing
+
+V includes several built-in tools for measuring execution time and profiling function performance.
+
+*   **Timing Execution**: `v time run script.v`
+    Starts the program, measures how long it takes to run, and reports its total execution time and exit code.
+    *Example:*
+    ```bash
+    v time run script.v
+    ```
+
+*   **Profiling Code**: `v -profile <file.txt> run script.v`
+    Compiles the program with all functions profiled, writing execution metrics to the specified text file.
+    *   To output profiling data directly to the stdout/terminal, use a hyphen `-`:
+        ```bash
+        v -profile - run script.v
+        ```
+    *   The output format contains four space-separated columns:
+        1. Number of times the function was called.
+        2. Total time spent in the function (in nanoseconds).
+        3. Average time per call (in nanoseconds).
+        4. Name of the function.
+    *   To skip profiling of V startup code (constants evaluation and module `init()` functions), add `-d no_profile_startup`:
+        ```bash
+        v -profile - -d no_profile_startup run script.v
+        ```
+    *   To profile only specific functions, use `-profile-fns`:
+        ```bash
+        v -profile-fns function_name_1,function_name_2 -profile - run script.v
+        ```
+    *   *Note:* The profiler is not thread-safe, so results for multithreaded programs should be interpreted with caution.
+
+*   **Programmatic Profiling**:
+    You can selectively enable or disable profiling in your V source code by importing the `v.profile` module:
+    ```v
+    import v.profile
+
+    fn main() {
+        // Turn profiling off initially
+        profile.on(false)
+        
+        // Critical section to profile
+        profile.on(true)
+        do_heavy_work()
+        profile.on(false)
+    }
+    ```
+
+*   **Compiler Timing**: `v -show-timings script.v`
+    Prints a breakdown of how much time each phase of the compiler took (e.g., PARSE, CHECK, C GEN, backend compiler).
 
 ---
 
