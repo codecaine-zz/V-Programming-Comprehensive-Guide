@@ -14,9 +14,6 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
 
 ## Table of Contents
 
-<details>
-<summary><b>Click to expand Table of Contents</b></summary>
-
 - [Prerequisites & Environment Setup](#prerequisites--environment-setup)
   - [V-Analyzer Setup for ARM Mac OS (Homebrew)](#v-analyzer-setup-for-arm-mac-os-homebrew)
 - [V Tooling & CLI Utilities](#v-tooling--cli-utilities)
@@ -518,7 +515,6 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
     - [Key Mechanisms](#key-mechanisms)
 - [Official Documentation](#official-documentation)
 
-</details>
 ---
 
 ## V Tooling & CLI Utilities
