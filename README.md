@@ -8283,6 +8283,136 @@ fn main() {
 }
 ```
 
+#### JSON Map To/From File
+
+_File location: `json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v`_
+
+This example demonstrates how to serialize a map structure (`map[string]int`) into a JSON string, write it to a file, read it back, and deserialize it back into a map in V.
+
+```v
+module main
+
+import json
+import os
+
+fn main() {
+	file_path := 'scores.json'
+
+	// Create a map[string]int
+	scores := {
+		'Alice': 95
+		'Bob': 88
+		'Charlie': 92
+	}
+
+	// 1. Encode map to JSON string
+	println('Encoding map to JSON...')
+	json_str := json.encode(scores)
+	println('JSON string: ${json_str}')
+
+	// 2. Write JSON string to file
+	println('Writing map JSON to file "${file_path}"...')
+	os.write_file(file_path, json_str) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	// 3. Read JSON string from file
+	println('Reading from file "${file_path}"...')
+	content := os.read_file(file_path) or {
+		eprintln('Failed to read file: ${err}')
+		return
+	}
+
+	// 4. Decode JSON string back to map[string]int
+	println('Decoding JSON back to map...')
+	decoded_scores := json.decode(map[string]int, content) or {
+		eprintln('Failed to decode map JSON: ${err}')
+		return
+	}
+
+	println('Decoded map successfully:')
+	for k, v in decoded_scores {
+		println('  - ${k}: ${v}')
+	}
+
+	// Clean up created file
+	os.rm(file_path) or {}
+}
+```
+
+#### JSON and Raw Array To/From File
+
+_File location: `json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v`_
+
+This example demonstrates two different methods for reading and writing arrays to/from files in V:
+1. **JSON Serialization**: Best for primitive numeric/boolean arrays (e.g. `[]int`).
+2. **Raw Line-by-Line (Plain Text)**: Best for string lists (e.g. `[]string`), joining with newlines on write and using V's standard `os.read_lines()` on read.
+
+```v
+module main
+
+import json
+import os
+
+fn main() {
+	// We will show two ways of writing/reading arrays to/from files:
+	// Method 1: Using JSON serialization (great for numeric or structured arrays)
+	// Method 2: Using raw text line-by-line reading/writing (great for string lists)
+
+	// --- Method 1: JSON Serialization ---
+	println('=== Method 1: JSON Serialization ===')
+	json_file_path := 'numbers.json'
+	numbers := [10, 20, 30, 40, 50]
+
+	println('Encoding array to JSON...')
+	json_str := json.encode(numbers)
+	println('JSON string: ${json_str}')
+
+	println('Writing JSON to file "${json_file_path}"...')
+	os.write_file(json_file_path, json_str) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	json_content := os.read_file(json_file_path) or {
+		eprintln('Failed to read file: ${err}')
+		return
+	}
+
+	decoded_numbers := json.decode([]int, json_content) or {
+		eprintln('Failed to decode array JSON: ${err}')
+		return
+	}
+	println('Decoded array: ${decoded_numbers}')
+	os.rm(json_file_path) or {}
+
+	// --- Method 2: Raw Line-by-Line (Plain Text) ---
+	println('\n=== Method 2: Raw Line-by-Line ===')
+	text_file_path := 'fruits.txt'
+	fruits := ['Apple', 'Banana', 'Cherry', 'Date']
+
+	println('Writing array elements to text file "${text_file_path}"...')
+	// Join the string array with newlines to write line-by-line
+	fruits_content := fruits.join('\n')
+	os.write_file(text_file_path, fruits_content) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	println('Reading lines from file "${text_file_path}" using os.read_lines()...')
+	// os.read_lines reads a file directly into a []string (line by line)
+	read_fruits := os.read_lines(text_file_path) or {
+		eprintln('Failed to read lines: ${err}')
+		return
+	}
+	println('Read string array: ${read_fruits}')
+	
+	// Clean up created files
+	os.rm(text_file_path) or {}
+}
+```
+
 ### Orm
 
 #### Orm Demo
