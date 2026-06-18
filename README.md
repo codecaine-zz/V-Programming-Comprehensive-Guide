@@ -173,8 +173,12 @@ V provides a powerful command-line interface with a rich set of built-in utiliti
     *Example:* `v doc strings`
 *   **HTML Documentation**: `v doc -f html module_name`
     Generates structured HTML documentation files inside a `_docs` folder.
-*   **Full Standard Library Docs**: `v vlib-docs`
-    Compiles the documentation for all of V's standard library modules (`vlib`) and opens it in your default web browser.
+*   **Full Standard Library Docs**:
+    Generates HTML documentation for all V standard library modules and opens it in your browser. Since the built-in `v vlib-docs` command only outputs plain text to the terminal in V 0.5.1, run the following commands instead:
+    ```bash
+    v doc -m -f html -o _docs vlib
+    open _docs/index.html
+    ```
 
 ### Live Reloading (Watch)
 
