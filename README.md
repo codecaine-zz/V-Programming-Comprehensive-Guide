@@ -513,6 +513,7 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
 - [Error Handling](#error-handling)
   - [Error Handling](#error-handling)
     - [Key Mechanisms](#key-mechanisms)
+- [Common V Programming Gotchas](#common-v-programming-gotchas)
 - [Official Documentation](#official-documentation)
 
 ---
@@ -14107,6 +14108,89 @@ fn main() {
     println('To run a panic, uncomment force_panic() in main.')
 }
 ```
+
+---
+
+## Common V Programming Gotchas
+
+As a language that is still actively evolving, V has certain design choices and quirks that can surprise newcomers coming from other languages. Below are some common "gotchas" to watch out for:
+
+### 1. Variables are Immutable by Default
+Unlike C or Go, variables in V are immutable by default. To modify a variable, you must explicitly declare it with the `mut` keyword.
+
+```v
+// This will cause a compilation error
+count := 1
+// count = 2
+
+// Correct way
+mut count := 1
+count = 2
+```
+
+### 2. Variable Shadowing is Not Allowed
+V strictly forbids variable shadowing. You cannot declare a variable in an inner scope with the same name as one in an outer scope.
+
+```v
+x := 10
+if true {
+    // This is an error in V
+    // x := 20 
+}
+```
+
+### 3. No Global Variables
+By default, V does not allow global variables to encourage better state management and prevent hidden side effects. If you absolutely need them, you must compile your program with the `-enable-globals` flag and declare them with the `__global` keyword.
+
+### 4. Struct Fields are Immutable and Private by Default
+When you define a struct, all fields are private to the module and immutable. You must use `pub` to make them public, and `mut` to make them mutable.
+
+```v
+struct User {
+pub mut:
+    name string
+    age  int
+}
+```
+
+### 5. Arrays and Maps in Functions
+When passing arrays or maps to functions, they are passed by value (copied). If you want to modify the original collection inside the function, you must pass it as a `mut` argument.
+
+```v
+fn add_item(mut arr []int) {
+    arr << 4
+}
+
+fn main() {
+    mut numbers := [1, 2, 3]
+    add_item(mut numbers)
+}
+```
+
+### 6. Unused Variables Cause Compilation Errors
+V enforces clean code by refusing to compile if there are declared but unused variables. If you need to ignore a return value, you must assign it to the blank identifier `_`.
+
+```v
+fn do_something() int { return 42 }
+
+fn main() {
+    _ = do_something() // Result ignored intentionally
+}
+```
+
+### 7. String Interpolation and Single Quotes
+V prefers single quotes (`'`) for string literals. Double quotes (`"`) are allowed but typically single quotes are considered idiomatic. String interpolation is simple, but requires the variable to be in scope.
+
+```v
+name := 'Bob'
+println('Hello, $name!') // Outputs: Hello, Bob!
+// For expressions, use ${}
+age := 30
+println('Next year you will be ${age + 1}')
+```
+
+### 8. `C` Backend vs. Autofree
+V heavily relies on its C backend. While V promises memory safety without a garbage collector through its experimental `autofree` engine, `autofree` is still a work-in-progress. For complex applications, relying on the default behaviour (which may leak or use GC depending on flags and versions) or using the `-gc none` flag and managing memory manually is sometimes necessary until `autofree` matures.
 
 ---
 
