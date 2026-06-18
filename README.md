@@ -1661,6 +1661,9 @@ fn main() {
     r := [1, 2, 3, 4]
     s := unsafe { r }
     println(s)
+    unsafe {
+        r.free()
+    }
 }
 
 ```
@@ -2105,6 +2108,7 @@ fn main() {
 		// Cast the raw array struct back to typed [][]int
 		typed_grid := *(&[][]int(&rep_grid))
 		println('repeat_to_depth: ${typed_grid}') // [[1, 2], [3, 4], [1, 2], [3, 4]]
+		rep_grid.free()
 	}
 
 	// 4. insert(index, val)
@@ -2140,6 +2144,9 @@ fn main() {
 		a_reset.reset()
 	}
 	println('reset: ${a_reset}') // [0, 0, 0]
+	unsafe {
+		a_reset.free()
+	}
 
 	// 10. trim(index)
 	// Truncates the array length to index.
@@ -2190,6 +2197,7 @@ fn main() {
 		grid_clone := grid2.clone_to_depth(1)
 		typed_clone := *(&[][]int(&grid_clone))
 		println('clone_to_depth: ${typed_clone}') // [[1, 2], [3, 4]]
+		grid_clone.free()
 	}
 
 	// 19. push_many(val, size) (unsafe)
@@ -2200,6 +2208,10 @@ fn main() {
 		a_push.push_many(vals.data, 2)
 	}
 	println('push_many: ${a_push}') // [1, 2, 3, 4]
+	unsafe {
+		a_push.free()
+		vals.free()
+	}
 
 	// 20. reverse()
 	// Returns a new reversed copy of the array.
@@ -2293,6 +2305,9 @@ fn main() {
 		a_grow.grow_len(3)
 	}
 	println('grow_len: ${a_grow}') // [1, 2, 0, 0, 0]
+	unsafe {
+		a_grow.free()
+	}
 
 	// 37. pointers() (unsafe)
 	// Returns an array of void pointers (pointers()) pointing to each element.
@@ -2300,6 +2315,8 @@ fn main() {
 	unsafe {
 		ptrs := a_ptrs.pointers()
 		println('pointers (first element): ${*(&int(ptrs[0]))}') // 10
+		ptrs.free()
+		a_ptrs.free()
 	}
 }
 ```
