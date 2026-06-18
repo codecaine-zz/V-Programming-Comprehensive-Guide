@@ -9323,9 +9323,6 @@ fn main() {
     println('Sending POST request to httpbin.org...')
     post_body := 'Hello V Standard Library!'
     post_resp := http.post('https://httpbin.org/post', post_body) or {
-        println('POST request failed: ${err}')
-        return
-    }
     println('POST Status Code: ${post_resp.status_code}')
     println('POST Response Body:')
     println(post_resp.body)
@@ -9335,15 +9332,12 @@ fn main() {
 
 #### Os Operations
 
-_File location: `language_updates_and_stdlib/02_standard_library/02_os_operations/os_operations.v`_
+V's standard library `os` module provides comprehensive functionality for interacting with the operating system, with a strong focus on POSIX/Nix systems. To cover the entire suite of `os` APIs, the examples are divided into four distinct files under `language_updates_and_stdlib/02_standard_library/02_os_operations/`:
 
-This example demonstrates the concepts of **os operations**, focusing on Unix/Nix features and common file system tasks:
+##### 1. Basic OS & File Operations
+_File location: `language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v`_
 
-- **Directory Tree Operations**: Creating recursive parent/child structures (`os.mkdir_all`) and removing folders recursively (`os.rmdir_all`).
-- **Path Manipulation & Extraction**: Handling platform-neutral path joining (`os.join_path`) and extracting directories (`os.dir`), filenames (`os.base`), and extensions (`os.file_ext`).
-- **Working Directory Traversal**: Querying the current working directory (`os.getwd`) and switching directories (`os.chdir`).
-- **Advanced File Actions**: Copying (`os.cp`) and moving/renaming (`os.mv`) files.
-- **Nix-Specific Operations**: Managing symbolic links (`os.symlink`, `os.is_link`), file permissions (`os.chmod` using octal literals, `os.is_readable`, `os.is_writable`, `os.is_executable`), and changing ownerships (`os.chown`) safely utilizing process metadata (`os.getuid()`, `os.getgid()`).
+This example demonstrates common file system tasks, path manipulation, working directory traversal, environmental querying, symbol links, permissions (`chmod`), and ownership (`chown`).
 
 ```v
 module main
@@ -9351,174 +9345,549 @@ module main
 import os
 
 fn main() {
-    filename := 'temp_book_example.txt'
-    content := 'V standard library makes OS operations very straightforward.'
+	filename := 'temp_book_example.txt'
+	content := 'V standard library makes OS operations very straightforward.'
 
-    // ==========================================
-    // 1. Basic File Operations (Writing, Reading, Existence)
-    // ==========================================
-    println('Writing text to ${filename}...')
-    os.write_file(filename, content) or {
-        println('Failed to write file: ${err}')
-        return
-    }
+	// ==========================================
+	// 1. Basic File Operations (Writing, Reading, Existence)
+	// ==========================================
+	println('Writing text to ${filename}...')
+	os.write_file(filename, content) or {
+		println('Failed to write file: ${err}')
+		return
+	}
 
-    // Checking file existence
-    if os.exists(filename) {
-        println('Confirmed: File exists.')
-    }
+	// Checking file existence
+	if os.exists(filename) {
+		println('Confirmed: File exists.')
+	}
 
-    // Reading from a file
-    read_content := os.read_file(filename) or {
-        println('Failed to read file: ${err}')
-        return
-    }
-    println('Read content from file: "${read_content}"')
+	// Reading from a file
+	read_content := os.read_file(filename) or {
+		println('Failed to read file: ${err}')
+		return
+	}
+	println('Read content from file: "${read_content}"')
 
-    // Listing directory contents
-    println('Listing files in current directory:')
-    files := os.ls('.') or {
-        println('Failed to list directory: ${err}')
-        []
-    }
-    for file in files {
-        // Filter and print temp file
-        if file == filename {
-            println('- Found file: ${file}')
-        }
-    }
+	// Writing and reading lines
+	lines := ['Line 1: V has simple OS functions.', 'Line 2: Supporting multiple lines.']
+	lines_file := 'temp_lines_example.txt'
+	os.write_lines(lines_file, lines) or {
+		println('Failed to write lines: ${err}')
+	}
+	read_lines := os.read_lines(lines_file) or {
+		println('Failed to read lines: ${err}')
+		[]
+	}
+	println('Read lines: ${read_lines}')
+	os.rm(lines_file) or {}
 
-    // Reading environment variables
-    home_dir := os.getenv('HOME')
-    println('User HOME directory: ${home_dir}')
+	// Listing directory contents
+	println('Listing files in current directory:')
+	files := os.ls('.') or {
+		println('Failed to list directory: ${err}')
+		[]
+	}
+	for file in files {
+		// Filter and print temp file
+		if file == filename {
+			println('- Found file: ${file}')
+		}
+	}
 
-    // Executing OS commands
-    // os.execute runs command in a subshell and returns a Result struct containing exit_code and output.
-    println('Running command "uname"...')
-    res := os.execute('uname')
-    if res.exit_code == 0 {
-        println('Operating System: ${res.output.trim_space()}')
-    } else {
-        println('Command execution failed with code ${res.exit_code}: ${res.output}')
-    }
+	// Reading environment variables
+	home_dir := os.getenv('HOME')
+	println('User HOME directory: ${home_dir}')
 
-    // ==========================================
-    // 2. Directory Tree Operations (Nix/CLI Focus)
-    // ==========================================
-    println('\n--- Directory Tree Operations ---')
-    
-    // Create nested directories (like `mkdir -p`)
-    nested_dir := os.join_path('temp_parent', 'temp_child')
-    println('Creating nested directory structure: ${nested_dir}...')
-    os.mkdir_all(nested_dir) or {
-        println('Failed to create directory structure: ${err}')
-    }
+	// Checking if a binary exists in the system PATH
+	if os.exists_in_system_path('git') {
+		println('Confirmed: Git executable exists in system PATH.')
+	}
 
-    // ==========================================
-    // 3. Path Manipulation & Extraction
-    // ==========================================
-    println('\n--- Path Manipulation & Extraction ---')
-    sample_path := '/usr/local/bin/v.exe'
-    println('Sample path: ${sample_path}')
-    println('Directory:   ${os.dir(sample_path)}')      // /usr/local/bin
-    println('Base name:   ${os.base(sample_path)}')     // v.exe
-    println('Extension:   ${os.file_ext(sample_path)}') // .exe
+	// Executing OS commands
+	// os.execute runs command in a subshell and returns a Result struct containing exit_code and output.
+	println('Running command "uname"...')
+	res := os.execute('uname')
+	if res.exit_code == 0 {
+		println('Operating System: ${res.output.trim_space()}')
+	} else {
+		println('Command execution failed with code ${res.exit_code}: ${res.output}')
+	}
 
-    // ==========================================
-    // 4. Working Directory Traversal
-    // ==========================================
-    println('\n--- Working Directory Traversal ---')
-    original_wd := os.getwd()
-    println('Original working directory: ${original_wd}')
+	// ==========================================
+	// 2. Directory Tree Operations (Nix/CLI Focus)
+	// ==========================================
+	println('\n--- Directory Tree Operations ---')
+	
+	// Create nested directories (like `mkdir -p`)
+	nested_dir := os.join_path('temp_parent', 'temp_child')
+	println('Creating nested directory structure: ${nested_dir}...')
+	os.mkdir_all(nested_dir) or {
+		println('Failed to create directory structure: ${err}')
+	}
 
-    println('Changing directory to: temp_parent...')
-    os.chdir('temp_parent') or {
-        println('Failed to change directory: ${err}')
-    }
-    println('New working directory: ${os.getwd()}')
+	// ==========================================
+	// 3. Path Manipulation & Extraction
+	// ==========================================
+	println('\n--- Path Manipulation & Extraction ---')
+	sample_path := '/usr/local/bin/v.exe'
+	println('Sample path: ${sample_path}')
+	println('Directory:   ${os.dir(sample_path)}')      // /usr/local/bin
+	println('Base name:   ${os.base(sample_path)}')     // v.exe
+	println('Extension:   ${os.file_ext(sample_path)}') // .exe
 
-    // Change back to original directory
-    os.chdir(original_wd) or {
-        println('Failed to restore directory: ${err}')
-    }
+	// ==========================================
+	// 4. Working Directory Traversal
+	// ==========================================
+	println('\n--- Working Directory Traversal ---')
+	original_wd := os.getwd()
+	println('Original working directory: ${original_wd}')
 
-    // ==========================================
-    // 5. Advanced File Operations (Copying, Moving)
-    // ==========================================
-    println('\n--- Advanced File Actions ---')
-    copied_file := 'temp_book_copy.txt'
-    moved_file := 'temp_book_moved.txt'
+	println('Changing directory to: temp_parent...')
+	os.chdir('temp_parent') or {
+		println('Failed to change directory: ${err}')
+	}
+	println('New working directory: ${os.getwd()}')
 
-    println('Copying ${filename} to ${copied_file}...')
-    os.cp(filename, copied_file) or {
-        println('Failed to copy file: ${err}')
-    }
+	// Change back to original directory
+	os.chdir(original_wd) or {
+		println('Failed to restore directory: ${err}')
+	}
 
-    println('Moving ${copied_file} to ${moved_file}...')
-    os.mv(copied_file, moved_file) or {
-        println('Failed to move file: ${err}')
-    }
+	// ==========================================
+	// 5. Advanced File Operations (Copying, Moving)
+	// ==========================================
+	println('\n--- Advanced File Actions ---')
+	copied_file := 'temp_book_copy.txt'
+	moved_file := 'temp_book_moved.txt'
 
-    // ==========================================
-    // 6. Symbolic Links & Nix-Specific Operations
-    // ==========================================
-    println('\n--- Nix-Specific Operations ---')
-    symlink_name := 'temp_book_link.txt'
+	println('Copying ${filename} to ${copied_file}...')
+	os.cp(filename, copied_file) or {
+		println('Failed to copy file: ${err}')
+	}
 
-    // Create symlink
-    println('Creating symbolic link from ${moved_file} to ${symlink_name}...')
-    os.symlink(moved_file, symlink_name) or {
-        println('Failed to create symlink: ${err}')
-    }
+	println('Moving ${copied_file} to ${moved_file}...')
+	os.mv(copied_file, moved_file) or {
+		println('Failed to move file: ${err}')
+	}
 
-    // Check if path is a link
-    if os.is_link(symlink_name) {
-        println('Confirmed: ${symlink_name} is a symbolic link.')
-    }
+	// ==========================================
+	// 6. Symbolic Links & Nix-Specific Operations
+	// ==========================================
+	println('\n--- Nix-Specific Operations ---')
+	symlink_name := 'temp_book_link.txt'
 
-    // Change file permissions (chmod)
-    // 0o644 = Owner: read/write, Group: read, Others: read
-    println('Setting file permissions to 0o644 (read/write for owner, read-only for others)...')
-    os.chmod(moved_file, 0o644) or {
-        println('Failed to change permissions: ${err}')
-    }
+	// Create symlink
+	println('Creating symbolic link from ${moved_file} to ${symlink_name}...')
+	os.symlink(moved_file, symlink_name) or {
+		println('Failed to create symlink: ${err}')
+	}
 
-    // Check permissions
-    // Note: Avoid TOCTOU (Time-of-Check-to-Time-of-Use) security vulnerabilities in production!
-    println('Is readable?   ${os.is_readable(moved_file)}')
-    println('Is writable?   ${os.is_writable(moved_file)}')
-    println('Is executable? ${os.is_executable(moved_file)}')
+	// Check if path is a link
+	if os.is_link(symlink_name) {
+		println('Confirmed: ${symlink_name} is a symbolic link.')
+	}
 
-    // Change ownership (chown)
-    // Safe demo using our current user's UID and GID to avoid permission errors
-    uid := os.getuid()
-    gid := os.getgid()
-    println('Setting ownership of ${moved_file} to UID: ${uid}, GID: ${gid}...')
-    os.chown(moved_file, uid, gid) or {
-        println('Failed to change ownership: ${err}')
-    }
+	// Change file permissions (chmod)
+	// 0o644 = Owner: read/write, Group: read, Others: read
+	println('Setting file permissions to 0o644 (read/write for owner, read-only for others)...')
+	os.chmod(moved_file, 0o644) or {
+		println('Failed to change permissions: ${err}')
+	}
 
-    // ==========================================
-    // 7. Cleanup
-    // ==========================================
-    println('\n--- Cleanup ---')
-    
-    // Remove original file
-    os.rm(filename) or { println('Failed to remove ${filename}: ${err}') }
-    
-    // Remove moved file
-    os.rm(moved_file) or { println('Failed to remove ${moved_file}: ${err}') }
-    
-    // Remove symlink
-    os.rm(symlink_name) or { println('Failed to remove symlink ${symlink_name}: ${err}') }
-    
-    // Remove nested directory structure recursively
-    os.rmdir_all('temp_parent') or { println('Failed to remove temp_parent directory: ${err}') }
-    
-    println('Cleanup completed successfully.')
+	// Check permissions
+	println('Is readable?   ${os.is_readable(moved_file)}')
+	println('Is writable?   ${os.is_writable(moved_file)}')
+	println('Is executable? ${os.is_executable(moved_file)}')
+
+	// Change ownership (chown)
+	// Safe demo using our current user's UID and GID to avoid permission errors
+	uid := os.getuid()
+	gid := os.getgid()
+	println('Setting ownership of ${moved_file} to UID: ${uid}, GID: ${gid}...')
+	os.chown(moved_file, uid, gid) or {
+		println('Failed to change ownership: ${err}')
+	}
+
+	// ==========================================
+	// 7. Cleanup
+	// ==========================================
+	println('\n--- Cleanup ---')
+	
+	// Remove original file
+	os.rm(filename) or { println('Failed to remove ${filename}: ${err}') }
+	
+	// Remove moved file
+	os.rm(moved_file) or { println('Failed to remove ${moved_file}: ${err}') }
+	
+	// Remove symlink
+	os.rm(symlink_name) or { println('Failed to remove symlink ${symlink_name}: ${err}') }
+	
+	// Remove nested directory structure recursively
+	os.rmdir_all('temp_parent') or { println('Failed to remove temp_parent directory: ${err}') }
+	
+	println('Cleanup completed successfully.')
+}
+```
+
+##### 2. Asynchronous Processes, Signals & Pipes
+_File location: `language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v`_
+
+This example demonstrates managing subprocesses asynchronously using `os.Process`, exchanging data via stdin/stdout redirection, passing custom environments, sending POSIX signals (`SIGSTOP`, `SIGCONT`, `SIGTERM`), creating low-level descriptor pipes, and capturing stdout/stderr dynamically via `IOCapture`.
+
+```v
+module main
+
+import os
+import time
+
+fn main() {
+	println('=== V OS Processes, Pipes & Signals (POSIX/Nix) ===')
+
+	// --- 1. Spawning and Controlling Processes ---
+	println('\n--- 1. Asynchronous Child Process (Process) ---')
+	
+	// Spawning '/bin/cat' as a child process
+	mut p := os.new_process('/bin/cat')
+	p.set_args([])
+	p.set_environment({
+		'CUSTOM_ENV_VAR': 'V-OS-Demo'
+	})
+	
+	// Enable standard I/O redirection to interact with the process
+	p.set_redirect_stdio()
+	p.use_stdio_ctl = true
+	
+	// Start the process asynchronously
+	p.run()
+	println('Child process spawned with PID: ${p.pid}')
+	println('Is alive? -> ${p.is_alive()}')
+
+	// Write to the process's standard input
+	p.stdin_write('Line 1: Hello from the parent process!\n')
+	p.stdin_write('Line 2: WebAssembly and V standard libraries rule.\n')
+	
+	// Allow child process buffer to receive and echo the lines
+	time.sleep(100 * time.millisecond)
+	
+	// Read output currently available in the stdout pipe
+	output := p.stdout_read()
+	println('Read from child stdout:\n${output.trim_space()}')
+
+	// --- 2. POSIX Signaling ---
+	println('\n--- 2. POSIX Signals ---')
+	
+	// Suspend the child process (SIGSTOP)
+	println('Suspending child process (SIGSTOP)...')
+	p.signal_stop()
+	time.sleep(50 * time.millisecond)
+	
+	// Resume the child process (SIGCONT)
+	println('Resuming child process (SIGCONT)...')
+	p.signal_continue()
+	time.sleep(50 * time.millisecond)
+
+	// Terminate the child process (SIGTERM)
+	println('Terminating child process (SIGTERM)...')
+	p.signal_term()
+	p.wait()
+	
+	println('Child process exited with status: ${p.status} (Code: ${p.code})')
+	p.close()
+
+
+	// --- 3. Pipes ---
+	println('\n--- 3. Low-Level Descriptor Pipes (Pipe) ---')
+	
+	// Create a new pipe
+	mut my_pipe := os.pipe() or {
+		println('Failed to create pipe: ${err}')
+		return
+	}
+	
+	// Write to the pipe
+	pipe_msg := 'IPC via Pipe'.bytes()
+	written := my_pipe.write(pipe_msg) or {
+		println('Failed to write to pipe: ${err}')
+		0
+	}
+	println('Wrote ${written} bytes to pipe.')
+
+	// Read from the pipe
+	mut pipe_buf := []u8{len: 32}
+	bytes_read := my_pipe.read(mut pipe_buf) or {
+		println('Failed to read from pipe: ${err}')
+		0
+	}
+	println('Read message from pipe: "${pipe_buf[..bytes_read].bytestr()}"')
+	my_pipe.close()
+
+
+	// --- 4. Capture Stdout/Stderr ---
+	println('\n--- 4. Capture Stdout and Stderr (IOCapture) ---')
+	
+	// Flush stdout to prevent capturing existing print statements
+	os.flush()
+	
+	// Capture all stdout/stderr output within this block
+	mut cap := os.stdio_capture() or {
+		println('Failed to initialize capture: ${err}')
+		return
+	}
+	
+	// Anything printed here will be redirected to the capture buffer
+	print('Captured standard output data.')
+	eprint('Captured standard error data.')
+	
+	// Restore standard streams and retrieve captured data
+	captured_out, captured_err := cap.finish()
+	
+	println('Captured stdout lines: ${captured_out}')
+	println('Captured stderr lines: ${captured_err}')
+}
+```
+
+##### 3. System Diagnostics & File Metadata (Stat)
+_File location: `language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v`_
+
+This example demonstrates calling system diagnostics (`os.uname`), retrieving current host/user identities, assessing disk capacity and usage metrics (`os.disk_usage`), and parsing detailed file metadata using POSIX stat/lstat mappings (`os.Stat` and `os.FileMode`).
+
+```v
+module main
+
+import os
+
+fn main() {
+	println('=== V OS System & File Information (POSIX/Nix) ===')
+
+	// --- 1. System Info (uname, hostname, loginname) ---
+	println('\n--- 1. System Diagnostics ---')
+	
+	// os.uname() returns kernel details, release, OS name, and architecture
+	u := os.uname()
+	println('Operating System:     ${u.sysname}')
+	println('Node Name (Network):  ${u.nodename}')
+	println('Kernel Release:       ${u.release}')
+	println('Kernel Version:       ${u.version}')
+	println('Machine Architecture: ${u.machine}')
+
+	// Retrieve hostname and login user name
+	host := os.hostname() or { 'unknown_host' }
+	user := os.loginname() or { 'unknown_user' }
+	println('Hostname:             ${host}')
+	println('Login Name:           ${user}')
+
+
+	// --- 2. Identity and Process Metrics ---
+	println('\n--- 2. User/Group IDs & Process Context ---')
+	
+	// Real and effective UID/GIDs
+	println('User ID (UID):        ${os.getuid()}')
+	println('Group ID (GID):       ${os.getgid()}')
+	println('Effective UID (EUID): ${os.geteuid()}')
+	println('Effective GID (EGID): ${os.getegid()}')
+	
+	// Current Process ID and Parent Process ID
+	println('Process ID (PID):     ${os.getpid()}')
+	println('Parent PID (PPID):    ${os.getppid()}')
+
+
+	// --- 3. Disk Space Usage ---
+	println('\n--- 3. Disk Space Stats ---')
+	
+	// Query disk space information for the current directory
+	du := os.disk_usage('.') or {
+		println('Failed to retrieve disk usage: ${err}')
+		return
+	}
+	
+	// Convert u64 bytes to Gigabytes for user readability
+	total_gb := f64(du.total) / (1024.0 * 1024.0 * 1024.0)
+	avail_gb := f64(du.available) / (1024.0 * 1024.0 * 1024.0)
+	used_gb := f64(du.used) / (1024.0 * 1024.0 * 1024.0)
+	
+	println('Disk Total:     ${total_gb:.2f} GB')
+	println('Disk Available: ${avail_gb:.2f} GB')
+	println('Disk Used:      ${used_gb:.2f} GB')
+
+
+	// --- 4. Detailed File Metadata (stat/lstat) ---
+	println('\n--- 4. File Metadata via stat ---')
+	
+	// Let's create a temporary file to run stat on
+	temp_file := 'temp_stat_test.txt'
+	os.write_file(temp_file, 'V stat demo content.') or { return }
+	
+	// Fetch file stats
+	st := os.stat(temp_file) or {
+		println('Failed to stat file: ${err}')
+		os.rm(temp_file) or {}
+		return
+	}
+	
+	println('File Size:          ${st.size} bytes')
+	println('Inode Number:       ${st.inode}')
+	println('Hard Links Count:   ${st.nlink}')
+	println('Device ID:          ${st.dev}')
+	println('Owner UID:          ${st.uid}')
+	println('Owner GID:          ${st.gid}')
+	
+	// Access access, modify, and status change timestamps
+	println('Last Access Time:   ${st.atime} (Unix Epoch)')
+	println('Last Modify Time:   ${st.mtime} (Unix Epoch)')
+	println('Last Change Time:   ${st.ctime} (Unix Epoch)')
+
+	// File type and permissions from Stat
+	file_type := st.get_filetype()
+	file_mode := st.get_mode()
+	println('File Type:          ${file_type}') // e.g., regular, directory, link, etc.
+	println('File Mode Bitmask:  0o${file_mode.bitmask():o}') // octal representation
+	
+	// Permissions breakdown
+	println('Permissions -> Owner: R=${file_mode.owner.read} W=${file_mode.owner.write} X=${file_mode.owner.execute}')
+	println('               Group: R=${file_mode.group.read} W=${file_mode.group.write} X=${file_mode.group.execute}')
+	println('               Other: R=${file_mode.others.read} W=${file_mode.others.write} X=${file_mode.others.execute}')
+
+	// Cleanup
+	os.rm(temp_file) or {}
+}
+```
+
+##### 4. Advanced I/O, Serialization & Directory Walking
+_File location: `language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v`_
+
+This example demonstrates advanced Unix file behaviors such as raw struct binary serialization, cursor seeking (`seek`/`tell`), file size truncation, and recursive directory tree traversal.
+
+```v
+module main
+
+import os
+
+struct Config {
+mut:
+	id   int
+	val  f64
+	name [20]u8 // fixed-size array of bytes for safe serialization
 }
 
+fn main() {
+	println('=== V Advanced File I/O & Directory Walking ===')
+
+	file_path := 'temp_advanced_io.bin'
+
+	// --- 1. Struct Reading & Writing (Binary Serialization) ---
+	println('\n--- 1. Struct Binary Serialization ---')
+	
+	// Create a mutable file in write/read mode
+	mut f := os.open_file(file_path, 'w+') or {
+		println('Failed to open file: ${err}')
+		return
+	}
+
+	mut cfg := Config{
+		id: 101
+		val: 99.99
+		name: [u8(0), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]!
+	}
+	
+	// Populate name
+	name_str := 'V-OS-Advanced-IO'
+	for i in 0 .. name_str.len {
+		if i < 20 {
+			cfg.name[i] = name_str[i]
+		}
+	}
+
+	// Write struct representation directly to the file
+	f.write_struct(cfg) or {
+		println('Failed to write struct: ${err}')
+	}
+	println('Struct successfully serialized to file.')
+
+
+	// --- 2. Seeking & Cursor Position (seek/tell) ---
+	println('\n--- 2. File Seeking & Cursor Position ---')
+	
+	// Retrieve current position in the file (should be size of struct)
+	pos := f.tell() or { 0 }
+	println('Current file cursor position: ${pos} bytes')
+
+	// Seek back to the beginning of the file (.start)
+	println('Seeking back to the start of the file...')
+	f.seek(0, .start) or {
+		println('Failed to seek: ${err}')
+	}
+
+	// Read struct back from file
+	mut read_cfg := Config{
+		name: [u8(0), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]!
+	}
+	f.read_struct(mut read_cfg) or {
+		println('Failed to read struct: ${err}')
+	}
+
+	// Extract string from fixed-size byte array
+	mut bytes := []u8{}
+	for b in read_cfg.name {
+		if b == 0 { break }
+		bytes << b
+	}
+	name_read := bytes.bytestr()
+
+	println('Deserialized Struct:')
+	println('  ID:   ${read_cfg.id}')
+	println('  Val:  ${read_cfg.val}')
+	println('  Name: ${name_read}')
+
+	f.close()
+
+
+	// --- 3. Truncating Files ---
+	println('\n--- 3. File Truncation (truncate) ---')
+	
+	// Note: V's os.truncate opens the file with O_TRUNC, resetting it first before sizing.
+	// Shrinking/sizing a file directly using os.truncate:
+	println('Truncating file "${file_path}" to 10 bytes...')
+	os.truncate(file_path, 10) or {
+		println('Failed to truncate: ${err}')
+	}
+	println('File size after truncation: ${os.file_size(file_path)} bytes')
+	
+	// Clean up binary file
+	os.rm(file_path) or {}
+
+
+	// --- 4. Recursive Directory Tree Walking ---
+	println('\n--- 4. Directory Tree Walking (walk) ---')
+	
+	// Create a dummy tree for traversal
+	walk_root := 'temp_walk_root'
+	sub_dir := os.join_path(walk_root, 'docs')
+	os.mkdir_all(sub_dir) or {}
+	os.write_file(os.join_path(walk_root, 'file1.txt'), 'content1') or {}
+	os.write_file(os.join_path(sub_dir, 'file2.log'), 'content2') or {}
+	os.write_file(os.join_path(sub_dir, 'file3.txt'), 'content3') or {}
+
+	// Recursive walk using a callback
+	println('Recursive walk using os.walk (all files):')
+	os.walk(walk_root, fn (path string) {
+		println('  Found file: ${path}')
+	})
+
+	// Walk with file extension filter
+	println('Walk with file extension filter using os.walk_ext (.txt only):')
+	txt_files := os.walk_ext(walk_root, '.txt', os.WalkParams{})
+	for path in txt_files {
+		println('  Found .txt file: ${path}')
+	}
+
+	// Cleanup directory tree
+	os.rmdir_all(walk_root) or {}
+	println('Directory tree cleanup complete.')
+}
 ```
+
+---
 
 #### Datatypes Collections
 
@@ -9848,6 +10217,412 @@ fn main() {
 	md5_hash := md5.hexhash(input)
 	println('MD5 of "${input}":')
 	println('  ${md5_hash}')
+}
+```
+
+##### Comprehensive Cryptographic Examples
+
+For a detailed demonstration of every cryptographic module, the standard library examples are structured into subdirectories under `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/`.
+
+###### 1. Cryptographic Hash Functions
+_File location: `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v`_
+
+Demonstrates MD5, SHA-1, SHA-256, SHA-512, SHA-3 (Keccak-256/Keccak-512), RIPEMD-160, BLAKE2b, BLAKE2s, and BLAKE3.
+
+```v
+module main
+
+import crypto.md5
+import crypto.sha1
+import crypto.sha256
+import crypto.sha512
+import crypto.sha3
+import crypto.ripemd160
+import crypto.blake2b
+import crypto.blake2s
+import crypto.blake3
+
+fn main() {
+	println('=== V Cryptographic Hash Algorithms ===')
+	
+	input := 'V Language Crypto Guide'.bytes()
+	input_str := 'V Language Crypto Guide'
+
+	// 1. MD5 (128-bit)
+	md5_hex := md5.hexhash(input_str)
+	println('MD5:       ${md5_hex}')
+
+	// 2. SHA-1 (160-bit)
+	sha1_hex := sha1.hexhash(input_str)
+	println('SHA-1:     ${sha1_hex}')
+
+	// 3. SHA-256 (256-bit)
+	sha256_hex := sha256.hexhash(input_str)
+	println('SHA-256:   ${sha256_hex}')
+
+	// 4. SHA-512 (512-bit)
+	sha512_hex := sha512.hexhash(input_str)
+	println('SHA-512:   ${sha512_hex}')
+
+	// 5. SHA-3 (Keccak-based, 256 and 512 bit sums)
+	sha3_256 := sha3.sum256(input)
+	sha3_512 := sha3.sum512(input)
+	println('SHA3-256:  ${sha3_256.hex()}')
+	println('SHA3-512:  ${sha3_512.hex()}')
+
+	// 6. RIPEMD-160 (160-bit)
+	ripemd_hex := ripemd160.hexhash(input_str)
+	println('RIPEMD160: ${ripemd_hex}')
+
+	// 7. BLAKE2b (commonly 512-bit / 256-bit)
+	blake2b_256 := blake2b.sum256(input)
+	blake2b_512 := blake2b.sum512(input)
+	println('BLAKE2b-256: ${blake2b_256.hex()}')
+	println('BLAKE2b-512: ${blake2b_512.hex()}')
+
+	// 8. BLAKE2s (commonly 256-bit)
+	blake2s_256 := blake2s.sum256(input)
+	println('BLAKE2s-256: ${blake2s_256.hex()}')
+
+	// 9. BLAKE3 (256-bit, highly optimized)
+	blake3_256 := blake3.sum256(input)
+	println('BLAKE3-256:  ${blake3_256.hex()}')
+}
+```
+
+###### 2. Symmetric Ciphers & Block Modes
+_File location: `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v`_
+
+Demonstrates AES (CBC block mode with PKCS7-like padding), DES, Blowfish (encryption-only), RC4 stream cipher, and general block modes.
+
+```v
+module main
+
+import crypto.aes
+import crypto.des
+import crypto.blowfish
+import crypto.rc4
+import crypto.cipher
+
+fn main() {
+	println('=== V Symmetric Cryptography Demo ===')
+
+	// --- 1. AES with CBC Block Mode ---
+	println('\n--- AES (CBC Mode) ---')
+	aes_key := [u8(1), 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] // 16-byte key (AES-128)
+	aes_iv := [u8(9), 8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4]       // 16-byte IV
+
+	aes_block := aes.new_cipher(aes_key)
+	mut aes_enc := cipher.new_cbc(aes_block, aes_iv)
+
+	// In CBC mode, data must be padded to block size (16 bytes for AES)
+	plaintext := 'Hello, V Cryptography! Padding here.'.bytes() // 36 bytes. We need to pad it to 48 bytes (multiple of 16)
+	mut padded := plaintext.clone()
+	pad_len := 16 - (padded.len % 16)
+	for _ in 0 .. pad_len {
+		padded << u8(pad_len)
+	}
+
+	mut ciphertext := []u8{len: padded.len}
+	aes_enc.encrypt_blocks(mut ciphertext, padded)
+	println('Ciphertext (Hex): ${ciphertext.hex()}')
+
+	// Decrypt
+	mut aes_dec := cipher.new_cbc(aes_block, aes_iv)
+	mut decrypted := []u8{len: ciphertext.len}
+	aes_dec.decrypt_blocks(mut decrypted, ciphertext)
+	
+	// Unpad
+	unpadded_len := decrypted.len - int(decrypted.last())
+	unpadded_text := decrypted[..unpadded_len].bytestr()
+	println('Decrypted Text:   "${unpadded_text}"')
+
+
+	// --- 2. DES Block Cipher ---
+	println('\n--- DES ---')
+	des_key := [u8(1), 2, 3, 4, 5, 6, 7, 8] // 8-byte key
+	des_block := des.new_cipher(des_key)
+
+	des_plain := 'DESplain'.bytes() // exactly 8 bytes (DES block size)
+	mut des_cipher := []u8{len: 8}
+	des_block.encrypt(mut des_cipher, des_plain)
+	println('DES Ciphertext (Hex): ${des_cipher.hex()}')
+
+	mut des_decrypted := []u8{len: 8}
+	des_block.decrypt(mut des_decrypted, des_cipher)
+	println('DES Decrypted:        "${des_decrypted.bytestr()}"')
+
+
+	// --- 3. Blowfish Block Cipher ---
+	println('\n--- Blowfish (Encryption Only) ---')
+	bf_key := 'blowfish_key'.bytes()
+	mut bf := blowfish.new_cipher(bf_key) or { panic(err) }
+
+	bf_plain := 'bf_block'.bytes() // exactly 8 bytes (Blowfish block size)
+	mut bf_cipher := []u8{len: 8}
+	bf.encrypt(mut bf_cipher, bf_plain)
+	println('Blowfish Ciphertext (Hex): ${bf_cipher.hex()}')
+	println('(Note: V standard library crypto.blowfish only supports encryption)')
+
+
+	// --- 4. RC4 Stream Cipher ---
+	println('\n--- RC4 (Stream Cipher) ---')
+	rc4_key := 'rc4_secret_key'.bytes()
+	rc4_plain := 'RC4 is a stream cipher commonly used for legacy operations.'.bytes()
+
+	mut rc4_enc := rc4.new_cipher(rc4_key) or { panic(err) }
+	mut rc4_cipher := []u8{len: rc4_plain.len}
+	rc4_enc.xor_key_stream(mut rc4_cipher, rc4_plain)
+	println('RC4 Ciphertext (Hex): ${rc4_cipher.hex()}')
+
+	mut rc4_dec := rc4.new_cipher(rc4_key) or { panic(err) }
+	mut rc4_decrypted := []u8{len: rc4_cipher.len}
+	rc4_dec.xor_key_stream(mut rc4_decrypted, rc4_cipher)
+	println('RC4 Decrypted:        "${rc4_decrypted.bytestr()}"')
+}
+```
+
+###### 3. Asymmetric Cryptography & PEM Formats
+_File location: `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v`_
+
+Demonstrates ECDSA key generation, signing, and verification; Ed25519 signing and verification; and PEM block encoding/decoding.
+
+```v
+module main
+
+import crypto.ecdsa
+import crypto.ed25519
+import crypto.pem
+
+fn main() {
+	println('=== V Asymmetric Cryptography Demo ===')
+
+	message := 'Message to sign and verify asymmetric signatures.'.bytes()
+
+	// --- 1. ECDSA ---
+	println('\n--- ECDSA ---')
+	
+	// Generate key pair
+	pub_ec, priv_ec := ecdsa.generate_key() or {
+		println('Failed to generate ECDSA key: ${err}')
+		return
+	}
+	
+	// Sign message
+	sig_ec := priv_ec.sign(message, ecdsa.SignerOpts{}) or {
+		println('ECDSA signing failed: ${err}')
+		return
+	}
+	println('ECDSA Signature (Hex): ${sig_ec.hex()}')
+
+	// Verify message
+	verified_ec := pub_ec.verify(message, sig_ec, ecdsa.SignerOpts{}) or {
+		println('ECDSA verification error: ${err}')
+		return
+	}
+	println('ECDSA Signature Verified? -> ${verified_ec}')
+
+
+	// --- 2. Ed25519 ---
+	println('\n--- Ed25519 ---')
+	
+	// Generate key pair
+	pub_ed, priv_ed := ed25519.generate_key() or {
+		println('Failed to generate Ed25519 key: ${err}')
+		return
+	}
+
+	// Sign message
+	sig_ed := ed25519.sign(priv_ed, message) or {
+		println('Ed25519 signing failed: ${err}')
+		return
+	}
+	println('Ed25519 Signature (Hex): ${sig_ed.hex()}')
+
+	// Verify message
+	verified_ed := ed25519.verify(pub_ed, message, sig_ed) or {
+		println('Ed25519 verification error: ${err}')
+		return
+	}
+	println('Ed25519 Signature Verified? -> ${verified_ed}')
+
+
+	// --- 3. PEM Encoding/Decoding ---
+	println('\n--- PEM (Privacy Enhanced Mail) Encoding ---')
+	
+	pub_bytes := pub_ec.bytes() or {
+		println('Failed to get public key bytes: ${err}')
+		return
+	}
+	
+	mut pem_block := pem.Block.new('EC PUBLIC KEY')
+	pem_block.data = pub_bytes
+	
+	pem_string := pem_block.encode(pem.EncodeConfig{}) or {
+		println('PEM encoding failed: ${err}')
+		return
+	}
+	println('Encoded PEM Public Key:')
+	println(pem_string)
+
+	// Decode back
+	decoded_block, _ := pem.decode(pem_string) or {
+		println('PEM decoding failed')
+		return
+	}
+	println('Decoded Block Type: "${decoded_block.block_type}"')
+	println('Decoded data size matches? -> ${decoded_block.data.len == pub_bytes.len}')
+}
+```
+
+###### 4. Key Derivation Functions (KDF)
+_File location: `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v`_
+
+Demonstrates secure password hashing and key derivation using Bcrypt, Scrypt, and PBKDF2.
+
+```v
+module main
+
+import crypto.bcrypt
+import crypto.scrypt
+import crypto.pbkdf2
+import crypto.sha256
+
+fn main() {
+	println('=== V Key Derivation Functions Demo ===')
+
+	// --- 1. Bcrypt ---
+	println('\n--- Bcrypt ---')
+	password := 'super_secure_password'.bytes()
+	hash := bcrypt.generate_from_password(password, bcrypt.default_cost) or {
+		println('Bcrypt failed: ${err}')
+		return
+	}
+	println('Bcrypt hash: ${hash}')
+
+	bcrypt.compare_hash_and_password(password, hash.bytes()) or {
+		println('Bcrypt verification failed: ${err}')
+		return
+	}
+	println('Bcrypt verification successful!')
+
+
+	// --- 2. Scrypt ---
+	println('\n--- Scrypt ---')
+	scrypt_pass := 'my_scrypt_pass'.bytes()
+	scrypt_salt := 'scrypt_salt'.bytes()
+	
+	// N=16384, r=8, p=1, key_len=32 (N must be power of 2)
+	scrypt_key := scrypt.scrypt(scrypt_pass, scrypt_salt, 16384, 8, 1, 32) or {
+		println('Scrypt failed: ${err}')
+		return
+	}
+	println('Scrypt Key (Hex): ${scrypt_key.hex()}')
+
+
+	// --- 3. PBKDF2 ---
+	println('\n--- PBKDF2 ---')
+	pbkdf2_pass := 'my_pbkdf2_pass'.bytes()
+	pbkdf2_salt := 'pbkdf2_salt'.bytes()
+	
+	// pbkdf2.key(password, salt, iterations, key_len, hash_fn)
+	pbkdf2_key := pbkdf2.key(pbkdf2_pass, pbkdf2_salt, 4096, 32, sha256.new()) or {
+		println('PBKDF2 failed: ${err}')
+		return
+	}
+	println('PBKDF2 Key (Hex): ${pbkdf2_key.hex()}')
+}
+```
+
+###### 5. Message Authentication Codes (MAC)
+_File location: `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v`_
+
+Demonstrates message integrity and authenticity verification using HMAC-SHA256.
+
+```v
+module main
+
+import crypto.hmac
+import crypto.sha256
+
+fn main() {
+	println('=== V Message Authentication Codes (MAC) Demo ===')
+
+	// --- 1. HMAC-SHA256 Signature Generation ---
+	println('\n--- HMAC-SHA256 Signature ---')
+	key := 'secret_signing_key'.bytes()
+	message := 'This is a message to be authenticated using HMAC.'.bytes()
+
+	// hmac.new(key, data, hash_func, blocksize)
+	mac := hmac.new(key, message, sha256.sum, sha256.block_size)
+	println('HMAC (Hex): ${mac.hex()}')
+
+	// --- 2. HMAC Verification ---
+	println('\n--- HMAC Verification ---')
+	
+	// Re-compute to verify
+	computed_mac := hmac.new(key, message, sha256.sum, sha256.block_size)
+	
+	// hmac.equal performs constant-time comparison to prevent timing attacks
+	is_valid := hmac.equal(mac, computed_mac)
+	println('Signature matches? -> ${is_valid}')
+
+	// Verify with a tampered message
+	tampered_message := 'This is a message to be authenticated using HMAC!'.bytes()
+	tampered_mac := hmac.new(key, tampered_message, sha256.sum, sha256.block_size)
+	is_tampered_valid := hmac.equal(mac, tampered_mac)
+	println('Tampered signature matches? -> ${is_tampered_valid}')
+}
+```
+
+###### 6. Secure Randomness & Entropy
+_File location: `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v`_
+
+Demonstrates generating secure cryptographically random bytes, `u64` values, and large integers (`big.Integer`).
+
+```v
+module main
+
+import crypto.rand
+import math.big
+
+fn main() {
+	println('=== V Secure Randomness (Entropy) Demo ===')
+
+	// --- 1. Generating Secure Random Bytes ---
+	println('\n--- Secure Random Bytes ---')
+	// Generates securely generated random bytes from the OS entropy pool
+	random_bytes := rand.bytes(16) or {
+		println('Failed to generate secure bytes: ${err}')
+		return
+	}
+	println('Generated 16 secure bytes (Hex): ${random_bytes.hex()}')
+
+	// --- 2. Generating Secure Random u64 ---
+	println('\n--- Secure Random u64 ---')
+	// Generates a random u64 in the range [0, max)
+	limit_u64 := u64(10_000)
+	random_val := rand.int_u64(limit_u64) or {
+		println('Failed to generate random u64: ${err}')
+		return
+	}
+	println('Secure random u64 in [0, ${limit_u64}): ${random_val}')
+
+	// --- 3. Generating Secure Random Big Integer ---
+	println('\n--- Secure Random big.Integer ---')
+	// Generates a random big.Integer in the range [0, limit)
+	limit_str := '10000000000000000000000000000000000000000' // 10^40
+	limit_big := big.integer_from_string(limit_str) or {
+		println('Failed to parse big integer string: ${err}')
+		return
+	}
+	
+	random_big := rand.int_big(limit_big) or {
+		println('Failed to generate random big integer: ${err}')
+		return
+	}
+	println('Secure random big.Integer in [0, 10^40):')
+	println(random_big.str())
 }
 ```
 
@@ -10850,6 +11625,363 @@ fn main() {
 }
 ```
 
+#### Net Unix Sockets
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v`_
+
+This example demonstrates Unix domain socket client-server communication using the `net.unix` module.
+
+```v
+module main
+
+import net.unix
+import os
+import time
+
+// run_server starts the Unix socket server, accepts one client connection,
+// echoes back the received message, and exits.
+fn run_server(socket_path string) ! {
+	// Clean up any stale socket file from a previous run
+	if os.exists(socket_path) {
+		os.rm(socket_path)!
+	}
+
+	// Listen on the Unix socket path with default options
+	mut listener := unix.listen_stream(socket_path, unix.ListenOptions{}) or {
+		println('Server: Failed to listen on ${socket_path}: ${err}')
+		return err
+	}
+	defer {
+		listener.close() or {}
+		listener.unlink() or {}
+	}
+
+	println('Server: Listening on socket path: ${socket_path}')
+
+	// Accept an incoming connection
+	mut conn := listener.accept() or {
+		println('Server: Failed to accept connection: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Server: Client connected!')
+
+	// Read client's message
+	mut buf := []u8{len: 1024}
+	n := conn.read(mut buf) or {
+		println('Server: Read failed: ${err}')
+		return err
+	}
+
+	message := buf[..n].bytestr()
+	println('Server: Received message: "${message}"')
+
+	// Write response back to the client
+	response := 'Echo: ${message}'
+	conn.write(response.bytes()) or {
+		println('Server: Write failed: ${err}')
+		return err
+	}
+	println('Server: Sent echo response.')
+}
+
+// run_client connects to the Unix socket server, sends a message,
+// reads the echo response, and closes the connection.
+fn run_client(socket_path string) ! {
+	println('Client: Connecting to ${socket_path}...')
+	mut conn := unix.connect_stream(socket_path) or {
+		println('Client: Failed to connect: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Client: Connected!')
+
+	// Send message to the server
+	message := 'Hello V Unix Domain Sockets!'
+	println('Client: Sending message: "${message}"')
+	conn.write(message.bytes()) or {
+		println('Client: Write failed: ${err}')
+		return err
+	}
+
+	// Read server response
+	mut buf := []u8{len: 1024}
+	n := conn.read(mut buf) or {
+		println('Client: Read failed: ${err}')
+		return err
+	}
+
+	response := buf[..n].bytestr()
+	println('Client: Received response: "${response}"')
+}
+
+fn main() {
+	println('=== net.unix Module Demo ===')
+	
+	// Create a unique temporary socket path
+	socket_path := os.join_path(os.temp_dir(), 'v_unix_socket_example')
+
+	// Spawn the server in a background thread
+	spawn fn (path string) {
+		run_server(path) or {
+			println('Server thread failed: ${err}')
+		}
+	}(socket_path)
+
+	// Allow the server thread a short time to start and bind
+	time.sleep(100 * time.millisecond)
+
+	// Run the client in the main thread
+	run_client(socket_path) or {
+		println('Client failed: ${err}')
+	}
+
+	// Give the server a small window to finish deferred cleanups
+	time.sleep(50 * time.millisecond)
+	println('Unix Sockets Demo finished.')
+}
+```
+
+#### HTML Parsing
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v`_
+
+This example demonstrates parsing HTML strings, querying tags by class name and attribute values, and extracting node text and properties using the `net.html` module.
+
+```v
+module main
+
+import net.html
+
+fn main() {
+	println('=== net.html Module Demo ===')
+
+	// 1. Define a sample HTML document to parse
+	html_content := '
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>V Programming Language</title>
+	</head>
+	<body>
+		<header>
+			<h1 class="main-title">Welcome to the V Standard Library</h1>
+		</header>
+		<main>
+			<div class="content" id="overview">
+				<p class="description">
+					V is a simple, fast, safe, and compiled language.
+				</p>
+				<p class="description">
+					The net.html module parses HTML into a Queryable Document Object Model (DOM).
+				</p>
+				<a href="https://vlang.io" class="link-btn" id="home-link">Official Website</a>
+				<a href="https://github.com/vlang/v" class="link-btn" id="repo-link">GitHub Repository</a>
+			</div>
+		</main>
+	</body>
+	</html>'
+
+	// 2. Parse the HTML string into a DocumentObjectModel (DOM)
+	println('Parsing HTML document...')
+	dom := html.parse(html_content)
+
+	// 3. Retrieve tags by name (e.g., header, title)
+	title_tags := dom.get_tags(name: 'title')
+	if title_tags.len > 0 {
+		println('Page Title: "${title_tags[0].text()}"')
+	}
+
+	// 4. Retrieve tags by class name
+	descriptions := dom.get_tags_by_class_name('description')
+	println('\nParagraphs with class "description":')
+	for i, p in descriptions {
+		println('  ${i + 1}: ${p.text().trim_space()}')
+	}
+
+	// 5. Query tags by attribute value (e.g., href, id)
+	links := dom.get_tags_by_class_name('link-btn')
+	println('\nLinks found in document:')
+	for link in links {
+		href := link.attributes['href']
+		id := link.attributes['id']
+		text := link.text()
+		println('  - Text: "${text}"')
+		println('    ID:   "${id}"')
+		println('    URL:  "${href}"')
+	}
+
+	// 6. Access DOM root and verify serialization representation
+	root := dom.get_root()
+	println('\nDOM Root Element Tag Name: <${root.name}>')
+	println('HTML Demo finished.')
+}
+```
+
+#### JSON-RPC 2.0
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v`_
+
+This example demonstrates implementing JSON-RPC 2.0 servers and clients using V's `net.jsonrpc` module, utilizing a Unix domain socket connection as the transport layer.
+
+```v
+module main
+
+import net.unix
+import net.jsonrpc
+import os
+import time
+
+// Define structs for request parameters and response results
+struct MathParams {
+pub:
+	a int
+	b int
+}
+
+struct MathResult {
+pub:
+	sum        int
+	difference int
+}
+
+// Router handler to compute mathematical operations
+fn handle_math(req &jsonrpc.Request, mut wr jsonrpc.ResponseWriter) {
+	// Decode request parameters into MathParams struct
+	params := req.decode_params[MathParams]() or {
+		wr.write_error(jsonrpc.invalid_params)
+		return
+	}
+
+	result := MathResult{
+		sum:        params.a + params.b
+		difference: params.a - params.b
+	}
+
+	// Write the successful result back
+	wr.write(result)
+}
+
+// Start JSON-RPC 2.0 Server over Unix Socket
+fn run_rpc_server(socket_path string) ! {
+	// Ensure cleanup of any old socket file
+	if os.exists(socket_path) {
+		os.rm(socket_path)!
+	}
+
+	mut listener := unix.listen_stream(socket_path, unix.ListenOptions{}) or {
+		println('Server: Failed to listen: ${err}')
+		return err
+	}
+	defer {
+		listener.close() or {}
+		listener.unlink() or {}
+	}
+
+	println('Server: Listening and waiting for connections...')
+
+	// Accept client connection
+	mut conn := listener.accept() or {
+		println('Server: Accept failed: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Server: Client connected, initiating JSON-RPC protocol.')
+
+	// Setup JSON-RPC router and register math method
+	mut router := jsonrpc.Router{}
+	router.register('math.compute', handle_math)
+
+	// Create JSON-RPC server wrapping the Unix socket connection stream
+	mut server := jsonrpc.new_server(jsonrpc.ServerConfig{
+		stream:  conn
+		handler: router.handle_jsonrpc
+	})
+
+	// Process incoming request and respond
+	server.respond() or {
+		println('Server: Error processing request: ${err}')
+		return err
+	}
+	println('Server: Successfully processed request and shut down.')
+}
+
+// Start JSON-RPC 2.0 Client over Unix Socket
+fn run_rpc_client(socket_path string) ! {
+	println('Client: Connecting to server at ${socket_path}...')
+	mut conn := unix.connect_stream(socket_path) or {
+		println('Client: Connection failed: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	// Create JSON-RPC client wrapping the Unix socket connection stream
+	mut client := jsonrpc.new_client(jsonrpc.ClientConfig{
+		stream: conn
+	})
+
+	params := MathParams{
+		a: 45
+		b: 17
+	}
+
+	println('Client: Sending request "math.compute" with params {a: ${params.a}, b: ${params.b}}')
+
+	// Execute JSON-RPC request (method, parameters, request ID)
+	resp := client.request('math.compute', params, 'req_math_1') or {
+		println('Client: Request execution failed: ${err}')
+		return err
+	}
+
+	// Decode response result
+	result := resp.decode_result[MathResult]() or {
+		println('Client: Failed to decode response result: ${err}')
+		return err
+	}
+
+	println('Client received response:')
+	println('  Request ID: ${resp.id}')
+	println('  Result sum:        ${result.sum}')
+	println('  Result difference: ${result.difference}')
+}
+
+fn main() {
+	println('=== net.jsonrpc Module Demo ===')
+	socket_path := os.join_path(os.temp_dir(), 'v_jsonrpc_example_socket')
+
+	// Spawn JSON-RPC server in background thread
+	spawn fn (path string) {
+		run_rpc_server(path) or {
+			println('Server thread failed: ${err}')
+		}
+	}(socket_path)
+
+	// Wait briefly for the server socket to bind
+	time.sleep(100 * time.millisecond)
+
+	// Run JSON-RPC client in main thread
+	run_rpc_client(socket_path) or {
+		println('Client thread failed: ${err}')
+	}
+
+	// Wait briefly for server post-handling cleanups
+	time.sleep(50 * time.millisecond)
+	println('JSON-RPC Demo finished.')
+}
+```
+
+
 #### Tar Archiving
 
 _File location: `language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v`_
@@ -10925,7 +12057,7 @@ fn main() {
 
 #### Gzip Compression
 
-_File location: `language_updates_and_stdlib/02_standard_library/27_compress_gzip/compress_gzip.v`_
+_File location: `language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v`_
 
 This example demonstrates compressing and decompressing binary or text data using the `compress.gzip` module.
 
@@ -10961,6 +12093,233 @@ fn main() {
 	println('Decompressed Text: "${decompressed_text}"')
 }
 ```
+
+#### Deflate Compression
+
+_File location: `language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v`_
+
+This example demonstrates standard Deflate byte stream compression and decompression using the `compress.deflate` module.
+
+```v
+module main
+
+import compress.deflate
+
+fn main() {
+	println('=== compress.deflate Module Demo ===')
+
+	// 1. Data to compress
+	original_text := 'V programming language standard library deflate compression demo. Deflate is a lossless data compression algorithm.'
+	println('Original Text length: ${original_text.len} bytes')
+
+	// 2. Compress the data using deflate.compress
+	compressed_bytes := deflate.compress(original_text.bytes()) or {
+		println('Compression failed: ${err}')
+		return
+	}
+	println('Compressed size:      ${compressed_bytes.len} bytes')
+
+	// 3. Decompress the data using deflate.decompress
+	decompressed_bytes := deflate.decompress(compressed_bytes) or {
+		println('Decompression failed: ${err}')
+		return
+	}
+	println('Decompressed size:    ${decompressed_bytes.len} bytes')
+
+	// 4. Verify the result
+	decompressed_text := decompressed_bytes.bytestr()
+	println('Decompressed text equals original? -> ${decompressed_text == original_text}')
+	println('Decompressed Text: "${decompressed_text}"')
+}
+```
+
+#### Zlib Compression
+
+_File location: `language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v`_
+
+This example demonstrates standard Zlib byte stream compression and decompression using the `compress.zlib` module.
+
+```v
+module main
+
+import compress.zlib
+
+fn main() {
+	println('=== compress.zlib Module Demo ===')
+
+	// 1. Data to compress
+	original_text := 'V programming language standard library zlib compression demo. Zlib uses the deflate algorithm with headers and checksum.'
+	println('Original Text length: ${original_text.len} bytes')
+
+	// 2. Compress the data using zlib.compress
+	compressed_bytes := zlib.compress(original_text.bytes()) or {
+		println('Compression failed: ${err}')
+		return
+	}
+	println('Compressed size:      ${compressed_bytes.len} bytes')
+
+	// 3. Decompress the data using zlib.decompress
+	decompressed_bytes := zlib.decompress(compressed_bytes) or {
+		println('Decompression failed: ${err}')
+		return
+	}
+	println('Decompressed size:    ${decompressed_bytes.len} bytes')
+
+	// 4. Verify the result
+	decompressed_text := decompressed_bytes.bytestr()
+	println('Decompressed text equals original? -> ${decompressed_text == original_text}')
+	println('Decompressed Text: "${decompressed_text}"')
+}
+```
+
+#### Zstd Compression
+
+_File location: `language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v`_
+
+This example demonstrates Zstd compression and decompression using the fast Facebook Zstandard algorithm in the `compress.zstd` module.
+
+```v
+module main
+
+import compress.zstd
+
+fn main() {
+	println('=== compress.zstd Module Demo ===')
+
+	// 1. Check version details
+	version := zstd.version_string()
+	println('ZSTD Library Version: ${version}')
+
+	// 2. Data to compress
+	original_text := 'Zstd, short for Zstandard, is a fast lossless compression algorithm developed by Facebook. It offers high compression ratios.'
+	println('\nOriginal Text length: ${original_text.len} bytes')
+
+	// 3. Compress using zstd.compress (specifying standard parameters)
+	compressed_bytes := zstd.compress(original_text.bytes(), compression_level: 3) or {
+		println('Compression failed: ${err}')
+		return
+	}
+	println('Compressed size:      ${compressed_bytes.len} bytes')
+
+	// 4. Decompress using zstd.decompress
+	decompressed_bytes := zstd.decompress(compressed_bytes) or {
+		println('Decompression failed: ${err}')
+		return
+	}
+	println('Decompressed size:    ${decompressed_bytes.len} bytes')
+
+	// 5. Verify and display result
+	decompressed_text := decompressed_bytes.bytestr()
+	println('Decompressed text equals original? -> ${decompressed_text == original_text}')
+	println('Decompressed Text: "${decompressed_text}"')
+}
+```
+
+#### Szip Archive
+
+_File location: `language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v`_
+
+This example demonstrates packaging multiple files into zip archives recursively, inspecting zip contents/meta-data (size, CRC32), and extracting zip files to folders using the `compress.szip` module.
+
+```v
+module main
+
+import os
+import compress.szip
+
+fn main() {
+	println('=== compress.szip Module Demo ===')
+
+	zip_filename := 'demo_archive.zip'
+	dest_dir := 'extracted_demo'
+
+	// Ensure cleanup of any temp files/folders
+	defer {
+		os.rm(zip_filename) or {}
+		os.rmdir_all(dest_dir) or {}
+		println('\nCleaned up archive and extraction folder.')
+	}
+
+	println('\n--- 1. Creating a Zip Archive ---')
+	// Open a new zip archive for writing (creating it)
+	mut archive := szip.open(zip_filename, .default_compression, .write) or {
+		println('Failed to create zip: ${err}')
+		return
+	}
+
+	// Add first file entry
+	archive.open_entry('first_file.txt') or {
+		println('Failed to open entry: ${err}')
+		return
+	}
+	archive.write_entry('Hello from the first file inside our zip archive!'.bytes()) or {
+		println('Failed to write entry: ${err}')
+		return
+	}
+	archive.close_entry()
+
+	// Add second file entry
+	archive.open_entry('docs/second_file.txt') or {
+		println('Failed to open entry: ${err}')
+		return
+	}
+	archive.write_entry('This is a second file nested inside a docs directory.'.bytes()) or {
+		println('Failed to write entry: ${err}')
+		return
+	}
+	archive.close_entry()
+
+	// Close the zip file
+	archive.close()
+	println('Successfully created zip archive "${zip_filename}" with 2 entries.')
+
+	println('\n--- 2. Inspecting the Zip Archive ---')
+	// Open zip file in read-only mode to inspect its contents
+	mut reader := szip.open(zip_filename, .default_compression, .read_only) or {
+		println('Failed to open zip for reading: ${err}')
+		return
+	}
+	
+	total_entries := reader.total() or { 0 }
+	println('Total entries found in zip: ${total_entries}')
+
+	// Inspect first entry details
+	reader.open_entry_by_index(0) or {
+		println('Failed to open entry 0: ${err}')
+		return
+	}
+	name := reader.name()
+	size := reader.size()
+	crc := reader.crc32()
+	println('Entry 0 details -> Name: "${name}", Size: ${size} bytes, CRC32: ${crc}')
+	reader.close_entry()
+	reader.close()
+
+	println('\n--- 3. Extracting Zip Archive contents to Directory ---')
+	os.mkdir(dest_dir) or {
+		println('Failed to create destination directory: ${err}')
+		return
+	}
+
+	// Extract the full archive to the target folder
+	success := szip.extract_zip_to_dir(zip_filename, dest_dir) or {
+		println('Extraction failed: ${err}')
+		return
+	}
+
+	if success {
+		println('Successfully extracted all entries to folder "${dest_dir}".')
+		// Read and display content from extracted files
+		file1_content := os.read_file(os.join_path(dest_dir, 'first_file.txt')) or { '' }
+		file2_content := os.read_file(os.join_path(dest_dir, 'docs', 'second_file.txt')) or { '' }
+		println('Extracted first_file.txt: "${file1_content}"')
+		println('Extracted docs/second_file.txt: "${file2_content}"')
+	} else {
+		println('Extraction reported failure.')
+	}
+}
+```
+
 
 #### IO Stream Interfaces
 
@@ -11024,6 +12383,183 @@ fn main() {
 	// 3. Print the written data
 	written_str := writer.buf.bytestr()
 	println('Writer received: "${written_str}"')
+}
+```
+
+#### File System IO
+
+_File location: `language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v`_
+
+This example demonstrates how `os.File` implements `io.Reader` and `io.Writer` interfaces, allowing standard file operations to utilize stream-oriented utilities like `io.cp` and `io.BufferedReader`.
+
+```v
+module main
+
+import os
+import io
+
+fn main() {
+	println('=== io & File System (os.File) Demo ===')
+
+	src_path := 'temp_src_file.txt'
+	dst_path := 'temp_dst_file.txt'
+
+	// Ensure files are cleaned up on completion
+	defer {
+		os.rm(src_path) or {}
+		os.rm(dst_path) or {}
+		println('\nCleaned up temporary files.')
+	}
+
+	println('\n--- 1. Creating and Writing to File via io.Writer ---')
+	// os.create returns an os.File struct, which implements the io.Writer interface.
+	mut src_file := os.create(src_path) or {
+		println('Failed to create file: ${err}')
+		return
+	}
+	
+	// Write data using the io.Writer write() method
+	content_to_write := 'Hello! This is a file system demo.\nIt demonstrates how os.File integrates with the io module.\n'
+	written_bytes := src_file.write(content_to_write.bytes()) or {
+		println('Failed to write to file: ${err}')
+		return
+	}
+	println('Wrote ${written_bytes} bytes to "${src_path}" using the io.Writer interface.')
+	src_file.close()
+
+	println('\n--- 2. Reading from File via io.BufferedReader ---')
+	// os.open opens a file for reading, returning an os.File (which implements io.Reader).
+	mut read_file := os.open(src_path) or {
+		println('Failed to open file: ${err}')
+		return
+	}
+
+	// Wrap os.File in io.BufferedReader for convenient line-by-line reading
+	mut buf_reader := io.new_buffered_reader(reader: read_file)
+	
+	// Read lines until EOF
+	for {
+		line := buf_reader.read_line() or {
+			break
+		}
+		println('Buffered Read Line: "${line}"')
+	}
+	read_file.close()
+
+	println('\n--- 3. Copying File Contents using io.cp ---')
+	// Re-open source file for reading (implements io.Reader)
+	mut src_to_copy := os.open(src_path) or {
+		println('Failed to open source file: ${err}')
+		return
+	}
+	defer { src_to_copy.close() }
+
+	// Create a new destination file for writing (implements io.Writer)
+	mut dst_file := os.create(dst_path) or {
+		println('Failed to create destination file: ${err}')
+		return
+	}
+	defer { dst_file.close() }
+
+	// Copy all contents from reader to writer using io.cp
+	io.cp(mut src_to_copy, mut dst_file) or {
+		println('Failed to copy file content: ${err}')
+		return
+	}
+	// Explicitly close files so data is flushed and readable
+	src_to_copy.close()
+	dst_file.close()
+	println('Copied content from "${src_path}" to "${dst_path}" via io.cp.')
+
+	// Verify the destination file contents
+	copied_content := os.read_file(dst_path) or {
+		println('Failed to read destination file: ${err}')
+		return
+	}
+	println('Copied File Contents:\n${copied_content.trim_space()}')
+}
+```
+
+#### IO Utilities
+
+_File location: `language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v`_
+
+This example demonstrates using the `io.util` module for creating, writing to, reading from, and cleaning up temporary files and directories.
+
+```v
+module main
+
+import os
+import io.util
+
+fn main() {
+	println('=== io.util Module Demo ===')
+
+	println('\n--- 1. Creating a Temporary File ---')
+	// Create a temporary file. The '*' character in the pattern is replaced by a random number.
+	// tfo.path defaults to the system temp directory if not specified.
+	mut temp_file, temp_file_path := util.temp_file(pattern: 'v_guide_demo_*.txt') or {
+		println('Failed to create temp file: ${err}')
+		return
+	}
+	// Close the returned file handle immediately so we can open it with a clean write mode
+	temp_file.close()
+
+	defer {
+		os.rm(temp_file_path) or {}
+		println('Cleaned up temporary file: ${temp_file_path}')
+	}
+	println('Created temporary file at: ${temp_file_path}')
+
+	// Reopen the temp file for writing explicitly
+	mut f := os.open_file(temp_file_path, 'w') or {
+		println('Failed to open temp file for writing: ${err}')
+		return
+	}
+
+	// Write content into the temporary file
+	f.write('This is some temporary data written to a temp file.'.bytes()) or {
+		println('Failed to write to temp file: ${err}')
+		f.close()
+		return
+	}
+	f.close() // Close file to flush buffer and allow reading
+
+	// Read content to verify
+	content := os.read_file(temp_file_path) or {
+		println('Failed to read temp file: ${err}')
+		return
+	}
+	println('Temp file content: "${content}"')
+
+	println('\n--- 2. Creating a Temporary Directory ---')
+	// Create a temporary directory using a pattern
+	temp_dir_path := util.temp_dir(pattern: 'v_guide_dir_*') or {
+		println('Failed to create temp directory: ${err}')
+		return
+	}
+	
+	// Register cleanup on function exit
+	defer {
+		os.rmdir_all(temp_dir_path) or {}
+		println('Cleaned up temporary directory: ${temp_dir_path}')
+	}
+	println('Created temporary directory at: ${temp_dir_path}')
+
+	// Create a sub-file inside the temporary directory
+	sub_file_path := os.join_path(temp_dir_path, 'sub_file.txt')
+	os.write_file(sub_file_path, 'Data saved inside temporary directory.') or {
+		println('Failed to create sub-file: ${err}')
+		return
+	}
+	println('Created sub-file: ${sub_file_path}')
+
+	// List files in the temporary directory to verify
+	dir_files := os.ls(temp_dir_path) or {
+		println('Failed to list temp directory: ${err}')
+		return
+	}
+	println('Temporary directory contents: ${dir_files}')
 }
 ```
 
@@ -11288,6 +12824,126 @@ fn main() {
 	println('  Total Memory: ${total_mb} MB')
 	println('  Free Memory:  ${free_mb} MB')
 	println('  Used (by App): ${used_mb} MB')
+}
+```
+
+#### WebAssembly (wasm) Binary Generation
+
+_File location: `language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v`_
+
+V provides a built-in `wasm` module in its standard library that allows developers to programmatically build WebAssembly binary (`.wasm`) files directly using instruction-level builder patterns. This is extremely useful for compilers, runtime engines, or dynamic code generation targeting the browser and other WebAssembly runtimes.
+
+This example demonstrates how to:
+1. Initialize a WebAssembly module (`wasm.Module`).
+2. Generate exported arithmetic functions (`add`, `sub`, `mul`).
+3. Construct and read mutable global variables (`new_global`, `global_get`, `global_set`).
+4. Build recursive control structures (a factorial `fac` function utilizing `c_if`, `c_else`, `c_end`, and recursive `call`).
+5. Compile the module down to a `.wasm` binary slice (`[]u8`) and save it to disk.
+
+```v
+module main
+
+import wasm
+import os
+
+fn main() {
+	println('=== V WebAssembly (wasm) Module Demo ===')
+
+	// Initialize the WebAssembly module
+	mut m := wasm.Module{}
+	m.enable_debug('vlang_wasm_demo')
+
+	// --- 1. Basic Arithmetic Functions ---
+	println('\n1. Generating Arithmetic Functions (add, sub, mul)...')
+	
+	// Exported 'add' function: taking two i32 parameters, returning one i32 result
+	mut add_fn := m.new_function('add', [.i32_t, .i32_t], [.i32_t])
+	{
+		add_fn.local_get(0)
+		add_fn.local_get(1)
+		add_fn.add(.i32_t)
+	}
+	m.commit(add_fn, true) // commit with export = true
+
+	// Exported 'sub' function
+	mut sub_fn := m.new_function('sub', [.i32_t, .i32_t], [.i32_t])
+	{
+		sub_fn.local_get(0)
+		sub_fn.local_get(1)
+		sub_fn.sub(.i32_t)
+	}
+	m.commit(sub_fn, true)
+
+	// Exported 'mul' function
+	mut mul_fn := m.new_function('mul', [.i32_t, .i32_t], [.i32_t])
+	{
+		mul_fn.local_get(0)
+		mul_fn.local_get(1)
+		mul_fn.mul(.i32_t)
+	}
+	m.commit(mul_fn, true)
+
+
+	// --- 2. Global Variables ---
+	println('\n2. Creating Global Variables...')
+	// Global variable named '__vsp' (Stack Pointer), internal/non-exported, type i32, mutable, init value 10
+	vsp := m.new_global('__vsp', false, .i32_t, true, wasm.constexpr_value(10))
+	
+	// Create a function that retrieves the global value, adds 20, stores it back, and returns the new value
+	mut vsp_fn := m.new_function('update_vsp', [], [.i32_t])
+	{
+		vsp_fn.global_get(vsp)
+		vsp_fn.i32_const(20)
+		vsp_fn.add(.i32_t)
+		vsp_fn.global_set(vsp)
+		vsp_fn.global_get(vsp)
+	}
+	m.commit(vsp_fn, true)
+
+
+	// --- 3. Recursive Functions (Factorial) ---
+	println('\n3. Generating Recursive Function (fac)...')
+	// fac(n) returns n! using i64 types
+	mut fac_fn := m.new_function('fac', [.i64_t], [.i64_t])
+	{
+		fac_fn.local_get(0)
+		fac_fn.eqz(.i64_t)
+		
+		// If block: if n == 0, return 1
+		ifs := fac_fn.c_if([], [.i64_t])
+		{
+			fac_fn.i64_const(1)
+		}
+		fac_fn.c_else(ifs)
+		{
+			// Else: return n * fac(n - 1)
+			fac_fn.local_get(0) // push n
+			
+			fac_fn.local_get(0)
+			fac_fn.i64_const(1)
+			fac_fn.sub(.i64_t)   // n - 1
+			fac_fn.call('fac')   // recursive call to fac(n - 1)
+			
+			fac_fn.mul(.i64_t)   // n * fac(n - 1)
+		}
+		fac_fn.c_end(ifs)
+	}
+	m.commit(fac_fn, true)
+
+
+	// --- 4. Compilation & Output ---
+	println('\n4. Compiling Module to WebAssembly Binary...')
+	binary_code := m.compile()
+	println('Compilation Successful! Binary size: ${binary_code.len} bytes')
+
+	// Save compiled binary as output.wasm in the current directory
+	dir := os.dir(@FILE)
+	output_path := os.join_path(dir, 'output.wasm')
+	os.write_file(output_path, binary_code.bytestr()) or {
+		println('Failed to write output.wasm: ${err}')
+		return
+	}
+	println('Saved Wasm binary to: ${output_path}')
 }
 ```
 

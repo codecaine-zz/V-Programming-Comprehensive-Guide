@@ -27,6 +27,19 @@ fn main() {
 	}
 	println('Read content from file: "${read_content}"')
 
+	// Writing and reading lines
+	lines := ['Line 1: V has simple OS functions.', 'Line 2: Supporting multiple lines.']
+	lines_file := 'temp_lines_example.txt'
+	os.write_lines(lines_file, lines) or {
+		println('Failed to write lines: ${err}')
+	}
+	read_lines := os.read_lines(lines_file) or {
+		println('Failed to read lines: ${err}')
+		[]
+	}
+	println('Read lines: ${read_lines}')
+	os.rm(lines_file) or {}
+
 	// Listing directory contents
 	println('Listing files in current directory:')
 	files := os.ls('.') or {
@@ -43,6 +56,11 @@ fn main() {
 	// Reading environment variables
 	home_dir := os.getenv('HOME')
 	println('User HOME directory: ${home_dir}')
+
+	// Checking if a binary exists in the system PATH
+	if os.exists_in_system_path('git') {
+		println('Confirmed: Git executable exists in system PATH.')
+	}
 
 	// Executing OS commands
 	// os.execute runs command in a subshell and returns a Result struct containing exit_code and output.
@@ -136,7 +154,6 @@ fn main() {
 	}
 
 	// Check permissions
-	// Note: Avoid TOCTOU (Time-of-Check-to-Time-of-Use) security vulnerabilities in production!
 	println('Is readable?   ${os.is_readable(moved_file)}')
 	println('Is writable?   ${os.is_writable(moved_file)}')
 	println('Is executable? ${os.is_executable(moved_file)}')
