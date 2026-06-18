@@ -9721,6 +9721,243 @@ fn main() {
 }
 ```
 
+#### Math And Rand
+
+_File location: `language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v`_
+
+This example demonstrates the concepts of **math and rand**.
+
+```v
+module main
+
+import math
+import rand
+
+fn main() {
+	println('=== Math & Rand Module Examples ===')
+
+	// --- math ---
+	println('\n--- math ---')
+	println('Pi constant: ${math.pi}')
+	println('E constant:  ${math.e}')
+	
+	// Trigonometry
+	angle := 45.0 * (math.pi / 180.0) // 45 degrees in radians
+	println('sin(45 deg): ${math.sin(angle):.4f}')
+	println('cos(45 deg): ${math.cos(angle):.4f}')
+	println('tan(45 deg): ${math.tan(angle):.4f}')
+
+	// Power, Square Root, Logarithms
+	println('2^10:        ${math.pow(2.0, 10.0)}')
+	println('sqrt(144):   ${math.sqrt(144.0)}')
+	println('ln(e):       ${math.log(math.e)}')
+	println('log10(100):  ${math.log10(100.0)}')
+
+	// Absolute, Min/Max, Rounding
+	println('abs(-5.5):   ${math.abs(-5.5)}')
+	println('max(10, 20): ${math.max(10.0, 20.0)}')
+	println('min(10, 20): ${math.min(10.0, 20.0)}')
+	println('ceil(4.2):   ${math.ceil(4.2)}')
+	println('floor(4.8):  ${math.floor(4.8)}')
+	println('round(4.5):  ${math.round(4.5)}')
+
+	// --- rand ---
+	println('\n--- rand ---')
+	// Random integers and floats
+	random_int := rand.int_in_range(1, 100) or { 0 }
+	println('Random integer in [1, 100): ${random_int}')
+
+	random_f64 := rand.f64()
+	println('Random f64 in [0.0, 1.0):   ${random_f64:.4f}')
+
+	// Random boolean simulated using rand.intn
+	random_bool := (rand.intn(2) or { 0 }) == 0
+	println('Random boolean:             ${random_bool}')
+
+	// Choosing a random element from an array
+	items := ['Apple', 'Banana', 'Cherry', 'Date']
+	chosen := rand.element(items) or { 'None' }
+	println('Randomly chosen fruit:      ${chosen}')
+
+	// Random UUID generation (commonly used)
+	uuid_str := rand.uuid_v4()
+	println('Random UUID v4:             ${uuid_str}')
+}
+```
+
+#### Log And Crypto
+
+_File location: `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v`_
+
+This example demonstrates the concepts of **log and crypto**.
+
+```v
+module main
+
+import log
+import crypto.sha256
+import crypto.md5
+
+fn main() {
+	println('=== Log & Crypto Module Examples ===')
+
+	// --- log ---
+	println('\n--- log ---')
+	// V's log module provides customizable levels (debug, info, warn, error, fatal)
+	mut logger := log.Log{}
+	logger.set_level(.info) // Set threshold (ignores debug level)
+	
+	logger.info('Logger initialized.')
+	logger.warn('This is a warning message.')
+	logger.error('This is an error message.')
+
+	// --- crypto ---
+	println('\n--- crypto ---')
+	input := 'V language standard library'
+	
+	// SHA256 Hash
+	sha_hash := sha256.hexhash(input)
+	println('SHA-256 of "${input}":')
+	println('  ${sha_hash}')
+
+	// MD5 Hash
+	md5_hash := md5.hexhash(input)
+	println('MD5 of "${input}":')
+	println('  ${md5_hash}')
+}
+```
+
+#### Sync Concurrency
+
+_File location: `language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v`_
+
+This example demonstrates the concepts of **sync concurrency**.
+
+```v
+module main
+
+import sync
+import time
+
+fn worker(id int, mut wg sync.WaitGroup) {
+	defer {
+		wg.done()
+	}
+	println('Worker ${id} starting...')
+	time.sleep(50 * time.millisecond)
+	println('Worker ${id} done!')
+}
+
+fn main() {
+	println('=== Sync & Concurrency Examples ===')
+
+	// 1. WaitGroup (Wait for multiple goroutines/tasks)
+	mut wg := sync.new_waitgroup()
+	for i in 1 .. 4 {
+		wg.add(1)
+		go worker(i, mut wg)
+	}
+	wg.wait()
+	println('All workers completed!')
+
+	// 2. Mutex (Thread-safe shared state access)
+	println('\n=== Mutex Demo ===')
+	mut mu := sync.new_mutex()
+	mu.@lock()
+	println('Mutex locked')
+	mu.unlock()
+	println('Mutex unlocked')
+}
+```
+
+#### Encoding Formats
+
+_File location: `language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v`_
+
+This example demonstrates the concepts of **encoding formats**.
+
+```v
+module main
+
+import encoding.base64
+import encoding.hex
+import encoding.csv
+
+fn main() {
+	println('=== Encoding Modules Examples ===')
+
+	// --- 1. Base64 ---
+	println('\n--- Base64 ---')
+	raw_str := 'V Programming Language'
+	encoded_b64 := base64.encode_str(raw_str)
+	println('Encoded Base64: ${encoded_b64}')
+
+	decoded_b64 := base64.decode_str(encoded_b64)
+	println('Decoded Base64: ${decoded_b64}')
+
+	// --- 2. Hex ---
+	println('\n--- Hex ---')
+	raw_bytes := [u8(72), 101, 108, 108, 111] // "Hello"
+	encoded_hex := hex.encode(raw_bytes)
+	println('Encoded Hex:    ${encoded_hex}')
+
+	decoded_hex := hex.decode(encoded_hex) or { []u8{} }
+	println('Decoded Hex:    ${decoded_hex.bytestr()}')
+
+	// --- 3. CSV ---
+	println('\n--- CSV ---')
+	csv_data := 'Name,Age,City\nAlice,30,New York\nBob,25,San Francisco'
+	
+	mut reader := csv.new_reader(csv_data)
+	println('Reading CSV rows:')
+	for {
+		row := reader.read() or { break }
+		println('  Row: ${row}')
+	}
+}
+```
+
+#### Arrays Utility
+
+_File location: `language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v`_
+
+This example demonstrates the concepts of **arrays utility**.
+
+```v
+module main
+
+import arrays
+
+fn main() {
+	println('=== arrays Utility Module Examples ===')
+
+	nums := [5, 3, 9, 1, 7, 3]
+
+	// Find min and max
+	min_val := arrays.min(nums) or { 0 }
+	max_val := arrays.max(nums) or { 0 }
+	println('Array: ${nums}')
+	println('Min:   ${min_val}') // 1
+	println('Max:   ${max_val}') // 9
+
+	// Find index of min/max
+	min_idx := arrays.idx_min(nums) or { -1 }
+	max_idx := arrays.idx_max(nums) or { -1 }
+	println('Index of Min: ${min_idx}') // 3
+	println('Index of Max: ${max_idx}') // 2
+
+	// Chunking
+	chunked := arrays.chunk(nums, 2)
+	println('Chunked into sizes of 2: ${chunked}') // [[5, 3], [9, 1], [7, 3]]
+
+	// Uniq (remove consecutive duplicates)
+	consecutive_dups := [1, 1, 2, 2, 3, 1, 1]
+	unique := arrays.uniq(consecutive_dups)
+	println('Consecutive duplicates array: ${consecutive_dups}')
+	println('After uniq():                 ${unique}') // [1, 2, 3, 1]
+}
+```
+
 #### GG Graphics
 
 _File location: `language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v`_
