@@ -8151,6 +8151,138 @@ fn main() {
 
 ```
 
+#### JSON To/From File
+
+_File location: `json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v`_
+
+This example demonstrates how to encode an object to JSON, write it to a file, read it back, and decode it into a V struct.
+
+```v
+module main
+
+import json
+import os
+
+struct Book {
+	title  string
+	author string
+	year   int
+}
+
+fn main() {
+	file_path := 'book.json'
+
+	// Create an object instance
+	book := Book{
+		title: 'The V Programming Language'
+		author: 'Alex Medvednikov'
+		year: 2019
+	}
+
+	// 1. Encode object to JSON string
+	println('Encoding object to JSON...')
+	json_str := json.encode(book)
+	println('JSON string: ${json_str}')
+
+	// 2. Write JSON string to file
+	println('Writing JSON to file "${file_path}"...')
+	os.write_file(file_path, json_str) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	// 3. Read JSON string from file
+	println('Reading JSON from file "${file_path}"...')
+	content := os.read_file(file_path) or {
+		eprintln('Failed to read file: ${err}')
+		return
+	}
+
+	// 4. Decode JSON string back to Book object
+	println('Decoding JSON back to object...')
+	decoded_book := json.decode(Book, content) or {
+		eprintln('Failed to decode JSON: ${err}')
+		return
+	}
+
+	println('Decoded book: Title: "${decoded_book.title}", Author: "${decoded_book.author}", Year: ${decoded_book.year}')
+
+	// Clean up created file
+	os.rm(file_path) or {}
+}
+```
+
+#### JSON Array of Objects
+
+_File location: `json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v`_
+
+This example demonstrates how to serialize and deserialize an array of objects (structs) to and from JSON, and how to write/read them using the filesystem.
+
+```v
+module main
+
+import json
+import os
+
+struct Task {
+	id    int
+	title string
+	done  bool
+}
+
+fn main() {
+	file_path := 'tasks.json'
+
+	// Create an array of objects
+	tasks := [
+		Task{
+			id: 1
+			title: 'Read V Guide'
+			done: false
+		},
+		Task{
+			id: 2
+			title: 'Write JSON helper examples'
+			done: true
+		},
+	]
+
+	// 1. Encode array of objects to JSON string
+	println('Encoding array of objects to JSON...')
+	json_str := json.encode(tasks)
+	println('JSON string:\n${json_str}')
+
+	// 2. Write JSON string to file
+	println('\nWriting JSON array to file "${file_path}"...')
+	os.write_file(file_path, json_str) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	// 3. Read JSON string from file
+	println('Reading JSON from file "${file_path}"...')
+	content := os.read_file(file_path) or {
+		eprintln('Failed to read file: ${err}')
+		return
+	}
+
+	// 4. Decode JSON string back to an array of Task objects
+	println('Decoding JSON back to array of objects...')
+	decoded_tasks := json.decode([]Task, content) or {
+		eprintln('Failed to decode JSON: ${err}')
+		return
+	}
+
+	println('Decoded array of tasks successfully!')
+	for task in decoded_tasks {
+		println('  - Task #${task.id}: "${task.title}" [Done: ${task.done}]')
+	}
+
+	// Clean up created file
+	os.rm(file_path) or {}
+}
+```
+
 ### Orm
 
 #### Orm Demo
