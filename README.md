@@ -14,71 +14,442 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
 
 ## Table of Contents
 
+<details>
+<summary><b>Click to expand Table of Contents</b></summary>
+
+- [Prerequisites & Environment Setup](#prerequisites--environment-setup)
+  - [V-Analyzer Setup for ARM Mac OS (Homebrew)](#v-analyzer-setup-for-arm-mac-os-homebrew)
+- [V Tooling & CLI Utilities](#v-tooling--cli-utilities)
+  - [Basic Build & Run](#basic-build--run)
+  - [Code Formatting & Vetting](#code-formatting--vetting)
+  - [Documentation Generator](#documentation-generator)
+  - [Live Reloading (Watch)](#live-reloading-watch)
+  - [Package & Installation Management](#package--installation-management)
+  - [Profiling & Timing](#profiling--timing)
 - [Variables And Constants](#variables-and-constants)
   - [Code Comments](#code-comments)
+    - [Programm Commented All Places](#programm-commented-all-places)
+    - [Single Line Comments](#single-line-comments)
+    - [Multi Line Comments](#multi-line-comments)
   - [Constants](#constants)
+    - [Define Constant Of Type Function](#define-constant-of-type-function)
+    - [Define Constant Of Type Struct](#define-constant-of-type-struct)
+    - [Define Single Constant](#define-single-constant)
+    - [Define Multiple Constants](#define-multiple-constants)
+    - [Define Module Level Constants](#define-module-level-constants)
+    - [Cannot Define Constants Inside Functions](#cannot-define-constants-inside-functions)
+    - [Main](#main)
+    - [File1](#file1)
   - [Variables](#variables)
+    - [Variable Shadowing Not Allowed](#variable-shadowing-not-allowed)
+    - [Global Variables Not Allowed](#global-variables-not-allowed)
+    - [Global Variables Not Allowed](#global-variables-not-allowed)
+    - [Variable Redeclaration](#variable-redeclaration)
+    - [Variable Scope For Same Variable Names](#variable-scope-for-same-variable-names)
+    - [Declare Mutable Variable](#declare-mutable-variable)
+    - [Cannot Update Mutable With Another Type](#cannot-update-mutable-with-another-type)
+    - [Declare Immutable Variable](#declare-immutable-variable)
+    - [Cannot Update Immutable Variables](#cannot-update-immutable-variables)
+    - [Unused Variables Will Be Warned](#unused-variables-will-be-warned)
+    - [Declared And Assigned](#declared-and-assigned)
+    - [Declared And Not Assigned](#declared-and-not-assigned)
+    - [Parallel Declaration Immutable Variables](#parallel-declaration-immutable-variables)
+    - [Parallel Declaration Mutable Variables](#parallel-declaration-mutable-variables)
+    - [Parallel Declaration Mut And Immutable Vars](#parallel-declaration-mut-and-immutable-vars)
+    - [Augmented Assignment String](#augmented-assignment-string)
+    - [Augmented Assignment Integer](#augmented-assignment-integer)
 - [Primitive Types](#primitive-types)
   - [Boolean Type](#boolean-type)
+    - [Relational Operators](#relational-operators)
+    - [Logical Operators](#logical-operators)
+    - [Boolean Methods](#boolean-methods)
+      - [`str()` (Boolean)](#str-boolean)
   - [Numeric Types](#numeric-types)
+    - [Shift Operators](#shift-operators)
+    - [Shift Operator On Range Of Integers](#shift-operator-on-range-of-integers)
+    - [Bitwise Operators](#bitwise-operators)
+    - [Arithmetic Operators](#arithmetic-operators)
+    - [Promoting Numeric Types](#promoting-numeric-types)
+    - [Declaring Integers](#declaring-integers)
+    - [Hex Binary Octa Notation Of Declaring Integers](#hex-binary-octa-notation-of-declaring-integers)
+    - [Integer Methods](#integer-methods)
+      - [`str()` (Integer)](#str-integer)
+      - [`hex()` (Integer)](#hex-integer)
+      - [`hex2()` (Integer)](#hex2-integer)
+      - [`hex_full()` (Integer)](#hex_full-integer)
+    - [Float Methods](#float-methods)
+      - [`str()` (Float)](#str-float)
+      - [`strg()` (Float)](#strg-float)
+      - [`strlong()` (Float)](#strlong-float)
+      - [`strsci(precision)` (Float)](#strsciprecision-float)
+      - [`eq_epsilon(other)` (Float)](#eq_epsilonother-float)
+    - [u8 Methods](#u8-methods)
+      - [`str()` (u8)](#str-u8)
+      - [`ascii_str()` (u8)](#ascii_str-u8)
+      - [`hex()` (u8)](#hex-u8)
+      - [`hex_full()` (u8)](#hex_full-u8)
+      - [`is_alnum()` (u8)](#is_alnum-u8)
+      - [`is_bin_digit()` (u8)](#is_bin_digit-u8)
+      - [`is_capital()` (u8)](#is_capital-u8)
+      - [`is_digit()` (u8)](#is_digit-u8)
+      - [`is_hex_digit()` (u8)](#is_hex_digit-u8)
+      - [`is_letter()` (u8)](#is_letter-u8)
+      - [`is_oct_digit()` (u8)](#is_oct_digit-u8)
+      - [`is_space()` (u8)](#is_space-u8)
+      - [`repeat(count)` (u8)](#repeatcount-u8)
+      - [`str_escaped()` (u8)](#str_escaped-u8)
+    - [Size And Pointer Methods](#size-and-pointer-methods)
+      - [`str()` (isize & usize)](#str-isize--usize)
+      - [`str()` (voidptr)](#str-voidptr)
+      - [`hex_full()` (voidptr)](#hex_full-voidptr)
+      - [`vbytes(len)` (voidptr)](#vbyteslen-voidptr)
   - [Rune Type](#rune-type)
+    - [Declare Rune](#declare-rune)
+    - [Rune Operations With Strings](#rune-operations-with-strings)
+    - [Rune Methods](#rune-methods)
+      - [`bytes()` (Rune)](#bytes-rune)
+      - [`hex()` (Rune)](#hex-rune)
+      - [`length_in_bytes()` (Rune)](#length_in_bytes-rune)
+      - [`repeat(count)` (Rune)](#repeatcount-rune)
+      - [`str()` (Rune)](#str-rune)
+      - [`to_lower()` (Rune)](#to_lower-rune)
+      - [`to_upper()` (Rune)](#to_upper-rune)
+      - [`to_title()` (Rune)](#to_title-rune)
   - [String Type](#string-type)
+    - [Declare String](#declare-string)
+    - [String Read Only Array Of Bytes](#string-read-only-array-of-bytes)
+    - [Strings Immutable By Default](#strings-immutable-by-default)
+    - [Declaring Mutable Strings](#declaring-mutable-strings)
+    - [Cannot Mutate String Elements](#cannot-mutate-string-elements)
+    - [Escape Special Characters](#escape-special-characters)
+    - [Declare Raw Strings](#declare-raw-strings)
+    - [String Concatenation Using Plus Sign](#string-concatenation-using-plus-sign)
+    - [String Concatenation Using Interpolation](#string-concatenation-using-interpolation)
+    - [Extract Substring From String Literal](#extract-substring-from-string-literal)
+      - [`substr()` (String)](#substr-string)
+    - [Split String](#split-string)
+      - [`split()` (String)](#split-string)
+    - [String To Runes Array](#string-to-runes-array)
+      - [`runes()` (String)](#runes-string)
+    - [Count Sub String Occurences](#count-sub-string-occurences)
+      - [`count()` (String)](#count-string)
+    - [Check String Contains Substring](#check-string-contains-substring)
+      - [`contains()` (String)](#contains-string)
+    - [String Contains Is Case Sensitive](#string-contains-is-case-sensitive)
+      - [`contains()` (Case Sensitivity) (String)](#contains-case-sensitivity-string)
+    - [Common String Methods](#common-string-methods)
+      - [`to_lower()` (String)](#to_lower-string)
+      - [`to_upper()` (String)](#to_upper-string)
+      - [`trim_space()` (String)](#trim_space-string)
+      - [`trim(cutset)` (String)](#trimcutset-string)
+      - [`replace(old, new)` (String)](#replaceold-new-string)
+      - [`replace_once(old, new)` (String)](#replace_onceold-new-string)
+      - [`index(sub)` (String)](#indexsub-string)
+      - [`last_index(sub)` (String)](#last_indexsub-string)
+      - [`starts_with(prefix)` (String)](#starts_withprefix-string)
+      - [`ends_with(suffix)` (String)](#ends_withsuffix-string)
+      - [`is_pure_ascii()` (String)](#is_pure_ascii-string)
+      - [`split_into_lines()` (String)](#split_into_lines-string)
+      - [`split_by_space()` (String)](#split_by_space-string)
+    - [String Interpolation](#string-interpolation)
 - [Arrays And Maps](#arrays-and-maps)
   - [Arrays](#arrays)
+    - [Working With Array Properties](#working-with-array-properties)
+    - [In Operator With Array](#in-operator-with-array)
+    - [Append Array](#append-array)
+    - [Clone Array](#clone-array)
+      - [`clone()` (Array)](#clone-array)
+    - [Copy Array](#copy-array)
+      - [`copy()` (Unsafe) (Array)](#copy-unsafe-array)
+    - [Map Array Items](#map-array-items)
+      - [`map()` (Array)](#map-array)
+    - [Map Using Anonymous Funcs On Array](#map-using-anonymous-funcs-on-array)
+      - [`map()` (Anonymous Functions) (Array)](#map-anonymous-functions-array)
+    - [Filter Array](#filter-array)
+      - [`filter()` (Array)](#filter-array)
+    - [Filter With Anonymous Funcs On Array](#filter-with-anonymous-funcs-on-array)
+      - [`filter()` (Anonymous Functions) (Array)](#filter-anonymous-functions-array)
+    - [Sort Integer Array](#sort-integer-array)
+      - [`sort()` (Integers) (Array)](#sort-integers-array)
+    - [Sort String Array](#sort-string-array)
+      - [`sort()` (Strings) (Array)](#sort-strings-array)
+    - [Sort Struct Array](#sort-struct-array)
+      - [`sort()` (Structs) (Array)](#sort-structs-array)
+    - [Declare And Initialize](#declare-and-initialize)
+    - [Declare Empty Array](#declare-empty-array)
+    - [Declare Array With Len](#declare-array-with-len)
+    - [Declare Array With Init And Len](#declare-array-with-init-and-len)
+    - [Declare Array With Cap](#declare-array-with-cap)
+    - [Define Fixed Size Array](#define-fixed-size-array)
+    - [Update Fixed Size Array Elements](#update-fixed-size-array-elements)
+    - [Determining Type Of Fixed Array](#determining-type-of-fixed-array)
+    - [Slicing Fixed Size Array Results In Ordinary Array](#slicing-fixed-size-array-results-in-ordinary-array)
+    - [Declaring Multi Dimensional Arrays](#declaring-multi-dimensional-arrays)
+    - [Updating Multi Dimensional Arrays](#updating-multi-dimensional-arrays)
+    - [Updating Multi Dimensional Arrays](#updating-multi-dimensional-arrays)
+    - [Access Array Elements Using Index](#access-array-elements-using-index)
+    - [Access Array Elements Using Slices](#access-array-elements-using-slices)
+    - [Array Methods](#array-methods)
+      - [`ensure_cap(required)` (Array)](#ensure_caprequired-array)
+      - [`repeat(count)` (Array)](#repeatcount-array)
+      - [`repeat_to_depth(count, depth)` (Array)](#repeat_to_depthcount-depth-array)
+      - [`insert(index, val)` (Array)](#insertindex-val-array)
+      - [`prepend(val)` (Array)](#prependval-array)
+      - [`delete(index)` (Array)](#deleteindex-array)
+      - [`delete_many(index, size)` (Array)](#delete_manyindex-size-array)
+      - [`clear()` (Array)](#clear-array)
+      - [`reset()` (Array)](#reset-array)
+      - [`trim(index)` (Array)](#trimindex-array)
+      - [`drop(num)` (Array)](#dropnum-array)
+      - [`first()` (Array)](#first-array)
+      - [`last()` (Array)](#last-array)
+      - [`pop_left()` (Array)](#pop_left-array)
+      - [`pop()` (Array)](#pop-array)
+      - [`delete_last()` (Array)](#delete_last-array)
+      - [`clone()` (Array)](#clone-array)
+      - [`clone_to_depth(depth)` (Array)](#clone_to_depthdepth-array)
+      - [`push_many(val, size)` (Array)](#push_manyval-size-array)
+      - [`reverse()` (Array)](#reverse-array)
+      - [`reverse_in_place()` (Array)](#reverse_in_place-array)
+      - [`free()` (Array)](#free-array)
+      - [`filter(it)` (Array)](#filterit-array)
+      - [`any(it)` (Array)](#anyit-array)
+      - [`count(it)` (Array)](#countit-array)
+      - [`all(it)` (Array)](#allit-array)
+      - [`map(it)` (Array)](#mapit-array)
+      - [`sort()` & `sort(custom)` (Array)](#sort--sortcustom-array)
+      - [`sorted()` & `sorted(custom)` (Array)](#sorted--sortedcustom-array)
+      - [`sort_with_compare(callback)` (Array)](#sort_with_comparecallback-array)
+      - [`sorted_with_compare(callback)` (Array)](#sorted_with_comparecallback-array)
+      - [`contains(value)` (Array)](#containsvalue-array)
+      - [`index(value)` (Array)](#indexvalue-array)
+      - [`last_index(value)` (Array)](#last_indexvalue-array)
+      - [`grow_cap(amount)` (Array)](#grow_capamount-array)
+      - [`grow_len(amount)` (Array)](#grow_lenamount-array)
+      - [`pointers()` (Array)](#pointers-array)
   - [Maps](#maps)
+    - [Explicit Map Initialization](#explicit-map-initialization)
+    - [Short Syntax Initialization Of Map](#short-syntax-initialization-of-map)
+    - [Count Key Value Pairs In Map](#count-key-value-pairs-in-map)
+    - [Value Given Key Of Map](#value-given-key-of-map)
+    - [Value Given Non Existent Key Of Map](#value-given-non-existent-key-of-map)
+    - [Handling Missing Keys In Map](#handling-missing-keys-in-map)
+    - [Update Value Given A Key In Map](#update-value-given-a-key-in-map)
+    - [Delete Key Value Pair From Map](#delete-key-value-pair-from-map)
+    - [Map Methods](#map-methods)
+      - [`keys()` (Map)](#keys-map)
+      - [`values()` (Map)](#values-map)
+      - [`clone()` (Map)](#clone-map)
+      - [`delete(key)` (Map)](#deletekey-map)
+      - [`reserve(capacity)` (Map)](#reservecapacity-map)
+      - [`clear()` (Map)](#clear-map)
+      - [`move()` (Map)](#move-map)
+      - [`free()` (Map)](#free-map)
 - [Control Flow](#control-flow)
   - [If Statement](#if-statement)
+    - [If With Goto](#if-with-goto)
+    - [Chaining Else If](#chaining-else-if)
   - [Iterative Statements](#iterative-statements)
+    - [Continue For](#continue-for)
+    - [For On Maps Ignore Key](#for-on-maps-ignore-key)
+    - [For On Maps](#for-on-maps)
+    - [For On Array Without Index](#for-on-array-without-index)
+    - [For On Arrays](#for-on-arrays)
+    - [Reverse For](#reverse-for)
+    - [Bare For](#bare-for)
+    - [For C Style](#for-c-style)
+    - [For With Continue Break And Labels](#for-with-continue-break-and-labels)
+    - [For On Range](#for-on-range)
+    - [Break For](#break-for)
   - [Match](#match)
+    - [Match As Switch Case](#match-as-switch-case)
+    - [Cascade Match Conditions](#cascade-match-conditions)
+    - [Match With Enum](#match-with-enum)
+    - [Match With Enum And Else](#match-with-enum-and-else)
+    - [Match Pattern Matching](#match-pattern-matching)
 - [Functions](#functions)
   - [Function Types](#function-types)
+    - [Basic Functions](#basic-functions)
+    - [Anonymous Functions](#anonymous-functions)
+    - [Hello](#hello)
+    - [Functions As Input Arguments](#functions-as-input-arguments)
+    - [Functions That Return Other Functions](#functions-that-return-other-functions)
   - [Understanding Funtion Features](#understanding-funtion-features)
+    - [Functions With Optional Return Types Example 1](#functions-with-optional-return-types-example-1)
+    - [Function With Optional Return Type Example 2](#function-with-optional-return-type-example-2)
+    - [Function With Defer Block](#function-with-defer-block)
+    - [Function Calls Other Function](#function-calls-other-function)
+    - [Function Return Multiple Values](#function-return-multiple-values)
+    - [Functions As Elements Of Array Or Map](#functions-as-elements-of-array-or-map)
+    - [Public Function Demo1](#public-function-demo1)
+    - [Public Function Demo2](#public-function-demo2)
+    - [Public Function Demo3](#public-function-demo3)
+    - [Mod1](#mod1)
+    - [Example 1](#example-1)
+    - [Example 2](#example-2)
+    - [Ignore Function Return Value](#ignore-function-return-value)
+    - [Function With Input Arguments](#function-with-input-arguments)
+    - [Main](#main)
+    - [Mymod](#mymod)
+    - [Function Returns Value Example 1](#function-returns-value-example-1)
+    - [Function Returns Value Example 2](#function-returns-value-example-2)
+    - [Funtions Without Return Type](#funtions-without-return-type)
 - [Structs](#structs)
   - [Approaches Defining Struct Fields](#approaches-defining-struct-fields)
+    - [Struct With Multiple Fields](#struct-with-multiple-fields)
+    - [Grouping Struct Fields Based On Access Modifiers](#grouping-struct-fields-based-on-access-modifiers)
+    - [Struct Fields With Default Values](#struct-fields-with-default-values)
+    - [Required Fields Example 01](#required-fields-example-01)
+    - [Required Fields Example 02](#required-fields-example-02)
   - [Introducing Structs](#introducing-structs)
+    - [Access Struct Fields](#access-struct-fields)
+    - [Heap Structs](#heap-structs)
+    - [Defining Struct](#defining-struct)
+    - [Initialize Struct Example 1](#initialize-struct-example-1)
+    - [Initialize Struct Example 2](#initialize-struct-example-2)
   - [Methods For Struct](#methods-for-struct)
+    - [Methods For Struct](#methods-for-struct)
   - [Struct As Struct Field](#struct-as-struct-field)
+    - [Adding Struct As Struct Field](#adding-struct-as-struct-field)
+    - [Updating Fields Of Type Struct](#updating-fields-of-type-struct)
   - [Struct As Trailing Literal Arguments To Function](#struct-as-trailing-literal-arguments-to-function)
+    - [Struct As Trailing Literal Arguments To Function](#struct-as-trailing-literal-arguments-to-function)
   - [Updating Fields Of Struct](#updating-fields-of-struct)
+    - [Updating Mutable Fields Of Struct](#updating-mutable-fields-of-struct)
+    - [Updating Struct With Unspecified Fields Are Zeroed](#updating-struct-with-unspecified-fields-are-zeroed)
+    - [Updating Immutable Fields Throws Error](#updating-immutable-fields-throws-error)
+    - [Updating Immutable Struct Variable Throws Error](#updating-immutable-struct-variable-throws-error)
 - [Modules](#modules)
   - [Accessing Constants Of Module](#accessing-constants-of-module)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
   - [Accessing Members Of Module](#accessing-members-of-module)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
   - [Accessing Structs And Embedded Structs Of Module](#accessing-structs-and-embedded-structs-of-module)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
   - [Creating Modue](#creating-modue)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
   - [Creating Simple V Project](#creating-simple-v-project)
+    - [Modulebasics](#modulebasics)
   - [Cyclic Imports](#cyclic-imports)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
+    - [File1](#file1)
   - [Importing Module](#importing-module)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
   - [Init Function For Module](#init-function-for-module)
-  - [Installing External Packages and Webview](#installing-external-packages-and-webview)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
   - [Member Scope In Module](#member-scope-in-module)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
+    - [File2](#file2)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
+    - [File2](#file2)
   - [Working With Multiple Files In Module](#working-with-multiple-files-in-module)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
+    - [File2](#file2)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
+    - [File2](#file2)
+  - [Installing External Packages and Webview](#installing-external-packages-and-webview)
+    - [Installing External Packages (`vpm`)](#installing-external-packages-vpm)
+    - [System Dependencies](#system-dependencies)
+    - [Compiling the C++ Webview Library (Workaround for macOS Bug)](#compiling-the-c-webview-library-workaround-for-macos-bug)
+    - [Binding V Functions to Webview (Bidirectional Communication)](#binding-v-functions-to-webview-bidirectional-communication)
+    - [Webview Demo](#webview-demo)
+    - [Redis GUI Explorer Demo](#redis-gui-explorer-demo)
+      - [HTML, CSS, and JS Layout (`index.html`)](#html-css-and-js-layout-indexhtml)
+      - [V Entrypoint (`redis_webview_demo.v`)](#v-entrypoint-redis_webview_demov)
+      - [Redis Helper Utility (`redis_helper.v`)](#redis-helper-utility-redis_helperv)
+      - [Redis Console Demo (`redis_console_demo.v`)](#redis-console-demo-redis_console_demov)
+      - [Redis Namespaced Demo (`redis_namespaced_demo.v`)](#redis-namespaced-demo-redis_namespaced_demov)
 - [Concurrency](#concurrency)
   - [Concurrency Real Life Scenario](#concurrency-real-life-scenario)
+    - [Running Multiple Tasks In Sequence](#running-multiple-tasks-in-sequence)
+    - [Spawning Multiple Tasks Concurrently](#spawning-multiple-tasks-concurrently)
   - [Implement Concurrent Programs](#implement-concurrent-programs)
+    - [Spawn Anonymous Funcs With Input Args](#spawn-anonymous-funcs-with-input-args)
+    - [Spawn Anonymous Funcs Without Input Args](#spawn-anonymous-funcs-without-input-args)
+    - [Functions With Return Values](#functions-with-return-values)
   - [Sharing Data Main And Concurrent Tasks](#sharing-data-main-and-concurrent-tasks)
+    - [Sharing Data Main And Concurrent Tasks](#sharing-data-main-and-concurrent-tasks)
   - [Spawn Void Function](#spawn-void-function)
+    - [Waiting On Concurrent Thread](#waiting-on-concurrent-thread)
+    - [Spawn Void Function](#spawn-void-function)
   - [Time Module Overview](#time-module-overview)
+    - [Stopwatch Demo](#stopwatch-demo)
 - [Channels](#channels)
   - [Channel Methods](#channel-methods)
+    - [Close](#close)
+    - [Defer Close](#defer-close)
+    - [Try Pop](#try-pop)
+    - [Try Push Unbuffered](#try-push-unbuffered)
+    - [Try Push Buffered](#try-push-buffered)
   - [Channel Operations](#channel-operations)
+    - [Push Buffered](#push-buffered)
+    - [Push Unbuffered](#push-unbuffered)
+    - [Pop](#pop)
   - [Channel Properties](#channel-properties)
+    - [Channel Properties](#channel-properties)
   - [Channel Select](#channel-select)
+    - [Channel Select Before](#channel-select-before)
+    - [Channel Select](#channel-select)
   - [Define Channels](#define-channels)
+    - [Unbuffered Channel](#unbuffered-channel)
+    - [Buffered Channel](#buffered-channel)
   - [Working With Buffered Channels](#working-with-buffered-channels)
+    - [Sync Before](#sync-before)
+    - [Sync After](#sync-after)
+    - [Coroutines Communication](#coroutines-communication)
+    - [Buffered Channel](#buffered-channel)
   - [Working With Unbuffered Channels](#working-with-unbuffered-channels)
+    - [Blocking Channels](#blocking-channels)
+    - [Dealing Before](#dealing-before)
+    - [Dealing After](#dealing-after)
+    - [Sync Before](#sync-before)
+    - [Sync After](#sync-after)
 - [Testing](#testing)
   - [Assert](#assert)
+    - [Assert Demo](#assert-demo)
   - [Simple Test](#simple-test)
+    - [Demo Test](#demo-test)
+    - [Demo Test](#demo-test)
   - [Test Optional Return Functions](#test-optional-return-functions)
+    - [Demo Test](#demo-test)
   - [Testing Program File](#testing-program-file)
+    - [Greet](#greet)
+    - [Greet Test](#greet-test)
   - [Testing Program With Modules](#testing-program-with-modules)
+    - [Main Test](#main-test)
+    - [Modulebasics](#modulebasics)
+    - [File1](#file1)
+    - [Mod1 Test](#mod1-test)
   - [Testsuite](#testsuite)
+    - [Testsuite Demo Test](#testsuite-demo-test)
 - [Json And Orm](#json-and-orm)
   - [Json](#json)
+    - [Encode](#encode)
+    - [Decode](#decode)
+    - [JSON To/From File](#json-tofrom-file)
+    - [JSON Array of Objects](#json-array-of-objects)
+    - [JSON Map To/From File](#json-map-tofrom-file)
+    - [JSON and Raw Array To/From File](#json-and-raw-array-tofrom-file)
   - [Orm](#orm)
+    - [Orm Demo](#orm-demo)
   - [Sqlite Raw Crud](#sqlite-raw-crud)
+    - [Sqlite Raw Crud](#sqlite-raw-crud)
 - [Notes Api](#notes-api)
   - [Notes Api](#notes-api)
+    - [Main](#main)
+    - [Note](#note)
+    - [Util](#util)
 - [Language Updates And Stdlib](#language-updates-and-stdlib)
   - [Language Basics Updates](#language-basics-updates)
     - [Sum Types](#sum-types)
@@ -91,12 +462,23 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
     - [Strings Builder](#strings-builder)
     - [Http Client](#http-client)
     - [Os Operations](#os-operations)
+      - [1. Basic OS & File Operations](#1-basic-os--file-operations)
+      - [2. Asynchronous Processes, Signals & Pipes](#2-asynchronous-processes-signals--pipes)
+      - [3. System Diagnostics & File Metadata (Stat)](#3-system-diagnostics--file-metadata-stat)
+      - [4. Advanced I/O, Serialization & Directory Walking](#4-advanced-io-serialization--directory-walking)
     - [Datatypes Collections](#datatypes-collections)
     - [Command Line Flags](#command-line-flags)
     - [Command Line Arguments](#command-line-arguments)
     - [Time And Stopwatch](#time-and-stopwatch)
     - [Math And Rand](#math-and-rand)
     - [Log And Crypto](#log-and-crypto)
+      - [Comprehensive Cryptographic Examples](#comprehensive-cryptographic-examples)
+        - [1. Cryptographic Hash Functions](#1-cryptographic-hash-functions)
+        - [2. Symmetric Ciphers & Block Modes](#2-symmetric-ciphers--block-modes)
+        - [3. Asymmetric Cryptography & PEM Formats](#3-asymmetric-cryptography--pem-formats)
+        - [4. Key Derivation Functions (KDF)](#4-key-derivation-functions-kdf)
+        - [5. Message Authentication Codes (MAC)](#5-message-authentication-codes-mac)
+        - [6. Secure Randomness & Entropy](#6-secure-randomness--entropy)
     - [Sync Concurrency](#sync-concurrency)
     - [Encoding Formats](#encoding-formats)
     - [Arrays Utility](#arrays-utility)
@@ -132,15 +514,11 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
     - [Runtime System Info](#runtime-system-info)
     - [WebAssembly (wasm) Binary Generation](#webassembly-wasm-binary-generation)
 - [Error Handling](#error-handling)
-  - [Error Handling](#error-handling-1)
-- [V Tooling & CLI Utilities](#v-tooling--cli-utilities)
-  - [Basic Build & Run](#basic-build--run)
-  - [Code Formatting & Vetting](#code-formatting--vetting)
-  - [Documentation Generator](#documentation-generator)
-  - [Live Reloading (Watch)](#live-reloading-watch)
-  - [Package & Installation Management](#package--installation-management)
-  - [Profiling & Timing](#profiling--timing)
+  - [Error Handling](#error-handling)
+    - [Key Mechanisms](#key-mechanisms)
+- [Official Documentation](#official-documentation)
 
+</details>
 ---
 
 ## V Tooling & CLI Utilities
@@ -942,6 +1320,10 @@ fn main() {
 	println(f.str()) // false
 }
 ```
+##### `str()` (Boolean)
+
+Returns the string representation of a boolean value: `'true'` or `'false'`.
+
 
 ```
 
@@ -1188,6 +1570,22 @@ fn main() {
 	println(x.hex_full()) // "0000002a"
 }
 ```
+##### `str()` (Integer)
+
+Returns the decimal string representation of the integer.
+
+##### `hex()` (Integer)
+
+Returns the hexadecimal representation of the integer without the `0x` prefix.
+
+##### `hex2()` (Integer)
+
+Returns the hexadecimal representation of the integer with the `0x` prefix.
+
+##### `hex_full()` (Integer)
+
+Returns the hexadecimal representation of the integer padded to the full width of its type (e.g., 8 digits for 32-bit `int`).
+
 
 #### Float Methods
 
@@ -1218,6 +1616,26 @@ fn main() {
 	println(f.eq_epsilon(f2)) // true
 }
 ```
+##### `str()` (Float)
+
+Returns the standard string representation of the float.
+
+##### `strg()` (Float)
+
+Returns the string representation of the float.
+
+##### `strlong()` (Float)
+
+Returns the full, un-truncated string representation of the float.
+
+##### `strsci(precision)` (Float)
+
+Returns the scientific notation string representation of the float with the specified decimal precision.
+
+##### `eq_epsilon(other)` (Float)
+
+Compares the float with another float for near-equality using machine epsilon.
+
 
 #### u8 Methods
 
@@ -1274,6 +1692,62 @@ fn main() {
 	println(b.str_escaped()) // "A"
 }
 ```
+##### `str()` (u8)
+
+Returns the decimal string representation of the `u8` numeric value.
+
+##### `ascii_str()` (u8)
+
+Returns a string of length 1 containing the character corresponding to the `u8` ASCII value.
+
+##### `hex()` (u8)
+
+Returns the hexadecimal representation of the byte.
+
+##### `hex_full()` (u8)
+
+Returns the full-width hexadecimal representation of the byte.
+
+##### `is_alnum()` (u8)
+
+Checks if the byte corresponds to an alphanumeric ASCII character.
+
+##### `is_bin_digit()` (u8)
+
+Checks if the byte is a binary digit (`'0'` or `'1'`).
+
+##### `is_capital()` (u8)
+
+Checks if the byte is an uppercase ASCII letter.
+
+##### `is_digit()` (u8)
+
+Checks if the byte is a decimal ASCII digit (`'0'`-`'9'`).
+
+##### `is_hex_digit()` (u8)
+
+Checks if the byte is a hexadecimal ASCII digit.
+
+##### `is_letter()` (u8)
+
+Checks if the byte is an alphabetic ASCII letter.
+
+##### `is_oct_digit()` (u8)
+
+Checks if the byte is an octal ASCII digit (`'0'`-`'7'`).
+
+##### `is_space()` (u8)
+
+Checks if the byte corresponds to an ASCII whitespace character.
+
+##### `repeat(count)` (u8)
+
+Repeats the character `count` times and returns the result as a string.
+
+##### `str_escaped()` (u8)
+
+Returns an escaped string representation of the character.
+
 
 #### Size And Pointer Methods
 
@@ -1310,6 +1784,22 @@ fn main() {
 	}
 }
 ```
+##### `str()` (isize & usize)
+
+Returns the decimal string representation of the `isize` or `usize` value.
+
+##### `str()` (voidptr)
+
+Returns the memory address of the pointer formatted as a hexadecimal string (starting with `0x`).
+
+##### `hex_full()` (voidptr)
+
+Returns the full-width hexadecimal string representation of the pointer address.
+
+##### `vbytes(len)` (voidptr)
+
+Returns a byte array copy of the memory pointed to, up to `len` bytes. Must be called within an `unsafe` block.
+
 
 ### Rune Type
 
@@ -1390,6 +1880,38 @@ fn main() {
 	println(r2.str())             // "🐕"
 }
 ```
+##### `bytes()` (Rune)
+
+Returns the UTF-8 byte array representation of the rune.
+
+##### `hex()` (Rune)
+
+Returns the hexadecimal representation of the rune code point.
+
+##### `length_in_bytes()` (Rune)
+
+Returns the size of the rune in UTF-8 bytes (1 to 4).
+
+##### `repeat(count)` (Rune)
+
+Repeats the rune `count` times and returns the result as a string.
+
+##### `str()` (Rune)
+
+Returns the string representation of the rune.
+
+##### `to_lower()` (Rune)
+
+Returns the lowercase equivalent of the rune.
+
+##### `to_upper()` (Rune)
+
+Returns the uppercase equivalent of the rune.
+
+##### `to_title()` (Rune)
+
+Returns the titlecase equivalent of the rune.
+
 
 ### String Type
 
@@ -1544,6 +2066,8 @@ fn main() {
 
 #### Extract Substring From String Literal
 
+##### `substr()` (String)
+
 _File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v`_
 
 This example demonstrates the concepts of **extract substring from string literal**.
@@ -1560,6 +2084,8 @@ fn main() {
 ```
 
 #### Split String
+
+##### `split()` (String)
 
 _File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v`_
 
@@ -1581,6 +2107,8 @@ fn main() {
 
 #### String To Runes Array
 
+##### `runes()` (String)
+
 _File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v`_
 
 This example demonstrates the concepts of **string to runes array**.
@@ -1597,6 +2125,8 @@ fn main() {
 ```
 
 #### Count Sub String Occurences
+
+##### `count()` (String)
 
 _File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v`_
 
@@ -1620,6 +2150,8 @@ fn main() {
 
 #### Check String Contains Substring
 
+##### `contains()` (String)
+
 _File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v`_
 
 This example demonstrates the concepts of **check string contains substring**.
@@ -1640,6 +2172,8 @@ fn main() {
 ```
 
 #### String Contains Is Case Sensitive
+
+##### `contains()` (Case Sensitivity) (String)
 
 _File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v`_
 
@@ -1715,6 +2249,58 @@ fn main() {
 	println(s.split_by_space()) // ["Hello,", "V!"]
 }
 ```
+##### `to_lower()` (String)
+
+Converts all characters in the string to lowercase.
+
+##### `to_upper()` (String)
+
+Converts all characters in the string to uppercase.
+
+##### `trim_space()` (String)
+
+Removes leading and trailing whitespaces from the string.
+
+##### `trim(cutset)` (String)
+
+Removes leading and trailing characters that match any character in the cutset.
+
+##### `replace(old, new)` (String)
+
+Replaces all occurrences of `old` with `new` in the string.
+
+##### `replace_once(old, new)` (String)
+
+Replaces only the first occurrence of `old` with `new` in the string.
+
+##### `index(sub)` (String)
+
+Returns the start index of the first occurrence of the substring `sub` as an optional `?int`.
+
+##### `last_index(sub)` (String)
+
+Returns the start index of the last occurrence of the substring `sub` as an optional `?int`.
+
+##### `starts_with(prefix)` (String)
+
+Checks if the string starts with the specified prefix.
+
+##### `ends_with(suffix)` (String)
+
+Checks if the string ends with the specified suffix.
+
+##### `is_pure_ascii()` (String)
+
+Checks if all characters in the string are pure ASCII.
+
+##### `split_into_lines()` (String)
+
+Splits a multiline string into an array of lines.
+
+##### `split_by_space()` (String)
+
+Splits a string by space as the delimiter.
+
 
 #### String Interpolation
 
@@ -1804,6 +2390,8 @@ fn main() {
 
 #### Clone Array
 
+##### `clone()` (Array)
+
 _File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v`_
 
 This example demonstrates the concepts of **clone array**.
@@ -1819,6 +2407,8 @@ fn main() {
 ```
 
 #### Copy Array
+
+##### `copy()` (Unsafe) (Array)
 
 _File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v`_
 
@@ -1838,6 +2428,8 @@ fn main() {
 
 #### Map Array Items
 
+##### `map()` (Array)
+
 _File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v`_
 
 This example demonstrates the concepts of **map array items**.
@@ -1852,6 +2444,8 @@ fn main() {
 ```
 
 #### Map Using Anonymous Funcs On Array
+
+##### `map()` (Anonymous Functions) (Array)
 
 _File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v`_
 
@@ -1872,6 +2466,8 @@ fn main() {
 
 #### Filter Array
 
+##### `filter()` (Array)
+
 _File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v`_
 
 This example demonstrates the concepts of **filter array**.
@@ -1887,6 +2483,8 @@ fn main() {
 ```
 
 #### Filter With Anonymous Funcs On Array
+
+##### `filter()` (Anonymous Functions) (Array)
 
 _File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v`_
 
@@ -1907,6 +2505,8 @@ fn main() {
 
 #### Sort Integer Array
 
+##### `sort()` (Integers) (Array)
+
 _File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v`_
 
 This example demonstrates the concepts of **sort integer array**.
@@ -1925,6 +2525,8 @@ fn main() {
 ```
 
 #### Sort String Array
+
+##### `sort()` (Strings) (Array)
 
 _File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v`_
 
@@ -1945,6 +2547,8 @@ fn main() {
 ```
 
 #### Sort Struct Array
+
+##### `sort()` (Structs) (Array)
 
 _File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v`_
 
@@ -2488,6 +3092,154 @@ fn main() {
 	}
 }
 ```
+##### `ensure_cap(required)` (Array)
+
+Ensures that the array has at least the specified capacity.
+
+##### `repeat(count)` (Array)
+
+Repeats the array `count` times and returns a new array.
+
+##### `repeat_to_depth(count, depth)` (Array)
+
+Recursively repeats a multi-dimensional array `count` times to the specified depth. Must be called within an `unsafe` block.
+
+##### `insert(index, val)` (Array)
+
+Inserts a new element at the specified index.
+
+##### `prepend(val)` (Array)
+
+Prepends a new element at the beginning of the array.
+
+##### `delete(index)` (Array)
+
+Deletes the element at the specified index.
+
+##### `delete_many(index, size)` (Array)
+
+Deletes `size` elements starting from the specified index.
+
+##### `clear()` (Array)
+
+Sets the array length to 0, retaining capacity.
+
+##### `reset()` (Array)
+
+Sets all elements of the array to 0 / empty values without altering `len` or `cap`. Must be called within an `unsafe` block.
+
+##### `trim(index)` (Array)
+
+Truncates the array length to `index`.
+
+##### `drop(num)` (Array)
+
+Drops the first `num` elements in-place.
+
+##### `first()` (Array)
+
+Returns the first element of the array.
+
+##### `last()` (Array)
+
+Returns the last element of the array.
+
+##### `pop_left()` (Array)
+
+Removes and returns the first element of the array.
+
+##### `pop()` (Array)
+
+Removes and returns the last element of the array.
+
+##### `delete_last()` (Array)
+
+Deletes the last element of the array.
+
+##### `clone()` (Array)
+
+Returns a deep copy of the array.
+
+##### `clone_to_depth(depth)` (Array)
+
+Recursively clones a multi-dimensional array up to the specified depth. Must be called within an `unsafe` block.
+
+##### `push_many(val, size)` (Array)
+
+Appends `size` elements starting from a raw pointer `val` to the array. Must be called within an `unsafe` block.
+
+##### `reverse()` (Array)
+
+Returns a new reversed copy of the array.
+
+##### `reverse_in_place()` (Array)
+
+Reverses the array elements in-place.
+
+##### `free()` (Array)
+
+Deallocates the array's buffer. Must be called within an `unsafe` block.
+
+##### `filter(it)` (Array)
+
+Filters elements that satisfy a predicate using compiler-defined `it` expression.
+
+##### `any(it)` (Array)
+
+Checks if any element satisfies the predicate.
+
+##### `count(it)` (Array)
+
+Counts how many elements satisfy the predicate.
+
+##### `all(it)` (Array)
+
+Checks if all elements satisfy the predicate.
+
+##### `map(it)` (Array)
+
+Maps elements to a new array using a transformation expression.
+
+##### `sort()` & `sort(custom)` (Array)
+
+Sorts elements in-place. Uses optional boolean expression for custom order (uses magic vars `a` and `b`).
+
+##### `sorted()` & `sorted(custom)` (Array)
+
+Returns a sorted copy of the array. Uses optional boolean expression for custom order (uses magic vars `a` and `b`).
+
+##### `sort_with_compare(callback)` (Array)
+
+Sorts the array in-place using a custom comparison function.
+
+##### `sorted_with_compare(callback)` (Array)
+
+Returns a sorted copy of the array using a custom comparison function.
+
+##### `contains(value)` (Array)
+
+Checks if the array contains value.
+
+##### `index(value)` (Array)
+
+Returns the index of the first occurrence of value, or -1 if not found.
+
+##### `last_index(value)` (Array)
+
+Returns the index of the last occurrence of value, or -1 if not found.
+
+##### `grow_cap(amount)` (Array)
+
+Increases the array capacity by the specified amount.
+
+##### `grow_len(amount)` (Array)
+
+Increases the array length by the specified amount. Must be called within an `unsafe` block.
+
+##### `pointers()` (Array)
+
+Returns an array of void pointers pointing to each element. Must be called within an `unsafe` block.
+
 
 ### Maps
 
@@ -2717,6 +3469,38 @@ fn main() {
 	println('free: map freed successfully')
 }
 ```
+##### `keys()` (Map)
+
+Returns an array containing all keys in the map.
+
+##### `values()` (Map)
+
+Returns an array containing all values in the map.
+
+##### `clone()` (Map)
+
+Returns a deep copy of the map.
+
+##### `delete(key)` (Map)
+
+Removes a key-value pair from the map by key.
+
+##### `reserve(capacity)` (Map)
+
+Pre-allocates space for at least `capacity` elements in the map.
+
+##### `clear()` (Map)
+
+Removes all key-value pairs from the map without deallocating data.
+
+##### `move()` (Map)
+
+Moves the map contents to a new map variable and clears the original map to empty.
+
+##### `free()` (Map)
+
+Deallocates the map memory. Must be called within an `unsafe` block.
+
 
 ## Control Flow
 
