@@ -15494,29 +15494,92 @@ fn main() {
 
 _File location: `error_handling/error_handling.v`_
 
-This section covers V's error handling model in depth, demonstrating how the language handles potential absence of values and errors without standard exceptions.
+In many programming languages, errors are handled using exceptions (with `try`, `catch`, and `throw` blocks). Exception blocks can make code hard to read and trace because control flow can jump unpredictably.
 
-#### Key Mechanisms
+V takes a different approach. **V does not have exceptions.** Instead, V handles errors explicitly using two main concepts:
+- **Option Types (`?T`)**: Used when a value might simply be missing (like searching for an item that isn't in a list).
+- **Result Types (`!T`)**: Used when an operation might actually fail with a specific error (like division by zero or a database timeout).
 
-1. **Option Types (`?T`)**:
-   - Represent a value that might be absent (either `T` or `none`).
-   - Defined with a `?` prefix (e.g., `?string`).
-   - Propagated using the `?` suffix.
-   - Handled/Unwrapped using `or { ... }` blocks (e.g., to return a fallback or perform early exit) or `if-let` binding: `if value := opt_func() { ... } else { ... }`.
+By forcing you to handle these outcomes explicitly, V makes your code safer and easier to debug.
 
-2. **Result Types (`!T`)**:
-   - Represent a value or an error (either `T` or an `IError`).
-   - Defined with a `!` prefix (e.g., `!f64`).
-   - Propagated using the `!` suffix.
-   - Handled using `or { ... }` blocks, where a special, automatically-bound `err` variable of type `IError` is accessible inside the block.
+---
 
-3. **Custom Errors (`IError`)**:
-   - V allows creating custom errors by defining a struct and embedding the builtin `Error` struct.
-   - You can implement/override `msg() string` and `code() int` from the `IError` interface.
-   - In handling blocks (`or`), you can dynamically check and cast the error using type guards: `if err is CustomError { ... }`. The compiler smart-casts the variable, letting you directly access custom fields (like `err.code` or `err.query`).
+### Key Error Handling Mechanisms
 
-4. **Unrecoverable Errors (Panics)**:
-   - For critical, non-recoverable runtime failures, V provides the `panic(message string)` function which prints a stack trace and immediately terminates the program.
+#### 1. Option Types (`?T`) - "Value Might Be Missing"
+An Option type represents either a valid value of type `T`, or nothing at all (`none`). 
+*   **Syntax:** Defined by prefixing the type with a `?` (e.g., `?string` means "optionally a string").
+*   **Returning none:** If the value isn't there, you return the `none` keyword.
+*   **Handling Options:**
+    *   **The `or` block:** Provides a default/fallback value if the option is `none`.
+        ```v
+        item := find_item(99) or { 'Default Item' }
+        ```
+    *   **The `if-let` block:** Runs code only if the option contains a value, binding that value to a temporary variable.
+        ```v
+        if item := find_item(42) {
+            println('Found item: ${item}')
+        } else {
+            println('Item was not found.')
+        }
+        ```
+*   **Propagation (`?` suffix):** If a function returns an option, you can call another option-returning function and append `?` to it. If that call returns `none`, the parent function immediately exits and returns `none`.
+    ```v
+    fn find_item_wrapper(id int) ?string {
+        item := find_item(id)? // Immediately returns none if find_item fails
+        return 'Found: ' + item
+    }
+    ```
+
+#### 2. Result Types (`!T`) - "Operation Might Fail"
+A Result type represents either a successful value of type `T`, or an error (`IError`).
+*   **Syntax:** Defined by prefixing the type with a `!` (e.g., `!f64` means "a float or an error").
+*   **Returning Errors:** Use the `error(message)` function to return a standard error.
+*   **Handling Results:** Use the `or { ... }` block. Inside the block, V automatically defines a special `err` variable which contains the error message and code.
+    ```v
+    result := divide(10.0, 0.0) or {
+        println('Failed: ${err}') // 'err' holds the error message
+        0.0 // Fallback value
+    }
+    ```
+*   **Propagation (`!` suffix):** If a function returns a result, you can append `!` to a result-returning call inside it. If it fails, the error is immediately propagated up to the caller.
+    ```v
+    fn calculate_and_format(a f64, b f64) !string {
+        res := divide(a, b)! // Propagates division-by-zero error if b is 0
+        return 'Result is ${res:.2f}'
+    }
+    ```
+
+#### 3. Custom Errors (`IError`) - "Define Your Own Errors"
+Sometimes a simple text message isn't enough, and you want to attach extra details (like an error code or the database query that failed).
+*   **Defining Custom Errors:** Define a struct, embed V's built-in `Error` struct (which provides default implementations), and implement or override the `msg() string` and `code() int` methods.
+    ```v
+    struct DatabaseError {
+        Error
+        query string
+    }
+    
+    fn (err DatabaseError) msg() string {
+        return 'Database error executing query: "${err.query}"'
+    }
+    ```
+*   **Handling / Casting Custom Errors:** In the `or` block, you can check if `err` is of a specific custom error type using the `is` keyword. V will automatically **smart-cast** the error, allowing you to access its custom fields directly.
+    ```v
+    query_db('SELECT * FROM users', false) or {
+        if err is DatabaseError {
+            println('Attempted query: ${err.query}') // Accessing custom field
+            println('Error message:   ${err.msg()}')
+        }
+        '' // Fallback string
+    }
+    ```
+
+#### 4. Unrecoverable Errors (Panics) - "Crash Immediately"
+For critical runtime errors that your program cannot recover from (like running out of memory or a corrupted configuration), V provides the `panic(message)` function. Calling `panic` prints the error message, outputs a stack trace, and immediately terminates the program. Use panics sparingly; prefer returning Options or Results so the caller has a chance to handle the issue.
+
+---
+
+### Code Demonstration
 
 ```v
 module main
