@@ -13498,6 +13498,17 @@ _File location: `language_updates_and_stdlib/02_standard_library/25_net/unix/net
 
 This example demonstrates Unix domain socket client-server communication using the `net.unix` module.
 
+### Why Use Unix Domain Sockets for Local Connections? (For Beginners)
+
+When connecting a server and client on the **same machine** (local connections), you can use either TCP loopback (`127.0.0.1:port`) or **Unix Domain Sockets (UDS)** (which use a file path like `/tmp/app.sock`). For local communication, Unix sockets are usually a better choice than TCP or UDP because:
+
+1. **Significantly Faster (Higher Performance):** TCP is designed for unreliable networks, so it has overhead like sequence numbers, handshakes, checksum calculations, and packet routing. Unix sockets know they are on the same machine, so they bypass the entire network stack and copy data directly through kernel buffers. This leads to **much higher throughput and lower latency**.
+2. **Increased Security:** A TCP port (like `127.0.0.1:8080`) is exposed to the local network loopback. Any process running on your machine under any user can potentially connect to it. Unix sockets are regular files in the filesystem, meaning you can restrict access using standard **file permissions** (e.g., owner, group, read/write permissions).
+3. **No Port Conflicts:** With TCP/UDP, only one application can use a port at a time. If port `8080` is taken, your app will fail to start. Unix sockets use unique file paths, so you never have to worry about port collisions.
+4. **Simple Addressing:** Instead of managing IPs and port ranges, you reference a file path (e.g., `/tmp/v_example.sock`).
+
+---
+
 ```v
 module main
 
