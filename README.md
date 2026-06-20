@@ -3,7 +3,7 @@
 Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers everything from basic variables to advanced concurrency and standard library usage.
 
 > [!TIP]
-> **Interactive Viewer**: Read this guide and other tutorials as a responsive HTML site using the [Markdown Tutorials Viewer](https://github.com/codecaine-zz/markdown_tutorials) project.
+> **Interactive Viewer**: Read this guide and other tutorials as a responsive HTML site on the [Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/) (source code available in the [GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
 
 ## Why V?
 
@@ -16149,4 +16149,4 @@ For a complete guide on how to handle memory defaults, write manual cleanups, an
 For comprehensive and up-to-date information about V, please refer to the official documentation:
 
 - **[V Official Documentation](https://github.com/vlang/v/blob/master/doc/docs.md)** - Complete reference guide for the V programming language
-- **[Markdown Tutorials Viewer](https://github.com/codecaine-zz/markdown_tutorials)** - Interactive HTML viewer featuring this Vlang guide alongside other programming tutorials
+- **[Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/)** - Interactive HTML viewer featuring this Vlang guide alongside other programming tutorials ([GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials))
