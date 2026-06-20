@@ -515,7 +515,15 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
     - [Context Propagation](#context-propagation)
     - [Net URL Parsing](#net-url-parsing)
     - [Net WebSockets](#net-websockets)
+    - [Net WebSockets (Persistent Connection)](#net-websockets-persistent-connection)
+    - [Net TCP Sockets](#net-tcp-sockets)
+    - [Net TCP Sockets (Persistent Connection)](#net-tcp-sockets-persistent-connection)
+    - [Net UDP Sockets](#net-udp-sockets)
+    - [Net UDP Sockets (Persistent Connection)](#net-udp-sockets-persistent-connection)
     - [Net Unix Sockets](#net-unix-sockets)
+    - [Net Unix Sockets (Persistent Connection)](#net-unix-sockets-persistent-connection)
+    - [Net SSL Sockets](#net-ssl-sockets)
+    - [Net SSL Sockets (Persistent Connection)](#net-ssl-sockets-persistent-connection)
     - [HTML Parsing](#html-parsing)
     - [JSON-RPC 2.0](#json-rpc-20)
     - [Tar Archiving](#tar-archiving)
@@ -12722,8 +12730,623 @@ fn main() {
 	ws_client.close(1000, 'Done') or {
 		println('Client close error: ${err}')
 	}
-	time.sleep(50 * time.millisecond)
 	println('WebSocket Demo finished.')
+}
+```
+
+#### Net WebSockets (Persistent Connection)
+
+_File location: `language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v`_
+
+This example demonstrates a persistent WebSocket connection maintaining an active back-and-forth ping-pong conversation between client and server, terminating with a handshake exchange.
+
+```v
+module main
+
+import net.websocket
+import time
+
+// ClientState maintains state across client callbacks
+struct ClientState {
+mut:
+	count int
+}
+
+fn main() {
+	println('=== Persistent WebSocket Demo ===')
+	port := 38292
+	uri := 'ws://localhost:${port}'
+
+	// 1. Initialize and run a local WebSocket server
+	mut ws_server := websocket.new_server(.ip, port, '/')
+	
+	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
+		println('Server: Client connected from ${s.client_key}')
+		return true
+	})!
+
+	// Server message handler responds back to ping messages
+	ws_server.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ! {
+		if msg.opcode == .text_frame {
+			payload := msg.payload.bytestr()
+			println('Server received text: "${payload}"')
+			
+			if payload.starts_with('Ping ') {
+				num := payload.replace('Ping ', '')
+				response := 'Pong ${num}'
+				println('Server responding with: "${response}"')
+				ws.write_string(response)!
+			} else if payload == 'Goodbye' {
+				println('Server received goodbye. Sending confirmation and closing...')
+				ws.write_string('Goodbye!')!
+			}
+		}
+	})
+
+	// Start the server listen loop in a background thread
+	spawn fn [mut ws_server] () {
+		ws_server.listen() or {
+			println('Server error: ${err}')
+		}
+	}()
+
+	// Allow the server a moment to start
+	time.sleep(100 * time.millisecond)
+
+	// 2. Initialize the WebSocket client
+	mut ws_client := websocket.new_client(uri) or {
+		println('Client init failed: ${err}')
+		return
+	}
+
+	mut state := &ClientState{
+		count: 0
+	}
+
+	ws_client.on_open(fn (mut c websocket.Client) ! {
+		println('Client: Connection opened!')
+		// Initiate the first Ping message
+		c.write_string('Ping 1')!
+	})
+
+	// Client message handler processes the Pong responses and decides
+	// whether to send another Ping, or bid Goodbye.
+	ws_client.on_message(fn [mut state] (mut c websocket.Client, msg &websocket.Message) ! {
+		if msg.opcode == .text_frame {
+			payload := msg.payload.bytestr()
+			println('Client received response: "${payload}"')
+
+			if payload.starts_with('Pong ') {
+				state.count++
+				if state.count < 3 {
+					next_msg := 'Ping ${state.count + 1}'
+					println('Client sending next message: "${next_msg}"')
+					c.write_string(next_msg)!
+				} else {
+					println('Client sending goodbye: "Goodbye"')
+					c.write_string('Goodbye')!
+				}
+			} else if payload == 'Goodbye!' {
+				println('Client received goodbye response. Closing connection...')
+				c.close(1000, 'Done') or {
+					println('Client close error: ${err}')
+				}
+			}
+		}
+	})
+
+	ws_client.on_close(fn (mut c websocket.Client, code int, reason string) ! {
+		println('Client: Connection closed (code: ${code}, reason: "${reason}")')
+	})
+
+	ws_client.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client error: ${error_msg}')
+	})
+
+	// Connect and run the client listener
+	ws_client.connect() or {
+		println('Client failed to connect: ${err}')
+		return
+	}
+
+	// Start the client listen loop in a background thread
+	spawn ws_client.listen()
+
+	// Wait for the conversational flow to finish
+	time.sleep(1000 * time.millisecond)
+	println('WebSocket Demo finished.')
+}
+```
+
+#### Net TCP Sockets
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v`_
+
+This example demonstrates how to create a simple TCP server and client in V. The server listens on a local port, accepts an incoming client connection, receives data, sends a response, and closes the connection.
+
+```v
+module main
+
+import net
+import time
+
+// run_server starts the TCP server on the specified port, accepts a connection,
+// reads a message, responds, and closes the connection.
+fn run_server(port int) ! {
+	mut listener := net.listen_tcp(.ip, '127.0.0.1:${port}') or {
+		println('Server: Failed to listen on port ${port}: ${err}')
+		return err
+	}
+	defer {
+		listener.close() or {}
+	}
+
+	println('Server: Listening on 127.0.0.1:${port}...')
+
+	mut conn := listener.accept() or {
+		println('Server: Failed to accept connection: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Server: Client connected!')
+
+	mut buf := []u8{len: 1024}
+	n := conn.read(mut buf) or {
+		println('Server: Read failed: ${err}')
+		return err
+	}
+
+	message := buf[..n].bytestr()
+	println('Server: Received message: "${message}"')
+
+	// Write response back to the client
+	response := 'Echo: ${message}'
+	conn.write(response.bytes()) or {
+		println('Server: Write failed: ${err}')
+		return err
+	}
+	println('Server: Sent echo response.')
+}
+
+// run_client connects to the TCP server, sends a message, reads the response,
+// and closes the connection.
+fn run_client(port int) ! {
+	println('Client: Connecting to 127.0.0.1:${port}...')
+	mut conn := net.dial_tcp('127.0.0.1:${port}') or {
+		println('Client: Failed to connect: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Client: Connected!')
+
+	// Send message to the server
+	message := 'Hello V TCP Sockets!'
+	println('Client: Sending message: "${message}"')
+	conn.write(message.bytes()) or {
+		println('Client: Write failed: ${err}')
+		return err
+	}
+
+	// Read server response
+	mut buf := []u8{len: 1024}
+	n := conn.read(mut buf) or {
+		println('Client: Read failed: ${err}')
+		return err
+	}
+
+	response := buf[..n].bytestr()
+	println('Client: Received response: "${response}"')
+}
+
+fn main() {
+	println('=== net.tcp Module Demo ===')
+	port := 38290
+
+	// Spawn the server in a background thread
+	spawn fn (p int) {
+		run_server(p) or {
+			println('Server thread failed: ${err}')
+		}
+	}(port)
+
+	// Allow the server thread a short time to start and bind
+	time.sleep(100 * time.millisecond)
+
+	// Run the client in the main thread
+	run_client(port) or {
+		println('Client failed: ${err}')
+	}
+
+	// Give the server a small window to finish deferred cleanups
+	println('TCP Demo finished.')
+}
+```
+
+#### Net TCP Sockets (Persistent Connection)
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v`_
+
+This example demonstrates a persistent TCP connection. The client connects to the server, and they exchange multiple messages back-and-forth in a loop before closing the connection cleanly.
+
+```v
+module main
+
+import net
+import time
+
+// run_server starts the TCP server on the specified port, accepts a connection,
+// and processes incoming messages in a loop until the client sends "Goodbye".
+fn run_server(port int) ! {
+	mut listener := net.listen_tcp(.ip, '127.0.0.1:${port}') or {
+		println('Server: Failed to listen on port ${port}: ${err}')
+		return err
+	}
+	defer {
+		listener.close() or {}
+	}
+
+	println('Server: Listening on 127.0.0.1:${port}...')
+
+	mut conn := listener.accept() or {
+		println('Server: Failed to accept connection: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Server: Client connected!')
+
+	// Loop to handle back-and-forth messages on the same connection
+	for {
+		mut buf := []u8{len: 1024}
+		n := conn.read(mut buf) or {
+			println('Server: Connection closed or read error: ${err}')
+			break
+		}
+		if n == 0 {
+			println('Server: Client disconnected.')
+			break
+		}
+
+		message := buf[..n].bytestr()
+		println('Server received: "${message}"')
+
+		if message == 'Goodbye' {
+			println('Server received Goodbye. Replying and closing connection...')
+			conn.write('Goodbye!'.bytes()) or {
+				println('Server: Write failed: ${err}')
+			}
+			break
+		}
+
+		response := 'Echo: ${message}'
+		println('Server sending: "${response}"')
+		conn.write(response.bytes()) or {
+			println('Server: Write failed: ${err}')
+			break
+		}
+	}
+	println('Server finished.')
+}
+
+// run_client connects to the TCP server, sends multiple messages,
+// receives replies, and finally sends a goodbye message.
+fn run_client(port int) ! {
+	println('Client: Connecting to 127.0.0.1:${port}...')
+	mut conn := net.dial_tcp('127.0.0.1:${port}') or {
+		println('Client: Failed to connect: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Client: Connected!')
+
+	// Exchange multiple messages
+	for i in 1 .. 4 {
+		message := 'Ping ${i}'
+		println('Client sending: "${message}"')
+		conn.write(message.bytes()) or {
+			println('Client: Write failed: ${err}')
+			return err
+		}
+
+		// Read response
+		mut buf := []u8{len: 1024}
+		n := conn.read(mut buf) or {
+			println('Client: Read failed: ${err}')
+			return err
+		}
+		if n == 0 {
+			println('Client: Server closed connection.')
+			return error('Server closed connection unexpectedly')
+		}
+
+		response := buf[..n].bytestr()
+		println('Client received response: "${response}"')
+		
+		time.sleep(50 * time.millisecond)
+	}
+
+	// Send Goodbye to cleanly terminate the persistent session
+	println('Client sending: "Goodbye"')
+	conn.write('Goodbye'.bytes()) or {
+		println('Client: Write failed: ${err}')
+		return err
+	}
+
+	mut buf := []u8{len: 1024}
+	n := conn.read(mut buf) or {
+		println('Client: Read failed: ${err}')
+		return err
+	}
+	if n > 0 {
+		response := buf[..n].bytestr()
+		println('Client received response: "${response}"')
+	}
+	println('Client finished.')
+}
+
+fn main() {
+	println('=== Persistent TCP Demo ===')
+	port := 38293
+
+	// Spawn the server in a background thread
+	spawn fn (p int) {
+		run_server(p) or {
+			println('Server thread failed: ${err}')
+		}
+	}(port)
+
+	// Allow the server thread a short time to start and bind
+	time.sleep(100 * time.millisecond)
+
+	// Run the client in the main thread
+	run_client(port) or {
+		println('Client failed: ${err}')
+	}
+
+	// Give the server a small window to finish deferred cleanups
+	time.sleep(50 * time.millisecond)
+	println('TCP Sockets Demo finished.')
+}
+```
+
+#### Net UDP Sockets
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v`_
+
+This example demonstrates sending and receiving connectionless UDP packets. The server binds to a local port and receives a message along with the sender's address, and responds to it using `write_to`.
+
+```v
+module main
+
+import net
+import time
+
+// run_server starts the UDP server on the specified port, listens for a packet,
+// prints the message, sends a response back to the sender, and exits.
+fn run_server(port int) ! {
+	mut socket := net.listen_udp('127.0.0.1:${port}') or {
+		println('Server: Failed to listen on port ${port}: ${err}')
+		return err
+	}
+	defer {
+		socket.close() or {}
+	}
+
+	println('Server: Listening for UDP packets on port ${port}...')
+
+	mut buf := []u8{len: 1024}
+	read, addr := socket.read(mut buf) or {
+		println('Server: Read failed: ${err}')
+		return err
+	}
+
+	message := buf[..read].bytestr()
+	println('Server: Received message from ${addr}: "${message}"')
+
+	// Send echo response
+	response := 'Echo: ${message}'
+	socket.write_to(addr, response.bytes()) or {
+		println('Server: Send failed: ${err}')
+		return err
+	}
+	println('Server: Sent echo response.')
+}
+
+// run_client creates a UDP client socket, sends a datagram, and waits for a response.
+fn run_client(port int) ! {
+	mut socket := net.dial_udp('127.0.0.1:${port}') or {
+		println('Client: Failed to dial server: ${err}')
+		return err
+	}
+	defer {
+		socket.close() or {}
+	}
+
+	message := 'Hello V UDP Sockets!'
+	println('Client: Sending message: "${message}"')
+	socket.write(message.bytes()) or {
+		println('Client: Write failed: ${err}')
+		return err
+	}
+
+	// Read server response
+	mut buf := []u8{len: 1024}
+	read, addr := socket.read(mut buf) or {
+		println('Client: Read failed: ${err}')
+		return err
+	}
+
+	response := buf[..read].bytestr()
+	println('Client: Received response from ${addr}: "${response}"')
+}
+
+fn main() {
+	println('=== net.udp Module Demo ===')
+	port := 38291
+
+	// Spawn the server in a background thread
+	spawn fn (p int) {
+		run_server(p) or {
+			println('Server thread failed: ${err}')
+		}
+	}(port)
+
+	// Allow the server thread a short time to start and bind
+	time.sleep(100 * time.millisecond)
+
+	// Run the client in the main thread
+	run_client(port) or {
+		println('Client failed: ${err}')
+	}
+
+	// Give the server a small window to finish deferred cleanups
+	println('UDP Demo finished.')
+}
+```
+
+#### Net UDP Sockets (Persistent Connection)
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v`_
+
+This example demonstrates how to maintain a persistent ping-pong message exchange over UDP. The client continuously sends datagrams using a bound socket, and the server receives them in a loop while retaining the sender's details to write back.
+
+```v
+module main
+
+import net
+import time
+
+// run_server starts the UDP server on the specified port, listens for packets,
+// prints incoming messages and their source addresses, and responds to each
+// in a loop until the client sends "Goodbye".
+fn run_server(port int) ! {
+	mut socket := net.listen_udp('127.0.0.1:${port}') or {
+		println('Server: Failed to listen on port ${port}: ${err}')
+		return err
+	}
+	defer {
+		socket.close() or {}
+	}
+
+	println('Server: Listening for UDP packets on port ${port}...')
+
+	// Loop to handle incoming UDP datagrams continuously
+	for {
+		mut buf := []u8{len: 1024}
+		read, addr := socket.read(mut buf) or {
+			println('Server: Read failed: ${err}')
+			break
+		}
+		if read == 0 {
+			break
+		}
+
+		message := buf[..read].bytestr()
+		println('Server received from ${addr}: "${message}"')
+
+		if message == 'Goodbye' {
+			println('Server received Goodbye. Replying and exiting...')
+			socket.write_to(addr, 'Goodbye!'.bytes()) or {
+				println('Server: Write failed: ${err}')
+			}
+			break
+		}
+
+		response := 'Echo: ${message}'
+		println('Server sending to ${addr}: "${response}"')
+		socket.write_to(addr, response.bytes()) or {
+			println('Server: Write failed: ${err}')
+			break
+		}
+	}
+	println('Server finished.')
+}
+
+// run_client creates a UDP socket bound to a remote destination address,
+// and sends multiple messages in sequence, receiving responses from the server.
+fn run_client(port int) ! {
+	mut socket := net.dial_udp('127.0.0.1:${port}') or {
+		println('Client: Failed to dial server: ${err}')
+		return err
+	}
+	defer {
+		socket.close() or {}
+	}
+
+	// Exchange multiple messages
+	for i in 1 .. 4 {
+		message := 'Ping ${i}'
+		println('Client sending: "${message}"')
+		socket.write(message.bytes()) or {
+			println('Client: Write failed: ${err}')
+			return err
+		}
+
+		// Read response
+		mut buf := []u8{len: 1024}
+		read, addr := socket.read(mut buf) or {
+			println('Client: Read failed: ${err}')
+			return err
+		}
+
+		response := buf[..read].bytestr()
+		println('Client received response from ${addr}: "${response}"')
+		
+		time.sleep(50 * time.millisecond)
+	}
+
+	// Send Goodbye to cleanly terminate the session
+	println('Client sending: "Goodbye"')
+	socket.write('Goodbye'.bytes()) or {
+		println('Client: Write failed: ${err}')
+		return err
+	}
+
+	mut buf := []u8{len: 1024}
+	read, addr := socket.read(mut buf) or {
+		println('Client: Read failed: ${err}')
+		return err
+	}
+	if read > 0 {
+		response := buf[..read].bytestr()
+		println('Client received response from ${addr}: "${response}"')
+	}
+	println('Client finished.')
+}
+
+fn main() {
+	println('=== Persistent UDP Demo ===')
+	port := 38294
+
+	// Spawn the server in a background thread
+	spawn fn (p int) {
+		run_server(p) or {
+			println('Server thread failed: ${err}')
+		}
+	}(port)
+
+	// Allow the server thread a short time to start and bind
+	time.sleep(100 * time.millisecond)
+
+	// Run the client in the main thread
+	run_client(port) or {
+		println('Client failed: ${err}')
+	}
+
+	// Give the server a small window to finish deferred cleanups
+	time.sleep(50 * time.millisecond)
+	println('UDP Sockets Demo finished.')
 }
 ```
 
@@ -12847,6 +13470,518 @@ fn main() {
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
 	println('Unix Sockets Demo finished.')
+}
+```
+
+#### Net Unix Sockets (Persistent Connection)
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v`_
+
+This example demonstrates establishing a Unix domain socket server and client, keeping the connection open for multiple rounds of back-and-forth communication, and terminating cleanly.
+
+```v
+module main
+
+import net.unix
+import os
+import time
+
+// run_server starts the Unix socket server, accepts one client connection,
+// and processes incoming messages in a loop until the client says "Goodbye".
+fn run_server(socket_path string) ! {
+	// Clean up any stale socket file from a previous run
+	if os.exists(socket_path) {
+		os.rm(socket_path)!
+	}
+
+	// Listen on the Unix socket path
+	mut listener := unix.listen_stream(socket_path, unix.ListenOptions{}) or {
+		println('Server: Failed to listen on ${socket_path}: ${err}')
+		return err
+	}
+	defer {
+		listener.close() or {}
+		listener.unlink() or {}
+	}
+
+	println('Server: Listening on socket path: ${socket_path}')
+
+	// Accept a connection
+	mut conn := listener.accept() or {
+		println('Server: Failed to accept connection: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Server: Client connected!')
+
+	// Loop to handle back-and-forth messages on the same connection
+	for {
+		mut buf := []u8{len: 1024}
+		n := conn.read(mut buf) or {
+			println('Server: Connection closed or read error: ${err}')
+			break
+		}
+		if n == 0 {
+			println('Server: Client disconnected.')
+			break
+		}
+
+		message := buf[..n].bytestr()
+		println('Server received: "${message}"')
+
+		if message == 'Goodbye' {
+			println('Server received Goodbye. Replying and shutting down connection...')
+			conn.write('Goodbye!'.bytes()) or {
+				println('Server: Write failed: ${err}')
+			}
+			break
+		}
+
+		response := 'Echo: ${message}'
+		println('Server sending: "${response}"')
+		conn.write(response.bytes()) or {
+			println('Server: Write failed: ${err}')
+			break
+		}
+	}
+	println('Server finished.')
+}
+
+// run_client connects to the Unix socket server, sends multiple messages,
+// receives replies, and finally sends a goodbye message.
+fn run_client(socket_path string) ! {
+	println('Client: Connecting to ${socket_path}...')
+	mut conn := unix.connect_stream(socket_path) or {
+		println('Client: Failed to connect: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Client: Connected!')
+
+	// Exchange multiple messages
+	for i in 1 .. 4 {
+		message := 'Ping ${i}'
+		println('Client sending: "${message}"')
+		conn.write(message.bytes()) or {
+			println('Client: Write failed: ${err}')
+			return err
+		}
+
+		// Read response
+		mut buf := []u8{len: 1024}
+		n := conn.read(mut buf) or {
+			println('Client: Read failed: ${err}')
+			return err
+		}
+		if n == 0 {
+			println('Client: Server closed connection.')
+			return error('Server closed connection unexpectedly')
+		}
+
+		response := buf[..n].bytestr()
+		println('Client received response: "${response}"')
+		
+		time.sleep(50 * time.millisecond)
+	}
+
+	// Send Goodbye to cleanly terminate the persistent session
+	println('Client sending: "Goodbye"')
+	conn.write('Goodbye'.bytes()) or {
+		println('Client: Write failed: ${err}')
+		return err
+	}
+
+	mut buf := []u8{len: 1024}
+	n := conn.read(mut buf) or {
+		println('Client: Read failed: ${err}')
+		return err
+	}
+	if n > 0 {
+		response := buf[..n].bytestr()
+		println('Client received response: "${response}"')
+	}
+	println('Client finished.')
+}
+
+fn main() {
+	println('=== Persistent Unix Sockets Demo ===')
+	socket_path := os.join_path(os.temp_dir(), 'v_unix_socket_persistent')
+
+	// Spawn the server in a background thread
+	spawn fn (path string) {
+		run_server(path) or {
+			println('Server thread failed: ${err}')
+		}
+	}(socket_path)
+
+	// Allow the server thread a short time to start and bind
+	time.sleep(100 * time.millisecond)
+
+	// Run the client in the main thread
+	run_client(socket_path) or {
+		println('Client failed: ${err}')
+	}
+
+	// Give the server a small window to finish deferred cleanups
+	println('Unix Sockets Demo finished.')
+}
+```
+
+#### Net SSL Sockets
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v`_
+
+This example demonstrates setting up a secure SSL/TLS server and client connection using the standard library's `net.mbedtls` module, including programmatically generating a self-signed key/cert pair using OpenSSL and cleaning them up on exit.
+
+```v
+module main
+
+import net.mbedtls
+import net
+import os
+import time
+
+// generate_certs runs openssl to create a temporary self-signed certificate and key.
+fn generate_certs() ! {
+	println('Generating temporary self-signed SSL certificate...')
+	res := os.execute('openssl req -x509 -newkey rsa:2048 -keyout temp_server.key -out temp_server.crt -days 1 -nodes -subj "/CN=localhost"')
+	if res.exit_code != 0 {
+		return error('Failed to generate certs: ${res.output}')
+	}
+}
+
+// cleanup_certs deletes the temporary certificate and key files.
+fn cleanup_certs() {
+	println('Cleaning up temporary certificate files...')
+	os.rm('temp_server.key') or {}
+	os.rm('temp_server.crt') or {}
+}
+
+// run_server starts the SSL server, accepts a client connection,
+// reads a message, responds securely, and exits.
+fn run_server(port int) ! {
+	config := mbedtls.SSLConnectConfig{
+		cert: 'temp_server.crt'
+		cert_key: 'temp_server.key'
+		validate: false
+	}
+
+	mut listener := mbedtls.new_ssl_listener('127.0.0.1:${port}', config) or {
+		println('Server: Failed to create listener: ${err}')
+		return err
+	}
+	defer {
+		listener.shutdown() or {}
+	}
+
+	println('Server: Listening on SSL port ${port}...')
+
+	mut conn := listener.accept() or {
+		println('Server: Failed to accept SSL connection: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Server: SSL Client connected!')
+
+	mut buf := []u8{len: 1024}
+	n := conn.read(mut buf) or {
+		println('Server: Read failed: ${err}')
+		return err
+	}
+
+	message := buf[..n].bytestr()
+	println('Server: Received message: "${message}"')
+
+	// Respond securely
+	response := 'Echo Secure: ${message}'
+	conn.write(response.bytes()) or {
+		println('Server: Write failed: ${err}')
+		return err
+	}
+	println('Server: Sent secure response.')
+}
+
+// run_client connects to the server port via TCP first, wraps it in SSL,
+// sends a message, reads the secure response, and closes.
+fn run_client(port int) ! {
+	println('Client: Dialing standard TCP port first...')
+	mut tcp_conn := net.dial_tcp('127.0.0.1:${port}') or {
+		println('Client: Failed to connect standard TCP: ${err}')
+		return err
+	}
+
+	println('Client: Initiating SSL handshake on top of TCP connection...')
+	config := mbedtls.SSLConnectConfig{
+		validate: false
+	}
+
+	mut ssl_conn := mbedtls.new_ssl_conn(config) or {
+		println('Client: Failed to create SSL connection struct: ${err}')
+		return err
+	}
+	defer {
+		ssl_conn.close() or {}
+	}
+
+	ssl_conn.connect(mut tcp_conn, 'localhost') or {
+		println('Client: SSL handshake failed: ${err}')
+		return err
+	}
+
+	println('Client: Secure connection established!')
+
+	message := 'Hello V Secure Sockets!'
+	println('Client: Sending message: "${message}"')
+	ssl_conn.write(message.bytes()) or {
+		println('Client: Write failed: ${err}')
+		return err
+	}
+
+	mut buf := []u8{len: 1024}
+	n := ssl_conn.read(mut buf) or {
+		println('Client: Read failed: ${err}')
+		return err
+	}
+
+	response := buf[..n].bytestr()
+	println('Client: Received response: "${response}"')
+}
+
+fn main() {
+	println('=== net.ssl Module Demo ===')
+	generate_certs() or {
+		println('Error generating certs: ${err}')
+		return
+	}
+	defer {
+		cleanup_certs()
+	}
+
+	port := 38295
+	// Spawn server in background
+	spawn fn (p int) {
+		run_server(p) or {
+			println('Server thread failed: ${err}')
+		}
+	}(port)
+
+	// Wait briefly for server to bind
+	time.sleep(200 * time.millisecond)
+
+	// Run client in main thread
+	run_client(port) or {
+		println('Client failed: ${err}')
+	}
+
+	time.sleep(50 * time.millisecond)
+	println('SSL Demo finished.')
+}
+```
+
+#### Net SSL Sockets (Persistent Connection)
+
+_File location: `language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v`_
+
+This example demonstrates keeping an SSL/TLS connection open for multiple rounds of secure back-and-forth ping-pong communication over `net.mbedtls`.
+
+```v
+module main
+
+import net.mbedtls
+import net
+import os
+import time
+
+// generate_certs runs openssl to create a temporary self-signed certificate and key.
+fn generate_certs() ! {
+	println('Generating temporary self-signed SSL certificate...')
+	res := os.execute('openssl req -x509 -newkey rsa:2048 -keyout temp_server.key -out temp_server.crt -days 1 -nodes -subj "/CN=localhost"')
+	if res.exit_code != 0 {
+		return error('Failed to generate certs: ${res.output}')
+	}
+}
+
+// cleanup_certs deletes the temporary certificate and key files.
+fn cleanup_certs() {
+	println('Cleaning up temporary certificate files...')
+	os.rm('temp_server.key') or {}
+	os.rm('temp_server.crt') or {}
+}
+
+// run_server starts the SSL server, accepts a client connection,
+// and processes incoming messages in a loop until the client sends "Goodbye".
+fn run_server(port int) ! {
+	config := mbedtls.SSLConnectConfig{
+		cert: 'temp_server.crt'
+		cert_key: 'temp_server.key'
+		validate: false
+	}
+
+	mut listener := mbedtls.new_ssl_listener('127.0.0.1:${port}', config) or {
+		println('Server: Failed to create listener: ${err}')
+		return err
+	}
+	defer {
+		listener.shutdown() or {}
+	}
+
+	println('Server: Listening on SSL port ${port}...')
+
+	mut conn := listener.accept() or {
+		println('Server: Failed to accept SSL connection: ${err}')
+		return err
+	}
+	defer {
+		conn.close() or {}
+	}
+
+	println('Server: SSL Client connected!')
+
+	// Loop to handle back-and-forth messages on the same secure connection
+	for {
+		mut buf := []u8{len: 1024}
+		n := conn.read(mut buf) or {
+			println('Server: Secure connection closed or read error: ${err}')
+			break
+		}
+		if n == 0 {
+			println('Server: Client disconnected.')
+			break
+		}
+
+		message := buf[..n].bytestr()
+		println('Server received secure: "${message}"')
+
+		if message == 'Goodbye' {
+			println('Server received Goodbye. Replying and closing secure connection...')
+			conn.write('Goodbye!'.bytes()) or {
+				println('Server: Write failed: ${err}')
+			}
+			break
+		}
+
+		response := 'Echo: ${message}'
+		println('Server sending secure: "${response}"')
+		conn.write(response.bytes()) or {
+			println('Server: Write failed: ${err}')
+			break
+		}
+	}
+	println('Server finished.')
+}
+
+// run_client connects to the server port via TCP first, wraps it in SSL,
+// and sends multiple messages in a loop before ending the secure session cleanly.
+fn run_client(port int) ! {
+	println('Client: Dialing standard TCP port first...')
+	mut tcp_conn := net.dial_tcp('127.0.0.1:${port}') or {
+		println('Client: Failed to connect standard TCP: ${err}')
+		return err
+	}
+
+	println('Client: Initiating SSL handshake on top of TCP connection...')
+	config := mbedtls.SSLConnectConfig{
+		validate: false
+	}
+
+	mut ssl_conn := mbedtls.new_ssl_conn(config) or {
+		println('Client: Failed to create SSL connection struct: ${err}')
+		return err
+	}
+	defer {
+		ssl_conn.close() or {}
+	}
+
+	ssl_conn.connect(mut tcp_conn, 'localhost') or {
+		println('Client: SSL handshake failed: ${err}')
+		return err
+	}
+
+	println('Client: Secure connection established!')
+
+	// Exchange multiple messages
+	for i in 1 .. 4 {
+		message := 'Ping ${i}'
+		println('Client sending secure: "${message}"')
+		ssl_conn.write(message.bytes()) or {
+			println('Client: Write failed: ${err}')
+			return err
+		}
+
+		// Read response
+		mut buf := []u8{len: 1024}
+		n := ssl_conn.read(mut buf) or {
+			println('Client: Read failed: ${err}')
+			return err
+		}
+		if n == 0 {
+			println('Client: Server closed secure connection.')
+			return error('Server closed connection unexpectedly')
+		}
+
+		response := buf[..n].bytestr()
+		println('Client received secure response: "${response}"')
+		
+		time.sleep(50 * time.millisecond)
+	}
+
+	// Send Goodbye to cleanly terminate the persistent session
+	println('Client sending: "Goodbye"')
+	ssl_conn.write('Goodbye'.bytes()) or {
+		println('Client: Write failed: ${err}')
+		return err
+	}
+
+	mut buf := []u8{len: 1024}
+	n := ssl_conn.read(mut buf) or {
+		println('Client: Read failed: ${err}')
+		return err
+	}
+	if n > 0 {
+		response := buf[..n].bytestr()
+		println('Client received secure response: "${response}"')
+	}
+	println('Client finished.')
+}
+
+fn main() {
+	println('=== Persistent SSL Demo ===')
+	generate_certs() or {
+		println('Error generating certs: ${err}')
+		return
+	}
+	defer {
+		cleanup_certs()
+	}
+
+	port := 38296
+	// Spawn the server in a background thread
+	spawn fn (p int) {
+		run_server(p) or {
+			println('Server thread failed: ${err}')
+		}
+	}(port)
+
+	// Allow the server thread a short time to start and bind
+	time.sleep(200 * time.millisecond)
+
+	// Run the client in the main thread
+	run_client(port) or {
+		println('Client failed: ${err}')
+	}
+
+	// Give the server a small window to finish deferred cleanups
+	time.sleep(50 * time.millisecond)
+	println('SSL Sockets Demo finished.')
 }
 ```
 
