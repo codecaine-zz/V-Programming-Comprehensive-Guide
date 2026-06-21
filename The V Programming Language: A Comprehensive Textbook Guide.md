@@ -30,7 +30,9 @@ Welcome to the ultimate learning guide for the V programming language! This text
 - [Chapter 8: Error Handling](#chapter-8-error-handling)
   - [Option & Result Types](#option-result-types)
 - [Chapter 9: Organizing Code with Modules](#chapter-9-organizing-code-with-modules)
+  - [Code Examples Index](#code-examples-index)
   - [Modules & Project Structure](#modules-project-structure)
+  - [Installing External Packages](#installing-external-packages)
 - [Chapter 10: Writing Tests in V](#chapter-10-writing-tests-in-v)
   - [Assertions & Unit Testing](#assertions-unit-testing)
 - [Chapter 11: Concurrency and Channels](#chapter-11-concurrency-and-channels)
@@ -5949,13 +5951,72 @@ fn main() {
 
 Modules help organize larger codebases. In this chapter, you will learn how to create modules, import them, manage member visibility using `pub`, and understand module initialization lifecycle.
 
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Modules & Project Structure**
+1. **Creating a Simple V Project**: A single-file main module program.
+   - [Main Entry (modulebasics.v)](#creating-a-simple-v-project-main-modulebasicsv)
+2. **Creating a Module**: Basic structure of creating a module and importing it.
+   - [Module Helper (file1.v)](#creating-a-module-helper-file1v)
+   - [Main Entry (modulebasics.v)](#creating-a-module-main-modulebasicsv)
+3. **Importing a Module**: Demonstrates importing custom modules.
+   - [Module Helper (file1.v)](#importing-a-module-helper-file1v)
+   - [Main Entry (modulebasics.v)](#importing-a-module-main-modulebasicsv)
+4. **Accessing Members of Module**: Explains how to make module functions public using `pub`.
+   - [Module Helper (file1.v)](#accessing-module-members-helper-file1v)
+   - [Main Entry (modulebasics.v)](#accessing-module-members-main-modulebasicsv)
+5. **Working with Multiple Files in a Module**: Combining multiple V files within the same module namespace.
+   - **Before Refactoring**:
+     - [Helper File 1 (file1.v)](#multiple-files-before-refactoring-helper-1-file1v)
+     - [Helper File 2 (file2.v)](#multiple-files-before-refactoring-helper-2-file2v)
+     - [Main Entry (modulebasics.v)](#multiple-files-before-refactoring-main-modulebasicsv)
+   - **After Refactoring**:
+     - [Helper File 1 (file1.v)](#multiple-files-after-refactoring-helper-1-file1v)
+     - [Helper File 2 (file2.v)](#multiple-files-after-refactoring-helper-2-file2v)
+     - [Main Entry (modulebasics.v)](#multiple-files-after-refactoring-main-modulebasicsv)
+6. **Member Scope in Module**: Explains module-private, module-pub, and package-pub visibility.
+   - **Before Refactoring**:
+     - [Helper File 1 (file1.v)](#member-scope-before-refactoring-helper-1-file1v)
+     - [Helper File 2 (file2.v)](#member-scope-before-refactoring-helper-2-file2v)
+     - [Main Entry (modulebasics.v)](#member-scope-before-refactoring-main-modulebasicsv)
+   - **After Refactoring**:
+     - [Helper File 1 (file1.v)](#member-scope-after-refactoring-helper-1-file1v)
+     - [Helper File 2 (file2.v)](#member-scope-after-refactoring-helper-2-file2v)
+     - [Main Entry (modulebasics.v)](#member-scope-after-refactoring-main-modulebasicsv)
+7. **Cyclic Imports**: Shows what cyclic imports are and how V detects and prevents them.
+   - [Module 1 Helper (file1.v)](#cyclic-imports-module-1-helper-file1v)
+   - [Module 2 Helper (file1.v)](#cyclic-imports-module-2-helper-file1v)
+   - [Main Entry (modulebasics.v)](#cyclic-imports-main-modulebasicsv)
+8. **Module Init Function**: Demonstrates using the special `init()` function for automatic module initialization.
+   - [Module Helper (file1.v)](#module-init-function-helper-file1v)
+   - [Main Entry (modulebasics.v)](#module-init-function-main-modulebasicsv)
+9. **Accessing Module Constants**: Accessing constants defined within another module.
+   - [Module Helper (file1.v)](#accessing-module-constants-helper-file1v)
+   - [Main Entry (modulebasics.v)](#accessing-module-constants-main-modulebasicsv)
+10. **Accessing Module Structs**: Accessing and instantiating structs defined in another module.
+    - [Module Helper (file1.v)](#accessing-module-structs-helper-file1v)
+    - [Main Entry (modulebasics.v)](#accessing-module-structs-main-modulebasicsv)
+
+**Installing External Packages**
+11. **Installing External Packages**: Demonstrates the use of the external `xiusin.vredis` client package and `webview` library.
+    - [Redis Console Demo](#redis-console-demo)
+    - [Redis Console Helper (redis_helper.v)](#redis-console-demo-helper-redis_helperv)
+    - [Redis Namespaced Demo](#redis-namespaced-demo)
+    - [Redis Namespaced Helper (redis_helper.v)](#redis-namespaced-demo-helper-redis_helperv)
+    - [Redis Webview Demo](#redis-webview-demo)
+    - [Webview Demo](#webview-demo)
+
+---
+
 ## Modules & Project Structure
 
-### Modulebasics
+### Creating a Simple V Project - Main (modulebasics.v)
 
 _File location: [modules/01_creating_simple_v_project/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/01_creating_simple_v_project/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Creating a Simple V Project
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -5974,11 +6035,11 @@ fn main() {
 
 ---
 
-### File1
+### Creating a Module - Helper (file1.v)
 
 _File location: [modules/02_creating_modue/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/02_creating_modue/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Module Helper
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -5997,11 +6058,11 @@ pub fn hello() {
 
 ---
 
-### Modulebasics
+### Creating a Module - Main (modulebasics.v)
 
 _File location: [modules/02_creating_modue/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/02_creating_modue/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Module Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6020,11 +6081,11 @@ fn main() {
 
 ---
 
-### File1
+### Importing a Module - Helper (file1.v)
 
 _File location: [modules/03_importing_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/03_importing_module/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Imported Module Helper
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6043,11 +6104,11 @@ pub fn hello() {
 
 ---
 
-### Modulebasics
+### Importing a Module - Main (modulebasics.v)
 
 _File location: [modules/03_importing_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/03_importing_module/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Imported Module Main
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6068,11 +6129,11 @@ fn main() {
 
 ---
 
-### File1
+### Accessing Module Members - Helper (file1.v)
 
 _File location: [modules/04_accessing_members_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/04_accessing_members_of_module/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Member Visibility Helper
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6091,11 +6152,11 @@ pub fn hello() {
 
 ---
 
-### Modulebasics
+### Accessing Module Members - Main (modulebasics.v)
 
 _File location: [modules/04_accessing_members_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/04_accessing_members_of_module/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Member Visibility Main
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6117,11 +6178,11 @@ fn main() {
 
 ---
 
-### File1
+### Multiple Files (After Refactoring) - Helper 1 (file1.v)
 
 _File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Multiple Files (After Refactoring) - Helper 1
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6140,11 +6201,11 @@ pub fn hello() {
 
 ---
 
-### File2
+### Multiple Files (After Refactoring) - Helper 2 (file2.v)
 
 _File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v)_
 
-### Lesson: File2
+### Lesson: Multiple Files (After Refactoring) - Helper 2
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6163,11 +6224,11 @@ fn hello2() {
 
 ---
 
-### Modulebasics
+### Multiple Files (After Refactoring) - Main (modulebasics.v)
 
 _File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Multiple Files (After Refactoring) - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6189,11 +6250,11 @@ fn main() {
 
 ---
 
-### File1
+### Multiple Files (Before Refactoring) - Helper 1 (file1.v)
 
 _File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Multiple Files (Before Refactoring) - Helper 1
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6212,11 +6273,11 @@ pub fn hello() {
 
 ---
 
-### File2
+### Multiple Files (Before Refactoring) - Helper 2 (file2.v)
 
 _File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v)_
 
-### Lesson: File2
+### Lesson: Multiple Files (Before Refactoring) - Helper 2
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6236,11 +6297,11 @@ fn main() {
 
 ---
 
-### Modulebasics
+### Multiple Files (Before Refactoring) - Main (modulebasics.v)
 
 _File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Multiple Files (Before Refactoring) - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6262,11 +6323,11 @@ fn main() {
 
 ---
 
-### File1
+### Member Scope (After Refactoring) - Helper 1 (file1.v)
 
 _File location: [modules/06_member_scope_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Member Scope (After Refactoring) - Helper 1
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6287,11 +6348,11 @@ pub fn hello() {
 
 ---
 
-### File2
+### Member Scope (After Refactoring) - Helper 2 (file2.v)
 
 _File location: [modules/06_member_scope_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/mod1/file2.v)_
 
-### Lesson: File2
+### Lesson: Member Scope (After Refactoring) - Helper 2
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6310,11 +6371,11 @@ fn hello2() {
 
 ---
 
-### Modulebasics
+### Member Scope (After Refactoring) - Main (modulebasics.v)
 
 _File location: [modules/06_member_scope_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Member Scope (After Refactoring) - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6335,11 +6396,11 @@ fn main() {
 
 ---
 
-### File1
+### Member Scope (Before Refactoring) - Helper 1 (file1.v)
 
 _File location: [modules/06_member_scope_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Member Scope (Before Refactoring) - Helper 1
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6358,11 +6419,11 @@ pub fn hello() {
 
 ---
 
-### File2
+### Member Scope (Before Refactoring) - Helper 2 (file2.v)
 
 _File location: [modules/06_member_scope_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/mod1/file2.v)_
 
-### Lesson: File2
+### Lesson: Member Scope (Before Refactoring) - Helper 2
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6381,11 +6442,11 @@ fn hello2() {
 
 ---
 
-### Modulebasics
+### Member Scope (Before Refactoring) - Main (modulebasics.v)
 
 _File location: [modules/06_member_scope_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Member Scope (Before Refactoring) - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6407,11 +6468,11 @@ fn main() {
 
 ---
 
-### File1
+### Cyclic Imports - Module 1 Helper (file1.v)
 
 _File location: [modules/07_cyclic_imports/modulebasics/m1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/m1/file1.v)_
 
-### Lesson: File1
+### Lesson: Cyclic Imports - Module 1
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6434,11 +6495,11 @@ pub fn hello() {
 
 ---
 
-### File1
+### Cyclic Imports - Module 2 Helper (file1.v)
 
 _File location: [modules/07_cyclic_imports/modulebasics/m2/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/m2/file1.v)_
 
-### Lesson: File1
+### Lesson: Cyclic Imports - Module 2
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6461,11 +6522,11 @@ pub fn hello() {
 
 ---
 
-### Modulebasics
+### Cyclic Imports - Main (modulebasics.v)
 
 _File location: [modules/07_cyclic_imports/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Cyclic Imports - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6488,11 +6549,11 @@ fn main() {
 
 ---
 
-### File1
+### Module Init Function - Helper (file1.v)
 
 _File location: [modules/08_init_function_for_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/08_init_function_for_module/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Module Init Function Helper
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6515,11 +6576,11 @@ fn init() {
 
 ---
 
-### Modulebasics
+### Module Init Function - Main (modulebasics.v)
 
 _File location: [modules/08_init_function_for_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/08_init_function_for_module/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Module Init Function
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6540,11 +6601,11 @@ fn main() {
 
 ---
 
-### File1
+### Accessing Module Constants - Helper (file1.v)
 
 _File location: [modules/09_accessing_constants_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/09_accessing_constants_of_module/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Accessing Module Constants Helper
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6561,11 +6622,11 @@ pub const greet_msg = 'Greeting from mod1!'
 
 ---
 
-### Modulebasics
+### Accessing Module Constants - Main (modulebasics.v)
 
 _File location: [modules/09_accessing_constants_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/09_accessing_constants_of_module/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Accessing Module Constants
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
@@ -6586,11 +6647,11 @@ fn main() {
 
 ---
 
-### File1
+### Accessing Module Structs - Helper (file1.v)
 
 _File location: [modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Accessing Module Structs Helper
 
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
@@ -6627,11 +6688,11 @@ pub mut:
 
 ---
 
-### Modulebasics
+### Accessing Module Structs - Main (modulebasics.v)
 
 _File location: [modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v)_
 
-### Lesson: Modulebasics
+### Lesson: Accessing Module Structs
 
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
@@ -6654,6 +6715,57 @@ fn main() {
 	}
 	println('Accessing struct field value Note id: ${n.id}')
 	println('Accessing embedded struct field value NoteTimeInfo: ${n.NoteTimeInfo}')
+}
+```
+
+---
+
+## Installing External Packages
+
+V has a built-in package manager called `vpm` (V Package Manager) that allows you to easily install, update, and manage third-party modules. External packages are hosted on the official V registry at [vpm.vlang.io](https://vpm.vlang.io).
+
+### How to Install Packages with vpm
+
+To install a package, use the `v install` command followed by the package identifier (usually in the format `author.package_name`):
+
+```bash
+v install xiusin.vredis
+```
+
+This downloads the package and installs it into the V modules directory (typically located at `~/.vmodules/` on Linux/macOS or `C:\Users\Username\.vmodules\` on Windows).
+
+### Common vpm Commands
+
+- **Install a package:**
+  ```bash
+  v install author.package_name
+  ```
+- **Install from a Git repository directly:**
+  ```bash
+  v install https://github.com/author/package_name
+  ```
+- **Update an installed package:**
+  ```bash
+  v update author.package_name
+  ```
+- **Remove/uninstall a package:**
+  ```bash
+  v remove author.package_name
+  ```
+- **Search for packages:**
+  ```bash
+  v search query
+  ```
+
+### Importing and Using External Packages
+
+Once a package is installed via `vpm`, you can import it in your V code just like a standard library module:
+
+```v
+import xiusin.vredis
+
+fn main() {
+	// Code utilizing the external redis package
 }
 ```
 
@@ -6808,7 +6920,7 @@ fn main() {
 
 ---
 
-### Redis Helper
+### Redis Console Demo - Helper (redis_helper.v)
 
 _File location: [modules/11_install_external_packages_and_webview/redis_console_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_console_demo/redis_helper.v)_
 
@@ -6941,11 +7053,11 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
 
 ---
 
-### Redis Helper
+### Redis Namespaced Demo - Helper (redis_helper.v)
 
 _File location: [modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v)_
 
-### Lesson: Redis Helper
+### Lesson: Redis Namespaced Helper
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Redis Helper** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
