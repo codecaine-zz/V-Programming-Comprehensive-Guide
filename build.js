@@ -141,7 +141,7 @@ function parseMarkdownToHtmlAndIndex(md) {
                 let playgroundBtn = '';
                 if (codeLanguage.toLowerCase() === 'v' || codeLanguage.toLowerCase() === 'vlang') {
                     const base64Code = Buffer.from(codeStr).toString('base64');
-                    const playgroundUrl = `https://play.vlang.io/?code=${encodeURIComponent(base64Code)}`;
+                    const playgroundUrl = `https://play.vlang.io/?base64=${encodeURIComponent(base64Code)}`;
                     playgroundBtn = `<a href="${playgroundUrl}" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
@@ -1635,18 +1635,21 @@ const template = `<!DOCTYPE html>
 
         function copyAndOpenPlayground(btn) {
             const codeBlock = btn.closest('.code-wrapper').querySelector('code');
-            navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            const codeText = codeBlock.innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
                 const originalText = btn.innerHTML;
                 btn.innerHTML = \`<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!\`;
                 btn.style.color = '#34d399';
                 setTimeout(() => {
                     btn.innerHTML = originalText;
                     btn.style.color = '';
-                    window.open('https://play.vlang.io/', '_blank');
+                    const base64 = btoa(unescape(encodeURIComponent(codeText)));
+                    window.open(\`https://play.vlang.io/?base64=\${encodeURIComponent(base64)}\`, '_blank');
                 }, 800);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
-                window.open('https://play.vlang.io/', '_blank');
+                const base64 = btoa(unescape(encodeURIComponent(codeText)));
+                window.open(\`https://play.vlang.io/?base64=\${encodeURIComponent(base64)}\`, '_blank');
             });
         }
     </script>

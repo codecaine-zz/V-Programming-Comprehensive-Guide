@@ -6,7 +6,7 @@ Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers every
 > **Interactive Viewer**: Read this guide and other tutorials as a responsive HTML site on the [Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/) (source code available in the [GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
 
 > [!NOTE]
-> **Enhanced HTML Textbook Version**: We now include a premium, interactive HTML documentation site compiled locally from this guide. You can read it live at **[codefreelance.net/apps/vlang.html](https://codefreelance.net/apps/vlang.html)** or open it locally at **[docs/index.html](file:///Users/codecaine/V-Programming-Comprehensive-Guide/docs/index.html)**. It features a collapsible navigation tree, dynamic search filters, dark/light/cyberpunk theme togglers, and direct links to run code examples in the [V Playground](https://play.vlang.io/).
+> **Enhanced HTML Textbook Version**: We now include a premium, interactive HTML documentation site compiled locally from this guide. You can read it live at **[codefreelance.net/apps/vlang.html](https://codefreelance.net/apps/vlang.html)** or open it locally at **[docs/index.html](file:///Users/codecaine/V-Programming-Comprehensive-Guide/docs/index.html)**. It features a collapsible navigation tree, dynamic search filters, dark/light/cyberpunk theme togglers, and interactive links to run code examples in the [V Playground](https://play.vlang.io/) with automatic code loading.
 
 ## Why V?
 
@@ -59,6 +59,11 @@ For comprehensive and up-to-date information about V, please refer to:
 - **[V Official Documentation](https://github.com/vlang/v/blob/master/doc/docs.md)** - Complete reference guide for the V programming language.
 - **[Vlang Complete Guide](vlang-complete-guide.md)** - Comprehensive textbook and learning guide for V.
 - **[Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/)** - Interactive HTML viewer featuring this Vlang guide alongside other programming tutorials ([GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
+
+### V Playground Integration
+The interactive HTML guide integrates directly with the [V Playground](https://play.vlang.io/):
+* **Run in Playground**: Pre-loads the specific V code block directly into the playground editor using the `base64` query parameter.
+* **Copy & Open**: Copies the V code block to your clipboard and opens the playground pre-loaded with the exact code snippet.
 
 ### Rebuilding the Interactive HTML Guide
 If you update `The V Programming Language: A Comprehensive Textbook Guide.md`, you can recompile the interactive HTML version at any time by running:
