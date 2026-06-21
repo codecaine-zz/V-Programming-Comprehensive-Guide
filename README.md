@@ -6,7 +6,7 @@ Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers every
 > **Interactive Viewer**: Read this guide and other tutorials as a responsive HTML site on the [Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/) (source code available in the [GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
 
 > [!NOTE]
-> **Enhanced HTML Textbook Version**: We now include a premium, interactive HTML documentation site compiled locally from this guide. You can open and read it at **[docs/index.html](file:///Users/codecaine/V-Programming-Comprehensive-Guide/docs/index.html)**. It features a collapsible navigation tree, dynamic search filters, dark/light/cyberpunk theme togglers, and direct links to run code examples in the [V Playground](https://play.vlang.io/).
+> **Enhanced HTML Textbook Version**: We now include a premium, interactive HTML documentation site compiled locally from this guide. You can read it live at **[codefreelance.net/apps/vlang.html](https://codefreelance.net/apps/vlang.html)** or open it locally at **[docs/index.html](file:///Users/codecaine/V-Programming-Comprehensive-Guide/docs/index.html)**. It features a collapsible navigation tree, dynamic search filters, dark/light/cyberpunk theme togglers, and direct links to run code examples in the [V Playground](https://play.vlang.io/).
 
 ## Why V?
 
@@ -54,7 +54,8 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
 
 For comprehensive and up-to-date information about V, please refer to:
 
-- **[Interactive HTML Guide](file:///Users/codecaine/V-Programming-Comprehensive-Guide/docs/index.html)** - The premium, interactive HTML version of this textbook with built-in search, theme togglers, and V Playground integration.
+- **[Interactive HTML Guide (Live Web Version)](https://codefreelance.net/apps/vlang.html)** - Read the compiled guide online on the web.
+- **[Interactive HTML Guide (Local Version)](file:///Users/codecaine/V-Programming-Comprehensive-Guide/docs/index.html)** - The premium, interactive HTML version of this textbook with built-in search, theme togglers, and V Playground integration.
 - **[V Official Documentation](https://github.com/vlang/v/blob/master/doc/docs.md)** - Complete reference guide for the V programming language.
 - **[Vlang Complete Guide](vlang-complete-guide.md)** - Comprehensive textbook and learning guide for V.
 - **[Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/)** - Interactive HTML viewer featuring this Vlang guide alongside other programming tutorials ([GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
