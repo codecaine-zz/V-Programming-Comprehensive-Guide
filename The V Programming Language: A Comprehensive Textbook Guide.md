@@ -5,6 +5,9 @@ Welcome to the ultimate learning guide for the V programming language! This text
 > [!NOTE]
 > **How to read this book:** Each section starts with a clear explanation of a fundamental programming concept, followed by concrete V code examples. Every example contains the exact code from the repository, formatted in clean code blocks so you can easily copy and run them yourself.
 
+> [!TIP]
+> **Interactive Learning:** You can test any code example from this guide live in your browser using the [V Playground](https://play.vlang.io/).
+
 ## Table of Contents
 
 - [Chapter 1: Getting Started with V](#chapter-1-getting-started-with-v)
