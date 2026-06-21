@@ -324,7 +324,7 @@ function parseMarkdownToHtmlAndIndex(md) {
                 html += `<h2 class="section-title" id="${slug}">${escapeHtml(title)}</h2>\n`;
                 
                 searchIndex.push({
-                    id: `sec-${slug}`,
+                    id: `${slug}`,
                     title: title,
                     type: 'section',
                     content: title,
@@ -353,7 +353,7 @@ function parseMarkdownToHtmlAndIndex(md) {
                 html += `<h3 class="lesson-title${lessonClass}" id="${slug}">${escapeHtml(cleanTitle)}</h3>\n`;
                 
                 searchIndex.push({
-                    id: `lesson-${slug}`,
+                    id: `${slug}`,
                     title: cleanTitle,
                     type: 'lesson',
                     content: cleanTitle,
@@ -416,6 +416,8 @@ const template = `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The V Programming Language: A Comprehensive Textbook Guide</title>
     <meta name="description" content="A comprehensive, premium, interactive learning guide for the V Programming Language. Explore chapters, code lessons, and run examples directly in the V Playground.">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -855,8 +857,6 @@ const template = `<!DOCTYPE html>
             margin-bottom: 80px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 60px;
-            content-visibility: auto;
-            contain-intrinsic-size: 1000px;
         }
 
         .chapter-section:last-of-type {
@@ -875,6 +875,7 @@ const template = `<!DOCTYPE html>
             gap: 8px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 16px;
+            scroll-margin-top: 90px;
         }
 
         .chap-badge {
@@ -897,6 +898,7 @@ const template = `<!DOCTYPE html>
             margin-top: 36px;
             margin-bottom: 16px;
             color: var(--text-primary);
+            scroll-margin-top: 90px;
         }
 
         .lesson-title {
@@ -906,6 +908,7 @@ const template = `<!DOCTYPE html>
             margin-top: 24px;
             margin-bottom: 12px;
             color: var(--text-primary);
+            scroll-margin-top: 90px;
         }
 
         .lesson-header {
@@ -1464,6 +1467,14 @@ const template = `<!DOCTYPE html>
                 document.querySelectorAll('.menu-link').forEach(link => {
                     if (link.dataset.target === activeId || link.getAttribute('href') === '#' + activeId) {
                         link.classList.add('active');
+                        
+                        // Automatically expand parent chapter items
+                        const parentItems = link.closest('.chapter-items');
+                        if (parentItems && parentItems.classList.contains('collapsed')) {
+                            parentItems.classList.remove('collapsed');
+                            const heading = parentItems.previousElementSibling;
+                            if (heading) heading.classList.remove('collapsed');
+                        }
                     } else {
                         link.classList.remove('active');
                     }
@@ -1652,6 +1663,11 @@ const template = `<!DOCTYPE html>
                 window.open(\`https://play.vlang.io/?base64=\${encodeURIComponent(base64)}\`, '_blank');
             });
         }
+
+        // Trigger initial highlight and expand on load
+        setTimeout(() => {
+            window.dispatchEvent(new Event('scroll'));
+        }, 100);
     </script>
 </body>
 </html>`;
