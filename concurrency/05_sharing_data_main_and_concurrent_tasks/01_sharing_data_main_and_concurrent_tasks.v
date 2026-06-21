@@ -21,7 +21,7 @@ fn (shared f Fund) collect(amt f32) {
 }
 
 fn donation() f32 {
-	return rand.f32_in_range(100.00, 250.00)
+	return rand.f32_in_range(100.00, 250.00) or { 100.00 }
 }
 
 fn main() {
