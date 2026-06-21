@@ -1956,7 +1956,11 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 
 ### Lesson: Extract Substring From String Literal
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Extract Substring From String Literal** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+V provides two main techniques to extract substrings from a string literal or variable:
+1. **The `.substr(start, end)` Method**: Takes the starting index (inclusive) and ending index (exclusive) as parameters.
+2. **Range Slicing Syntax `[start..end]`**: A clean and idiomatic syntax (similar to Go and Rust) where you specify range offsets. If the starting index is omitted (e.g. `[..end]`), it defaults to `0`. If the ending index is omitted (e.g. `[start..]`), it defaults to the length of the string.
+
+Both techniques are demonstrated in the example below.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **extract substring from string literal**.
@@ -1968,9 +1972,26 @@ module main
 
 fn main() {
 	a := 'Camel'
+
+	// Method 1: Using the substr(start, end) method
+	// Extracts characters from index 0 up to (but not including) index 3
 	b := a.substr(0, 3)
-	println(b)
-	// Cam
+	println(b) // Output: Cam
+
+	// Method 2: Using idiomatic range slicing syntax [start..end] (similar to Go/Rust)
+	// Slices from index 1 up to (but not including) index 4
+	c := a[1..4]
+	println(c) // Output: ame
+
+	// Method 3: Slicing from start to index [..end]
+	// If the start index is omitted, it defaults to 0
+	d := a[..3]
+	println(d) // Output: Cam
+
+	// Method 4: Slicing from index to end [start..]
+	// If the end index is omitted, it defaults to the string length
+	e := a[2..]
+	println(e) // Output: mel
 }
 ```
 
