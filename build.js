@@ -145,7 +145,11 @@ function parseMarkdownToHtmlAndIndex(md) {
                     playgroundBtn = `<a href="${playgroundUrl}" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
-                    </a>`;
+                    </a>
+                    <button class="btn-playground-copy" onclick="copyAndOpenPlayground(this)" title="Copy Code & Open V Playground">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Copy &amp; Open
+                    </button>`;
                 }
 
                 html += `<div class="code-wrapper">
@@ -1075,7 +1079,7 @@ const template = `<!DOCTYPE html>
             gap: 8px;
         }
 
-        .btn-copy, .btn-playground {
+        .btn-copy, .btn-playground, .btn-playground-copy {
             background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
@@ -1087,10 +1091,10 @@ const template = `<!DOCTYPE html>
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: background-color var(--transition-speed), color var(--transition-speed);
+            transition: background-color var(--transition-speed), color var(--transition-speed), transform var(--transition-speed);
         }
 
-        .btn-copy:hover, .btn-playground:hover {
+        .btn-copy:hover, .btn-playground:hover, .btn-playground-copy:hover {
             background-color: rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
         }
@@ -1101,6 +1105,16 @@ const template = `<!DOCTYPE html>
             border: none;
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-playground-copy {
+            border-color: rgba(99, 102, 241, 0.4);
+            color: var(--accent-glow);
+        }
+
+        .btn-playground-copy:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+            border-color: var(--accent-glow);
         }
 
         .btn-playground:hover {
@@ -1616,6 +1630,23 @@ const template = `<!DOCTYPE html>
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
+            });
+        }
+
+        function copyAndOpenPlayground(btn) {
+            const codeBlock = btn.closest('.code-wrapper').querySelector('code');
+            navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = \`<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!\`;
+                btn.style.color = '#34d399';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.color = '';
+                    window.open('https://play.vlang.io/', '_blank');
+                }, 800);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                window.open('https://play.vlang.io/', '_blank');
             });
         }
     </script>
