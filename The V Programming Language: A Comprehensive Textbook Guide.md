@@ -10574,6 +10574,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Interfaces](#interfaces)
 - [Sum Types](#sum-types)
 - [Attributes](#attributes)
+- [Compile-Time Directives](#compile-time-directives)
 - [Strings Builder](#strings-builder)
 - [Os Advanced Io](#os-advanced-io)
 - [Os Operations](#os-operations)
@@ -12889,6 +12890,73 @@ fn main() {
 	// Note: Calling old_greet() will compile successfully but output a warning:
 	// warning: old_greet has been deprecated. use modern_greet instead
 	// old_greet()
+}
+```
+
+---
+
+### Compile-Time Directives
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v)_
+
+### Lesson: Compile-Time Directives
+
+V provides compile-time directives (starting with `$`) that are processed by the compiler before compilation. These directives allow you to perform conditional compilation based on OS or flags, retrieve environment variables, embed files directly into the compiled binary, and compile templates at compile time.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **compile-time directives**.
+
+
+
+``` v
+module main
+
+fn main() {
+	println('=== V Compile-Time Directives Demo ===')
+
+	// 1. $if Directive (Conditional Compilation)
+	println('\n--- 1. Conditional Compilation (\$if) ---')
+	$if macos {
+		println('Compiled specifically for macOS.')
+	}
+	$if windows {
+		println('Compiled specifically for Windows.')
+	}
+	$if linux {
+		println('Compiled specifically for Linux.')
+	}
+
+	$if debug {
+		println('Debug mode is active.')
+	} $else {
+		println('Running in standard release/dev mode.')
+	}
+
+	// 2. $env Directive (Compile-time Environment Variables)
+	println('\n--- 2. Compile-Time Environment (\$env) ---')
+	// Retrieves the value of the environment variable at compilation time
+	compile_path := $env('PATH')
+	println('PATH length at compile-time: ${compile_path.len} bytes')
+
+	// 3. $embed_file Directive (Compile-time Asset Embedding)
+	println('\n--- 3. Asset Embedding (\$embed_file) ---')
+	// Embeds the file content directly into the binary at compile time.
+	// Returns an embed_file.EmbedFileData struct which we convert to string.
+	embedded_file := $embed_file('temp_embed.txt')
+	content := embedded_file.to_string()
+	println('Embedded File Content:')
+	println(content)
+
+	// 4. $tmpl Directive (Compile-time Template Interpolation)
+	println('\n--- 4. Template Interpolation (\$tmpl) ---')
+	// Interpolates local variables inside the template file at compile time.
+	name := 'Developer'
+	status := 'active'
+	
+	// Renders the template with the variables in the current scope
+	rendered_template := $tmpl('template.html')
+	println('Rendered Template Output:')
+	println(rendered_template)
 }
 ```
 

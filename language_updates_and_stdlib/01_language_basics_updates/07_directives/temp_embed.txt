@@ -1,0 +1,2 @@
+This content is embedded directly into the V binary!
+No file reads are needed at runtime.
