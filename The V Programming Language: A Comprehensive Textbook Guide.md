@@ -30,7 +30,6 @@ Welcome to the ultimate learning guide for the V programming language! This text
 - [Chapter 8: Error Handling](#chapter-8-error-handling)
   - [Option & Result Types](#option-result-types)
 - [Chapter 9: Organizing Code with Modules](#chapter-9-organizing-code-with-modules)
-  - [Code Examples Index](#code-examples-index)
   - [Modules & Project Structure](#modules-project-structure)
   - [Installing External Packages](#installing-external-packages)
 - [Chapter 10: Writing Tests in V](#chapter-10-writing-tests-in-v)
@@ -54,6 +53,17 @@ Welcome to the ultimate learning guide for the V programming language! This text
 # Chapter 1: Getting Started with V
 
 This chapter introduces the core design philosophies of V. You will learn how to set up your development environment, compile and run programs, and document your code using comments.
+
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Code Comments**
+- [Single Line Comments](#single-line-comments)
+- [Multi Line Comments](#multi-line-comments)
+- [Programm Commented All Places](#programm-commented-all-places)
+
+---
 
 ## Code Comments
 
@@ -176,6 +186,41 @@ fn main() {
 # Chapter 2: Variables and Constants
 
 Variables are the basic storage units of any program. In this chapter, we explore how V handles variables with a safety-first mindset: variables are immutable by default, variable shadowing is forbidden, and constants are declared in module scopes. You will learn to manage program data safely and cleanly.
+
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Constants**
+- [Define Single Constant](#define-single-constant)
+- [Define Multiple Constants](#define-multiple-constants)
+- [Define Constant Of Type Struct](#define-constant-of-type-struct)
+- [Define Constant Of Type Function](#define-constant-of-type-function)
+- [Define Module Level Constants](#define-module-level-constants)
+- [Cannot Define Constants Inside Functions](#cannot-define-constants-inside-functions)
+- [Main](#main)
+- [File1](#file1)
+
+**Variables**
+- [Parallel Declaration Immutable Variables](#parallel-declaration-immutable-variables)
+- [Parallel  Declaration Mutable Variables](#parallel-declaration-mutable-variables)
+- [Parallel Declaration Mut And Immutable Vars](#parallel-declaration-mut-and-immutable-vars)
+- [Augmented Assignment String](#augmented-assignment-string)
+- [Augmented Assignment Integer](#augmented-assignment-integer)
+- [Declare Mutable Variable](#declare-mutable-variable)
+- [Cannot Update Mutable With Another Type](#cannot-update-mutable-with-another-type)
+- [Declare Immutable Variable](#declare-immutable-variable)
+- [Cannot Update Immutable Variables](#cannot-update-immutable-variables)
+- [Declared And Assigned](#declared-and-assigned)
+- [Declared And Not Assigned](#declared-and-not-assigned)
+- [Unused Variables Will Be Warned](#unused-variables-will-be-warned)
+- [Global Variables Not Allowed](#global-variables-not-allowed)
+- [Global Variables Not Allowed](#global-variables-not-allowed-1)
+- [Variable Redeclaration](#variable-redeclaration)
+- [Variable Scope For Same Variable Names](#variable-scope-for-same-variable-names)
+- [Variable Shadowing Not Allowed](#variable-shadowing-not-allowed)
+
+---
 
 ## Constants
 
@@ -880,6 +925,54 @@ fn main() {
 # Chapter 3: Primitive Data Types
 
 V is a statically-typed language, meaning every variable has a fixed data type at compile time. In this chapter, you will learn about V's primitive types: booleans for logic, numeric types for numbers, runes for single characters, and strings for text. You will also learn about V's rich set of built-in methods on these types.
+
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Boolean Type**
+- [Logical Operators](#logical-operators)
+- [Relational Operators](#relational-operators)
+- [Boolean Methods](#boolean-methods)
+
+**Numeric Types**
+- [Declaring Integers](#declaring-integers)
+- [Hex Binary Octa Notation Of Declaring Integers](#hex-binary-octa-notation-of-declaring-integers)
+- [Promoting Numeric Types](#promoting-numeric-types)
+- [Arithmetic Operators](#arithmetic-operators)
+- [Bitwise Operators](#bitwise-operators)
+- [Shift Operators](#shift-operators)
+- [Shift Operator On Range Of Integers](#shift-operator-on-range-of-integers)
+- [Integer Methods](#integer-methods)
+- [Float Methods](#float-methods)
+- [U8 Methods](#u8-methods)
+- [Size Pointer Methods](#size-pointer-methods)
+
+**Rune Type**
+- [Declare Rune](#declare-rune)
+- [Rune Operations With Strings](#rune-operations-with-strings)
+- [Rune Methods](#rune-methods)
+
+**String Type**
+- [Declare String](#declare-string)
+- [String Read Only Array Of Bytes](#string-read-only-array-of-bytes)
+- [Strings Immutable By Default](#strings-immutable-by-default)
+- [Declaring Mutable Strings](#declaring-mutable-strings)
+- [Cannot Mutate String Elements](#cannot-mutate-string-elements)
+- [String Interpolation](#string-interpolation)
+- [Escape Special Characters](#escape-special-characters)
+- [Declare Raw Strings](#declare-raw-strings)
+- [String Concatenation Using Plus Sign](#string-concatenation-using-plus-sign)
+- [String Concatenation Using Interpolation](#string-concatenation-using-interpolation)
+- [Extract Substring From String Literal](#extract-substring-from-string-literal)
+- [Split String](#split-string)
+- [String To Runes Array](#string-to-runes-array)
+- [Count Sub String Occurences](#count-sub-string-occurences)
+- [Check String Contains Substring](#check-string-contains-substring)
+- [String Contains Is Case Sensitive](#string-contains-is-case-sensitive)
+- [Common String Methods](#common-string-methods)
+
+---
 
 ## Boolean Type
 
@@ -2096,6 +2189,32 @@ fn main() {
 
 Control flow determines the execution path of your code. In this chapter, we cover conditionals (`if-else`), pattern matching (`match`), and the versatile `for` loop. V simplifies control flow by using fewer keywords, making code highly readable.
 
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Control Flow Extras**
+- [Chaining Else If](#chaining-else-if)
+- [If With Goto](#if-with-goto)
+- [Cascade Match Conditions](#cascade-match-conditions)
+- [Match As Switch Case](#match-as-switch-case)
+- [Match Pattern Matching](#match-pattern-matching)
+- [Match With Enum](#match-with-enum)
+- [Match With Enum And Else](#match-with-enum-and-else)
+- [Bare For](#bare-for)
+- [Break For](#break-for)
+- [Continue For](#continue-for)
+- [For C Style](#for-c-style)
+- [For On Array Without Index](#for-on-array-without-index)
+- [For On Arrays](#for-on-arrays)
+- [For On Maps](#for-on-maps)
+- [For On Maps Ignore Key](#for-on-maps-ignore-key)
+- [For On Range](#for-on-range)
+- [For With Continue Break And Labels](#for-with-continue-break-and-labels)
+- [Reverse For](#reverse-for)
+
+---
+
 ## Control Flow Extras
 
 ### Chaining Else If
@@ -2752,6 +2871,52 @@ fn main() {
 # Chapter 5: Collections: Arrays and Maps
 
 Collections allow you to group multiple data items together. V provides two primary built-in collection types: **arrays** (ordered lists of elements) and **maps** (key-value dictionaries). This chapter covers creating, accessing, and manipulating these collections using modern functional patterns like `map` and `filter`.
+
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Arrays**
+- [Declare And Initialize](#declare-and-initialize)
+- [Declare Empty Array](#declare-empty-array)
+- [Declare Array With Len](#declare-array-with-len)
+- [Declare Array With Init And Len](#declare-array-with-init-and-len)
+- [Declare Array With Cap](#declare-array-with-cap)
+- [Working With Array Properties](#working-with-array-properties)
+- [Access Array Elements Using Index](#access-array-elements-using-index)
+- [Access Array Elements Using Slices](#access-array-elements-using-slices)
+- [In Operator With Array](#in-operator-with-array)
+- [Append Array](#append-array)
+- [Define Fixed Size Array](#define-fixed-size-array)
+- [Update Fixed Size Array Elements](#update-fixed-size-array-elements)
+- [Determining Type Of Fixed Array](#determining-type-of-fixed-array)
+- [Slicing Fixed Size Array Results In Ordinary Array](#slicing-fixed-size-array-results-in-ordinary-array)
+- [Declaring Multi Dimensional Arrays](#declaring-multi-dimensional-arrays)
+- [Updating Multi Dimensional Arrays](#updating-multi-dimensional-arrays)
+- [Updating Multi Dimensional Arrays](#updating-multi-dimensional-arrays-1)
+- [Clone Array](#clone-array)
+- [Copy Array](#copy-array)
+- [Sort Integer Array](#sort-integer-array)
+- [Sort String Array](#sort-string-array)
+- [Sort Struct Array](#sort-struct-array)
+- [Filter Array](#filter-array)
+- [Filter With Anonymous Funcs On Array](#filter-with-anonymous-funcs-on-array)
+- [Map Array Items](#map-array-items)
+- [Map Using Anonymous Funcs On Array](#map-using-anonymous-funcs-on-array)
+- [Array Methods](#array-methods)
+
+**Maps**
+- [Explicit Map Initialization](#explicit-map-initialization)
+- [Short Syntax Initialization Of Map](#short-syntax-initialization-of-map)
+- [Count Key Value Pairs In Map](#count-key-value-pairs-in-map)
+- [Value Given Key Of Map](#value-given-key-of-map)
+- [Value Given Non Existent Key Of Map](#value-given-non-existent-key-of-map)
+- [Handling Missing Keys In Map](#handling-missing-keys-in-map)
+- [Update Value Given A Key In Map](#update-value-given-a-key-in-map)
+- [Delete Key Value Pair From Map](#delete-key-value-pair-from-map)
+- [Map Methods](#map-methods)
+
+---
 
 ## Arrays
 
@@ -4103,6 +4268,42 @@ fn main() {
 
 Functions allow you to break your program into reusable blocks of logic. This chapter explains how to declare functions, handle multiple return values, write anonymous functions and closures, and use the `defer` keyword to clean up resources.
 
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Advanced Function Features**
+- [Function Returns Value Example 1](#function-returns-value-example-1)
+- [Function Returns Value Example 2](#function-returns-value-example-2)
+- [Funtions Without Return Type](#funtions-without-return-type)
+- [Function With Input Arguments](#function-with-input-arguments)
+- [Function Return Multiple Values](#function-return-multiple-values)
+- [Ignore Function Return Value](#ignore-function-return-value)
+- [Function Calls Other Function](#function-calls-other-function)
+- [Example 1](#example-1)
+- [Example 2](#example-2)
+- [Error Script Functions](#error-script-functions)
+- [Script Functions](#script-functions)
+- [Main](#main-1)
+- [Mymod](#mymod)
+- [Functions With Optional Return Types Example 1](#functions-with-optional-return-types-example-1)
+- [Function With Optional Return Type Example 2](#function-with-optional-return-type-example-2)
+- [Mod1](#mod1)
+- [Public Function Demo1](#public-function-demo1)
+- [Public Function Demo2](#public-function-demo2)
+- [Public Function Demo3](#public-function-demo3)
+- [Function With Defer Block](#function-with-defer-block)
+- [Functions As Elements Of Array Or Map](#functions-as-elements-of-array-or-map)
+
+**Function Extras**
+- [Hello](#hello)
+- [Basic Functions](#basic-functions)
+- [Anonymous Functions](#anonymous-functions)
+- [Functions As Input Arguments](#functions-as-input-arguments)
+- [Functions That Return Other Functions](#functions-that-return-other-functions)
+
+---
+
 ## Advanced Function Features
 
 ### Function Returns Value Example 1
@@ -5049,6 +5250,32 @@ fn main() {
 
 Structs are user-defined data structures that allow you to group related fields together. This chapter explains how to define structs, set default values, make fields required, attach methods to structs, and embed structs inside other structures.
 
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Struct Basics & Fields**
+- [Defining Struct](#defining-struct)
+- [Initialize Struct Example 1](#initialize-struct-example-1)
+- [Initialize Struct Example 2](#initialize-struct-example-2)
+- [Access Struct Fields](#access-struct-fields)
+- [Heap Structs](#heap-structs)
+- [Updating Immutable Struct Variable Throws Error](#updating-immutable-struct-variable-throws-error)
+- [Updating Mutable Fields Of Struct](#updating-mutable-fields-of-struct)
+- [Updating Immutable Fields Throws Error](#updating-immutable-fields-throws-error)
+- [Updating Struct With Unspecified Fields Are Zeroed](#updating-struct-with-unspecified-fields-are-zeroed)
+- [Struct With Multiple Fields](#struct-with-multiple-fields)
+- [Grouping Struct Fields Based On Access Modifiers](#grouping-struct-fields-based-on-access-modifiers)
+- [Required Fields Example 01](#required-fields-example-01)
+- [Required Fields Example 02](#required-fields-example-02)
+- [Struct Fields With Default Values](#struct-fields-with-default-values)
+- [Methods For Struct](#methods-for-struct)
+- [Adding Struct As Struct Field](#adding-struct-as-struct-field)
+- [Updating Fields Of Type Struct](#updating-fields-of-type-struct)
+- [Struct As Trailing Literal Arguments To Function](#struct-as-trailing-literal-arguments-to-function)
+
+---
+
 ## Struct Basics & Fields
 
 ### Defining Struct
@@ -5748,6 +5975,15 @@ fn main() {
 
 V has no exceptions. Instead, it handles errors using **Option** and **Result** types, which are checked at compile time. This chapter teaches you how to write robust, error-free programs using V's clean error handling syntax.
 
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Option & Result Types**
+- [Error Handling](#error-handling)
+
+---
+
 ## Option & Result Types
 
 ### Error Handling
@@ -5956,57 +6192,45 @@ Modules help organize larger codebases. In this chapter, you will learn how to c
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Modules & Project Structure**
-1. **Creating a Simple V Project**: A single-file main module program.
-   - [Main Entry (modulebasics.v)](#creating-a-simple-v-project-main-modulebasicsv)
-2. **Creating a Module**: Basic structure of creating a module and importing it.
-   - [Module Helper (file1.v)](#creating-a-module-helper-file1v)
-   - [Main Entry (modulebasics.v)](#creating-a-module-main-modulebasicsv)
-3. **Importing a Module**: Demonstrates importing custom modules.
-   - [Module Helper (file1.v)](#importing-a-module-helper-file1v)
-   - [Main Entry (modulebasics.v)](#importing-a-module-main-modulebasicsv)
-4. **Accessing Members of Module**: Explains how to make module functions public using `pub`.
-   - [Module Helper (file1.v)](#accessing-module-members-helper-file1v)
-   - [Main Entry (modulebasics.v)](#accessing-module-members-main-modulebasicsv)
-5. **Working with Multiple Files in a Module**: Combining multiple V files within the same module namespace.
-   - **Before Refactoring**:
-     - [Helper File 1 (file1.v)](#multiple-files-before-refactoring-helper-1-file1v)
-     - [Helper File 2 (file2.v)](#multiple-files-before-refactoring-helper-2-file2v)
-     - [Main Entry (modulebasics.v)](#multiple-files-before-refactoring-main-modulebasicsv)
-   - **After Refactoring**:
-     - [Helper File 1 (file1.v)](#multiple-files-after-refactoring-helper-1-file1v)
-     - [Helper File 2 (file2.v)](#multiple-files-after-refactoring-helper-2-file2v)
-     - [Main Entry (modulebasics.v)](#multiple-files-after-refactoring-main-modulebasicsv)
-6. **Member Scope in Module**: Explains module-private, module-pub, and package-pub visibility.
-   - **Before Refactoring**:
-     - [Helper File 1 (file1.v)](#member-scope-before-refactoring-helper-1-file1v)
-     - [Helper File 2 (file2.v)](#member-scope-before-refactoring-helper-2-file2v)
-     - [Main Entry (modulebasics.v)](#member-scope-before-refactoring-main-modulebasicsv)
-   - **After Refactoring**:
-     - [Helper File 1 (file1.v)](#member-scope-after-refactoring-helper-1-file1v)
-     - [Helper File 2 (file2.v)](#member-scope-after-refactoring-helper-2-file2v)
-     - [Main Entry (modulebasics.v)](#member-scope-after-refactoring-main-modulebasicsv)
-7. **Cyclic Imports**: Shows what cyclic imports are and how V detects and prevents them.
-   - [Module 1 Helper (file1.v)](#cyclic-imports-module-1-helper-file1v)
-   - [Module 2 Helper (file1.v)](#cyclic-imports-module-2-helper-file1v)
-   - [Main Entry (modulebasics.v)](#cyclic-imports-main-modulebasicsv)
-8. **Module Init Function**: Demonstrates using the special `init()` function for automatic module initialization.
-   - [Module Helper (file1.v)](#module-init-function-helper-file1v)
-   - [Main Entry (modulebasics.v)](#module-init-function-main-modulebasicsv)
-9. **Accessing Module Constants**: Accessing constants defined within another module.
-   - [Module Helper (file1.v)](#accessing-module-constants-helper-file1v)
-   - [Main Entry (modulebasics.v)](#accessing-module-constants-main-modulebasicsv)
-10. **Accessing Module Structs**: Accessing and instantiating structs defined in another module.
-    - [Module Helper (file1.v)](#accessing-module-structs-helper-file1v)
-    - [Main Entry (modulebasics.v)](#accessing-module-structs-main-modulebasicsv)
+- [Creating a Simple V Project - Main (modulebasics.v)](#creating-a-simple-v-project-main-modulebasicsv)
+- [Creating a Module - Helper (file1.v)](#creating-a-module-helper-file1v)
+- [Creating a Module - Main (modulebasics.v)](#creating-a-module-main-modulebasicsv)
+- [Importing a Module - Helper (file1.v)](#importing-a-module-helper-file1v)
+- [Importing a Module - Main (modulebasics.v)](#importing-a-module-main-modulebasicsv)
+- [Accessing Module Members - Helper (file1.v)](#accessing-module-members-helper-file1v)
+- [Accessing Module Members - Main (modulebasics.v)](#accessing-module-members-main-modulebasicsv)
+- [Multiple Files (After Refactoring) - Helper 1 (file1.v)](#multiple-files-after-refactoring-helper-1-file1v)
+- [Multiple Files (After Refactoring) - Helper 2 (file2.v)](#multiple-files-after-refactoring-helper-2-file2v)
+- [Multiple Files (After Refactoring) - Main (modulebasics.v)](#multiple-files-after-refactoring-main-modulebasicsv)
+- [Multiple Files (Before Refactoring) - Helper 1 (file1.v)](#multiple-files-before-refactoring-helper-1-file1v)
+- [Multiple Files (Before Refactoring) - Helper 2 (file2.v)](#multiple-files-before-refactoring-helper-2-file2v)
+- [Multiple Files (Before Refactoring) - Main (modulebasics.v)](#multiple-files-before-refactoring-main-modulebasicsv)
+- [Member Scope (After Refactoring) - Helper 1 (file1.v)](#member-scope-after-refactoring-helper-1-file1v)
+- [Member Scope (After Refactoring) - Helper 2 (file2.v)](#member-scope-after-refactoring-helper-2-file2v)
+- [Member Scope (After Refactoring) - Main (modulebasics.v)](#member-scope-after-refactoring-main-modulebasicsv)
+- [Member Scope (Before Refactoring) - Helper 1 (file1.v)](#member-scope-before-refactoring-helper-1-file1v)
+- [Member Scope (Before Refactoring) - Helper 2 (file2.v)](#member-scope-before-refactoring-helper-2-file2v)
+- [Member Scope (Before Refactoring) - Main (modulebasics.v)](#member-scope-before-refactoring-main-modulebasicsv)
+- [Cyclic Imports - Module 1 Helper (file1.v)](#cyclic-imports-module-1-helper-file1v)
+- [Cyclic Imports - Module 2 Helper (file1.v)](#cyclic-imports-module-2-helper-file1v)
+- [Cyclic Imports - Main (modulebasics.v)](#cyclic-imports-main-modulebasicsv)
+- [Module Init Function - Helper (file1.v)](#module-init-function-helper-file1v)
+- [Module Init Function - Main (modulebasics.v)](#module-init-function-main-modulebasicsv)
+- [Accessing Module Constants - Helper (file1.v)](#accessing-module-constants-helper-file1v)
+- [Accessing Module Constants - Main (modulebasics.v)](#accessing-module-constants-main-modulebasicsv)
+- [Accessing Module Structs - Helper (file1.v)](#accessing-module-structs-helper-file1v)
+- [Accessing Module Structs - Main (modulebasics.v)](#accessing-module-structs-main-modulebasicsv)
 
 **Installing External Packages**
-11. **Installing External Packages**: Demonstrates the use of the external `xiusin.vredis` client package and `webview` library.
-    - [Redis Console Demo](#redis-console-demo)
-    - [Redis Console Helper (redis_helper.v)](#redis-console-demo-helper-redis_helperv)
-    - [Redis Namespaced Demo](#redis-namespaced-demo)
-    - [Redis Namespaced Helper (redis_helper.v)](#redis-namespaced-demo-helper-redis_helperv)
-    - [Redis Webview Demo](#redis-webview-demo)
-    - [Webview Demo](#webview-demo)
+- [How to Install Packages with vpm](#how-to-install-packages-with-vpm)
+- [Common vpm Commands](#common-vpm-commands)
+- [Importing and Using External Packages](#importing-and-using-external-packages)
+- [Redis Console Demo](#redis-console-demo)
+- [Redis Console Demo - Helper (redis_helper.v)](#redis-console-demo-helper-redis_helperv)
+- [Redis Namespaced Demo - Helper (redis_helper.v)](#redis-namespaced-demo-helper-redis_helperv)
+- [Redis Namespaced Demo](#redis-namespaced-demo)
+- [Redis Webview Demo](#redis-webview-demo)
+- [Webview Demo](#webview-demo)
 
 ---
 
@@ -7699,6 +7923,25 @@ fn main() {
 
 V has testing built directly into the compiler. This chapter explains how to write test files, use assertions, set up test suites with setup/teardown methods, and run test suites.
 
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Assertions & Unit Testing**
+- [Assert Demo](#assert-demo)
+- [Demo Test](#demo-test)
+- [Demo Test](#demo-test-1)
+- [Testsuite Demo Test](#testsuite-demo-test)
+- [Demo Test](#demo-test-2)
+- [Greet](#greet)
+- [Greet Test](#greet-test)
+- [Main Test](#main-test)
+- [File1](#file1-1)
+- [Mod1 Test](#mod1-test)
+- [Modulebasics](#modulebasics)
+
+---
+
 ## Assertions & Unit Testing
 
 ### Assert Demo
@@ -8049,6 +8292,47 @@ fn main() {
 # Chapter 11: Concurrency and Channels
 
 V makes concurrent programming easy and safe. This chapter covers spawning threads using `spawn`, communicating safely between threads using channels, and sharing state safely using `shared` and `lock` primitives.
+
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Channels & Communication**
+- [Unbuffered Channel](#unbuffered-channel)
+- [Buffered Channel](#buffered-channel)
+- [Push Buffered](#push-buffered)
+- [Push Unbuffered](#push-unbuffered)
+- [Pop](#pop)
+- [Channel Properties](#channel-properties)
+- [Try Push Unbuffered](#try-push-unbuffered)
+- [Try Push Buffered](#try-push-buffered)
+- [Try Pop](#try-pop)
+- [Close](#close)
+- [Defer Close](#defer-close)
+- [Blocking Channels](#blocking-channels)
+- [Dealing Before](#dealing-before)
+- [Dealing After](#dealing-after)
+- [Sync Before](#sync-before)
+- [Sync After](#sync-after)
+- [Buffered Channel](#buffered-channel-1)
+- [Coroutines Communication](#coroutines-communication)
+- [Sync Before](#sync-before-1)
+- [Sync After](#sync-after-1)
+- [Channel Select Before](#channel-select-before)
+- [Channel Select](#channel-select)
+
+**V-Routines & Concurrency**
+- [Stopwatch Demo](#stopwatch-demo)
+- [Spawn Void Function](#spawn-void-function)
+- [Waiting On Concurrent Thread](#waiting-on-concurrent-thread)
+- [Running Multiple Tasks In Sequence](#running-multiple-tasks-in-sequence)
+- [Spawning Multiple Tasks Concurrently](#spawning-multiple-tasks-concurrently)
+- [Functions With Return Values](#functions-with-return-values)
+- [Spawn Anonymous Funcs Without Input Args](#spawn-anonymous-funcs-without-input-args)
+- [Spawn Anonymous Funcs With Input Args](#spawn-anonymous-funcs-with-input-args)
+- [Sharing Data Main And Concurrent Tasks](#sharing-data-main-and-concurrent-tasks)
+
+---
 
 ## Channels & Communication
 
@@ -9257,6 +9541,30 @@ fn main() {
 
 Most applications need to work with databases or API payloads. This chapter teaches you how to serialize and deserialize JSON data, use V's built-in ORM with SQLite, and covers a complete Notes REST API case study.
 
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Case Study: Notes API**
+- [Main](#main-2)
+- [Note](#note)
+- [Util](#util)
+
+**JSON & ORM**
+- [Decode](#decode)
+- [Encode](#encode)
+- [Json To From File](#json-to-from-file)
+- [Json Array Of Objects](#json-array-of-objects)
+- [Json Map To From File](#json-map-to-from-file)
+- [Json Array To From File](#json-array-to-from-file)
+- [Orm Demo](#orm-demo)
+- [Sqlite Raw Crud](#sqlite-raw-crud)
+
+**SQLite Integration**
+- [Sqlite](#sqlite)
+
+---
+
 ## Case Study: Notes API
 
 ### Main
@@ -10115,6 +10423,90 @@ pub fn connect(path string) !DB {
 # Chapter 13: Standard Library & Advanced Features
 
 This chapter highlights the power of V's standard library and advanced integration features, including low-level socket networking, inline assembly, compilation to WebAssembly, and V's unique memory management models.
+
+## Code Examples Index
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Inline Assembly & C Interop**
+- [Inline Assembly](#inline-assembly)
+
+**Networking (TCP, UDP, SSL, WebSockets)**
+- [Net Urllib](#net-urllib)
+- [Net Websocket](#net-websocket)
+- [Websocket Persistent](#websocket-persistent)
+- [Net Html](#net-html)
+- [Net Jsonrpc](#net-jsonrpc)
+- [Net Jsonrpc Persistent](#net-jsonrpc-persistent)
+- [Net Ssl](#net-ssl)
+- [Ssl Persistent](#ssl-persistent)
+- [Net Tcp](#net-tcp)
+- [Tcp Persistent](#tcp-persistent)
+- [Net Udp](#net-udp)
+- [Udp Persistent](#udp-persistent)
+- [Net Unix](#net-unix)
+- [Unix Persistent](#unix-persistent)
+
+**Other Stdlib Updates**
+- [Options And Results](#options-and-results)
+- [Generics](#generics)
+- [Interfaces](#interfaces)
+- [Sum Types](#sum-types)
+- [Attributes](#attributes)
+- [Strings Builder](#strings-builder)
+- [Os Advanced Io](#os-advanced-io)
+- [Os Operations](#os-operations)
+- [Os Process Pipe](#os-process-pipe)
+- [Os System Info](#os-system-info)
+- [Time And Stopwatch](#time-and-stopwatch)
+- [Http Client](#http-client)
+- [Regex Matching](#regex-matching)
+- [Command Line Flags](#command-line-flags)
+- [Datatypes Collections](#datatypes-collections)
+- [Gg Graphics](#gg-graphics)
+- [Command Line Arguments](#command-line-arguments)
+- [Math And Rand](#math-and-rand)
+- [Crypto Asymmetric](#crypto-asymmetric)
+- [Crypto Entropy](#crypto-entropy)
+- [Crypto Hash](#crypto-hash)
+- [Crypto Kdf](#crypto-kdf)
+- [Crypto Mac](#crypto-mac)
+- [Crypto Symmetric](#crypto-symmetric)
+- [Log And Crypto](#log-and-crypto)
+- [Sync Concurrency](#sync-concurrency)
+- [Encoding Formats](#encoding-formats)
+- [Arrays Utility](#arrays-utility)
+- [Toml](#toml)
+- [Strconv](#strconv)
+- [Term](#term)
+- [Benchmark](#benchmark)
+- [Clipboard](#clipboard)
+- [Semver](#semver)
+- [Maps](#maps-1)
+- [Context](#context)
+- [Archive Tar](#archive-tar)
+- [Compress Deflate](#compress-deflate)
+- [Compress Gzip](#compress-gzip)
+- [Compress Szip](#compress-szip)
+- [Compress Zlib](#compress-zlib)
+- [Compress Zstd](#compress-zstd)
+- [Io Fs](#io-fs)
+- [Io](#io)
+- [Io Util](#io-util)
+- [Hash](#hash)
+- [Bitfield](#bitfield)
+- [Cli](#cli)
+- [Veb](#veb)
+- [Readline](#readline)
+- [Runtime](#runtime)
+
+**Strings.Lorem Helper**
+- [Strings Lorem](#strings-lorem)
+
+**WebAssembly Compilation**
+- [Wasm](#wasm)
+
+---
 
 ## Inline Assembly & C Interop
 
