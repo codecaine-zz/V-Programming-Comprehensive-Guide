@@ -13,6 +13,7 @@ Welcome to the ultimate learning guide for the V programming language! This text
   - [Constants](#constants)
   - [Variables](#variables)
 - [Chapter 3: Primitive Data Types](#chapter-3-primitive-data-types)
+  - [Primitive Types Demo](#primitive-types-demo)
   - [Boolean Type](#boolean-type)
   - [Numeric Types](#numeric-types)
   - [Rune Type](#rune-type)
@@ -930,6 +931,9 @@ V is a statically-typed language, meaning every variable has a fixed data type a
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
+**Primitive Types Demo**
+- [Primitive Types Demo](#primitive-types-demo-1)
+
 **Boolean Type**
 - [Logical Operators](#logical-operators)
 - [Relational Operators](#relational-operators)
@@ -971,6 +975,84 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Check String Contains Substring](#check-string-contains-substring)
 - [String Contains Is Case Sensitive](#string-contains-is-case-sensitive)
 - [Common String Methods](#common-string-methods)
+
+## Primitive Types Demo
+
+### Primitive Types Demo
+
+_File location: [primitive_types/05_primitive_types_demo/primitive_types_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/05_primitive_types_demo/primitive_types_demo.v)_
+
+### Lesson: Primitive Types Demo
+
+This comprehensive example demonstrates every primitive data type in V:
+- **Boolean**: `bool` (representing `true` or `false`).
+- **String**: `string` (representing an immutable array of bytes).
+- **Rune**: `rune` (representing a single Unicode code point, alias for `u32`).
+- **Signed Integers**: `i8` (8-bit), `i16` (16-bit), `int` (32-bit), `i64` (64-bit).
+- **Unsigned Integers**: `u8` (8-bit, alias `byte`), `u16` (16-bit), `u32` (32-bit), `u64` (64-bit).
+- **Platform-dependent sizes**: `isize` (signed size of a pointer), `usize` (unsigned size of a pointer).
+- **Floating Point Numbers**: `f32` (32-bit single-precision), `f64` (64-bit double-precision).
+
+For each type, the example initializes a value and prints its value, type (using `typeof(var).name`), and size in bytes (using `sizeof(var)`).
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **primitive types demo**.
+
+``` v
+module main
+
+fn main() {
+	println('==================================================')
+	println('        Vlang Primitive Data Types Demo           ')
+	println('==================================================')
+
+	// 1. Boolean Type
+	b := true
+	println('Boolean: val: ${b} | type: ${typeof(b).name} | size: ${sizeof(b)} byte')
+
+	// 2. String Type
+	s := 'Hello, V!'
+	println('String:  val: "${s}" | type: ${typeof(s).name} | size: ${sizeof(s)} bytes')
+
+	// 3. Rune Type (unicode character, represented as `r` prefix or backticks)
+	r := `V`
+	println('Rune:    val: ${r} (char: ${r.str()}) | type: ${typeof(r).name} | size: ${sizeof(r)} bytes')
+
+	// 4. Signed Integers
+	i_8 := i8(-128)
+	i_16 := i16(-32768)
+	i_32 := int(-2147483648)
+	i_64 := i64(-9223372036854775808)
+	println('i8:      val: ${i_8} | type: ${typeof(i_8).name} | size: ${sizeof(i_8)} byte')
+	println('i16:     val: ${i_16} | type: ${typeof(i_16).name} | size: ${sizeof(i_16)} bytes')
+	println('int:     val: ${i_32} | type: ${typeof(i_32).name} | size: ${sizeof(i_32)} bytes')
+	println('i64:     val: ${i_64} | type: ${typeof(i_64).name} | size: ${sizeof(i_64)} bytes')
+
+	// 5. Unsigned Integers
+	u_8 := u8(255)
+	u_16 := u16(65535)
+	u_32 := u32(4294967295)
+	u_64 := u64(18446744073709551615)
+	println('u8:      val: ${u_8} | type: ${typeof(u_8).name} | size: ${sizeof(u_8)} byte')
+	println('u16:     val: ${u_16} | type: ${typeof(u_16).name} | size: ${sizeof(u_16)} bytes')
+	println('u32:     val: ${u_32} | type: ${typeof(u_32).name} | size: ${sizeof(u_32)} bytes')
+	println('u64:     val: ${u_64} | type: ${typeof(u_64).name} | size: ${sizeof(u_64)} bytes')
+
+	// 6. Platform-dependent Sizes
+	isize_val := isize(-12345)
+	usize_val := usize(12345)
+	println('isize:   val: ${isize_val} | type: ${typeof(isize_val).name} | size: ${sizeof(isize_val)} bytes')
+	println('usize:   val: ${usize_val} | type: ${typeof(usize_val).name} | size: ${sizeof(usize_val)} bytes')
+
+	// 7. Floating Point Numbers
+	f_32 := f32(3.14159)
+	f_64 := f64(2.718281828459)
+	println('f32:     val: ${f_32} | type: ${typeof(f_32).name} | size: ${sizeof(f_32)} bytes')
+	println('f64:     val: ${f_64} | type: ${typeof(f_64).name} | size: ${sizeof(f_64)} bytes')
+
+	println('==================================================')
+}
+```
 
 ---
 
