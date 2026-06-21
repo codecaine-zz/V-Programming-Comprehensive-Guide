@@ -45,6 +45,8 @@ Welcome to the ultimate learning guide for the V programming language! This text
   - [Case Study: Notes API](#case-study-notes-api)
   - [JSON & ORM](#json--orm)
   - [SQLite Integration](#sqlite-integration)
+    - [Sqlite](#sqlite)
+    - [Sqlite Raw Crud](#sqlite-raw-crud)
 - [Chapter 13: Standard Library & Advanced Features](#chapter-13-standard-library--advanced-features)
   - [Inline Assembly & C Interop](#inline-assembly--c-interop)
   - [Networking (TCP, UDP, SSL, WebSockets)](#networking-tcp-udp-ssl-websockets)
@@ -9676,10 +9678,10 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Json Map To From File](#json-map-to-from-file)
 - [Json Array To From File](#json-array-to-from-file)
 - [Orm Demo](#orm-demo)
-- [Sqlite Raw Crud](#sqlite-raw-crud)
 
 **SQLite Integration**
 - [Sqlite](#sqlite)
+- [Sqlite Raw Crud](#sqlite-raw-crud)
 
 ---
 
@@ -10397,6 +10399,32 @@ fn main() {
 
 ---
 
+## SQLite Integration
+
+### Sqlite
+
+_File location: [sqlite/sqlite.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/sqlite/sqlite.v)_
+
+### Lesson: Sqlite
+
+Databases and JSON handling are essential parts of backend development. This lesson on **Sqlite** details V's built-in JSON utilities or its built-in database ORM.
+
+
+
+``` v
+module sqlite
+
+import db.sqlite as dbsqlite
+
+pub type DB = dbsqlite.DB
+
+pub fn connect(path string) !DB {
+	return dbsqlite.connect(path)!
+}
+```
+
+---
+
 ### Sqlite Raw Crud
 
 _File location: [json_and_orm/03_sqlite_raw/sqlite_raw_crud.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/03_sqlite_raw/sqlite_raw_crud.v)_
@@ -10507,32 +10535,6 @@ fn main() {
 	db.exec('DROP TABLE users;') or {
 		println('Drop table failed: ${err}')
 	}
-}
-```
-
----
-
-## SQLite Integration
-
-### Sqlite
-
-_File location: [sqlite/sqlite.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/sqlite/sqlite.v)_
-
-### Lesson: Sqlite
-
-Databases and JSON handling are essential parts of backend development. This lesson on **Sqlite** details V's built-in JSON utilities or its built-in database ORM.
-
-
-
-``` v
-module sqlite
-
-import db.sqlite as dbsqlite
-
-pub type DB = dbsqlite.DB
-
-pub fn connect(path string) !DB {
-	return dbsqlite.connect(path)!
 }
 ```
 
