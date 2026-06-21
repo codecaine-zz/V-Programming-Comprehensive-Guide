@@ -40,9 +40,9 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
 
 > [!IMPORTANT]
 > **Vlang Textbook Learning Guide & Code Examples**
-> All code examples and detailed, step-by-step programming lessons have been moved to the dedicated textbook guide: **[The V Programming Language: A Comprehensive Textbook Guide.md](file:///Users/codecaine/V-Programming-Comprehensive-Guide/The%20V%20Programming%20Language:%20A%20Comprehensive%20Textbook%20Guide.md)**.
+> All code examples and detailed, step-by-step programming lessons have been moved to the dedicated textbook guide: **[The V Programming Language: A Comprehensive Textbook Guide.md](file:///Users/codecaine/V-Programming-Comprehensive-Guide/The%20V%20Programming%20Language:%20A%20Comprehensive%20Textbook%20Guide.md)** (or **[vlang-complete-guide.md](vlang-complete-guide.md)**).
 > 
-> Please use `The V Programming Language: A Comprehensive Textbook Guide.md` as your primary resource for learning V, as it features a structured, school-book syllabus designed specifically for new and experienced developers alike.
+> Please use `The V Programming Language: A Comprehensive Textbook Guide.md` (or **[vlang-complete-guide.md](vlang-complete-guide.md)**) as your primary resource for learning V, as it features a structured, school-book syllabus designed specifically for new and experienced developers alike.
 
 ---
 
@@ -52,4 +52,5 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
 For comprehensive and up-to-date information about V, please refer to the official documentation:
 
 - **[V Official Documentation](https://github.com/vlang/v/blob/master/doc/docs.md)** - Complete reference guide for the V programming language
+- **[Vlang Complete Guide](vlang-complete-guide.md)** - Comprehensive textbook and learning guide for V
 - **[Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/)** - Interactive HTML viewer featuring this Vlang guide alongside other programming tutorials ([GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials))
