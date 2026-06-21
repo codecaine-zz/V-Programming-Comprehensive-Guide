@@ -199,12 +199,12 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Define Constant Of Type Function](#define-constant-of-type-function)
 - [Define Module Level Constants](#define-module-level-constants)
 - [Cannot Define Constants Inside Functions](#cannot-define-constants-inside-functions)
-- [Main](#main)
-- [File1](#file1)
+- [Constants Module - Main (main.v)](#constants-module---main-mainv)
+- [Constant Module Prefix - Helper (file1.v)](#constant-module-prefix---helper-file1v)
 
 **Variables**
 - [Parallel Declaration Immutable Variables](#parallel-declaration-immutable-variables)
-- [Parallel  Declaration Mutable Variables](#parallel-declaration-mutable-variables)
+- [Parallel Declaration Mutable Variables](#parallel-declaration-mutable-variables)
 - [Parallel Declaration Mut And Immutable Vars](#parallel-declaration-mut-and-immutable-vars)
 - [Augmented Assignment String](#augmented-assignment-string)
 - [Augmented Assignment Integer](#augmented-assignment-integer)
@@ -215,8 +215,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Declared And Assigned](#declared-and-assigned)
 - [Declared And Not Assigned](#declared-and-not-assigned)
 - [Unused Variables Will Be Warned](#unused-variables-will-be-warned)
-- [Global Variables Not Allowed](#global-variables-not-allowed)
-- [Global Variables Not Allowed](#global-variables-not-allowed-1)
+- [Global Variables Not Allowed - Scope Demo](#global-variables-not-allowed---scope-demo)
+- [Global Variables Not Allowed - File Scope Demo](#global-variables-not-allowed---file-scope-demo)
 - [Variable Redeclaration](#variable-redeclaration)
 - [Variable Scope For Same Variable Names](#variable-scope-for-same-variable-names)
 - [Variable Shadowing Not Allowed](#variable-shadowing-not-allowed)
@@ -408,11 +408,11 @@ fn main() {
 
 ---
 
-### Main
+### Constants Module - Main (main.v)
 
 _File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v)_
 
-### Lesson: Main
+### Lesson: Constants Module - Main
 
 Variables and constants store state in V programs. This lesson on **Main** covers declaration rules, default values, scopes, or constant naming conventions.
 
@@ -433,11 +433,11 @@ fn main() {
 
 ---
 
-### File1
+### Constant Module Prefix - Helper (file1.v)
 
 _File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Constant Module Prefix - Helper
 
 Variables and constants store state in V programs. This lesson on **File1** covers declaration rules, default values, scopes, or constant naming conventions.
 
@@ -488,11 +488,11 @@ fn main() {
 
 ---
 
-### Parallel  Declaration Mutable Variables
+### Parallel Declaration Mutable Variables
 
 _File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v)_
 
-### Lesson: Parallel  Declaration Mutable Variables
+### Lesson: Parallel Declaration Mutable Variables
 
 If you want to modify parallelly declared variables later, you must explicitly mark them as mutable using the `mut` keyword. In V, mutability is always explicit to make code safer and easier to reason about.
 
@@ -764,11 +764,11 @@ fn main() {
 
 ---
 
-### Global Variables Not Allowed
+### Global Variables Not Allowed - Scope Demo
 
 _File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v)_
 
-### Lesson: Global Variables Not Allowed
+### Lesson: Global Variables Not Allowed - Scope Demo
 
 V does not allow global variables by default. Global state is a major source of bugs, race conditions in multi-threaded applications, and poor code structure. By forbidding globals, V enforces clean, modular code passing state via arguments.
 
@@ -795,11 +795,11 @@ fn main() {
 
 ---
 
-### Global Variables Not Allowed
+### Global Variables Not Allowed - File Scope Demo
 
 _File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v)_
 
-### Lesson: Global Variables Not Allowed
+### Lesson: Global Variables Not Allowed - File Scope Demo
 
 V does not allow global variables by default. Global state is a major source of bugs, race conditions in multi-threaded applications, and poor code structure. By forbidding globals, V enforces clean, modular code passing state via arguments.
 
@@ -932,7 +932,7 @@ V is a statically-typed language, meaning every variable has a fixed data type a
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Primitive Types Demo**
-- [Primitive Types Demo](#primitive-types-demo-1)
+- [Primitive Types Demo Code](#primitive-types-demo-code)
 
 **Boolean Type**
 - [Logical Operators](#logical-operators)
@@ -978,11 +978,11 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 ## Primitive Types Demo
 
-### Primitive Types Demo
+### Primitive Types Demo Code
 
 _File location: [primitive_types/05_primitive_types_demo/primitive_types_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/05_primitive_types_demo/primitive_types_demo.v)_
 
-### Lesson: Primitive Types Demo
+### Lesson: Primitive Types Demo Code
 
 This comprehensive example demonstrates every primitive data type in V:
 - **Boolean**: `bool` (representing `true` or `false`).
@@ -3007,8 +3007,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Determining Type Of Fixed Array](#determining-type-of-fixed-array)
 - [Slicing Fixed Size Array Results In Ordinary Array](#slicing-fixed-size-array-results-in-ordinary-array)
 - [Declaring Multi Dimensional Arrays](#declaring-multi-dimensional-arrays)
-- [Updating Multi Dimensional Arrays](#updating-multi-dimensional-arrays)
-- [Updating Multi Dimensional Arrays](#updating-multi-dimensional-arrays-1)
+- [Updating Multi Dimensional Array Indices](#updating-multi-dimensional-array-indices)
+- [Reassigning Multi Dimensional Arrays](#reassigning-multi-dimensional-arrays)
 - [Clone Array](#clone-array)
 - [Copy Array](#copy-array)
 - [Sort Integer Array](#sort-integer-array)
@@ -3435,11 +3435,11 @@ fn main() {
 
 ---
 
-### Updating Multi Dimensional Arrays
+### Updating Multi Dimensional Array Indices
 
 _File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v)_
 
-### Lesson: Updating Multi Dimensional Arrays
+### Lesson: Updating Multi Dimensional Array Indices
 
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
@@ -3470,11 +3470,11 @@ fn main() {
 
 ---
 
-### Updating Multi Dimensional Arrays
+### Reassigning Multi Dimensional Arrays
 
 _File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v)_
 
-### Lesson: Updating Multi Dimensional Arrays
+### Lesson: Reassigning Multi Dimensional Arrays
 
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
@@ -4399,7 +4399,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Example 2](#example-2)
 - [Error Script Functions](#error-script-functions)
 - [Script Functions](#script-functions)
-- [Main](#main-1)
+- [Functions Module Variables - Main (main.v)](#functions-module-variables---main-mainv)
 - [Mymod](#mymod)
 - [Functions With Optional Return Types Example 1](#functions-with-optional-return-types-example-1)
 - [Function With Optional Return Type Example 2](#function-with-optional-return-type-example-2)
@@ -4797,11 +4797,11 @@ for i in 0 .. cnt {
 
 ---
 
-### Main
+### Functions Module Variables - Main (main.v)
 
 _File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v)_
 
-### Lesson: Main
+### Lesson: Functions Module Variables - Main
 
 V functions support several advanced features:
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
@@ -6307,42 +6307,42 @@ Modules help organize larger codebases. In this chapter, you will learn how to c
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Modules & Project Structure**
-- [Creating a Simple V Project - Main (modulebasics.v)](#creating-a-simple-v-project-main-modulebasicsv)
-- [Creating a Module - Helper (file1.v)](#creating-a-module-helper-file1v)
-- [Creating a Module - Main (modulebasics.v)](#creating-a-module-main-modulebasicsv)
-- [Importing a Module - Helper (file1.v)](#importing-a-module-helper-file1v)
-- [Importing a Module - Main (modulebasics.v)](#importing-a-module-main-modulebasicsv)
-- [Accessing Module Members - Helper (file1.v)](#accessing-module-members-helper-file1v)
-- [Accessing Module Members - Main (modulebasics.v)](#accessing-module-members-main-modulebasicsv)
-- [Multiple Files (After Refactoring) - Helper 1 (file1.v)](#multiple-files-after-refactoring-helper-1-file1v)
-- [Multiple Files (After Refactoring) - Helper 2 (file2.v)](#multiple-files-after-refactoring-helper-2-file2v)
-- [Multiple Files (After Refactoring) - Main (modulebasics.v)](#multiple-files-after-refactoring-main-modulebasicsv)
-- [Multiple Files (Before Refactoring) - Helper 1 (file1.v)](#multiple-files-before-refactoring-helper-1-file1v)
-- [Multiple Files (Before Refactoring) - Helper 2 (file2.v)](#multiple-files-before-refactoring-helper-2-file2v)
-- [Multiple Files (Before Refactoring) - Main (modulebasics.v)](#multiple-files-before-refactoring-main-modulebasicsv)
-- [Member Scope (After Refactoring) - Helper 1 (file1.v)](#member-scope-after-refactoring-helper-1-file1v)
-- [Member Scope (After Refactoring) - Helper 2 (file2.v)](#member-scope-after-refactoring-helper-2-file2v)
-- [Member Scope (After Refactoring) - Main (modulebasics.v)](#member-scope-after-refactoring-main-modulebasicsv)
-- [Member Scope (Before Refactoring) - Helper 1 (file1.v)](#member-scope-before-refactoring-helper-1-file1v)
-- [Member Scope (Before Refactoring) - Helper 2 (file2.v)](#member-scope-before-refactoring-helper-2-file2v)
-- [Member Scope (Before Refactoring) - Main (modulebasics.v)](#member-scope-before-refactoring-main-modulebasicsv)
-- [Cyclic Imports - Module 1 Helper (file1.v)](#cyclic-imports-module-1-helper-file1v)
-- [Cyclic Imports - Module 2 Helper (file1.v)](#cyclic-imports-module-2-helper-file1v)
-- [Cyclic Imports - Main (modulebasics.v)](#cyclic-imports-main-modulebasicsv)
-- [Module Init Function - Helper (file1.v)](#module-init-function-helper-file1v)
-- [Module Init Function - Main (modulebasics.v)](#module-init-function-main-modulebasicsv)
-- [Accessing Module Constants - Helper (file1.v)](#accessing-module-constants-helper-file1v)
-- [Accessing Module Constants - Main (modulebasics.v)](#accessing-module-constants-main-modulebasicsv)
-- [Accessing Module Structs - Helper (file1.v)](#accessing-module-structs-helper-file1v)
-- [Accessing Module Structs - Main (modulebasics.v)](#accessing-module-structs-main-modulebasicsv)
+- [Creating a Simple V Project - Main (modulebasics.v)](#creating-a-simple-v-project---main-modulebasicsv)
+- [Creating a Module - Helper (file1.v)](#creating-a-module---helper-file1v)
+- [Creating a Module - Main (modulebasics.v)](#creating-a-module---main-modulebasicsv)
+- [Importing a Module - Helper (file1.v)](#importing-a-module---helper-file1v)
+- [Importing a Module - Main (modulebasics.v)](#importing-a-module---main-modulebasicsv)
+- [Accessing Module Members - Helper (file1.v)](#accessing-module-members---helper-file1v)
+- [Accessing Module Members - Main (modulebasics.v)](#accessing-module-members---main-modulebasicsv)
+- [Multiple Files (After Refactoring) - Helper 1 (file1.v)](#multiple-files-after-refactoring---helper-1-file1v)
+- [Multiple Files (After Refactoring) - Helper 2 (file2.v)](#multiple-files-after-refactoring---helper-2-file2v)
+- [Multiple Files (After Refactoring) - Main (modulebasics.v)](#multiple-files-after-refactoring---main-modulebasicsv)
+- [Multiple Files (Before Refactoring) - Helper 1 (file1.v)](#multiple-files-before-refactoring---helper-1-file1v)
+- [Multiple Files (Before Refactoring) - Helper 2 (file2.v)](#multiple-files-before-refactoring---helper-2-file2v)
+- [Multiple Files (Before Refactoring) - Main (modulebasics.v)](#multiple-files-before-refactoring---main-modulebasicsv)
+- [Member Scope (After Refactoring) - Helper 1 (file1.v)](#member-scope-after-refactoring---helper-1-file1v)
+- [Member Scope (After Refactoring) - Helper 2 (file2.v)](#member-scope-after-refactoring---helper-2-file2v)
+- [Member Scope (After Refactoring) - Main (modulebasics.v)](#member-scope-after-refactoring---main-modulebasicsv)
+- [Member Scope (Before Refactoring) - Helper 1 (file1.v)](#member-scope-before-refactoring---helper-1-file1v)
+- [Member Scope (Before Refactoring) - Helper 2 (file2.v)](#member-scope-before-refactoring---helper-2-file2v)
+- [Member Scope (Before Refactoring) - Main (modulebasics.v)](#member-scope-before-refactoring---main-modulebasicsv)
+- [Cyclic Imports - Module 1 Helper (file1.v)](#cyclic-imports---module-1-helper-file1v)
+- [Cyclic Imports - Module 2 Helper (file1.v)](#cyclic-imports---module-2-helper-file1v)
+- [Cyclic Imports - Main (modulebasics.v)](#cyclic-imports---main-modulebasicsv)
+- [Module Init Function - Helper (file1.v)](#module-init-function---helper-file1v)
+- [Module Init Function - Main (modulebasics.v)](#module-init-function---main-modulebasicsv)
+- [Accessing Module Constants - Helper (file1.v)](#accessing-module-constants---helper-file1v)
+- [Accessing Module Constants - Main (modulebasics.v)](#accessing-module-constants---main-modulebasicsv)
+- [Accessing Module Structs - Helper (file1.v)](#accessing-module-structs---helper-file1v)
+- [Accessing Module Structs - Main (modulebasics.v)](#accessing-module-structs---main-modulebasicsv)
 
 **Installing External Packages**
 - [How to Install Packages with vpm](#how-to-install-packages-with-vpm)
 - [Common vpm Commands](#common-vpm-commands)
 - [Importing and Using External Packages](#importing-and-using-external-packages)
 - [Redis Console Demo](#redis-console-demo)
-- [Redis Console Demo - Helper (redis_helper.v)](#redis-console-demo-helper-redis_helperv)
-- [Redis Namespaced Demo - Helper (redis_helper.v)](#redis-namespaced-demo-helper-redis_helperv)
+- [Redis Console Demo - Helper (redis_helper.v)](#redis-console-demo---helper-redis_helperv)
+- [Redis Namespaced Demo - Helper (redis_helper.v)](#redis-namespaced-demo---helper-redis_helperv)
 - [Redis Namespaced Demo](#redis-namespaced-demo)
 - [Redis Webview Demo](#redis-webview-demo)
 - [Webview Demo](#webview-demo)
@@ -8044,14 +8044,14 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 **Assertions & Unit Testing**
 - [Assert Demo](#assert-demo)
-- [Demo Test](#demo-test)
-- [Demo Test](#demo-test-1)
+- [Simple Test - Before (demo_test.v)](#simple-test---before-demo_testv)
+- [Simple Test - After (demo_test.v)](#simple-test---after-demo_testv)
 - [Testsuite Demo Test](#testsuite-demo-test)
-- [Demo Test](#demo-test-2)
+- [Testing Optional Return Functions (demo_test.v)](#testing-optional-return-functions-demo_testv)
 - [Greet](#greet)
 - [Greet Test](#greet-test)
 - [Main Test](#main-test)
-- [File1](#file1-1)
+- [Testing Program Modules - Helper (file1.v)](#testing-program-modules---helper-file1v)
 - [Mod1 Test](#mod1-test)
 - [Modulebasics](#modulebasics)
 
@@ -8089,11 +8089,11 @@ fn main() {
 
 ---
 
-### Demo Test
+### Simple Test - Before (demo_test.v)
 
 _File location: [testing/02_simple_test/01_before/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/02_simple_test/01_before/demo_test.v)_
 
-### Lesson: Demo Test
+### Lesson: Simple Test - Before
 
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
@@ -8112,11 +8112,11 @@ fn test_first() {
 
 ---
 
-### Demo Test
+### Simple Test - After (demo_test.v)
 
 _File location: [testing/02_simple_test/02_after/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/02_simple_test/02_after/demo_test.v)_
 
-### Lesson: Demo Test
+### Lesson: Simple Test - After
 
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
@@ -8180,11 +8180,11 @@ fn testsuite_end() {
 
 ---
 
-### Demo Test
+### Testing Optional Return Functions (demo_test.v)
 
 _File location: [testing/05_test_optional_return_functions/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/05_test_optional_return_functions/demo_test.v)_
 
-### Lesson: Demo Test
+### Lesson: Testing Optional Return Functions
 
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
@@ -8319,11 +8319,11 @@ fn test_hello() {
 
 ---
 
-### File1
+### Testing Program Modules - Helper (file1.v)
 
 _File location: [testing/07_testing_program_with_modules/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/mod1/file1.v)_
 
-### Lesson: File1
+### Lesson: Testing Program Modules - Helper
 
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
@@ -8414,7 +8414,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 **Channels & Communication**
 - [Unbuffered Channel](#unbuffered-channel)
-- [Buffered Channel](#buffered-channel)
+- [Define Buffered Channel (buffered_channel.v)](#define-buffered-channel-buffered_channelv)
 - [Push Buffered](#push-buffered)
 - [Push Unbuffered](#push-unbuffered)
 - [Pop](#pop)
@@ -8427,12 +8427,12 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Blocking Channels](#blocking-channels)
 - [Dealing Before](#dealing-before)
 - [Dealing After](#dealing-after)
-- [Sync Before](#sync-before)
-- [Sync After](#sync-after)
-- [Buffered Channel](#buffered-channel-1)
+- [Unbuffered Sync Before (sync_before.v)](#unbuffered-sync-before-sync_beforev)
+- [Unbuffered Sync After (sync_after.v)](#unbuffered-sync-after-sync_afterv)
+- [Understanding Buffered Channel (buffered_channel.v)](#understanding-buffered-channel-buffered_channelv)
 - [Coroutines Communication](#coroutines-communication)
-- [Sync Before](#sync-before-1)
-- [Sync After](#sync-after-1)
+- [Buffered Sync Before (sync_before.v)](#buffered-sync-before-sync_beforev)
+- [Buffered Sync After (sync_after.v)](#buffered-sync-after-sync_afterv)
 - [Channel Select Before](#channel-select-before)
 - [Channel Select](#channel-select)
 
@@ -8476,11 +8476,11 @@ fn main() {
 
 ---
 
-### Buffered Channel
+### Define Buffered Channel (buffered_channel.v)
 
 _File location: [channels/01_define_channels/02_buffered_channel.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/01_define_channels/02_buffered_channel.v)_
 
-### Lesson: Buffered Channel
+### Lesson: Define Buffered Channel
 
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
@@ -8879,11 +8879,11 @@ fn main() {
 
 ---
 
-### Sync Before
+### Unbuffered Sync Before (sync_before.v)
 
 _File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
 
-### Lesson: Sync Before
+### Lesson: Unbuffered Sync Before
 
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
@@ -8924,11 +8924,11 @@ fn main() {
 
 ---
 
-### Sync After
+### Unbuffered Sync After (sync_after.v)
 
 _File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
 
-### Lesson: Sync After
+### Lesson: Unbuffered Sync After
 
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
@@ -8971,11 +8971,11 @@ fn main() {
 
 ---
 
-### Buffered Channel
+### Understanding Buffered Channel (buffered_channel.v)
 
 _File location: [channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v)_
 
-### Lesson: Buffered Channel
+### Lesson: Understanding Buffered Channel
 
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
@@ -9047,11 +9047,11 @@ fn main() {
 
 ---
 
-### Sync Before
+### Buffered Sync Before (sync_before.v)
 
 _File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
 
-### Lesson: Sync Before
+### Lesson: Buffered Sync Before
 
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
@@ -9093,11 +9093,11 @@ fn main() {
 
 ---
 
-### Sync After
+### Buffered Sync After (sync_after.v)
 
 _File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
 
-### Lesson: Sync After
+### Lesson: Buffered Sync After
 
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
@@ -9661,7 +9661,7 @@ Most applications need to work with databases or API payloads. This chapter teac
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Case Study: Notes API**
-- [Main](#main-2)
+- [Notes API Case Study - Main (main.v)](#notes-api-case-study---main-mainv)
 - [Note](#note)
 - [Util](#util)
 
@@ -9682,11 +9682,11 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 ## Case Study: Notes API
 
-### Main
+### Notes API Case Study - Main (main.v)
 
 _File location: [notes_api/notes_api/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/notes_api/notes_api/main.v)_
 
-### Lesson: Main
+### Lesson: Notes API Case Study - Main
 
 This is a complete, real-world case study of a REST API built using the V web framework (`veb`). It includes routing, JSON requests/responses, and persistence using SQLite. It is a great example of how all the pieces of V fit together to build a production-grade application.
 
@@ -10597,7 +10597,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Benchmark](#benchmark)
 - [Clipboard](#clipboard)
 - [Semver](#semver)
-- [Maps](#maps-1)
+- [Maps Standard Library Module (maps.v)](#maps-standard-library-module-mapsv)
 - [Context](#context)
 - [Archive Tar](#archive-tar)
 - [Compress Deflate](#compress-deflate)
@@ -10619,7 +10619,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Strings Lorem](#strings-lorem)
 
 **WebAssembly Compilation**
-- [Wasm](#wasm)
+- [Compiling V Source to WebAssembly](#compiling-v-source-to-webassembly)
+- [Programmatic WASM Generation](#programmatic-wasm-generation)
 
 ---
 
@@ -15205,7 +15206,7 @@ fn main() {
 
 ---
 
-### Maps
+### Maps Standard Library Module (maps.v)
 
 _File location: [language_updates_and_stdlib/02_standard_library/21_maps/maps.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/21_maps/maps.v)_
 
@@ -16306,7 +16307,71 @@ fn main() {
 
 ## WebAssembly Compilation
 
-### Wasm
+V has first-class support for WebAssembly (WASM). There are two distinct methods for compiling and working with WebAssembly in V:
+1. **Compiling V source code to WASM** (using direct/native backends or Emscripten).
+2. **Programmatic WASM generation** (using the built-in `wasm` instruction-level builder).
+
+---
+
+### Compiling V Source to WebAssembly
+
+#### 1. Native Direct Backend (`-b wasm`)
+V contains a native compiler backend that bypasses C intermediate code and outputs WebAssembly binary files (`.wasm`) directly. This backend has zero dependencies and is extremely fast, though it is currently in active development and supports a subset of the language.
+
+To compile a V file directly to WASM:
+```bash
+v -b wasm -o main.wasm main.v
+```
+
+##### Executing in JavaScript/Node.js:
+To run the natively compiled WASM binary, instantiate it using the standard JavaScript `WebAssembly` API:
+```javascript
+const fs = require('fs');
+
+async function run() {
+	const wasmBuffer = fs.readFileSync('main.wasm');
+	const { instance } = await WebAssembly.instantiate(wasmBuffer, {
+		env: {
+			// Import host functions here if needed
+		}
+	});
+	// Call exported V functions from JS
+	console.log(instance.exports.add(5, 10));
+}
+run();
+```
+
+#### 2. Emscripten C Backend (`-os wasm`)
+For compiling complex applications, standard library features, or C-linked dependencies to WASM, V relies on the Emscripten toolchain. V translates the V code to intermediate C, and Emscripten compiles it to highly optimized WebAssembly.
+
+##### Prerequisites:
+Ensure the Emscripten SDK (`emsdk`) is installed and active on your PATH:
+```bash
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install latest
+./emsdk activate latest
+source ./emsdk_env.sh
+```
+
+##### Compiling with V:
+```bash
+v -os wasm -o main.js main.v
+```
+This produces:
+- `main.wasm`: The compiled WebAssembly binary.
+- `main.js`: Emscripten glue code to load the WASM module and map runtime environments (I/O, memory, filesystem).
+
+##### Running in Node.js:
+```bash
+node main.js
+```
+
+---
+
+### Programmatic WASM Generation
+
+#### Programmatic WASM Builder
 
 _File location: [language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v)_
 
