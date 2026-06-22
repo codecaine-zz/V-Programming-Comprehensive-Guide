@@ -309,8 +309,8 @@ function parseMarkdownToHtmlAndIndex(md) {
                     currentSection = null;
                     currentLesson = null;
                     
-                    html += `</section>\n<section id="chap-wrapper-${slug}" class="chapter-section">\n`;
-                    html += `<h1 class="chapter-title" id="${slug}"><span class="chap-badge">Chapter ${chapNum}</span> ${escapeHtml(chapName)}</h1>\n`;
+                    html += `</section>\n<section id="chap-wrapper-${slug}" class="chapter-section" data-chapter-id="${slug}">\n`;
+                    html += `<h1 class="chapter-title" id="${slug}" data-chapter-id="${slug}"><span class="chap-badge">Chapter ${chapNum}</span> ${escapeHtml(chapName)}</h1>\n`;
                     
                     searchIndex.push({
                         id: currentChapter.id,
@@ -346,7 +346,7 @@ function parseMarkdownToHtmlAndIndex(md) {
                 }
                 currentLesson = null;
 
-                html += `<h2 class="section-title" id="${slug}">${escapeHtml(title)}</h2>\n`;
+                html += `<h2 class="section-title" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">${escapeHtml(title)}</h2>\n`;
                 
                 searchIndex.push({
                     id: `${slug}`,
@@ -375,7 +375,7 @@ function parseMarkdownToHtmlAndIndex(md) {
                 }
 
                 const lessonClass = isLesson ? ' lesson-header' : '';
-                html += `<h3 class="lesson-title${lessonClass}" id="${slug}">${escapeHtml(cleanTitle)}</h3>\n`;
+                html += `<h3 class="lesson-title${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">${escapeHtml(cleanTitle)}</h3>\n`;
                 
                 searchIndex.push({
                     id: `${slug}`,
@@ -1488,6 +1488,69 @@ const template = `<!DOCTYPE html>
         // Init Theme
         const savedTheme = localStorage.getItem('theme') || 'dark';
         setTheme(savedTheme);
+
+        function getChapterContext(element) {
+            if (!element) return '';
+            const directChapterId = element.getAttribute('data-chapter-id');
+            if (directChapterId) return directChapterId;
+            const chapterEl = element.closest('[data-chapter-id]');
+            return chapterEl ? chapterEl.getAttribute('data-chapter-id') : '';
+        }
+
+        function resolveHashTarget(id, contextElement = null) {
+            if (!id) return null;
+            const matches = Array.from(document.querySelectorAll('[id="' + id + '"]'));
+            if (matches.length <= 1) return matches[0] || null;
+
+            const contextChapter = getChapterContext(contextElement);
+            if (contextChapter) {
+                const chapterMatches = matches.filter(match => match.getAttribute('data-chapter-id') === contextChapter);
+                if (chapterMatches.length) {
+                    return chapterMatches[0];
+                }
+            }
+
+            return matches[0];
+        }
+
+        function scrollToHashTarget(hash, behavior = 'smooth', contextElement = null) {
+            if (!hash) return;
+            const id = hash.replace(/^#/, '');
+            if (!id) return;
+
+            const target = resolveHashTarget(id, contextElement);
+            if (!target) return;
+
+            const offset = 100;
+            const top = target.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top, behavior });
+        }
+
+        document.addEventListener('click', (event) => {
+            const link = event.target.closest('a[href^="#"]');
+            if (!link) return;
+
+            const href = link.getAttribute('href');
+            if (!href || href === '#' || href.startsWith('#!')) return;
+            if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+
+            const target = resolveHashTarget(href.slice(1), link);
+            if (!target) return;
+
+            event.preventDefault();
+            history.pushState(null, '', href);
+            scrollToHashTarget(href, 'smooth', link);
+        });
+
+        window.addEventListener('hashchange', () => {
+            scrollToHashTarget(window.location.hash, 'auto', document.body);
+        });
+
+        window.addEventListener('load', () => {
+            if (window.location.hash) {
+                setTimeout(() => scrollToHashTarget(window.location.hash, 'auto', document.body), 0);
+            }
+        });
         
         // Populate Sidebar menu
         const menuEl = document.getElementById('sidebarMenu');
@@ -1516,6 +1579,7 @@ const template = `<!DOCTYPE html>
                 link.className = 'menu-link';
                 link.dataset.target = sec.id;
                 link.dataset.title = sec.title.toLowerCase();
+                link.setAttribute('data-chapter-id', chap.id);
                 link.innerHTML = \`<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>\${sec.title}\`;
                 
                 link.addEventListener('click', (e) => {

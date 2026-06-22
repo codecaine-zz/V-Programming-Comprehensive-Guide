@@ -364,9 +364,7 @@ To get the most from this book:
 
 # Chapter 1: Getting Started with V
 
-This chapter introduces the core design philosophies of V. You will learn how to set up your development environment, compile and run programs, and document your code using comments.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -377,6 +375,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Programm Commented All Places](#programm-commented-all-places)
 
 ---
+
+This chapter introduces the core design philosophies of V. You will learn how to set up your development environment, compile and run programs, and document your code using comments.
 
 ## Code Comments
 
@@ -492,9 +492,7 @@ fn main() {
 
 # Chapter 2: Variables and Constants
 
-Variables are the basic storage units of any program. In this chapter, we explore how V handles variables with a safety-first mindset: variables are immutable by default, variable shadowing is forbidden, and constants are declared in module scopes. You will learn to manage program data safely and cleanly.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -530,6 +528,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Variable Shadowing Not Allowed](#variable-shadowing-not-allowed)
 
 ---
+
+Variables are the basic storage units of any program. In this chapter, we explore how V handles variables with a safety-first mindset: variables are immutable by default, variable shadowing is forbidden, and constants are declared in module scopes. You will learn to manage program data safely and cleanly.
 
 ## Constants
 
@@ -1183,9 +1183,7 @@ fn main() {
 
 # Chapter 3: Primitive Data Types
 
-V is a statically-typed language, meaning every variable has a fixed data type at compile time. In this chapter, you will learn about V's primitive types: booleans for logic, numeric types for numbers, runes for single characters, and strings for text. You will also learn about V's rich set of built-in methods on these types.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -1319,6 +1317,8 @@ fn main() {
 ```
 
 ---
+
+V is a statically-typed language, meaning every variable has a fixed data type at compile time. In this chapter, you will learn about V's primitive types: booleans for logic, numeric types for numbers, runes for single characters, and strings for text. You will also learn about V's rich set of built-in methods on these types.
 
 ## Boolean Type
 
@@ -2499,9 +2499,7 @@ fn main() {
 
 # Chapter 4: Control Flow
 
-Control flow determines the execution path of your code. In this chapter, we cover conditionals (`if-else`), pattern matching (`match`), and the versatile `for` loop. V simplifies control flow by using fewer keywords, making code highly readable.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -2527,6 +2525,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Reverse For](#reverse-for)
 
 ---
+
+Control flow determines the execution path of your code. In this chapter, we cover conditionals (`if-else`), pattern matching (`match`), and the versatile `for` loop. V simplifies control flow by using fewer keywords, making code highly readable.
 
 ## Control Flow Extras
 
@@ -3147,9 +3147,7 @@ fn main() {
 
 # Chapter 5: Collections: Arrays and Maps
 
-Collections allow you to group multiple data items together. V provides two primary built-in collection types: **arrays** (ordered lists of elements) and **maps** (key-value dictionaries). This chapter covers creating, accessing, and manipulating these collections using modern functional patterns like `map` and `filter`.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -3196,6 +3194,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Map Methods](#map-methods)
 
 ---
+
+Collections allow you to group multiple data items together. V provides two primary built-in collection types: **arrays** (ordered lists of elements) and **maps** (key-value dictionaries). This chapter covers creating, accessing, and manipulating these collections using modern functional patterns like `map` and `filter`.
 
 ## Arrays
 
@@ -4473,9 +4473,7 @@ fn main() {
 
 # Chapter 6: Functions
 
-Functions allow you to break your program into reusable blocks of logic. This chapter explains how to declare functions, handle multiple return values, write anonymous functions and closures, and use the `defer` keyword to clean up resources.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -4512,6 +4510,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Functions That Return Other Functions](#functions-that-return-other-functions)
 
 ---
+
+Functions allow you to break your program into reusable blocks of logic. This chapter explains how to declare functions, handle multiple return values, write anonymous functions and closures, and use the `defer` keyword to clean up resources.
 
 ## Advanced Function Features
 
@@ -5426,9 +5426,7 @@ fn main() {
 
 # Chapter 7: Structs (Custom Types)
 
-Structs are user-defined data structures that allow you to group related fields together. This chapter explains how to define structs, set default values, make fields required, attach methods to structs, and embed structs inside other structures.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -5454,6 +5452,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Struct As Trailing Literal Arguments To Function](#struct-as-trailing-literal-arguments-to-function)
 
 ---
+
+Structs are user-defined data structures that allow you to group related fields together. This chapter explains how to define structs, set default values, make fields required, attach methods to structs, and embed structs inside other structures.
 
 ## Struct Basics & Fields
 
@@ -6116,9 +6116,7 @@ fn main() {
 
 # Chapter 8: Error Handling
 
-V has no exceptions. Instead, it handles errors using **Option** and **Result** types, which are checked at compile time. This chapter teaches you how to write robust, error-free programs using V's clean error handling syntax.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -6127,6 +6125,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Error Handling](#error-handling)
 
 ---
+
+V has no exceptions. Instead, it handles errors using **Option** and **Result** types, which are checked at compile time. This chapter teaches you how to write robust, error-free programs using V's clean error handling syntax.
 
 ## Option & Result Types
 
@@ -6330,9 +6330,7 @@ fn main() {
 
 # Chapter 9: Organizing Code with Modules
 
-Modules help organize larger codebases. In this chapter, you will learn how to create modules, import them, manage member visibility using `pub`, and understand module initialization lifecycle.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -6380,6 +6378,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Webview Demo](#webview-demo)
 
 ---
+
+Modules help organize larger codebases. In this chapter, you will learn how to create modules, import them, manage member visibility using `pub`, and understand module initialization lifecycle.
 
 ## Modules & Project Structure
 
@@ -8007,9 +8007,7 @@ fn main() {
 
 # Chapter 10: Writing Tests in V
 
-V has testing built directly into the compiler. This chapter explains how to write test files, use assertions, set up test suites with setup/teardown methods, and run test suites.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -8028,6 +8026,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Modulebasics](#modulebasics)
 
 ---
+
+V has testing built directly into the compiler. This chapter explains how to write test files, use assertions, set up test suites with setup/teardown methods, and run test suites.
 
 ## Assertions & Unit Testing
 
@@ -8356,9 +8356,7 @@ fn main() {
 
 # Chapter 11: Concurrency and Channels
 
-V makes concurrent programming easy and safe. This chapter covers spawning threads using `spawn`, communicating safely between threads using channels, and sharing state safely using `shared` and `lock` primitives.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -8400,6 +8398,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Sharing Data Main And Concurrent Tasks](#sharing-data-main-and-concurrent-tasks)
 
 ---
+
+V makes concurrent programming easy and safe. This chapter covers spawning threads using `spawn`, communicating safely between threads using channels, and sharing state safely using `shared` and `lock` primitives.
 
 ## Channels & Communication
 
@@ -9544,9 +9544,7 @@ fn main() {
 
 # Chapter 12: Working with Databases and JSON
 
-Most applications need to work with databases or API payloads. This chapter teaches you how to serialize and deserialize JSON data, use V's built-in ORM with SQLite, and covers a complete Notes REST API case study.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -9575,6 +9573,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Sqlite Raw Crud](#sqlite-raw-crud)
 
 ---
+
+Most applications need to work with databases or API payloads. This chapter teaches you how to serialize and deserialize JSON data, use V's built-in ORM with SQLite, and covers a complete Notes REST API case study.
 
 ## Case Study: Notes API
 
@@ -10421,9 +10421,7 @@ fn main() {
 
 # Chapter 13: Standard Library & Advanced Features
 
-This chapter highlights the power of V's standard library and advanced integration features, including low-level socket networking, inline assembly, compilation to WebAssembly, and V's unique memory management models.
-
-## Code Examples Index
+## Quick Access
 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
@@ -10513,6 +10511,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Programmatic WASM Generation](#programmatic-wasm-generation)
 
 ---
+
+This chapter highlights the power of V's standard library and advanced integration features, including low-level socket networking, inline assembly, compilation to WebAssembly, and V's unique memory management models.
 
 ## Inline Assembly & C Interop
 
