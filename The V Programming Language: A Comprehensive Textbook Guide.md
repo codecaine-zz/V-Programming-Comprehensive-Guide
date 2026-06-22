@@ -158,6 +158,27 @@ import math
 - Modules help organize code and separate concerns.
 - Importing standard library packages is a normal part of larger programs.
 
+## From Practice to Real Projects
+
+Once the basics feel comfortable, the next step is to build small applications that combine multiple ideas. A very effective progression is:
+
+1. Build a tiny CLI tool that reads input and prints output.
+2. Add functions, structs, and tests.
+3. Introduce modules so the code is easier to maintain.
+4. Add file I/O or JSON handling for persistence.
+5. Explore concurrency for tasks that can run in parallel.
+
+This progression helps learners move from “I can read examples” to “I can build useful software.”
+
+## Where to Go Next
+
+After finishing this guide, the best next steps are:
+
+- read the official V documentation and examples
+- try the V Playground for rapid experimentation
+- build one project end to end instead of reading only
+- contribute to or study real V repositories for idiomatic patterns
+
 ## Table of Contents
 
 - [Chapter 1: Getting Started with V](#chapter-1-getting-started-with-v)
