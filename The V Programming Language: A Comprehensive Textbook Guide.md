@@ -179,6 +179,30 @@ After finishing this guide, the best next steps are:
 - build one project end to end instead of reading only
 - contribute to or study real V repositories for idiomatic patterns
 
+## Beginner Project Roadmap
+
+A practical roadmap for new V developers could look like this:
+
+### Milestone 1: CLI App
+
+Build a small command-line app that accepts user input and prints useful output. This helps you practice functions, variables, and control flow.
+
+### Milestone 2: Data App
+
+Add file I/O or JSON handling so your app can save and load data. This introduces practical patterns for real-world applications.
+
+### Milestone 3: Structured App
+
+Split the app into modules and add structs for data models. This is where programs become easier to maintain.
+
+### Milestone 4: Tested App
+
+Write tests and improve reliability. This is an important step for building confidence as a programmer.
+
+### Milestone 5: Concurrent App
+
+Explore concurrency with `spawn` and channels for tasks that can run in parallel. This is where V becomes especially compelling for performance-oriented software.
+
 ## Table of Contents
 
 - [Chapter 1: Getting Started with V](#chapter-1-getting-started-with-v)
