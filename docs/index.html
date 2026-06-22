@@ -2178,7 +2178,7 @@ pub fn do_work() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Ly8gaW1tdXRhYmxlIHZhcmlhYmxlcyBwYXJhbGxlbCBhc3NpZ25tZW50CgpmbiBtYWluKCkgewoJYSwgYiwgYyA6PSAzLCA0LCA1CglwcmludGxuKGEpCglwcmludGxuKGIpCglwcmludGxuKGMpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW5hbWUsIGFnZSwgY2l0eSA6PSAnQWRhJywgMzYsICdMb25kb24nCglwcmludGxuKCcke25hbWV9IGlzICR7YWdlfSB5ZWFycyBvbGQgYW5kIGxpdmVzIGluICR7Y2l0eX0uJykKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -2196,13 +2196,9 @@ pub fn do_work() {
                             </button>
                         </div>
                     </div>
-                    <pre><code class="language-v">// immutable variables parallel assignment
-
-fn main() {
-	a, b, c := 3, 4, 5
-	println(a)
-	println(b)
-	println(c)
+                    <pre><code class="language-v">fn main() {
+	name, age, city := &#039;Ada&#039;, 36, &#039;London&#039;
+	println(&#039;${name} is ${age} years old and lives in ${city}.&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -2389,7 +2385,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW11dCBpIDo9IDEwCglpID0gMTAwCglwcmludGxuKGkpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW11dCBjb3VudCA6PSAwCgljb3VudCArPSAxCgljb3VudCArPSAyCglwcmludGxuKCdDdXJyZW50IGNvdW50OiAke2NvdW50fScpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -2408,9 +2404,10 @@ fn main() {
                         </div>
                     </div>
                     <pre><code class="language-v">fn main() {
-	mut i := 10
-	i = 100
-	println(i)
+	mut count := 0
+	count += 1
+	count += 2
+	println(&#039;Current count: ${count}&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -2465,7 +2462,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW1zZyA6PSAnSGVsbG8nCglwcmludGxuKG1zZykKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCWdyZWV0aW5nIDo9ICdIZWxsbycKCW1lc3NhZ2UgOj0gZ3JlZXRpbmcgKyAnLCBWIScKCXByaW50bG4obWVzc2FnZSkKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -2484,8 +2481,9 @@ fn main() {
                         </div>
                     </div>
                     <pre><code class="language-v">fn main() {
-	msg := &#039;Hello&#039;
-	println(msg)
+	greeting := &#039;Hello&#039;
+	message := greeting + &#039;, V!&#039;
+	println(message)
 }</code></pre>
                 </div>
 <hr />
@@ -3392,7 +3390,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmZuIG1haW4oKSB7CglhIDo9IDEwCgliIDo9IDIKCgkvLyBhZGQgdXNpbmcgKwoJc3VtIDo9IGEgKyBiCgoJLy8gc3VidHJhY3QgdXNpbmcgLQoJZGlmZiA6PSBiIC0gYQoKCS8vIHByb2R1Y3QgdXNpbmcgKgoJcHJvZCA6PSBhICogYgoKCS8vIC8gcmVzdWx0cyBpbiBxdW90aWVudAoJcXVvdGllbnQgOj0gYSAvIGIKCgkvLyAlIG1vZHVsbyByZXN1bHRzIGluIHJlbWFpbmRlcgoJcmVtYWluZGVyIDo9IGEgJSBiCgoJcHJpbnRsbignU3VtIG9mICR7YX0gYW5kICR7Yn0gaXMgJHtzdW19JykKCXByaW50bG4oJ1N1YnRyYWN0aW5nICR7YX0gZnJvbSAke2J9IGlzICR7ZGlmZn0nKQoJcHJpbnRsbignUHJvZHVjdCBvZiAke2F9IGFuZCAke2J9IGlzICR7cHJvZH0nKQoJcHJpbnRsbignUXVvdGllbnQgd2hlbiAke2F9IGRpdmlkZWQgYnkgJHtifSBpcyAke3F1b3RpZW50fScpCglwcmludGxuKCdSZW1haW5kZXIgd2hlbiAke2F9IGRpdmlkZWQgYnkgJHtifSBpcyAke3JlbWFpbmRlcn0nKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmZuIG1haW4oKSB7CglwcmljZSA6PSAxMjAKCXRheF9yYXRlIDo9IDgKCXRheCA6PSBwcmljZSAqIHRheF9yYXRlIC8gMTAwCgl0b3RhbCA6PSBwcmljZSArIHRheAoKCXByaW50bG4oJ1N1YnRvdGFsOiAke3ByaWNlfScpCglwcmludGxuKCdUYXg6ICR7dGF4fScpCglwcmludGxuKCdUb3RhbDogJHt0b3RhbH0nKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -3413,29 +3411,14 @@ fn main() {
                     <pre><code class="language-v">module main
 
 fn main() {
-	a := 10
-	b := 2
+	price := 120
+	tax_rate := 8
+	tax := price * tax_rate / 100
+	total := price + tax
 
-	// add using +
-	sum := a + b
-
-	// subtract using -
-	diff := b - a
-
-	// product using *
-	prod := a * b
-
-	// / results in quotient
-	quotient := a / b
-
-	// % modulo results in remainder
-	remainder := a % b
-
-	println(&#039;Sum of ${a} and ${b} is ${sum}&#039;)
-	println(&#039;Subtracting ${a} from ${b} is ${diff}&#039;)
-	println(&#039;Product of ${a} and ${b} is ${prod}&#039;)
-	println(&#039;Quotient when ${a} divided by ${b} is ${quotient}&#039;)
-	println(&#039;Remainder when ${a} divided by ${b} is ${remainder}&#039;)
+	println(&#039;Subtotal: ${price}&#039;)
+	println(&#039;Tax: ${tax}&#039;)
+	println(&#039;Total: ${total}&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -3849,7 +3832,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCWwgOj0gYGFgCglwcmludGxuKHR5cGVvZihsKS5uYW1lKQoJLy8gcnVuZQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCWluaXRpYWwgOj0gYEFgCglzeW1ib2wgOj0gYPCflKVgCgoJcHJpbnRsbih0eXBlb2YoaW5pdGlhbCkubmFtZSkKCXByaW50bG4odHlwZW9mKHN5bWJvbCkubmFtZSkKCXByaW50bG4oJ0luaXRpYWw6ICR7aW5pdGlhbC5zdHIoKX0nKQoJcHJpbnRsbignU3ltYm9sOiAke3N5bWJvbC5zdHIoKX0nKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -3868,9 +3851,13 @@ fn main() {
                         </div>
                     </div>
                     <pre><code class="language-v">fn main() {
-	l := `a`
-	println(typeof(l).name)
-	// rune
+	initial := `A`
+	symbol := `🔥`
+
+	println(typeof(initial).name)
+	println(typeof(symbol).name)
+	println(&#039;Initial: ${initial.str()}&#039;)
+	println(&#039;Symbol: ${symbol.str()}&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -3998,7 +3985,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCWggOj0gJ2hlbGxvJwoJcHJpbnRsbihoKQoJLy8gaGVsbG8KCXByaW50bG4oaC5sZW4pCgkvLyA1CglwcmludGxuKHR5cGVvZihoKS5uYW1lKQoJLy8gc3RyaW5nCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCWdyZWV0aW5nIDo9ICdoZWxsbycKCW5hbWUgOj0gJ0FkYScKCW1lc3NhZ2UgOj0gZ3JlZXRpbmcgKyAnLCAnICsgbmFtZSArICchJwoKCXByaW50bG4obWVzc2FnZSkKCXByaW50bG4obWVzc2FnZS5sZW4pCglwcmludGxuKHR5cGVvZihtZXNzYWdlKS5uYW1lKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -4017,13 +4004,13 @@ fn main() {
                         </div>
                     </div>
                     <pre><code class="language-v">fn main() {
-	h := &#039;hello&#039;
-	println(h)
-	// hello
-	println(h.len)
-	// 5
-	println(typeof(h).name)
-	// string
+	greeting := &#039;hello&#039;
+	name := &#039;Ada&#039;
+	message := greeting + &#039;, &#039; + name + &#039;!&#039;
+
+	println(message)
+	println(message.len)
+	println(typeof(message).name)
 }</code></pre>
                 </div>
 <hr />

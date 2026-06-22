@@ -795,13 +795,9 @@ This program demonstrates declaring two variables `a` and `b` at the same time a
 This example demonstrates the concepts of **parallel declaration immutable variables**.
 
 ```v
-// immutable variables parallel assignment
-
 fn main() {
-	a, b, c := 3, 4, 5
-	println(a)
-	println(b)
-	println(c)
+	name, age, city := 'Ada', 36, 'London'
+	println('${name} is ${age} years old and lives in ${city}.')
 }
 ```
 
@@ -924,9 +920,10 @@ This example demonstrates the concepts of **declare mutable variable**.
 
 ```v
 fn main() {
-	mut i := 10
-	i = 100
-	println(i)
+	mut count := 0
+	count += 1
+	count += 2
+	println('Current count: ${count}')
 }
 ```
 
@@ -966,8 +963,9 @@ This example demonstrates the concepts of **declare immutable variable**.
 
 ```v
 fn main() {
-	msg := 'Hello'
-	println(msg)
+	greeting := 'Hello'
+	message := greeting + ', V!'
+	println(message)
 }
 ```
 
@@ -1621,29 +1619,14 @@ This example demonstrates the concepts of **arithmetic operators**.
 module main
 
 fn main() {
-	a := 10
-	b := 2
+	price := 120
+	tax_rate := 8
+	tax := price * tax_rate / 100
+	total := price + tax
 
-	// add using +
-	sum := a + b
-
-	// subtract using -
-	diff := b - a
-
-	// product using *
-	prod := a * b
-
-	// / results in quotient
-	quotient := a / b
-
-	// % modulo results in remainder
-	remainder := a % b
-
-	println('Sum of ${a} and ${b} is ${sum}')
-	println('Subtracting ${a} from ${b} is ${diff}')
-	println('Product of ${a} and ${b} is ${prod}')
-	println('Quotient when ${a} divided by ${b} is ${quotient}')
-	println('Remainder when ${a} divided by ${b} is ${remainder}')
+	println('Subtotal: ${price}')
+	println('Tax: ${tax}')
+	println('Total: ${total}')
 }
 ```
 
@@ -1942,9 +1925,13 @@ This example demonstrates the concepts of **declare rune**.
 
 ```v
 fn main() {
-	l := `a`
-	println(typeof(l).name)
-	// rune
+	initial := `A`
+	symbol := `🔥`
+
+	println(typeof(initial).name)
+	println(typeof(symbol).name)
+	println('Initial: ${initial.str()}')
+	println('Symbol: ${symbol.str()}')
 }
 ```
 
@@ -2041,13 +2028,13 @@ This example demonstrates the concepts of **declare string**.
 
 ```v
 fn main() {
-	h := 'hello'
-	println(h)
-	// hello
-	println(h.len)
-	// 5
-	println(typeof(h).name)
-	// string
+	greeting := 'hello'
+	name := 'Ada'
+	message := greeting + ', ' + name + '!'
+
+	println(message)
+	println(message.len)
+	println(typeof(message).name)
 }
 ```
 
