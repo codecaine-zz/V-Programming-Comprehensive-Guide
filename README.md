@@ -14,19 +14,19 @@ V is a statically typed, compiled programming language designed for building mai
 
 ### Core Philosophy
 
-*   **Zero Dependencies**: The entire language, compiler, and standard library have no external dependencies. Everything you need is compiled into a single, clean codebase.
-*   **Extreme Compilation Speeds**: V compiles to native C code (and from there to machine code) or directly to machine code/WebAssembly in under a second. Rebuilding the entire V compiler itself takes less than 1.5 seconds.
-*   **Safety**: Immortality by default (no globals, immutable variables, immutable struct fields by default), bounds checking, no null pointers, and strict control over variable scopes.
-*   **No Heavy Runtime**: V compiles directly to native binaries without a Virtual Machine (VM), interpreter, or heavy runtime library. Resulting executables are extremely lightweight (usually < 1MB).
+- **Zero Dependencies**: The entire language, compiler, and standard library have no external dependencies. Everything you need is compiled into a single, clean codebase.
+- **Extreme Compilation Speeds**: V compiles to native C code (and from there to machine code) or directly to machine code/WebAssembly in under a second. Rebuilding the entire V compiler itself takes less than 1.5 seconds.
+- **Safety**: Immortality by default (no globals, immutable variables, immutable struct fields by default), bounds checking, no null pointers, and strict control over variable scopes.
+- **No Heavy Runtime**: V compiles directly to native binaries without a Virtual Machine (VM), interpreter, or heavy runtime library. Resulting executables are extremely lightweight (usually < 1MB).
 
 ### Use-Case Guidance: Choosing V
 
-| Scenario / Goal | Choose V when... | Choose Go when... | Choose Rust when... | Choose C when... |
-| :--- | :--- | :--- | :--- | :--- |
-| **Lightweight CLI Tools** | **Highly Recommended**. Tiny binaries, instant startup, zero dependencies, easy arguments/flags parsing. | Binaries are larger (~5-15MB) and startup is slightly slower due to GC. | Great, but development speed is slower and setup is more complex. | Good, but lack of modern string handling and collections makes it tedious. |
-| **Fast-Booting Microservices** | **Excellent**. Low memory overhead, instant boot (ideal for Serverless/Docker environments). | Excellent standard library, but higher memory footprint and GC pauses. | Excellent performance, but longer compilation cycles and steeper learning curve. | Too low-level, unsafe web-facing library ecosystem. |
-| **Embedded & Systems** | **Excellent**. Easily compiles to C, runs on bare-metal or resource-constrained boards. | Not suitable due to garbage collector and runtime footprint. | **Excellent**. Safe concurrency and hardware control, though more complex. | The classic choice, but lacks V's safety guards against memory corruption. |
-| **Desktop GUI Apps** | **Excellent**. Built-in `gg` graphics library and simple Webview bindings. | Not ideal; lacks first-class native desktop GUI support. | Possible, but complex ecosystem. | Possible, but extremely verbose and unsafe. |
+| Scenario / Goal                | Choose V when...                                                                                         | Choose Go when...                                                       | Choose Rust when...                                                              | Choose C when...                                                           |
+| :----------------------------- | :------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- | :------------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
+| **Lightweight CLI Tools**      | **Highly Recommended**. Tiny binaries, instant startup, zero dependencies, easy arguments/flags parsing. | Binaries are larger (~5-15MB) and startup is slightly slower due to GC. | Great, but development speed is slower and setup is more complex.                | Good, but lack of modern string handling and collections makes it tedious. |
+| **Fast-Booting Microservices** | **Excellent**. Low memory overhead, instant boot (ideal for Serverless/Docker environments).             | Excellent standard library, but higher memory footprint and GC pauses.  | Excellent performance, but longer compilation cycles and steeper learning curve. | Too low-level, unsafe web-facing library ecosystem.                        |
+| **Embedded & Systems**         | **Excellent**. Easily compiles to C, runs on bare-metal or resource-constrained boards.                  | Not suitable due to garbage collector and runtime footprint.            | **Excellent**. Safe concurrency and hardware control, though more complex.       | The classic choice, but lacks V's safety guards against memory corruption. |
+| **Desktop GUI Apps**           | **Excellent**. Built-in `gg` graphics library and simple Webview bindings.                               | Not ideal; lacks first-class native desktop GUI support.                | Possible, but complex ecosystem.                                                 | Possible, but extremely verbose and unsafe.                                |
 
 ## Prerequisites & Environment Setup
 
@@ -38,17 +38,15 @@ If you are using an ARM-based Mac (Apple Silicon) and installed V via Homebrew, 
 
 Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings) to set the `custom_vroot` to the Homebrew installation path (e.g., `/opt/homebrew/Cellar/vlang/0.5.1/libexec/v` or `/opt/homebrew/opt/vlang/libexec/v`). This ensures the analyzer correctly locates the `vlib` standard library.
 
-
 ---
 
 > [!IMPORTANT]
 > **Vlang Textbook Learning Guide & Code Examples**
 > All code examples and detailed, step-by-step programming lessons have been moved to the dedicated textbook guide: **[The V Programming Language: A Comprehensive Textbook Guide.md](./The%20V%20Programming%20Language:%20A%20Comprehensive%20Textbook%20Guide.md)** (or **[vlang-complete-guide.md](./vlang-complete-guide.md)**).
-> 
+>
 > Please use [The V Programming Language: A Comprehensive Textbook Guide.md](./The%20V%20Programming%20Language:%20A%20Comprehensive%20Textbook%20Guide.md) (or **[vlang-complete-guide.md](./vlang-complete-guide.md)**) as your primary resource for learning V, as it features a structured, school-book syllabus designed specifically for new and experienced developers alike.
 
 ---
-
 
 ## Official Documentation & Interactive Guide
 
@@ -61,12 +59,16 @@ For comprehensive and up-to-date information about V, please refer to:
 - **[Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/)** - Interactive HTML viewer featuring this Vlang guide alongside other programming tutorials ([GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
 
 ### V Playground Integration
+
 The interactive HTML guide integrates directly with the [V Playground](https://play.vlang.io/):
-* **Run in Playground**: Pre-loads the specific V code block directly into the playground editor using the `base64` query parameter.
-* **Copy & Open**: Copies the V code block to your clipboard and opens the playground pre-loaded with the exact code snippet.
+
+- **Run in Playground**: Pre-loads the specific V code block directly into the playground editor using the `base64` query parameter.
+- **Copy & Open**: Copies the V code block to your clipboard and opens the playground pre-loaded with the exact code snippet.
 
 ### Rebuilding the Interactive HTML Guide
+
 If you update `The V Programming Language: A Comprehensive Textbook Guide.md`, you can recompile the interactive HTML version at any time by running:
+
 ```bash
 node build.js
 ```
