@@ -4537,25 +4537,26 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 
 ### Lesson: Function Returns Value Example 1
 
-V functions support several advanced features:
+A function is a named block of code that performs one job and can return a value. The simplest pattern is:
 
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
+1. define a function
+2. give it inputs
+3. compute something
+4. return the result
 
-These examples illustrate these powerful concepts.
+This example shows a function that adds two numbers and returns the total.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function returns value example 1**.
 
 ```v
-fn sum(a int, b int) int {
+fn add(a int, b int) int {
 	return a + b
 }
 
 fn main() {
-	println(sum(2, 3))
+	total := add(7, 5)
+	println('7 + 5 = ${total}')
 }
 ```
 
@@ -4567,28 +4568,19 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 
 ### Lesson: Function Returns Value Example 2
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Functions do not have to print anything directly. They can return a value that the caller uses later. In this example, a function creates a friendly greeting string and the main program prints it.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function returns value example 2**.
 
 ```v
-fn say_hello() string {
-	return 'Hello!'
+fn say_hello(name string) string {
+	return 'Hello, ${name}!'
 }
 
 fn main() {
-	// call the method
-	res := say_hello()
-	println(res)
-	// prints: Hello!
+	message := say_hello('Ada')
+	println(message)
 }
 ```
 
@@ -4600,26 +4592,18 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 
 ### Lesson: Funtions Without Return Type
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Some functions are used for actions rather than returning a computed value. In that case, you can leave out the return type and simply perform work such as printing, writing files, or updating a value.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **funtions without return type**.
 
 ```v
-fn console_greeter() {
-	println('Hello!')
+fn print_welcome_message() {
+	println('Welcome to V!')
 }
 
 fn main() {
-	console_greeter()
-	// prints: Hello!
+	print_welcome_message()
 }
 ```
 
@@ -4631,14 +4615,7 @@ _File location: [functions/02_understanding_funtion_features/02_function_and_inp
 
 ### Lesson: Function With Input Arguments
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Functions become much more useful when they accept inputs. This example uses two numbers as arguments and returns their sum, showing the classic input → process → output flow.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with input arguments**.
@@ -4649,9 +4626,8 @@ fn add(a int, b int) int {
 }
 
 fn main() {
-	res := add(2, 4)
-	println(res)
-	// prints: 6
+	result := add(15, 27)
+	println('15 + 27 = ${result}')
 }
 ```
 
@@ -6405,16 +6381,15 @@ _File location: [modules/01_creating_simple_v_project/modulebasics/modulebasics.
 
 ### Lesson: Creating a Simple V Project
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
+Think of a module as a small toolbox. The `main` module is the entry point of your program, while other modules can hold reusable functions and types.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+This first example is intentionally simple: it shows the structure of a single-file V program before we introduce imports and shared modules.
 
 ```v
 module main
 
 fn main() {
-	println('Hello World!')
+	println('Welcome to the V module demo!')
 }
 ```
 
@@ -6424,18 +6399,15 @@ fn main() {
 
 _File location: [modules/02_creating_modue/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/02_creating_modue/modulebasics/mod1/file1.v)_
 
-### Lesson: Module Helper
+### Lesson: A Reusable Helper Module
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+A module can hold functions that other parts of your program can reuse. In this example, the helper module `mod1` exposes a public function called `greet`.
 
 ```v
 module mod1
 
-pub fn hello() {
-	println('Hello from mod1!')
+pub fn greet(name string) string {
+	return 'Hello, ${name}!'
 }
 ```
 
@@ -6447,16 +6419,15 @@ _File location: [modules/02_creating_modue/modulebasics/modulebasics.v](file:///
 
 ### Lesson: Module Main Entry
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+This file acts as the application entry point. It imports the helper module and calls one of its public functions.
 
 ```v
 module main
 
+import mod1
+
 fn main() {
-	println('Hello World!')
+	println(mod1.greet('Ada'))
 }
 ```
 
@@ -6468,16 +6439,13 @@ _File location: [modules/03_importing_module/modulebasics/mod1/file1.v](file:///
 
 ### Lesson: Imported Module Helper
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+Importing a module gives your program access to its public members. The module name becomes the namespace you use when calling those functions.
 
 ```v
 module mod1
 
-pub fn hello() {
-	println('Hello from mod1!')
+pub fn greet(name string) string {
+	return 'Hello, ${name}!'
 }
 ```
 
@@ -6489,10 +6457,7 @@ _File location: [modules/03_importing_module/modulebasics/modulebasics.v](file:/
 
 ### Lesson: Imported Module Main
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+The main program can now use the imported module without copying its code into the entry file.
 
 ```v
 module main
@@ -6500,7 +6465,8 @@ module main
 import mod1
 
 fn main() {
-	println('Hello World!')
+	message := mod1.greet('Lina')
+	println(message)
 }
 ```
 
@@ -6510,18 +6476,19 @@ fn main() {
 
 _File location: [modules/04_accessing_members_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/04_accessing_members_of_module/modulebasics/mod1/file1.v)_
 
-### Lesson: Member Visibility Helper
+### Lesson: Public vs Private Members
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+Not everything in a module should be accessible from outside. In V, `pub` makes a function available to other modules, while private functions stay inside the module.
 
 ```v
 module mod1
 
-pub fn hello() {
-	println('Hello from mod1!')
+pub fn greet(name string) string {
+	return 'Hello, ${name}!'
+}
+
+fn internal_note() string {
+	return 'This helper stays inside the module.'
 }
 ```
 
@@ -6533,10 +6500,7 @@ _File location: [modules/04_accessing_members_of_module/modulebasics/modulebasic
 
 ### Lesson: Member Visibility Main
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+From the main program, you can call the public function, but private helpers remain hidden.
 
 ```v
 module main
@@ -6544,8 +6508,8 @@ module main
 import mod1
 
 fn main() {
-	mod1.hello()
-	println('Hello World!')
+	println(mod1.greet('Noor'))
+	// mod1.internal_note() is not allowed from here
 }
 ```
 
@@ -6557,10 +6521,7 @@ _File location: [modules/05_working_with_multiple_files_in_module/after/moduleba
 
 ### Lesson: Multiple Files (After Refactoring) - Helper 1
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+A single module can be split across several files. This makes it easier to keep related helpers organized without changing how the module is imported.
 
 ```v
 module mod1
@@ -6578,10 +6539,7 @@ _File location: [modules/05_working_with_multiple_files_in_module/after/moduleba
 
 ### Lesson: Multiple Files (After Refactoring) - Helper 2
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file2**.
+The second file in the same module can hold additional helper functions. The module still behaves as one logical unit when imported.
 
 ```v
 module mod1
@@ -6690,10 +6648,7 @@ _File location: [modules/06_member_scope_in_module/after/modulebasics/mod1/file1
 
 ### Lesson: Member Scope (After Refactoring) - Helper 1
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+A function marked `pub` can be called from outside the module, while a private helper can still be used by other functions inside the same module.
 
 ```v
 module mod1
@@ -6823,10 +6778,7 @@ _File location: [modules/07_cyclic_imports/modulebasics/m1/file1.v](file:///User
 
 ### Lesson: Cyclic Imports - Module 1
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+This example shows a circular dependency between two modules. In practice, you should avoid this pattern because it makes the import graph harder to reason about.
 
 ```v
 module m1
@@ -6898,10 +6850,7 @@ _File location: [modules/08_init_function_for_module/modulebasics/mod1/file1.v](
 
 ### Lesson: Module Init Function Helper
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+The special `init()` function runs automatically when the module is loaded, which is useful for one-time setup work.
 
 ```v
 module mod1
@@ -6946,10 +6895,7 @@ _File location: [modules/09_accessing_constants_of_module/modulebasics/mod1/file
 
 ### Lesson: Accessing Module Constants Helper
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+Constants are shared values that belong to a module. They are great for configuration strings or fixed messages that multiple files can use.
 
 ```v
 module mod1
