@@ -203,6 +203,35 @@ Write tests and improve reliability. This is an important step for building conf
 
 Explore concurrency with `spawn` and channels for tasks that can run in parallel. This is where V becomes especially compelling for performance-oriented software.
 
+## Setup Checklist
+
+Before you start coding in V, make sure you have:
+
+- V installed and available on your terminal
+- a text editor or IDE with basic syntax highlighting
+- a way to run and test small programs quickly
+- a folder for practice files and mini projects
+
+## Quick Glossary
+
+- `mut`: makes a variable changeable
+- `fn`: defines a function
+- `struct`: defines a custom data type
+- `module`: groups related code together
+- `option`/`result`: explicit ways to handle missing or failing values
+- `spawn`: runs code concurrently
+- `channel`: passes data between concurrent tasks
+
+## How to Use This Guide Effectively
+
+To get the most from this book:
+
+1. Read the explanation first, but do not stop there.
+2. Run each example locally.
+3. Change one small thing and observe what happens.
+4. Write your own tiny version before moving on.
+5. Apply each idea in a small project as soon as possible.
+
 ## Table of Contents
 
 - [Chapter 1: Getting Started with V](#chapter-1-getting-started-with-v)
