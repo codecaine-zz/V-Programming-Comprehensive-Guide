@@ -1,7 +1,7 @@
-fn sum(a int, b int) int {
+fn add(a int, b int) int {
 	return a + b
 }
 
 fn main() {
-	println(sum(2, 3))
+	println(add(2, 3))
 }

@@ -1,7 +1,7 @@
-fn greet(msg string) {
-	println(msg)
+fn greet(name string) {
+	println('Hello, ${name}!')
 }
 
 fn main() {
-	greet('Hello, Welcome to the world of V programming')
+	greet('Ada')
 }

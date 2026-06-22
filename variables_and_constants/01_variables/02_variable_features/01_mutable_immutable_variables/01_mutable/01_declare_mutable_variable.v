@@ -1,5 +1,5 @@
 fn main() {
-	mut i := 10
-	i = 100
-	println(i)
+	mut counter := 0
+	counter += 1
+	println(counter)
 }

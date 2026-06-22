@@ -2,6 +2,23 @@
 
 Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers everything from basic variables to advanced concurrency and standard library usage.
 
+## Repository Layout
+
+The repository is organized by topic so you can move through the material in a natural learning order:
+
+- `variables_and_constants/` — variables, mutability, constants, and comments
+- `primitive_types/` — booleans, numbers, strings, and runes
+- `control_flow/` — conditionals, pattern matching, and loops
+- `functions/` — function basics and advanced usage
+- `structs/` — custom types, fields, and methods
+- `error_handling/` — option and result patterns
+- `modules/` — organizing code into reusable modules
+- `testing/` — assertions and test suites
+- `concurrency/` and `channels/` — concurrent programming and communication
+- `json_and_orm/`, `sqlite/`, and `notes_api/` — data persistence and APIs
+
+This structure makes it easier to jump straight to the concept you want to study.
+
 > [!TIP]
 > **Interactive Viewer**: Read this guide and other tutorials as a responsive HTML site on the [Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/) (source code available in the [GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
 

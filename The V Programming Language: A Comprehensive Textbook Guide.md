@@ -8,6 +8,20 @@ Welcome to the ultimate learning guide for the V programming language! This text
 > [!TIP]
 > **Interactive Learning:** You can test any code example from this guide live in your browser using the [V Playground](https://play.vlang.io/).
 
+## Repository Structure
+
+This book is paired with a topic-based repository layout so it is easier to explore examples by concept:
+
+- `variables_and_constants/` for variables, mutability, constants, and comments
+- `primitive_types/` for booleans, numbers, strings, and runes
+- `control_flow/` for conditionals, `match`, and loops
+- `functions/` for function basics and advanced function features
+- `structs/` for custom data types and methods
+- `error_handling/`, `modules/`, and `testing/` for reliability and organization
+- `concurrency/`, `channels/`, `json_and_orm/`, `sqlite/`, and `notes_api/` for real-world applications
+
+Following this structure makes it simpler to move from small examples to larger projects.
+
 ## Quick Start: Learn V by Building Things
 
 If you are new to programming, the fastest way to learn V is to start small and build something real. Follow this sequence:
@@ -173,8 +187,11 @@ Here is a compact reference for the most common V patterns you will see in every
 ### Variables and Mutability
 
 ```v
-mut x := 1
-x = 2
+fn main() {
+	mut score := 0
+	score += 5
+	println(score)
+}
 ```
 
 - Use `mut` when a variable needs to change.
@@ -196,6 +213,10 @@ for i in 0..5 {
 ```v
 fn add(a int, b int) int {
 	return a + b
+}
+
+fn main() {
+	println(add(2, 3))
 }
 ```
 
