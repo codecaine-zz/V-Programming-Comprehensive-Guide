@@ -12425,6 +12425,75 @@ fn main() {
 
 ## Other Stdlib Updates
 
+This section is grouped into focused subtopics so you can jump quickly to the area you need.
+
+### Core Language and Type Features
+
+- [Options And Results](#options-and-results)
+- [Generics](#generics)
+- [Interfaces](#interfaces)
+- [Sum Types](#sum-types)
+- [Attributes](#attributes)
+- [Compile-Time Directives](#compile-time-directives)
+
+### Standard Library and OS Modules
+
+- [Strings Builder](#strings-builder)
+- [Os Advanced Io](#os-advanced-io)
+- [Os Operations](#os-operations)
+- [Os Process Pipe](#os-process-pipe)
+- [Os System Info](#os-system-info)
+- [Time And Stopwatch](#time-and-stopwatch)
+- [Http Client](#http-client)
+- [Regex Matching](#regex-matching)
+- [Command Line Flags](#command-line-flags)
+- [Datatypes Collections](#datatypes-collections)
+- [Gg Graphics](#gg-graphics)
+- [Command Line Arguments](#command-line-arguments)
+- [Math And Rand](#math-and-rand)
+
+### Security, Data, and Formats
+
+- [Crypto Asymmetric](#crypto-asymmetric)
+- [Crypto Entropy](#crypto-entropy)
+- [Crypto Hash](#crypto-hash)
+- [Crypto Kdf](#crypto-kdf)
+- [Crypto Mac](#crypto-mac)
+- [Crypto Symmetric](#crypto-symmetric)
+- [Log And Crypto](#log-and-crypto)
+- [Encoding Formats](#encoding-formats)
+- [Arrays Utility](#arrays-utility)
+- [Toml](#toml)
+- [Strconv](#strconv)
+- [Semver](#semver)
+- [Maps Standard Library Module (maps.v)](#maps-standard-library-module-mapsv)
+- [Archive Tar](#archive-tar)
+- [Compress Deflate](#compress-deflate)
+- [Compress Gzip](#compress-gzip)
+- [Compress Szip](#compress-szip)
+- [Compress Zlib](#compress-zlib)
+- [Compress Zstd](#compress-zstd)
+- [Hash](#hash)
+- [Bitfield](#bitfield)
+
+### Concurrency, CLI, and App Development
+
+- [Sync Concurrency](#sync-concurrency)
+- [Cli](#cli)
+- [Veb](#veb)
+- [Readline](#readline)
+- [Runtime](#runtime)
+
+### I/O, Streams, and Terminal
+
+- [Io Fs](#io-fs)
+- [Io](#io)
+- [Io Util](#io-util)
+- [Term](#term)
+- [Benchmark](#benchmark)
+- [Clipboard](#clipboard)
+- [Context](#context)
+
 ### Options And Results
 
 _File location: [language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v)_
