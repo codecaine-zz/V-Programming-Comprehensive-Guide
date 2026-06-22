@@ -31,6 +31,18 @@ V has a few ideas that are worth remembering early:
 - `option` and `result` make error handling explicit.
 - `spawn` and channels make concurrency approachable.
 
+## Why This Matters
+
+The goal is not just to memorize syntax. Each concept in this guide solves a real programming problem:
+
+- Variables and mutability help your program store and update information safely.
+- Functions let you break a program into small, reusable pieces.
+- Structs help you model real-world data such as users, files, or payments.
+- Error handling makes programs more predictable and easier to debug.
+- Concurrency helps programs do more work efficiently when tasks can run independently.
+
+When you learn a new feature, ask yourself: “What problem does this solve?” and “How would I use it in a small program?”
+
 ## Suggested Learning Path
 
 A beginner-friendly path through this guide is:
@@ -48,6 +60,77 @@ These projects will make the guide feel much more practical:
 - A number guessing game
 - A simple file organizer or text search tool
 - A notes app that stores data in JSON or SQLite
+
+## Practice Exercises
+
+Try these small exercises as you move through the guide:
+
+1. Write a program that prints your name and age.
+2. Create a function that adds two numbers and returns the result.
+3. Build a tiny program that stores a user in a struct and prints the fields.
+4. Write a loop that prints the first 10 even numbers.
+5. Use an `option` or `result` in a small helper function and handle the failure case.
+
+If you get stuck, write the smallest possible version first and test it before adding more features.
+
+## Your First Project: A Tiny CLI Greeting App
+
+A great first project is a small command-line app that asks for a name and prints a greeting. This lets you practice variables, functions, input, and output without getting overwhelmed.
+
+### Step 1: Start with a simple main function
+
+```v
+fn main() {
+	println('Hello, V!')
+}
+```
+
+### Step 2: Add a name variable
+
+```v
+fn main() {
+	name := 'Ada'
+	println('Hello, ' + name + '!')
+}
+```
+
+### Step 3: Make it interactive
+
+```v
+import os
+
+fn main() {
+	name := os.input('What is your name? ')
+	println('Hello, ' + name + '!')
+}
+```
+
+### Step 4: Improve it with a function
+
+```v
+import os
+
+fn greet(name string) string {
+	return 'Hello, ' + name + '!'
+}
+
+fn main() {
+	name := os.input('What is your name? ')
+	println(greet(name))
+}
+```
+
+### Why this project is useful
+
+This project teaches the core flow of programming in V:
+
+- write a small program
+- test it
+- add a feature
+- refactor it into functions
+- make the output clearer
+
+Once this feels easy, you can extend it with a command-line option, a loop, or a saved history file.
 
 ## What Most Programmers Want Next
 
