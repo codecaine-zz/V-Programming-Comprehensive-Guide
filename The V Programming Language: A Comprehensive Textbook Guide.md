@@ -1,12 +1,53 @@
 # The V Programming Language: A Comprehensive Textbook Guide
 
-Welcome to the ultimate learning guide for the V programming language! This textbook is structured specifically to take you from a complete beginner (zero programming experience) to an advanced V developer capable of building high-performance, concurrent, and safe systems applications.
+Welcome to the ultimate learning guide for the V programming language! This textbook is structured specifically to take you from a complete beginner (zero programming experience) to an advanced V developer capable of building high-performance, concurrent, and safe systems applications. Rather than treating V as a list of syntax rules, this guide emphasizes a practical path: learn the core ideas, run the examples, and build small projects as you go.
 
 > [!NOTE]
 > **How to read this book:** Each section starts with a clear explanation of a fundamental programming concept, followed by concrete V code examples. Every example contains the exact code from the repository, formatted in clean code blocks so you can easily copy and run them yourself.
 
 > [!TIP]
 > **Interactive Learning:** You can test any code example from this guide live in your browser using the [V Playground](https://play.vlang.io/).
+
+## Quick Start: Learn V by Building Things
+
+If you are new to programming, the fastest way to learn V is to start small and build something real. Follow this sequence:
+
+1. Install V and confirm it works with `v --version`.
+2. Create a file named `hello.v` with a tiny program:
+
+```v
+fn main() {
+	println('Hello, V!')
+}
+```
+
+3. Run it with `v run hello.v`.
+4. Build an executable with `v -o hello hello.v`.
+
+V has a few ideas that are worth remembering early:
+
+- Variables are immutable by default, so use `mut` when you need to change a value.
+- Modules help organize larger programs.
+- `option` and `result` make error handling explicit.
+- `spawn` and channels make concurrency approachable.
+
+## Suggested Learning Path
+
+A beginner-friendly path through this guide is:
+
+- Start with Chapters 1-4 to learn the basic syntax and control flow.
+- Move into functions, structs, and modules to structure your programs.
+- Practice with tests and error handling before tackling larger projects.
+- Finish with concurrency, JSON, and databases by building a small app.
+
+## Mini Projects to Try
+
+These projects will make the guide feel much more practical:
+
+- A command-line to-do list
+- A number guessing game
+- A simple file organizer or text search tool
+- A notes app that stores data in JSON or SQLite
 
 ## Table of Contents
 
@@ -64,6 +105,7 @@ This chapter introduces the core design philosophies of V. You will learn how to
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Code Comments**
+
 - [Single Line Comments](#single-line-comments)
 - [Multi Line Comments](#multi-line-comments)
 - [Programm Commented All Places](#programm-commented-all-places)
@@ -83,9 +125,7 @@ Comments are non-executable lines of text in a program that explain what the cod
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **single line comments**.
 
-
-
-``` v
+```v
 module main
 
 // greet function prints greetings to the console
@@ -111,9 +151,7 @@ Comments are non-executable lines of text in a program that explain what the cod
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **multi line comments**.
 
-
-
-``` v
+```v
 module main
 
 /*
@@ -146,9 +184,7 @@ Comments are non-executable lines of text in a program that explain what the cod
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **programm commented all places**.
 
-
-
-``` v
+```v
 module main
 
 // Space3D A struct indicating the 3 dimensional coordinate system
@@ -197,6 +233,7 @@ Variables are the basic storage units of any program. In this chapter, we explor
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Constants**
+
 - [Define Single Constant](#define-single-constant)
 - [Define Multiple Constants](#define-multiple-constants)
 - [Define Constant Of Type Struct](#define-constant-of-type-struct)
@@ -207,6 +244,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Constant Module Prefix - Helper (file1.v)](#constant-module-prefix---helper-file1v)
 
 **Variables**
+
 - [Parallel Declaration Immutable Variables](#parallel-declaration-immutable-variables)
 - [Parallel Declaration Mutable Variables](#parallel-declaration-mutable-variables)
 - [Parallel Declaration Mut And Immutable Vars](#parallel-declaration-mut-and-immutable-vars)
@@ -242,9 +280,7 @@ This example shows how to define and use a single constant.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **define single constant**.
 
-
-
-``` v
+```v
 const app_name = 'V on Wheels'
 
 fn main() {
@@ -267,9 +303,7 @@ This example shows how to declare multiple constants (integers, strings, floats)
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **define multiple constants**.
 
-
-
-``` v
+```v
 const app_name2 = 'V on Wheels'
 const max_connections = 1000
 const decimal_places = 2
@@ -296,9 +330,7 @@ Variables and constants store state in V programs. This lesson on **Define Const
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **define constant of type struct**.
 
-
-
-``` v
+```v
 module main
 
 struct Space3D {
@@ -332,9 +364,7 @@ Variables and constants store state in V programs. This lesson on **Define Const
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **define constant of type function**.
 
-
-
-``` v
+```v
 module main
 
 struct Space3D {
@@ -372,9 +402,7 @@ Variables and constants store state in V programs. This lesson on **Define Modul
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **define module level constants**.
 
-
-
-``` v
+```v
 module main
 
 const app_name = 'V on Wheels'
@@ -397,9 +425,7 @@ Variables and constants store state in V programs. This lesson on **Cannot Defin
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **cannot define constants inside functions**.
 
-
-
-``` v
+```v
 module main
 
 const app_name = 'V on Wheels'
@@ -423,9 +449,7 @@ Variables and constants store state in V programs. This lesson on **Main** cover
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **main**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -448,9 +472,7 @@ Variables and constants store state in V programs. This lesson on **File1** cove
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 const greet_count = 5
@@ -477,9 +499,7 @@ This program demonstrates declaring two variables `a` and `b` at the same time a
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **parallel declaration immutable variables**.
 
-
-
-``` v
+```v
 // immutable variables parallel assignment
 
 fn main() {
@@ -494,7 +514,7 @@ fn main() {
 
 ### Parallel Declaration Mutable Variables
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel\_\_declaration_mutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v)_
 
 ### Lesson: Parallel Declaration Mutable Variables
 
@@ -505,9 +525,7 @@ Here, we declare two mutable variables `a` and `b` at the same time using `mut`.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **parallel declaration mutable variables**.
 
-
-
-``` v
+```v
 // mutable variables parallel assignment
 
 fn main() {
@@ -533,9 +551,7 @@ Variables and constants store state in V programs. This lesson on **Parallel Dec
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **parallel declaration mut and immutable vars**.
 
-
-
-``` v
+```v
 fn main() {
 	mut msg, i := 'Hello', 32
 	println(msg) // Hello
@@ -559,9 +575,7 @@ Variables and constants store state in V programs. This lesson on **Augmented As
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **augmented assignment string**.
 
-
-
-``` v
+```v
 fn main() {
 	mut greet := 'Hi'
 	println(greet)
@@ -587,9 +601,7 @@ Variables and constants store state in V programs. This lesson on **Augmented As
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **augmented assignment integer**.
 
-
-
-``` v
+```v
 fn main() {
 	mut cnt := 10
 	println(cnt)
@@ -615,9 +627,7 @@ This example shows how to declare a mutable variable, change its value, and prin
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare mutable variable**.
 
-
-
-``` v
+```v
 fn main() {
 	mut i := 10
 	i = 100
@@ -638,9 +648,7 @@ Variables and constants store state in V programs. This lesson on **Cannot Updat
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **cannot update mutable with another type**.
 
-
-
-``` v
+```v
 fn main() {
 	mut i := 10
 	i = 100
@@ -661,9 +669,7 @@ Variables and constants store state in V programs. This lesson on **Declare Immu
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare immutable variable**.
 
-
-
-``` v
+```v
 fn main() {
 	msg := 'Hello'
 	println(msg)
@@ -685,9 +691,7 @@ This example demonstrates what happens when you try to update an immutable varia
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **cannot update immutable variables**.
 
-
-
-``` v
+```v
 fn main() {
 	msg := 'Hello'
 	msg = 'Good Day!' // throws error
@@ -707,9 +711,7 @@ Variables and constants store state in V programs. This lesson on **Declared And
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declared and assigned**.
 
-
-
-``` v
+```v
 fn main() {
 	mut i := 0
 	// declared and assigned
@@ -732,9 +734,7 @@ This example illustrates that declaring a variable without an assignment is a co
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declared and not assigned**.
 
-
-
-``` v
+```v
 fn main() {
 	mut a // throws error
 }
@@ -755,9 +755,7 @@ This example shows a declared variable that is never used.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **unused variables will be warned**.
 
-
-
-``` v
+```v
 fn main() {
 	i := 'hello' // i is not used anywhere, so warns when run in dev mode and throws error when run in prod mode
 	x := 3
@@ -781,9 +779,7 @@ These examples demonstrate that declaring variables outside of the main function
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **global variables not allowed**.
 
-
-
-``` v
+```v
 module main
 
 fn method1() {
@@ -812,9 +808,7 @@ These examples demonstrate that declaring variables outside of the main function
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **global variables not allowed**.
 
-
-
-``` v
+```v
 module main
 
 fn method1() {
@@ -843,9 +837,7 @@ Variables and constants store state in V programs. This lesson on **Variable Red
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **variable redeclaration**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -869,9 +861,7 @@ Variables and constants store state in V programs. This lesson on **Variable Sco
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **variable scope for same variable names**.
 
-
-
-``` v
+```v
 module main
 
 fn method1() {
@@ -905,9 +895,7 @@ This example shows how V rejects shadowed variable declarations.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **variable shadowing not allowed**.
 
-
-
-``` v
+```v
 module main
 
 fn scope_demo() {
@@ -936,14 +924,17 @@ V is a statically-typed language, meaning every variable has a fixed data type a
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Primitive Types Demo**
+
 - [Primitive Types Demo Code](#primitive-types-demo-code)
 
 **Boolean Type**
+
 - [Logical Operators](#logical-operators)
 - [Relational Operators](#relational-operators)
 - [Boolean Methods](#boolean-methods)
 
 **Numeric Types**
+
 - [Declaring Integers](#declaring-integers)
 - [Hex Binary Octa Notation Of Declaring Integers](#hex-binary-octa-notation-of-declaring-integers)
 - [Promoting Numeric Types](#promoting-numeric-types)
@@ -957,11 +948,13 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Size Pointer Methods](#size-pointer-methods)
 
 **Rune Type**
+
 - [Declare Rune](#declare-rune)
 - [Rune Operations With Strings](#rune-operations-with-strings)
 - [Rune Methods](#rune-methods)
 
 **String Type**
+
 - [Declare String](#declare-string)
 - [String Read Only Array Of Bytes](#string-read-only-array-of-bytes)
 - [Strings Immutable By Default](#strings-immutable-by-default)
@@ -989,6 +982,7 @@ _File location: [primitive_types/05_primitive_types_demo/primitive_types_demo.v]
 ### Lesson: Primitive Types Demo Code
 
 This comprehensive example demonstrates every primitive data type in V:
+
 - **Boolean**: `bool` (representing `true` or `false`).
 - **String**: `string` (representing an immutable array of bytes).
 - **Rune**: `rune` (representing a single Unicode code point, alias for `u32`).
@@ -1002,7 +996,7 @@ For each type, the example initializes a value and prints its value, type (using
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **primitive types demo**.
 
-``` v
+```v
 module main
 
 fn main() {
@@ -1073,9 +1067,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **logical operators**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1131,9 +1123,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **relational operators**.
 
-
-
-``` v
+```v
 module main
 
 struct Note {
@@ -1183,9 +1173,7 @@ This is useful for logging, printing, or interpolating booleans into strings.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **boolean methods**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1215,9 +1203,7 @@ This example demonstrates how to declare different integer types.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declaring integers**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1247,9 +1233,7 @@ This example demonstrates how to declare different integer types.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **hex binary octa notation of declaring integers**.
 
-
-
-``` v
+```v
 module main
 
 fn demo() {
@@ -1284,9 +1268,7 @@ This example shows how to cast (promote) smaller integer types to larger ones or
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **promoting numeric types**.
 
-
-
-``` v
+```v
 module main
 
 fn demo() {
@@ -1340,9 +1322,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **arithmetic operators**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1385,9 +1365,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **bitwise operators**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1425,9 +1403,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **shift operators**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1459,9 +1435,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **shift operator on range of integers**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1491,9 +1465,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **integer methods**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1526,9 +1498,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **float methods**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1565,9 +1535,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **u8 methods**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1630,9 +1598,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **size and pointer methods**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1679,9 +1645,7 @@ This example shows how to declare and print runes.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare rune**.
 
-
-
-``` v
+```v
 fn main() {
 	l := `a`
 	println(typeof(l).name)
@@ -1702,9 +1666,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **rune operations with strings**.
 
-
-
-``` v
+```v
 fn main() {
 	beverage := 'café'
 	s := `é`
@@ -1727,9 +1689,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **rune methods**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1784,9 +1744,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare string**.
 
-
-
-``` v
+```v
 fn main() {
 	h := 'hello'
 	println(h)
@@ -1813,9 +1771,7 @@ This example shows how to read bytes from a string and print their values.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string read only array of bytes**.
 
-
-
-``` v
+```v
 fn main() {
 	fruit := 'Orange'
 	println(typeof(fruit[0]).name)
@@ -1840,9 +1796,7 @@ This example demonstrates that strings are read-only and cannot be changed.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **strings immutable by default**.
 
-
-
-``` v
+```v
 fn main() {
 	s := 'hello'
 	// variable s is immutable
@@ -1866,9 +1820,7 @@ This example shows how to declare a mutable string and append text to it.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declaring mutable strings**.
 
-
-
-``` v
+```v
 fn main() {
 	mut msg := 'Hello Friend!'
 	msg = 'Hope you are doing good.'
@@ -1895,9 +1847,7 @@ This program shows that element mutation is strictly forbidden.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **cannot mutate string elements**.
 
-
-
-``` v
+```v
 fn main() {
 	mut greet := 'good Day'
 
@@ -1920,9 +1870,7 @@ This example demonstrates how to format strings with variable values.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string interpolation**.
 
-
-
-``` v
+```v
 fn main() {
 	a := 'coding'
 	b := 'fun'
@@ -1946,9 +1894,7 @@ This example shows how these escape sequences are rendered in the console.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **escape special characters**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -1984,9 +1930,7 @@ This is extremely useful when writing regular expressions or file paths.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare raw strings**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2008,9 +1952,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string concatenation using plus sign**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2034,9 +1976,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string concatenation using interpolation**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2055,6 +1995,7 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 ### Lesson: Extract Substring From String Literal
 
 V provides two main techniques to extract substrings from a string literal or variable:
+
 1. **The `.substr(start, end)` Method**: Takes the starting index (inclusive) and ending index (exclusive) as parameters.
 2. **Range Slicing Syntax `[start..end]`**: A clean and idiomatic syntax (similar to Go and Rust) where you specify range offsets. If the starting index is omitted (e.g. `[..end]`), it defaults to `0`. If the ending index is omitted (e.g. `[start..]`), it defaults to the length of the string.
 
@@ -2063,9 +2004,7 @@ Both techniques are demonstrated in the example below.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **extract substring from string literal**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2106,9 +2045,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **split string**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2135,9 +2072,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string to runes array**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2161,9 +2096,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **count sub string occurences**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2192,9 +2125,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **check string contains substring**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2221,9 +2152,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string contains is case sensitive**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2250,9 +2179,7 @@ In V, primitive data types are the core building blocks of the language. This se
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **common string methods**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2313,6 +2240,7 @@ Control flow determines the execution path of your code. In this chapter, we cov
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Control Flow Extras**
+
 - [Chaining Else If](#chaining-else-if)
 - [If With Goto](#if-with-goto)
 - [Cascade Match Conditions](#cascade-match-conditions)
@@ -2347,9 +2275,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **chaining else if**.
 
-
-
-``` v
+```v
 module main
 
 fn breakfast_menu(day string) {
@@ -2390,9 +2316,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **if with goto**.
 
-
-
-``` v
+```v
 module main
 
 import os
@@ -2436,9 +2360,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **cascade match conditions**.
 
-
-
-``` v
+```v
 module main
 
 fn breakfast_menu(day string) string {
@@ -2492,9 +2414,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **match as switch case**.
 
-
-
-``` v
+```v
 module main
 
 fn breakfast_menu(day string) {
@@ -2528,9 +2448,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **match pattern matching**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2557,9 +2475,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **match with enum**.
 
-
-
-``` v
+```v
 module main
 
 enum Day {
@@ -2620,9 +2536,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **match with enum and else**.
 
-
-
-``` v
+```v
 module main
 
 enum Day {
@@ -2671,9 +2585,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **bare for**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2698,9 +2610,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **break for**.
 
-
-
-``` v
+```v
 module main
 
 import os
@@ -2733,9 +2643,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **continue for**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2761,9 +2669,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for c style**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2787,9 +2693,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on array without index**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2817,9 +2721,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on arrays**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2843,9 +2745,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on maps**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2874,9 +2774,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on maps ignore key**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2906,9 +2804,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on range**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2931,9 +2827,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for with continue break and labels**.
 
-
-
-``` v
+```v
 module main
 
 import os
@@ -2971,9 +2865,7 @@ Control flow structures allow your program to decide which path of execution to 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **reverse for**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -2996,6 +2888,7 @@ Collections allow you to group multiple data items together. V provides two prim
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Arrays**
+
 - [Declare And Initialize](#declare-and-initialize)
 - [Declare Empty Array](#declare-empty-array)
 - [Declare Array With Len](#declare-array-with-len)
@@ -3025,6 +2918,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Array Methods](#array-methods)
 
 **Maps**
+
 - [Explicit Map Initialization](#explicit-map-initialization)
 - [Short Syntax Initialization Of Map](#short-syntax-initialization-of-map)
 - [Count Key Value Pairs In Map](#count-key-value-pairs-in-map)
@@ -3052,9 +2946,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare and initialize**.
 
-
-
-``` v
+```v
 fn main() {
 	mut sports := ['cricket', 'hockey', 'football']
 	println(sports)
@@ -3076,9 +2968,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare empty array**.
 
-
-
-``` v
+```v
 fn main() {
 	mut animals := []string{}
 	println(animals)
@@ -3105,9 +2995,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare array with len**.
 
-
-
-``` v
+```v
 fn main() {
 	mut i := []int{len: 3}
 	println(i)
@@ -3129,9 +3017,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare array with init and len**.
 
-
-
-``` v
+```v
 fn main() {
 	mut j := []int{len: 3, init: 1}
 	println(j)
@@ -3153,9 +3039,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare array with cap**.
 
-
-
-``` v
+```v
 fn main() {
 	mut k := []int{cap: 2}
 	println(k)
@@ -3177,9 +3061,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **working with array properties**.
 
-
-
-``` v
+```v
 fn main() {
 	mut sports := ['cricket', 'hockey', 'football']
 	println(sports.len)
@@ -3216,9 +3098,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **access array elements using index**.
 
-
-
-``` v
+```v
 fn main() {
 	mut sports := ['cricket', 'hockey', 'football']
 	s := sports[1]
@@ -3241,9 +3121,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **access array elements using slices**.
 
-
-
-``` v
+```v
 fn main() {
 	mut sports := ['cricket', 'hockey', 'football']
 	println(sports[1..3])
@@ -3265,9 +3143,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **in operator with array**.
 
-
-
-``` v
+```v
 fn main() {
 	odd := [1, 3, 5, 7]
 
@@ -3293,9 +3169,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **append array**.
 
-
-
-``` v
+```v
 fn main() {
 	mut even := [2, 4, 6]
 	even << 8
@@ -3322,9 +3196,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **define fixed size array**.
 
-
-
-``` v
+```v
 fn main() {
 	mut fix := [4]int{}
 	println(fix)
@@ -3347,9 +3219,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **update fixed size array elements**.
 
-
-
-``` v
+```v
 fn main() {
 	mut fix := [4]int{}
 	fix[1] = 33
@@ -3373,9 +3243,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **determining type of fixed array**.
 
-
-
-``` v
+```v
 fn main() {
 	mut fix := [4]int{}
 	println(typeof(fix).name) // [4]int
@@ -3397,9 +3265,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **slicing fixed size array results in ordinary array**.
 
-
-
-``` v
+```v
 fn main() {
 	mut fix := [4]int{}
 	fix[1] = 33
@@ -3425,9 +3291,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declaring multi dimensional arrays**.
 
-
-
-``` v
+```v
 fn main() {
 	mut coordinates_2d := [][]int{len: 4, init: []int{len: 2}}
 	println(typeof(coordinates_2d).name)
@@ -3452,9 +3316,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating multi dimensional arrays**.
 
-
-
-``` v
+```v
 fn main() {
 	mut coordinates_2d := [][]int{len: 4, init: []int{len: 2}}
 	println(coordinates_2d.len)
@@ -3487,9 +3349,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating multi dimensional arrays**.
 
-
-
-``` v
+```v
 fn main() {
 	mut coordinates_2d := [][]int{len: 4, init: []int{len: 2}}
 	println(coordinates_2d.len)
@@ -3518,9 +3378,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **clone array**.
 
-
-
-``` v
+```v
 fn main() {
 	r := [1, 2, 3, 4]
 	mut u := r.clone()
@@ -3544,9 +3402,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **copy array**.
 
-
-
-``` v
+```v
 fn main() {
 	r := [1, 2, 3, 4]
 	s := unsafe { r }
@@ -3572,9 +3428,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sort integer array**.
 
-
-
-``` v
+```v
 fn main() {
 	mut i := [3, 2, 8, 1]
 	i.sort()
@@ -3601,9 +3455,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sort string array**.
 
-
-
-``` v
+```v
 fn main() {
 	mut fruits := ['Apples', 'avocado', 'banana', 'Orange']
 
@@ -3631,9 +3483,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sort struct array**.
 
-
-
-``` v
+```v
 module main
 
 struct Student {
@@ -3702,9 +3552,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **filter array**.
 
-
-
-``` v
+```v
 fn main() {
 	f := [1, 2, 3, 4, 5, 6, 7, 8, 9]
 	multiples_of_3 := f.filter(it % 3 == 0)
@@ -3728,9 +3576,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **filter with anonymous funcs on array**.
 
-
-
-``` v
+```v
 fn main() {
 	fruits := ['apple', 'mango', 'water melon', 'musk melon']
 
@@ -3757,9 +3603,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **map array items**.
 
-
-
-``` v
+```v
 fn main() {
 	visitor := ['Tom', 'Ram', 'Rao']
 	res := visitor.map('Mr. ' + it)
@@ -3782,9 +3626,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **map using anonymous funcs on array**.
 
-
-
-``` v
+```v
 fn main() {
 	colors := ['red', 'blue', 'green', 'white', 'black']
 
@@ -3811,9 +3653,7 @@ These examples show how to initialize, append, clone, copy, and manipulate array
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **array methods**.
 
-
-
-``` v
+```v
 module main
 
 // A custom comparison function for sorting.
@@ -4078,9 +3918,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **explicit map initialization**.
 
-
-
-``` v
+```v
 fn main() {
 	mut books := map[string]int{}
 	books['V on Wheels'] = 320
@@ -4105,9 +3943,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **short syntax initialization of map**.
 
-
-
-``` v
+```v
 fn main() {
 	mut student_1 := {
 		'english':     90
@@ -4134,9 +3970,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **count key value pairs in map**.
 
-
-
-``` v
+```v
 fn main() {
 	mut student_1 := {
 		'english':     90
@@ -4164,9 +3998,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **value given key of map**.
 
-
-
-``` v
+```v
 fn main() {
 	mut student_1 := {
 		'english':     90
@@ -4194,9 +4026,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **value given non existent key of map**.
 
-
-
-``` v
+```v
 fn main() {
 	mut student_1 := {
 		'english':     90
@@ -4224,9 +4054,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **handling missing keys in map**.
 
-
-
-``` v
+```v
 fn main() {
 	mut student_1 := {
 		'english':     90
@@ -4255,9 +4083,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **update value given a key in map**.
 
-
-
-``` v
+```v
 fn main() {
 	mut student_1 := {
 		'english':     90
@@ -4285,9 +4111,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **delete key value pair from map**.
 
-
-
-``` v
+```v
 fn main() {
 	mut student_1 := {
 		'english':     90
@@ -4317,9 +4141,7 @@ These examples cover how to initialize maps, look up keys, add or delete entries
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **map methods**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -4392,6 +4214,7 @@ Functions allow you to break your program into reusable blocks of logic. This ch
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Advanced Function Features**
+
 - [Function Returns Value Example 1](#function-returns-value-example-1)
 - [Function Returns Value Example 2](#function-returns-value-example-2)
 - [Funtions Without Return Type](#funtions-without-return-type)
@@ -4415,6 +4238,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Functions As Elements Of Array Or Map](#functions-as-elements-of-array-or-map)
 
 **Function Extras**
+
 - [Hello](#hello)
 - [Basic Functions](#basic-functions)
 - [Anonymous Functions](#anonymous-functions)
@@ -4432,6 +4256,7 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 ### Lesson: Function Returns Value Example 1
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4442,9 +4267,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function returns value example 1**.
 
-
-
-``` v
+```v
 fn sum(a int, b int) int {
 	return a + b
 }
@@ -4463,6 +4286,7 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 ### Lesson: Function Returns Value Example 2
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4473,9 +4297,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function returns value example 2**.
 
-
-
-``` v
+```v
 fn say_hello() string {
 	return 'Hello!'
 }
@@ -4497,6 +4319,7 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 ### Lesson: Funtions Without Return Type
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4507,9 +4330,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **funtions without return type**.
 
-
-
-``` v
+```v
 fn console_greeter() {
 	println('Hello!')
 }
@@ -4529,6 +4350,7 @@ _File location: [functions/02_understanding_funtion_features/02_function_and_inp
 ### Lesson: Function With Input Arguments
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4539,9 +4361,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with input arguments**.
 
-
-
-``` v
+```v
 fn add(a int, b int) int {
 	return a + b
 }
@@ -4562,6 +4382,7 @@ _File location: [functions/02_understanding_funtion_features/03_function_return_
 ### Lesson: Function Return Multiple Values
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4572,9 +4393,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function return multiple values**.
 
-
-
-``` v
+```v
 fn greet_and_message_length(name string) (string, int) {
 	mut greeting := 'Hello, ' + name + '!'
 	return greeting, greeting.len
@@ -4596,6 +4415,7 @@ _File location: [functions/02_understanding_funtion_features/04_ignore_function_
 ### Lesson: Ignore Function Return Value
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4606,9 +4426,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **ignore function return value**.
 
-
-
-``` v
+```v
 fn greet_and_message_length(name string) (string, int) {
 	mut greeting := 'Hello, ' + name + '!'
 	return greeting, greeting.len
@@ -4629,6 +4447,7 @@ _File location: [functions/02_understanding_funtion_features/05_function_calls_o
 ### Lesson: Function Calls Other Function
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4639,9 +4458,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function calls other function**.
 
-
-
-``` v
+```v
 fn greet(p string) string {
 	return 'Hello, ${p}!'
 }
@@ -4668,6 +4485,7 @@ _File location: [functions/02_understanding_funtion_features/06_allowed_function
 ### Lesson: Example 1
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4678,9 +4496,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **example 1**.
 
-
-
-``` v
+```v
 fn increment_array_items(arr []int, inc int) []int {
 	mut tmp := arr.clone()
 	for mut i in tmp {
@@ -4708,6 +4524,7 @@ _File location: [functions/02_understanding_funtion_features/06_allowed_function
 ### Lesson: Example 2
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4718,9 +4535,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **example 2**.
 
-
-
-``` v
+```v
 fn increment_array_items(mut arr []int, inc int) {
 	for mut i in arr {
 		i += inc
@@ -4744,6 +4559,7 @@ _File location: [functions/02_understanding_funtion_features/07_functions_in_v_s
 ### Lesson: Error Script Functions
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4751,9 +4567,7 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-
-
-``` v
+```v
 #!/usr/local/bin/v run
 
 cnt := 2
@@ -4776,6 +4590,7 @@ _File location: [functions/02_understanding_funtion_features/07_functions_in_v_s
 ### Lesson: Script Functions
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4783,9 +4598,7 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-
-
-``` v
+```v
 #!/usr/local/bin/v run
 
 fn log(msg string) {
@@ -4808,6 +4621,7 @@ _File location: [functions/02_understanding_funtion_features/08_functions_and_mo
 ### Lesson: Functions Module Variables - Main
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4818,9 +4632,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **main**.
 
-
-
-``` v
+```v
 // file: main.v
 module main
 
@@ -4841,6 +4653,7 @@ _File location: [functions/02_understanding_funtion_features/08_functions_and_mo
 ### Lesson: Mymod
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4851,9 +4664,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **mymod**.
 
-
-
-``` v
+```v
 // file: mymod/mymod.v
 module mymod
 
@@ -4871,6 +4682,7 @@ _File location: [functions/02_understanding_funtion_features/09_functions_with_o
 ### Lesson: Functions With Optional Return Types Example 1
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4881,9 +4693,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions with optional return types example 1**.
 
-
-
-``` v
+```v
 module main
 
 fn is_teen(age int) ?string {
@@ -4911,6 +4721,7 @@ _File location: [functions/02_understanding_funtion_features/09_functions_with_o
 ### Lesson: Function With Optional Return Type Example 2
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4921,9 +4732,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with optional return type example 2**.
 
-
-
-``` v
+```v
 module main
 
 fn is_teen(age int) ?string {
@@ -4951,6 +4760,7 @@ _File location: [functions/02_understanding_funtion_features/10_functions_marked
 ### Lesson: Mod1
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -4961,9 +4771,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **mod1**.
 
-
-
-``` v
+```v
 // file: mod1/mod1.v
 module mod1
 
@@ -4990,6 +4798,7 @@ _File location: [functions/02_understanding_funtion_features/10_functions_marked
 ### Lesson: Public Function Demo1
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -5000,9 +4809,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **public function demo1**.
 
-
-
-``` v
+```v
 // file: public_function_demo1.v
 import mod1
 
@@ -5021,6 +4828,7 @@ _File location: [functions/02_understanding_funtion_features/10_functions_marked
 ### Lesson: Public Function Demo2
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -5031,9 +4839,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **public function demo2**.
 
-
-
-``` v
+```v
 // file: public_function_demo2.v
 import mod1
 
@@ -5052,6 +4858,7 @@ _File location: [functions/02_understanding_funtion_features/10_functions_marked
 ### Lesson: Public Function Demo3
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -5062,9 +4869,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **public function demo3**.
 
-
-
-``` v
+```v
 // file: public_function_demo3.v
 import mod1
 
@@ -5083,6 +4888,7 @@ _File location: [functions/02_understanding_funtion_features/11_functions_with_d
 ### Lesson: Function With Defer Block
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -5093,9 +4899,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with defer block**.
 
-
-
-``` v
+```v
 module main
 
 fn void_func_defer() {
@@ -5122,6 +4926,7 @@ _File location: [functions/02_understanding_funtion_features/12_functions_as_ele
 ### Lesson: Functions As Elements Of Array Or Map
 
 V functions support several advanced features:
+
 - **Multiple Return Values**: A function can return more than one value (often a result and an error).
 - **Blank Identifier (`_`)**: Used to discard unwanted return values.
 - **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
@@ -5132,9 +4937,7 @@ These examples illustrate these powerful concepts.
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions as elements of array or map**.
 
-
-
-``` v
+```v
 module main
 
 fn adder(i int, j int) int {
@@ -5187,9 +4990,7 @@ Functions are reusable blocks of logic. This lesson on **Hello** explains functi
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **hello**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -5210,9 +5011,7 @@ Functions are reusable blocks of logic. This lesson on **Basic Functions** expla
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **basic functions**.
 
-
-
-``` v
+```v
 fn greet(msg string) {
 	println(msg)
 }
@@ -5235,9 +5034,7 @@ Functions are reusable blocks of logic. This lesson on **Anonymous Functions** e
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **anonymous functions**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -5262,9 +5059,7 @@ Functions are reusable blocks of logic. This lesson on **Functions As Input Argu
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions as input arguments**.
 
-
-
-``` v
+```v
 module main
 
 fn greet_morning() string {
@@ -5310,9 +5105,7 @@ Functions are reusable blocks of logic. This lesson on **Functions That Return O
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions that return other functions**.
 
-
-
-``` v
+```v
 module main
 
 enum Operation {
@@ -5374,6 +5167,7 @@ Structs are user-defined data structures that allow you to group related fields 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Struct Basics & Fields**
+
 - [Defining Struct](#defining-struct)
 - [Initialize Struct Example 1](#initialize-struct-example-1)
 - [Initialize Struct Example 2](#initialize-struct-example-2)
@@ -5410,9 +5204,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **defining struct**.
 
-
-
-``` v
+```v
 struct Note {
 	id      int
 	message string
@@ -5437,9 +5229,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **initialize struct example 1**.
 
-
-
-``` v
+```v
 struct Note {
 	id      int
 	message string
@@ -5467,9 +5257,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **initialize struct example 2**.
 
-
-
-``` v
+```v
 struct Note {
 	id      int
 	message string
@@ -5501,9 +5289,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **access struct fields**.
 
-
-
-``` v
+```v
 struct Note {
 	id      int
 	message string
@@ -5530,9 +5316,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **heap structs**.
 
-
-
-``` v
+```v
 struct Note {
 	id      int
 	message string
@@ -5559,9 +5343,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating immutable struct variable throws error**.
 
-
-
-``` v
+```v
 module main
 
 struct Note {
@@ -5593,9 +5375,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating mutable fields of struct**.
 
-
-
-``` v
+```v
 module main
 
 struct Note {
@@ -5630,9 +5410,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating immutable fields throws error**.
 
-
-
-``` v
+```v
 module main
 
 struct Note {
@@ -5662,9 +5440,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating struct with unspecified fields are zeroed**.
 
-
-
-``` v
+```v
 module main
 
 struct Note {
@@ -5709,9 +5485,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **struct with multiple fields**.
 
-
-
-``` v
+```v
 struct Note {
 	id int
 mut:
@@ -5738,9 +5512,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **grouping struct fields based on access modifiers**.
 
-
-
-``` v
+```v
 pub struct Note {
 pub:
 	id int
@@ -5768,9 +5540,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **required fields example 01**.
 
-
-
-``` v
+```v
 pub struct Note {
 pub:
 	id int
@@ -5803,9 +5573,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **required fields example 02**.
 
-
-
-``` v
+```v
 module main
 
 pub struct Note {
@@ -5841,9 +5609,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **struct fields with default values**.
 
-
-
-``` v
+```v
 import time
 
 pub struct Note {
@@ -5880,9 +5646,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **methods for struct**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -5931,9 +5695,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **adding struct as struct field**.
 
-
-
-``` v
+```v
 import time
 
 // NoteTimeInfo is a struct to store time info of Note
@@ -5979,9 +5741,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating fields of type struct**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -6037,9 +5797,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **struct as trailing literal arguments to function**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -6099,6 +5857,7 @@ V has no exceptions. Instead, it handles errors using **Option** and **Result** 
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Option & Result Types**
+
 - [Error Handling](#error-handling)
 
 ---
@@ -6112,6 +5871,7 @@ _File location: [error_handling/error_handling.v](file:///Users/codecaine/V-Prog
 In many programming languages, errors are handled using exceptions (with `try`, `catch`, and `throw` blocks). Exception blocks can make code hard to read and trace because control flow can jump unpredictably.
 
 V takes a different approach. **V does not have exceptions.** Instead, V handles errors explicitly using two main concepts:
+
 - **Option Types (`?T`)**: Used when a value might simply be missing (like searching for an item that isn't in a list).
 - **Result Types (`!T`)**: Used when an operation might actually fail with a specific error (like division by zero or a database timeout).
 
@@ -6119,7 +5879,7 @@ By forcing you to handle these outcomes explicitly, V makes your code safer and 
 
 ---
 
-``` v
+```v
 module main
 
 // ==========================================
@@ -6169,7 +5929,7 @@ fn find_item(id int) ?string {
 // find_item_wrapper demonstrates Option propagation with the `?` suffix.
 fn find_item_wrapper(id int) ?string {
 	// If find_item returns none, the execution stops here and propagates none up.
-	item := find_item(id)? 
+	item := find_item(id)?
 	return 'Found: ' + item
 }
 
@@ -6210,7 +5970,7 @@ fn query_db(query string, success bool) !string {
 // calculate_and_format demonstrates Result propagation using the `!` operator.
 fn calculate_and_format(a f64, b f64) !string {
 	// The `!` suffix propagates the error to the caller if divide fails.
-	res := divide(a, b)! 
+	res := divide(a, b)!
 	return 'Result is ${res:.2f}'
 }
 
@@ -6224,11 +5984,11 @@ fn force_panic() {
 
 fn main() {
 	println('=== 1. Option Types (?T) ===')
-	
+
 	// Option Handling: Option unwrapping using `or` block
 	item_1 := find_item(42) or { 'Default Item' }
 	println('Item 1 (with 42): ${item_1}')
-	
+
 	item_2 := find_item(99) or { 'Default Item' }
 	println('Item 2 (with 99): ${item_2}')
 
@@ -6269,7 +6029,7 @@ fn main() {
 	// We use `''` (empty string) here as the fallback value to satisfy this type requirement.
 	fetch_data(false) or {
 		if err is CustomError {
-			// Inside this block, `err` is smart-cast to CustomError automatically, 
+			// Inside this block, `err` is smart-cast to CustomError automatically,
 			// allowing direct access to custom fields like `code`.
 			println('Caught CustomError! Message: "${err.msg()}", Code: ${err.code}')
 		} else {
@@ -6311,6 +6071,7 @@ Modules help organize larger codebases. In this chapter, you will learn how to c
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Modules & Project Structure**
+
 - [Creating a Simple V Project - Main (modulebasics.v)](#creating-a-simple-v-project---main-modulebasicsv)
 - [Creating a Module - Helper (file1.v)](#creating-a-module---helper-file1v)
 - [Creating a Module - Main (modulebasics.v)](#creating-a-module---main-modulebasicsv)
@@ -6341,6 +6102,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Accessing Module Structs - Main (modulebasics.v)](#accessing-module-structs---main-modulebasicsv)
 
 **Installing External Packages**
+
 - [How to Install Packages with vpm](#how-to-install-packages-with-vpm)
 - [Common vpm Commands](#common-vpm-commands)
 - [Importing and Using External Packages](#importing-and-using-external-packages)
@@ -6366,9 +6128,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -6389,9 +6149,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() {
@@ -6412,9 +6170,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -6435,9 +6191,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() {
@@ -6458,9 +6212,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -6483,9 +6235,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() {
@@ -6506,9 +6256,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -6532,9 +6280,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() {
@@ -6555,9 +6301,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file2**.
 
-
-
-``` v
+```v
 module mod1
 
 fn hello2() {
@@ -6578,9 +6322,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -6604,9 +6346,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() {
@@ -6627,9 +6367,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file2**.
 
-
-
-``` v
+```v
 fn hello2() {
 	println('Hello 2 from mod1!')
 }
@@ -6651,9 +6389,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -6677,9 +6413,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() {
@@ -6702,9 +6436,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file2**.
 
-
-
-``` v
+```v
 module mod1
 
 fn hello2() {
@@ -6725,9 +6457,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -6750,9 +6480,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() {
@@ -6773,9 +6501,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file2**.
 
-
-
-``` v
+```v
 module mod1
 
 fn hello2() {
@@ -6796,9 +6522,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -6822,9 +6546,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module m1
 
 import m2
@@ -6849,9 +6571,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module m2
 
 import m1
@@ -6876,9 +6596,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import m1
@@ -6903,9 +6621,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() {
@@ -6930,9 +6646,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -6955,9 +6669,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub const greet_msg = 'Greeting from mod1!'
@@ -6976,9 +6688,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -7003,9 +6713,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 import time
@@ -7044,9 +6752,7 @@ These examples demonstrate defining structs, updating fields, required fields, d
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -7119,15 +6825,16 @@ fn main() {
 _File location: [modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v)_
 
 This example demonstrates how to use the external `xiusin.vredis` client package in a console application and demonstrates key namespacing with the custom `NamespacedRedis` helper. It covers:
-*   Establishing a connection and handling errors gracefully.
-*   Basic String operations (`set`, `get`, `incr`, `expire`, `ttl`, `del`).
-*   List operations (`rpush`, `llen`, `lrange`, `lpop`).
-*   Hash operations (`hset`, `hget`, `hgetall`).
-*   Set operations (`sadd`, `sismember`, `smembers`).
-*   Namespaced Redis helper operations using `NamespacedRedis`.
-*   Cleaning up created keys on application exit.
 
-``` v
+- Establishing a connection and handling errors gracefully.
+- Basic String operations (`set`, `get`, `incr`, `expire`, `ttl`, `del`).
+- List operations (`rpush`, `llen`, `lrange`, `lpop`).
+- Hash operations (`hset`, `hget`, `hgetall`).
+- Set operations (`sadd`, `sismember`, `smembers`).
+- Namespaced Redis helper operations using `NamespacedRedis`.
+- Cleaning up created keys on application exit.
+
+```v
 module main
 
 import xiusin.vredis
@@ -7269,7 +6976,7 @@ _File location: [modules/11_install_external_packages_and_webview/redis_console_
 
 This helper provides a namespaced wrapper struct `NamespacedRedis` that automatically prefixes all Redis keys with a given namespace (e.g. `namespace:key`). This is a great pattern for keeping keys organized and avoiding collisions between multiple apps/environments.
 
-``` v
+```v
 module main
 
 import xiusin.vredis
@@ -7404,9 +7111,7 @@ _File location: [modules/11_install_external_packages_and_webview/redis_namespac
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Redis Helper** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-
-
-``` v
+```v
 module main
 
 import xiusin.vredis
@@ -7537,7 +7242,7 @@ _File location: [modules/11_install_external_packages_and_webview/redis_namespac
 
 This example provides an easy, dedicated demo showing how to use the `NamespacedRedis` helper wrapper to manage multiple independent namespaces (like `cache` and `session`) over a single underlying Redis connection without key collisions.
 
-``` v
+```v
 module main
 
 import xiusin.vredis
@@ -7613,9 +7318,7 @@ _File location: [modules/11_install_external_packages_and_webview/redis_webview_
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Redis Webview Demo** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-
-
-``` v
+```v
 module main
 
 import json
@@ -7668,7 +7371,7 @@ fn redis_connect_status(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	mut version := 'Unknown'
 	info := client.send('INFO', 'server') or {
 		count := client.dbsize() or { 0 }
@@ -7693,9 +7396,9 @@ fn redis_connect_status(e &webview.Event) !string {
 			}
 		}
 	}
-	
+
 	count := client.dbsize() or { 0 }
-	
+
 	status_info := ConnectStatus{
 		status: 'connected'
 		host: '127.0.0.1'
@@ -7711,7 +7414,7 @@ fn redis_get_keys(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	keys := client.keys('*') or { []string{} }
 	mut items := []KeyInfo{}
 	for key in keys {
@@ -7731,11 +7434,11 @@ fn redis_get_key_detail(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	key := e.get_arg[string](0)!
 	t := client.@type(key)!
 	ttl := client.ttl(key)!
-	
+
 	mut detail := KeyDetail{
 		name: key
 		@type: t
@@ -7744,7 +7447,7 @@ fn redis_get_key_detail(e &webview.Event) !string {
 		list_val: []string{}
 		hash_val: map[string]string{}
 	}
-	
+
 	match t {
 		'string' {
 			detail.value = client.get(key) or { '' }
@@ -7768,11 +7471,11 @@ fn redis_set_string(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	key := e.get_arg[string](0)!
 	val := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
-	
+
 	client.set(key, val)!
 	if ttl > 0 {
 		client.expire(key, ttl)!
@@ -7787,11 +7490,11 @@ fn redis_set_list(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	key := e.get_arg[string](0)!
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
-	
+
 	vals := json.decode([]string, vals_json)!
 	client.del(key) or {}
 	for val in vals {
@@ -7810,11 +7513,11 @@ fn redis_set_hash(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	key := e.get_arg[string](0)!
 	hash_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
-	
+
 	fvs := json.decode(map[string]string, hash_json)!
 	client.del(key) or {}
 	for field, val in fvs {
@@ -7833,11 +7536,11 @@ fn redis_set_set(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	key := e.get_arg[string](0)!
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
-	
+
 	vals := json.decode([]string, vals_json)!
 	client.del(key) or {}
 	for val in vals {
@@ -7856,7 +7559,7 @@ fn redis_del_key(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	key := e.get_arg[string](0)!
 	client.del(key)!
 	return 'ok'
@@ -7867,7 +7570,7 @@ fn redis_flush_db(e &webview.Event) !string {
 	defer {
 		client.close() or {}
 	}
-	
+
 	client.flushdb()!
 	return 'ok'
 }
@@ -7909,9 +7612,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **installing external packages and webview bindings**.
 
-
-
-``` v
+```v
 module main
 
 import ttytm.webview
@@ -8047,6 +7748,7 @@ V has testing built directly into the compiler. This chapter explains how to wri
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Assertions & Unit Testing**
+
 - [Assert Demo](#assert-demo)
 - [Simple Test - Before (demo_test.v)](#simple-test---before-demo_testv)
 - [Simple Test - After (demo_test.v)](#simple-test---after-demo_testv)
@@ -8076,9 +7778,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **assert demo**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -8106,9 +7806,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **demo test**.
 
-
-
-``` v
+```v
 fn test_first() {
 	assert 2 != 2
 }
@@ -8129,9 +7827,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **demo test**.
 
-
-
-``` v
+```v
 fn test_first() {
 	assert 2 == 2
 }
@@ -8152,9 +7848,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **testsuite demo test**.
 
-
-
-``` v
+```v
 import os
 
 fn testsuite_begin() {
@@ -8197,9 +7891,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **demo test**.
 
-
-
-``` v
+```v
 fn greet(name string) !string {
 	if name != '' {
 		return 'Hello $name!'
@@ -8237,9 +7929,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **greet**.
 
-
-
-``` v
+```v
 module main
 
 fn greet(name string) string {
@@ -8267,9 +7957,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **greet test**.
 
-
-
-``` v
+```v
 module main
 
 fn test_greet() {
@@ -8301,9 +7989,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **main test**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -8336,9 +8022,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **file1**.
 
-
-
-``` v
+```v
 module mod1
 
 pub fn hello() string {
@@ -8361,9 +8045,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **mod1 test**.
 
-
-
-``` v
+```v
 module mod1
 
 fn test_hello() {
@@ -8393,9 +8075,7 @@ These examples cover writing simple assertions, test suites, and testing functio
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **modulebasics**.
 
-
-
-``` v
+```v
 module main
 
 import mod1
@@ -8417,6 +8097,7 @@ V makes concurrent programming easy and safe. This chapter covers spawning threa
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Channels & Communication**
+
 - [Unbuffered Channel](#unbuffered-channel)
 - [Define Buffered Channel (buffered_channel.v)](#define-buffered-channel-buffered_channelv)
 - [Push Buffered](#push-buffered)
@@ -8441,6 +8122,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Channel Select](#channel-select)
 
 **V-Routines & Concurrency**
+
 - [Stopwatch Demo](#stopwatch-demo)
 - [Spawn Void Function](#spawn-void-function)
 - [Waiting On Concurrent Thread](#waiting-on-concurrent-thread)
@@ -8468,9 +8150,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **unbuffered channel**.
 
-
-
-``` v
+```v
 fn main() {
 	uc := chan int{}
 	println(uc.cap) // 0
@@ -8493,9 +8173,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **buffered channel**.
 
-
-
-``` v
+```v
 fn main() {
 	bc := chan string{cap: 2}
 	println(bc.cap)
@@ -8518,9 +8196,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **push buffered**.
 
-
-
-``` v
+```v
 fn main() {
 	ch := chan int{cap: 1}
 	ch <- 51
@@ -8543,9 +8219,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **push unbuffered**.
 
-
-
-``` v
+```v
 fn main() {
 	ch := chan int{}
 	ch <- 51
@@ -8568,9 +8242,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **pop**.
 
-
-
-``` v
+```v
 fn main() {
 	ch := chan int{cap: 1}
 	ch <- 51
@@ -8598,9 +8270,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **channel properties**.
 
-
-
-``` v
+```v
 fn main() {
 	b := chan string{cap: 2}
 	b <- 'hello'
@@ -8625,9 +8295,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **try push unbuffered**.
 
-
-
-``` v
+```v
 fn main() {
 	v := 'hi'
 	ch := chan string{} // unbuffered channel
@@ -8651,9 +8319,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **try push buffered**.
 
-
-
-``` v
+```v
 fn main() {
 	x := 'hello'
 	ch := chan string{cap: 2}
@@ -8684,9 +8350,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **try pop**.
 
-
-
-``` v
+```v
 fn main() {
 	ch := chan int{cap: 1}
 	mut x, mut y := 0, 0
@@ -8713,9 +8377,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **close**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -8752,9 +8414,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **defer close**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -8793,9 +8453,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **blocking channels**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -8825,9 +8483,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **dealing before**.
 
-
-
-``` v
+```v
 module main
 
 fn receiver(ch chan int) {
@@ -8860,9 +8516,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **dealing after**.
 
-
-
-``` v
+```v
 module main
 
 fn receiver(ch chan int) {
@@ -8896,9 +8550,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sync before**.
 
-
-
-``` v
+```v
 module main
 
 const count = 4
@@ -8941,9 +8593,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sync after**.
 
-
-
-``` v
+```v
 module main
 
 const count = 4
@@ -8988,9 +8638,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **buffered channel**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -9020,9 +8668,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **coroutines communication**.
 
-
-
-``` v
+```v
 module main
 
 fn sender(ch chan int) {
@@ -9064,9 +8710,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sync before**.
 
-
-
-``` v
+```v
 module main
 
 const count = 4
@@ -9110,9 +8754,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sync after**.
 
-
-
-``` v
+```v
 module main
 
 const count = 4
@@ -9158,9 +8800,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **channel select before**.
 
-
-
-``` v
+```v
 module main
 
 fn process1(ch chan int) {
@@ -9212,9 +8852,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **channel select**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -9286,9 +8924,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **stopwatch demo**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -9318,9 +8954,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **spawn void function**.
 
-
-
-``` v
+```v
 module main
 
 fn greet() {
@@ -9348,9 +8982,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **waiting on concurrent thread**.
 
-
-
-``` v
+```v
 module main
 
 fn greet() {
@@ -9379,9 +9011,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **running multiple tasks in sequence**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -9428,9 +9058,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **spawning multiple tasks concurrently**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -9479,9 +9107,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions with return values**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -9538,9 +9164,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **spawn anonymous funcs without input args**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -9568,9 +9192,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **spawn anonymous funcs with input args**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -9602,9 +9224,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sharing data main and concurrent tasks**.
 
-
-
-``` v
+```v
 module main
 
 import rand
@@ -9665,11 +9285,13 @@ Most applications need to work with databases or API payloads. This chapter teac
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Case Study: Notes API**
+
 - [Notes API Case Study - Main (main.v)](#notes-api-case-study---main-mainv)
 - [Note](#note)
 - [Util](#util)
 
 **JSON & ORM**
+
 - [Decode](#decode)
 - [Encode](#encode)
 - [Json To From File](#json-to-from-file)
@@ -9679,9 +9301,11 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Orm Demo](#orm-demo)
 
 **SQLite Integration**
+
 - [Sqlite](#sqlite)
 
 **Sqlite Raw Crud**
+
 - [Sqlite Raw Crud](#sqlite-raw-crud)
 
 ---
@@ -9699,9 +9323,7 @@ This is a complete, real-world case study of a REST API built using the V web fr
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **main**.
 
-
-
-``` v
+```v
 module main
 
 import veb
@@ -9746,9 +9368,7 @@ This is a complete, real-world case study of a REST API built using the V web fr
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **note**.
 
-
-
-``` v
+```v
 module main
 
 import json
@@ -9917,9 +9537,7 @@ This is a complete, real-world case study of a REST API built using the V web fr
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **util**.
 
-
-
-``` v
+```v
 module main
 
 import json
@@ -9958,9 +9576,7 @@ Databases and JSON handling are essential parts of backend development. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **decode**.
 
-
-
-``` v
+```v
 import json
 
 struct Note {
@@ -9991,9 +9607,7 @@ Databases and JSON handling are essential parts of backend development. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **encode**.
 
-
-
-``` v
+```v
 import json
 
 struct Note {
@@ -10022,7 +9636,7 @@ _File location: [json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v](
 
 This example demonstrates how to encode an object to JSON, write it to a file, read it back, and decode it into a V struct.
 
-``` v
+```v
 module main
 
 import json
@@ -10085,7 +9699,7 @@ _File location: [json_and_orm/01_json/04_json_array_of_objects/json_array_of_obj
 
 This example demonstrates how to serialize and deserialize an array of objects (structs) to and from JSON, and how to write/read them using the filesystem.
 
-``` v
+```v
 module main
 
 import json
@@ -10158,7 +9772,7 @@ _File location: [json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_
 
 This example demonstrates how to serialize a map structure (`map[string]int`) into a JSON string, write it to a file, read it back, and deserialize it back into a map in V.
 
-``` v
+```v
 module main
 
 import json
@@ -10217,10 +9831,11 @@ fn main() {
 _File location: [json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v)_
 
 This example demonstrates two different methods for reading and writing arrays to/from files in V:
+
 1. **JSON Serialization**: Best for primitive numeric/boolean arrays (e.g. `[]int`).
 2. **Raw Line-by-Line (Plain Text)**: Best for string lists (e.g. `[]string`), joining with newlines on write and using V's standard `os.read_lines()` on read.
 
-``` v
+```v
 module main
 
 import json
@@ -10278,7 +9893,7 @@ fn main() {
 		return
 	}
 	println('Read string array: ${read_fruits}')
-	
+
 	// Clean up created files
 	os.rm(text_file_path) or {}
 }
@@ -10297,9 +9912,7 @@ Databases and JSON handling are essential parts of backend development. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **orm demo**.
 
-
-
-``` v
+```v
 module main
 
 import db.sqlite
@@ -10410,9 +10023,7 @@ _File location: [sqlite/sqlite.v](file:///Users/codecaine/V-Programming-Comprehe
 
 Databases and JSON handling are essential parts of backend development. This lesson on **Sqlite** details V's built-in JSON utilities or its built-in database ORM.
 
-
-
-``` v
+```v
 module sqlite
 
 import db.sqlite as dbsqlite
@@ -10433,6 +10044,7 @@ _File location: [json_and_orm/03_sqlite_raw/sqlite_raw_crud.v](file:///Users/cod
 This example demonstrates how to connect to a SQLite database and execute raw SQL queries securely using parameterized queries (`db.exec_param_many`) to prevent SQL Injection attacks.
 
 It illustrates:
+
 1. Connecting with `sqlite.connect`.
 2. Executing statements that do not return tabular results (like DDL/DML) via `db.exec`.
 3. Executing parameterized DML queries (INSERT, SELECT, UPDATE, DELETE) using `db.exec_param_many` and `?` placeholders.
@@ -10443,7 +10055,7 @@ It illustrates:
 > [!TIP]
 > **SQL Injection Prevention:** Avoid raw string interpolation (e.g. `"$name"`) inside raw queries. Using `db.exec_param_many` forces parameter binding, rendering the query secure from malicious inputs.
 
-``` v
+```v
 module main
 
 import db.sqlite
@@ -10470,7 +10082,7 @@ fn main() {
 
 	// 3. Create (Insert Records using Parameterized Queries)
 	println('\n--- CREATE: Inserting records securely ---')
-	
+
 	// SAFE APPROACH: Use `exec_param_many` with '?' placeholders to prevent SQL Injection.
 	// Parameters are passed as an array of strings: []string
 	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Alice', 'alice@example.com', '30']) or {
@@ -10487,7 +10099,7 @@ fn main() {
 
 	// 4. Read (Select Records using Parameterized Queries)
 	println('\n--- READ: Querying records securely ---')
-	
+
 	// Querying with parameters: only retrieve users older than 20
 	rows := db.exec_param_many('SELECT id, name, email, age FROM users WHERE age > ?;', ['20']) or {
 		println('Select failed: ${err}')
@@ -10550,9 +10162,11 @@ This chapter highlights the power of V's standard library and advanced integrati
 Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
 
 **Inline Assembly & C Interop**
+
 - [Inline Assembly](#inline-assembly)
 
 **Networking (TCP, UDP, SSL, WebSockets)**
+
 - [Net Urllib](#net-urllib)
 - [Net Websocket](#net-websocket)
 - [Websocket Persistent](#websocket-persistent)
@@ -10569,6 +10183,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Unix Persistent](#unix-persistent)
 
 **Other Stdlib Updates**
+
 - [Options And Results](#options-and-results)
 - [Generics](#generics)
 - [Interfaces](#interfaces)
@@ -10623,9 +10238,11 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Runtime](#runtime)
 
 **Strings.Lorem Helper**
+
 - [Strings Lorem](#strings-lorem)
 
 **WebAssembly Compilation**
+
 - [Compiling V Source to WebAssembly](#compiling-v-source-to-webassembly)
 - [Programmatic WASM Generation](#programmatic-wasm-generation)
 
@@ -10640,15 +10257,16 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/06_inlin
 V supports inline assembly block definitions using the `asm` keyword, allowing developers to execute architecture-specific instructions directly from V code. It integrates directly with V variables by mapping them to inputs and outputs using register constraints.
 
 This example demonstrates how to:
+
 1. Write inline assembly blocks targeted at specific architectures (e.g. `arm64` and `amd64`).
 2. Utilize V's compile-time conditional block `$if` to compile architecture-specific assembly blocks.
 3. Map V variables to assembly inputs and outputs using semicolon constraint annotations (e.g. `; +r (res)`).
 
-``` v
+```v
 module main
 
 // add_five adds 5 to the given integer using inline assembly.
-// It uses compile-time conditional checks ($if) to select the correct 
+// It uses compile-time conditional checks ($if) to select the correct
 // assembly instructions depending on the target CPU architecture.
 fn add_five(val int) int {
 	mut res := val
@@ -10725,7 +10343,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/23_net_urllib/n
 
 This example demonstrates parsing URLs into components, escaping and unescaping query parameters, and encoding query parameters using the `net.urllib` module.
 
-``` v
+```v
 module main
 
 import net.urllib
@@ -10736,7 +10354,7 @@ fn main() {
 	// 1. Parsing a URL
 	raw_url := 'https://user:pass@vlang.io:8080/docs/stdlib?lang=v&version=0.5.1#intro'
 	println('Parsing URL: ${raw_url}')
-	
+
 	u := urllib.parse(raw_url) or {
 		println('Failed to parse URL: ${err}')
 		return
@@ -10786,7 +10404,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/24_net_websocke
 
 This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly using the `net.websocket` module.
 
-``` v
+```v
 module main
 
 import net.websocket
@@ -10800,7 +10418,7 @@ fn main() {
 
 	// 1. Initialize and run a local WebSocket server in a separate thread
 	mut ws_server := websocket.new_server(.ip, port, '/')
-	
+
 	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
 		println('Server: Client connecting from ${s.client_key}')
 		return true
@@ -10810,7 +10428,7 @@ fn main() {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
 			println('Server received text: "${payload}"')
-			
+
 			// Echo message back to client
 			ws.write_string('Echo: ' + payload)!
 		}
@@ -10885,7 +10503,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/24_net_websocke
 
 This example demonstrates a persistent WebSocket connection maintaining an active back-and-forth ping-pong conversation between client and server, terminating with a handshake exchange.
 
-``` v
+```v
 module main
 
 import net.websocket
@@ -10904,7 +10522,7 @@ fn main() {
 
 	// 1. Initialize and run a local WebSocket server
 	mut ws_server := websocket.new_server(.ip, port, '/')
-	
+
 	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
 		println('Server: Client connected from ${s.client_key}')
 		return true
@@ -10915,7 +10533,7 @@ fn main() {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
 			println('Server received text: "${payload}"')
-			
+
 			if payload.starts_with('Ping ') {
 				num := payload.replace('Ping ', '')
 				response := 'Pong ${num}'
@@ -11011,7 +10629,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/html/net
 
 This example demonstrates parsing HTML strings, querying tags by class name and attribute values, and extracting node text and properties using the `net.html` module.
 
-``` v
+```v
 module main
 
 import net.html
@@ -11089,7 +10707,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/
 
 This example demonstrates implementing JSON-RPC 2.0 servers and clients using V's `net.jsonrpc` module, utilizing a Unix domain socket connection as the transport layer.
 
-``` v
+```v
 module main
 
 import net.unix
@@ -11248,7 +10866,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_
 
 This example demonstrates how to build a persistent JSON-RPC 2.0 connection. The server calls `server.start()` to continuously process incoming requests, and the client sends multiple method invocations sequentially over a single socket connection.
 
-``` v
+```v
 module main
 
 import net.unix
@@ -11361,7 +10979,7 @@ fn run_rpc_client(socket_path string) ! {
 		println('Client received response for ${resp.id}:')
 		println('  sum:        ${result.sum}')
 		println('  difference: ${result.difference}')
-		
+
 		time.sleep(50 * time.millisecond)
 	}
 }
@@ -11399,7 +11017,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl/net_
 
 This example demonstrates setting up a secure SSL/TLS server and client connection using the standard library's `net.mbedtls` module, including programmatically generating a self-signed key/cert pair using OpenSSL and cleaning them up on exit.
 
-``` v
+```v
 module main
 
 import net.mbedtls
@@ -11555,7 +11173,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl_pers
 
 This example demonstrates keeping an SSL/TLS connection open for multiple rounds of secure back-and-forth ping-pong communication over `net.mbedtls`.
 
-``` v
+```v
 module main
 
 import net.mbedtls
@@ -11692,7 +11310,7 @@ fn run_client(port int) ! {
 
 		response := buf[..n].bytestr()
 		println('Client received secure response: "${response}"')
-		
+
 		time.sleep(50 * time.millisecond)
 	}
 
@@ -11755,7 +11373,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp/net_
 
 This example demonstrates how to create a simple TCP server and client in V. The server listens on a local port, accepts an incoming client connection, receives data, sends a response, and closes the connection.
 
-``` v
+```v
 module main
 
 import net
@@ -11868,7 +11486,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp_pers
 
 This example demonstrates a persistent TCP connection. The client connects to the server, and they exchange multiple messages back-and-forth in a loop before closing the connection cleanly.
 
-``` v
+```v
 module main
 
 import net
@@ -11966,7 +11584,7 @@ fn run_client(port int) ! {
 
 		response := buf[..n].bytestr()
 		println('Client received response: "${response}"')
-		
+
 		time.sleep(50 * time.millisecond)
 	}
 
@@ -12022,7 +11640,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/udp/net_
 
 This example demonstrates sending and receiving connectionless UDP packets. The server binds to a local port and receives a message along with the sender's address, and responds to it using `write_to`.
 
-``` v
+```v
 module main
 
 import net
@@ -12120,7 +11738,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/udp_pers
 
 This example demonstrates how to maintain a persistent ping-pong message exchange over UDP. The client continuously sends datagrams using a bound socket, and the server receives them in a loop while retaining the sender's details to write back.
 
-``` v
+```v
 module main
 
 import net
@@ -12201,7 +11819,7 @@ fn run_client(port int) ! {
 
 		response := buf[..read].bytestr()
 		println('Client received response from ${addr}: "${response}"')
-		
+
 		time.sleep(50 * time.millisecond)
 	}
 
@@ -12257,7 +11875,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/unix/net
 
 This example demonstrates Unix domain socket client-server communication using the `net.unix` module.
 
-``` v
+```v
 module main
 
 import net.unix
@@ -12349,7 +11967,7 @@ fn run_client(socket_path string) ! {
 
 fn main() {
 	println('=== net.unix Module Demo ===')
-	
+
 	// Create a unique temporary socket path
 	socket_path := os.join_path(os.temp_dir(), 'v_unix_socket_example')
 
@@ -12382,7 +12000,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/25_net/unix_per
 
 This example demonstrates establishing a Unix domain socket server and client, keeping the connection open for multiple rounds of back-and-forth communication, and terminating cleanly.
 
-``` v
+```v
 module main
 
 import net.unix
@@ -12489,7 +12107,7 @@ fn run_client(socket_path string) ! {
 
 		response := buf[..n].bytestr()
 		println('Client received response: "${response}"')
-		
+
 		time.sleep(50 * time.millisecond)
 	}
 
@@ -12552,9 +12170,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **options and results**.
 
-
-
-``` v
+```v
 module main
 
 // Result type (!T) is used when a function can return an error.
@@ -12619,9 +12235,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **generics**.
 
-
-
-``` v
+```v
 module main
 
 // Stack[T] represents a generic stack structure.
@@ -12684,9 +12298,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **interfaces**.
 
-
-
-``` v
+```v
 module main
 
 // Speaker is an interface. Any struct that implements a `speak() string` method
@@ -12751,9 +12363,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sum types**.
 
-
-
-``` v
+```v
 module main
 
 // Define structs for different shapes
@@ -12836,9 +12446,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **attributes**.
 
-
-
-``` v
+```v
 module main
 
 import json
@@ -12906,9 +12514,7 @@ V provides compile-time directives (starting with `$`) that are processed by the
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **compile-time directives**.
 
-
-
-``` v
+```v
 module main
 
 fn main() {
@@ -12952,7 +12558,7 @@ fn main() {
 	// Interpolates local variables inside the template file at compile time.
 	name := 'Developer'
 	status := 'active'
-	
+
 	// Renders the template with the variables in the current scope
 	rendered_template := $tmpl('template.html')
 	println('Rendered Template Output:')
@@ -12973,9 +12579,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **strings builder**.
 
-
-
-``` v
+```v
 module main
 
 import strings
@@ -13019,10 +12623,9 @@ _File location: [language_updates_and_stdlib/02_standard_library/02_os_operation
 
 This example demonstrates advanced Unix file behaviors such as raw struct binary serialization, cursor seeking (`seek`/`tell`), file size truncation, and recursive directory tree traversal.
 
-
 ---
 
-``` v
+```v
 module main
 
 import os
@@ -13041,7 +12644,7 @@ fn main() {
 
 	// --- 1. Struct Reading & Writing (Binary Serialization) ---
 	println('\n--- 1. Struct Binary Serialization ---')
-	
+
 	// Create a mutable file in write/read mode
 	mut f := os.open_file(file_path, 'w+') or {
 		println('Failed to open file: ${err}')
@@ -13053,7 +12656,7 @@ fn main() {
 		val: 99.99
 		name: [u8(0), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]!
 	}
-	
+
 	// Populate name
 	name_str := 'V-OS-Advanced-IO'
 	for i in 0 .. name_str.len {
@@ -13071,7 +12674,7 @@ fn main() {
 
 	// --- 2. Seeking & Cursor Position (seek/tell) ---
 	println('\n--- 2. File Seeking & Cursor Position ---')
-	
+
 	// Retrieve current position in the file (should be size of struct)
 	pos := f.tell() or { 0 }
 	println('Current file cursor position: ${pos} bytes')
@@ -13108,7 +12711,7 @@ fn main() {
 
 	// --- 3. Truncating Files ---
 	println('\n--- 3. File Truncation (truncate) ---')
-	
+
 	// Note: V's os.truncate opens the file with O_TRUNC, resetting it first before sizing.
 	// Shrinking/sizing a file directly using os.truncate:
 	println('Truncating file "${file_path}" to 10 bytes...')
@@ -13116,14 +12719,14 @@ fn main() {
 		println('Failed to truncate: ${err}')
 	}
 	println('File size after truncation: ${os.file_size(file_path)} bytes')
-	
+
 	// Clean up binary file
 	os.rm(file_path) or {}
 
 
 	// --- 4. Recursive Directory Tree Walking ---
 	println('\n--- 4. Directory Tree Walking (walk) ---')
-	
+
 	// Create a dummy tree for traversal
 	walk_root := 'temp_walk_root'
 	sub_dir := os.join_path(walk_root, 'docs')
@@ -13159,7 +12762,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/02_os_operation
 
 This example demonstrates common file system tasks, path manipulation, working directory traversal, environmental querying, symbol links, permissions (`chmod`), and ownership (`chown`).
 
-``` v
+```v
 module main
 
 import os
@@ -13238,7 +12841,7 @@ fn main() {
 	// 2. Directory Tree Operations (Nix/CLI Focus)
 	// ==========================================
 	println('\n--- Directory Tree Operations ---')
-	
+
 	// Create nested directories (like `mkdir -p`)
 	nested_dir := os.join_path('temp_parent', 'temp_child')
 	println('Creating nested directory structure: ${nested_dir}...')
@@ -13333,19 +12936,19 @@ fn main() {
 	// 7. Cleanup
 	// ==========================================
 	println('\n--- Cleanup ---')
-	
+
 	// Remove original file
 	os.rm(filename) or { println('Failed to remove ${filename}: ${err}') }
-	
+
 	// Remove moved file
 	os.rm(moved_file) or { println('Failed to remove ${moved_file}: ${err}') }
-	
+
 	// Remove symlink
 	os.rm(symlink_name) or { println('Failed to remove symlink ${symlink_name}: ${err}') }
-	
+
 	// Remove nested directory structure recursively
 	os.rmdir_all('temp_parent') or { println('Failed to remove temp_parent directory: ${err}') }
-	
+
 	println('Cleanup completed successfully.')
 }
 ```
@@ -13358,7 +12961,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/02_os_operation
 
 This example demonstrates managing subprocesses asynchronously using `os.Process`, exchanging data via stdin/stdout redirection, passing custom environments, sending POSIX signals (`SIGSTOP`, `SIGCONT`, `SIGTERM`), creating low-level descriptor pipes, and capturing stdout/stderr dynamically via `IOCapture`.
 
-``` v
+```v
 module main
 
 import os
@@ -13369,18 +12972,18 @@ fn main() {
 
 	// --- 1. Spawning and Controlling Processes ---
 	println('\n--- 1. Asynchronous Child Process (Process) ---')
-	
+
 	// Spawning '/bin/cat' as a child process
 	mut p := os.new_process('/bin/cat')
 	p.set_args([])
 	p.set_environment({
 		'CUSTOM_ENV_VAR': 'V-OS-Demo'
 	})
-	
+
 	// Enable standard I/O redirection to interact with the process
 	p.set_redirect_stdio()
 	p.use_stdio_ctl = true
-	
+
 	// Start the process asynchronously
 	p.run()
 	println('Child process spawned with PID: ${p.pid}')
@@ -13389,22 +12992,22 @@ fn main() {
 	// Write to the process's standard input
 	p.stdin_write('Line 1: Hello from the parent process!\n')
 	p.stdin_write('Line 2: WebAssembly and V standard libraries rule.\n')
-	
+
 	// Allow child process buffer to receive and echo the lines
 	time.sleep(100 * time.millisecond)
-	
+
 	// Read output currently available in the stdout pipe
 	output := p.stdout_read()
 	println('Read from child stdout:\n${output.trim_space()}')
 
 	// --- 2. POSIX Signaling ---
 	println('\n--- 2. POSIX Signals ---')
-	
+
 	// Suspend the child process (SIGSTOP)
 	println('Suspending child process (SIGSTOP)...')
 	p.signal_stop()
 	time.sleep(50 * time.millisecond)
-	
+
 	// Resume the child process (SIGCONT)
 	println('Resuming child process (SIGCONT)...')
 	p.signal_continue()
@@ -13414,20 +13017,20 @@ fn main() {
 	println('Terminating child process (SIGTERM)...')
 	p.signal_term()
 	p.wait()
-	
+
 	println('Child process exited with status: ${p.status} (Code: ${p.code})')
 	p.close()
 
 
 	// --- 3. Pipes ---
 	println('\n--- 3. Low-Level Descriptor Pipes (Pipe) ---')
-	
+
 	// Create a new pipe
 	mut my_pipe := os.pipe() or {
 		println('Failed to create pipe: ${err}')
 		return
 	}
-	
+
 	// Write to the pipe
 	pipe_msg := 'IPC via Pipe'.bytes()
 	written := my_pipe.write(pipe_msg) or {
@@ -13448,23 +13051,23 @@ fn main() {
 
 	// --- 4. Capture Stdout/Stderr ---
 	println('\n--- 4. Capture Stdout and Stderr (IOCapture) ---')
-	
+
 	// Flush stdout to prevent capturing existing print statements
 	os.flush()
-	
+
 	// Capture all stdout/stderr output within this block
 	mut cap := os.stdio_capture() or {
 		println('Failed to initialize capture: ${err}')
 		return
 	}
-	
+
 	// Anything printed here will be redirected to the capture buffer
 	print('Captured standard output data.')
 	eprint('Captured standard error data.')
-	
+
 	// Restore standard streams and retrieve captured data
 	captured_out, captured_err := cap.finish()
-	
+
 	println('Captured stdout lines: ${captured_out}')
 	println('Captured stderr lines: ${captured_err}')
 }
@@ -13478,7 +13081,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/02_os_operation
 
 This example demonstrates calling system diagnostics (`os.uname`), retrieving current host/user identities, assessing disk capacity and usage metrics (`os.disk_usage`), and parsing detailed file metadata using POSIX stat/lstat mappings (`os.Stat` and `os.FileMode`).
 
-``` v
+```v
 module main
 
 import os
@@ -13488,7 +13091,7 @@ fn main() {
 
 	// --- 1. System Info (uname, hostname, loginname) ---
 	println('\n--- 1. System Diagnostics ---')
-	
+
 	// os.uname() returns kernel details, release, OS name, and architecture
 	u := os.uname()
 	println('Operating System:     ${u.sysname}')
@@ -13506,13 +13109,13 @@ fn main() {
 
 	// --- 2. Identity and Process Metrics ---
 	println('\n--- 2. User/Group IDs & Process Context ---')
-	
+
 	// Real and effective UID/GIDs
 	println('User ID (UID):        ${os.getuid()}')
 	println('Group ID (GID):       ${os.getgid()}')
 	println('Effective UID (EUID): ${os.geteuid()}')
 	println('Effective GID (EGID): ${os.getegid()}')
-	
+
 	// Current Process ID and Parent Process ID
 	println('Process ID (PID):     ${os.getpid()}')
 	println('Parent PID (PPID):    ${os.getppid()}')
@@ -13520,18 +13123,18 @@ fn main() {
 
 	// --- 3. Disk Space Usage ---
 	println('\n--- 3. Disk Space Stats ---')
-	
+
 	// Query disk space information for the current directory
 	du := os.disk_usage('.') or {
 		println('Failed to retrieve disk usage: ${err}')
 		return
 	}
-	
+
 	// Convert u64 bytes to Gigabytes for user readability
 	total_gb := f64(du.total) / (1024.0 * 1024.0 * 1024.0)
 	avail_gb := f64(du.available) / (1024.0 * 1024.0 * 1024.0)
 	used_gb := f64(du.used) / (1024.0 * 1024.0 * 1024.0)
-	
+
 	println('Disk Total:     ${total_gb:.2f} GB')
 	println('Disk Available: ${avail_gb:.2f} GB')
 	println('Disk Used:      ${used_gb:.2f} GB')
@@ -13539,25 +13142,25 @@ fn main() {
 
 	// --- 4. Detailed File Metadata (stat/lstat) ---
 	println('\n--- 4. File Metadata via stat ---')
-	
+
 	// Let's create a temporary file to run stat on
 	temp_file := 'temp_stat_test.txt'
 	os.write_file(temp_file, 'V stat demo content.') or { return }
-	
+
 	// Fetch file stats
 	st := os.stat(temp_file) or {
 		println('Failed to stat file: ${err}')
 		os.rm(temp_file) or {}
 		return
 	}
-	
+
 	println('File Size:          ${st.size} bytes')
 	println('Inode Number:       ${st.inode}')
 	println('Hard Links Count:   ${st.nlink}')
 	println('Device ID:          ${st.dev}')
 	println('Owner UID:          ${st.uid}')
 	println('Owner GID:          ${st.gid}')
-	
+
 	// Access access, modify, and status change timestamps
 	println('Last Access Time:   ${st.atime} (Unix Epoch)')
 	println('Last Modify Time:   ${st.mtime} (Unix Epoch)')
@@ -13568,7 +13171,7 @@ fn main() {
 	file_mode := st.get_mode()
 	println('File Type:          ${file_type}') // e.g., regular, directory, link, etc.
 	println('File Mode Bitmask:  0o${file_mode.bitmask():o}') // octal representation
-	
+
 	// Permissions breakdown
 	println('Permissions -> Owner: R=${file_mode.owner.read} W=${file_mode.owner.write} X=${file_mode.owner.execute}')
 	println('               Group: R=${file_mode.group.read} W=${file_mode.group.write} X=${file_mode.group.execute}')
@@ -13592,9 +13195,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **time and stopwatch**.
 
-
-
-``` v
+```v
 module main
 
 import time
@@ -13640,9 +13241,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **http client**.
 
-
-
-``` v
+```v
 module main
 
 import net.http
@@ -13687,9 +13286,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **regex matching**.
 
-
-
-``` v
+```v
 module main
 
 import regex
@@ -13739,9 +13336,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **command line flags**.
 
-
-
-``` v
+```v
 module main
 
 import flag
@@ -13799,9 +13394,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **datatypes collections**.
 
-
-
-``` v
+```v
 module main
 
 import datatypes
@@ -13882,9 +13475,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **gg graphics** using V's simple graphics module. It shows how to initialize a window, define an application state struct, draw various 2D shapes (rectangles, circles, triangles, polygons, lines), render formatted text, and intercept keyboard and mouse event inputs.
 
-
-
-``` v
+```v
 module main
 
 import gg
@@ -13958,7 +13549,7 @@ fn frame(data voidptr) {
 	ctx.begin()
 
 	// --- 1. Draw Static 2D Shapes ---
-	
+
 	// Draw a thick horizontal line dividing the header from the demo workspace
 	ctx.draw_line(0, 80, app.width, 80, gg.gray)
 
@@ -14140,7 +13731,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/09_command_line
 
 This example demonstrates how to directly access and parse command-line arguments using `os.args` to build simple command-line applications.
 
-``` v
+```v
 module main
 
 import os
@@ -14206,9 +13797,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **math and rand**.
 
-
-
-``` v
+```v
 module main
 
 import math
@@ -14221,7 +13810,7 @@ fn main() {
 	println('\n--- math ---')
 	println('Pi constant: ${math.pi}')
 	println('E constant:  ${math.e}')
-	
+
 	// Trigonometry
 	angle := 45.0 * (math.pi / 180.0) // 45 degrees in radians
 	println('sin(45 deg): ${math.sin(angle):.4f}')
@@ -14276,9 +13865,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/11_log_and_cryp
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Crypto Asymmetric** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-
-
-``` v
+```v
 module main
 
 import crypto.ecdsa
@@ -14292,13 +13879,13 @@ fn main() {
 
 	// --- 1. ECDSA ---
 	println('\n--- ECDSA ---')
-	
+
 	// Generate key pair
 	pub_ec, priv_ec := ecdsa.generate_key() or {
 		println('Failed to generate ECDSA key: ${err}')
 		return
 	}
-	
+
 	// Sign message
 	sig_ec := priv_ec.sign(message, ecdsa.SignerOpts{}) or {
 		println('ECDSA signing failed: ${err}')
@@ -14316,7 +13903,7 @@ fn main() {
 
 	// --- 2. Ed25519 ---
 	println('\n--- Ed25519 ---')
-	
+
 	// Generate key pair
 	pub_ed, priv_ed := ed25519.generate_key() or {
 		println('Failed to generate Ed25519 key: ${err}')
@@ -14340,15 +13927,15 @@ fn main() {
 
 	// --- 3. PEM Encoding/Decoding ---
 	println('\n--- PEM (Privacy Enhanced Mail) Encoding ---')
-	
+
 	pub_bytes := pub_ec.bytes() or {
 		println('Failed to get public key bytes: ${err}')
 		return
 	}
-	
+
 	mut pem_block := pem.Block.new('EC PUBLIC KEY')
 	pem_block.data = pub_bytes
-	
+
 	pem_string := pem_block.encode(pem.EncodeConfig{}) or {
 		println('PEM encoding failed: ${err}')
 		return
@@ -14376,9 +13963,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/11_log_and_cryp
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Crypto Entropy** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-
-
-``` v
+```v
 module main
 
 import crypto.rand
@@ -14414,7 +13999,7 @@ fn main() {
 		println('Failed to parse big integer string: ${err}')
 		return
 	}
-	
+
 	random_big := rand.int_big(limit_big) or {
 		println('Failed to generate random big integer: ${err}')
 		return
@@ -14436,32 +14021,27 @@ For a detailed demonstration of every cryptographic module, the standard library
 
 Demonstrates MD5, SHA-1, SHA-256, SHA-512, SHA-3 (Keccak-256/Keccak-512), RIPEMD-160, BLAKE2b, BLAKE2s, and BLAKE3.
 
-
 ###### 2. Symmetric Ciphers & Block Modes
 
 Demonstrates AES (CBC block mode with PKCS7-like padding), DES, Blowfish (encryption-only), RC4 stream cipher, and general block modes.
-
 
 ###### 3. Asymmetric Cryptography & PEM Formats
 
 Demonstrates ECDSA key generation, signing, and verification; Ed25519 signing and verification; and PEM block encoding/decoding.
 
-
 ###### 4. Key Derivation Functions (KDF)
 
 Demonstrates secure password hashing and key derivation using Bcrypt, Scrypt, and PBKDF2.
-
 
 ###### 5. Message Authentication Codes (MAC)
 
 Demonstrates message integrity and authenticity verification using HMAC-SHA256.
 
-
 ###### 6. Secure Randomness & Entropy
 
 Demonstrates generating secure cryptographically random bytes, `u64` values, and large integers (`big.Integer`).
 
-``` v
+```v
 module main
 
 import crypto.md5
@@ -14476,7 +14056,7 @@ import crypto.blake3
 
 fn main() {
 	println('=== V Cryptographic Hash Algorithms ===')
-	
+
 	input := 'V Language Crypto Guide'.bytes()
 	input_str := 'V Language Crypto Guide'
 
@@ -14532,9 +14112,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/11_log_and_cryp
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Crypto Kdf** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-
-
-``` v
+```v
 module main
 
 import crypto.bcrypt
@@ -14565,7 +14143,7 @@ fn main() {
 	println('\n--- Scrypt ---')
 	scrypt_pass := 'my_scrypt_pass'.bytes()
 	scrypt_salt := 'scrypt_salt'.bytes()
-	
+
 	// N=16384, r=8, p=1, key_len=32 (N must be power of 2)
 	scrypt_key := scrypt.scrypt(scrypt_pass, scrypt_salt, 16384, 8, 1, 32) or {
 		println('Scrypt failed: ${err}')
@@ -14578,7 +14156,7 @@ fn main() {
 	println('\n--- PBKDF2 ---')
 	pbkdf2_pass := 'my_pbkdf2_pass'.bytes()
 	pbkdf2_salt := 'pbkdf2_salt'.bytes()
-	
+
 	// pbkdf2.key(password, salt, iterations, key_len, hash_fn)
 	pbkdf2_key := pbkdf2.key(pbkdf2_pass, pbkdf2_salt, 4096, 32, sha256.new()) or {
 		println('PBKDF2 failed: ${err}')
@@ -14598,9 +14176,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/11_log_and_cryp
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Crypto Mac** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-
-
-``` v
+```v
 module main
 
 import crypto.hmac
@@ -14620,10 +14196,10 @@ fn main() {
 
 	// --- 2. HMAC Verification ---
 	println('\n--- HMAC Verification ---')
-	
+
 	// Re-compute to verify
 	computed_mac := hmac.new(key, message, sha256.sum, sha256.block_size)
-	
+
 	// hmac.equal performs constant-time comparison to prevent timing attacks
 	is_valid := hmac.equal(mac, computed_mac)
 	println('Signature matches? -> ${is_valid}')
@@ -14646,9 +14222,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/11_log_and_cryp
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Crypto Symmetric** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-
-
-``` v
+```v
 module main
 
 import crypto.aes
@@ -14684,7 +14258,7 @@ fn main() {
 	mut aes_dec := cipher.new_cbc(aes_block, aes_iv)
 	mut decrypted := []u8{len: ciphertext.len}
 	aes_dec.decrypt_blocks(mut decrypted, ciphertext)
-	
+
 	// Unpad
 	unpadded_len := decrypted.len - int(decrypted.last())
 	unpadded_text := decrypted[..unpadded_len].bytestr()
@@ -14748,9 +14322,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **log and crypto**.
 
-
-
-``` v
+```v
 module main
 
 import log
@@ -14765,7 +14337,7 @@ fn main() {
 	// V's log module provides customizable levels (debug, info, warn, error, fatal)
 	mut logger := log.Log{}
 	logger.set_level(.info) // Set threshold (ignores debug level)
-	
+
 	logger.info('Logger initialized.')
 	logger.warn('This is a warning message.')
 	logger.error('This is an error message.')
@@ -14773,7 +14345,7 @@ fn main() {
 	// --- crypto ---
 	println('\n--- crypto ---')
 	input := 'V language standard library'
-	
+
 	// SHA256 Hash
 	sha_hash := sha256.hexhash(input)
 	println('SHA-256 of "${input}":')
@@ -14801,9 +14373,7 @@ These examples cover spawning tasks, reading/writing channels, buffering, select
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sync concurrency**.
 
-
-
-``` v
+```v
 module main
 
 import sync
@@ -14853,9 +14423,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **encoding formats**.
 
-
-
-``` v
+```v
 module main
 
 import encoding.base64
@@ -14886,7 +14454,7 @@ fn main() {
 	// --- 3. CSV ---
 	println('\n--- CSV ---')
 	csv_data := 'Name,Age,City\nAlice,30,New York\nBob,25,San Francisco'
-	
+
 	mut reader := csv.new_reader(csv_data)
 	println('Reading CSV rows:')
 	for {
@@ -14909,9 +14477,7 @@ V has a very rich and growing standard library and is actively updated. This les
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **arrays utility**.
 
-
-
-``` v
+```v
 module main
 
 import arrays
@@ -14954,7 +14520,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/15_toml/toml.v]
 
 This example demonstrates how to parse and query TOML configuration files using V's built-in `toml` module.
 
-``` v
+```v
 module main
 
 import toml
@@ -14999,7 +14565,7 @@ fn main() {
 	// 4. Retrieving array values
 	ports_any := doc.value('database.ports')
 	println('Ports Any: ${ports_any}')
-	
+
 	// Accessing array elements with query syntax
 	port_0 := doc.value('database.ports[0]').int()
 	port_1 := doc.value('database.ports[1]').int()
@@ -15026,7 +14592,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/16_strconv/strc
 
 This example demonstrates how to convert strings to numbers, parse numbers in different bases and bit-sizes, and convert numbers back to base string representations using the `strconv` module.
 
-``` v
+```v
 module main
 
 import strconv
@@ -15085,7 +14651,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/17_term/term.v]
 
 This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, and retrieving the terminal size using the `term` module.
 
-``` v
+```v
 module main
 
 import term
@@ -15126,7 +14692,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/18_benchmark/be
 
 This example demonstrates timing code execution chunks and step-by-step progress benchmarking using the `benchmark` module.
 
-``` v
+```v
 module main
 
 import benchmark
@@ -15138,7 +14704,7 @@ fn main() {
 	// Example 1: Using benchmark.start() and measure()
 	println('--- Simple Measurement ---')
 	mut b := benchmark.start()
-	
+
 	// Simulate work chunk 1
 	time.sleep(50 * time.millisecond)
 	b.measure('Simulated task 1 (50ms sleep)')
@@ -15150,7 +14716,7 @@ fn main() {
 	// Example 2: Using structured new_benchmark()
 	println('\n--- Structured Step-by-Step Benchmarking ---')
 	mut bmark := benchmark.new_benchmark()
-	
+
 	// Step 1: Ok step
 	bmark.step()
 	time.sleep(30 * time.millisecond)
@@ -15177,7 +14743,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/19_clipboard/cl
 
 This example demonstrates writing to and reading from the system clipboard on macOS using the `clipboard` module, including a backup and restore mechanism.
 
-``` v
+```v
 module main
 
 import clipboard
@@ -15228,7 +14794,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/20_semver/semve
 
 This example demonstrates parsing semantic versions and checking constraint satisfaction using the `semver` module.
 
-``` v
+```v
 module main
 
 import semver
@@ -15270,7 +14836,7 @@ fn main() {
 	// Range checking
 	println('  Is ${v2} in range ">=1.0.0 <2.0.0" ? -> ${v2.satisfies('>=1.0.0 <2.0.0')}')
 	println('  Is ${v3} in range ">=1.0.0 <2.0.0" ? -> ${v3.satisfies('>=1.0.0 <2.0.0')}')
-	
+
 	// Complex constraint checking using logical OR (||)
 	range_query := '^1.4.0 || >=2.0.0'
 	println('  Does ${v2} satisfy "${range_query}"? -> ${v2.satisfies(range_query)}')
@@ -15286,7 +14852,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/21_maps/maps.v]
 
 This example demonstrates map utility functions such as filtering, converting map keys and values to arrays, inverting maps, and merging maps using the `maps` module.
 
-``` v
+```v
 module main
 
 import maps
@@ -15346,7 +14912,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/22_context/cont
 
 This example demonstrates propagating request-scoped values, cancellation signals, and timeouts across thread boundaries using the `context` module.
 
-``` v
+```v
 module main
 
 import context
@@ -15368,11 +14934,11 @@ fn main() {
 
 	// 2. Context with Cancellation
 	mut ctx_cancel, cancel := context.with_cancel(mut ctx_val)
-	
+
 	// Check if canceled
 	println('Before cancel - Done channel is open')
 	cancel() // trigger cancellation
-	
+
 	// Select block to read from done channel
 	done_ch := ctx_cancel.done()
 	select {
@@ -15414,7 +14980,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/26_archive_tar/
 
 This example demonstrates reading and inspecting the contents of `.tar.gz` files using the `archive.tar` module.
 
-``` v
+```v
 module main
 
 import archive.tar
@@ -15470,7 +15036,7 @@ fn main() {
 	// 3. Read and parse the tar.gz archive using V's archive.tar module
 	println('Reading archive using vlib/archive/tar:')
 	mut reader := CustomReader{}
-	
+
 	// Read and parse
 	tar.read_tar_gz_file(tar_archive, reader) or {
 		println('Failed to read tar archive: ${err}')
@@ -15489,7 +15055,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/27_compress/def
 
 This example demonstrates standard Deflate byte stream compression and decompression using the `compress.deflate` module.
 
-``` v
+```v
 module main
 
 import compress.deflate
@@ -15530,7 +15096,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/27_compress/gzi
 
 This example demonstrates compressing and decompressing binary or text data using the `compress.gzip` module.
 
-``` v
+```v
 module main
 
 import compress.gzip
@@ -15571,7 +15137,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/27_compress/szi
 
 This example demonstrates packaging multiple files into zip archives recursively, inspecting zip contents/meta-data (size, CRC32), and extracting zip files to folders using the `compress.szip` module.
 
-``` v
+```v
 module main
 
 import os
@@ -15629,7 +15195,7 @@ fn main() {
 		println('Failed to open zip for reading: ${err}')
 		return
 	}
-	
+
 	total_entries := reader.total() or { 0 }
 	println('Total entries found in zip: ${total_entries}')
 
@@ -15678,7 +15244,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/27_compress/zli
 
 This example demonstrates standard Zlib byte stream compression and decompression using the `compress.zlib` module.
 
-``` v
+```v
 module main
 
 import compress.zlib
@@ -15719,7 +15285,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/27_compress/zst
 
 This example demonstrates Zstd compression and decompression using the fast Facebook Zstandard algorithm in the `compress.zstd` module.
 
-``` v
+```v
 module main
 
 import compress.zstd
@@ -15764,7 +15330,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.
 
 This example demonstrates how `os.File` implements `io.Reader` and `io.Writer` interfaces, allowing standard file operations to utilize stream-oriented utilities like `io.cp` and `io.BufferedReader`.
 
-``` v
+```v
 module main
 
 import os
@@ -15789,7 +15355,7 @@ fn main() {
 		println('Failed to create file: ${err}')
 		return
 	}
-	
+
 	// Write data using the io.Writer write() method
 	content_to_write := 'Hello! This is a file system demo.\nIt demonstrates how os.File integrates with the io module.\n'
 	written_bytes := src_file.write(content_to_write.bytes()) or {
@@ -15808,7 +15374,7 @@ fn main() {
 
 	// Wrap os.File in io.BufferedReader for convenient line-by-line reading
 	mut buf_reader := io.new_buffered_reader(reader: read_file)
-	
+
 	// Read lines until EOF
 	for {
 		line := buf_reader.read_line() or {
@@ -15860,7 +15426,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/28_io/io.v](fil
 
 This example demonstrates implementing custom Reader and Writer structs and using the `io.cp` utility to copy data between streams using the `io` module.
 
-``` v
+```v
 module main
 
 import io
@@ -15927,7 +15493,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/28_io/util/io_u
 
 This example demonstrates using the `io.util` module for creating, writing to, reading from, and cleaning up temporary files and directories.
 
-``` v
+```v
 module main
 
 import os
@@ -15979,7 +15545,7 @@ fn main() {
 		println('Failed to create temp directory: ${err}')
 		return
 	}
-	
+
 	// Register cleanup on function exit
 	defer {
 		os.rmdir_all(temp_dir_path) or {}
@@ -16012,7 +15578,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/29_hash/hash.v]
 
 This example demonstrates calculating FNV-1a (32-bit and 64-bit) hashes and CRC32 checksums using the `hash` module.
 
-``` v
+```v
 module main
 
 import hash.fnv1a
@@ -16044,7 +15610,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/30_bitfield/bit
 
 This example demonstrates creating bitfields, getting/setting individual bits, performing logical operations (AND, OR, XOR, NOT), and converting to string representation using the `bitfield` module.
 
-``` v
+```v
 module main
 
 import bitfield
@@ -16069,7 +15635,7 @@ fn main() {
 	// 3. Logical bitwise operations
 	mut bf2 := bitfield.from_str('011010')
 	println('\nLogical operations on ${bf1.str()} and ${bf2.str()}:')
-	
+
 	and_result := bitfield.bf_and(bf1, bf2)
 	or_result  := bitfield.bf_or(bf1, bf2)
 	xor_result := bitfield.bf_xor(bf1, bf2)
@@ -16090,7 +15656,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/31_cli/cli.v](f
 
 This example demonstrates building structured CLI applications with commands, subcommands, and option flags in POSIX mode using the `cli` module.
 
-``` v
+```v
 module main
 
 import cli
@@ -16114,7 +15680,7 @@ fn main() {
 				execute:     fn (cmd cli.Command) ! {
 					name := cmd.flags.get_string('name') or { 'Guest' }
 					verbose := cmd.flags.get_bool('verbose') or { false }
-					
+
 					if verbose {
 						println('Log: Initiating greeting process...')
 					}
@@ -16139,7 +15705,7 @@ fn main() {
 	}
 
 	app.setup()
-	
+
 	// Test by parsing args mock
 	println('\nParsing args: tool greet --name Antigravity -v')
 	app.parse(['tool', 'greet', '--name', 'Antigravity', '-v'])
@@ -16154,7 +15720,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/32_veb/veb.v](f
 
 This example demonstrates building a web application with routes, starting it in a background thread, and testing requests using the modern `veb` web framework.
 
-``` v
+```v
 module main
 
 import veb
@@ -16195,7 +15761,7 @@ fn main() {
 	// Make an HTTP GET request to verify the server is running and responding
 	url := 'http://localhost:${port}/'
 	println('Sending request to: ${url}')
-	
+
 	resp := http.get(url) or {
 		println('HTTP request failed: ${err}')
 		return
@@ -16215,7 +15781,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/33_readline/rea
 
 This example demonstrates prompting users for text input from terminal lines in a structured manner using the `readline` module.
 
-``` v
+```v
 module main
 
 import readline
@@ -16225,7 +15791,7 @@ fn main() {
 
 	mut r := readline.Readline{}
 	println('Simulating readline input (feed via stdin if non-interactive):')
-	
+
 	// Read a line from standard input
 	line := r.read_line('Enter text: ') or {
 		println('Error or EOF: ${err}')
@@ -16243,7 +15809,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/34_runtime/runt
 
 This example demonstrates inspecting hardware specifications, processor cores, system endianness, and memory usage statistics using the `runtime` module.
 
-``` v
+```v
 module main
 
 import runtime
@@ -16291,16 +15857,15 @@ _File location: [language_updates_and_stdlib/02_standard_library/36_strings_lore
 V's standard library `strings.lorem` module provides a pseudo-random text generator based on a Markov chain built from embedded corpora. It produces structured text in the form of paragraphs and sentences, with options to control layouts, select specific corpora, and configure deterministic output.
 
 This example demonstrates how to:
+
 1. Generate pseudo-random text with default configurations.
 2. Customize the output layout by adjusting words per sentence, sentences per paragraph, and paragraphs.
 3. Select specific corpora such as `lorem` (Latin), `poe` (Edgar Allan Poe), `darwin` (Charles Darwin), and `bard` (William Shakespeare).
 4. Run deterministic generation using an RNG seed and a custom starting phrase.
 
-
-
 ---
 
-``` v
+```v
 module main
 
 import strings.lorem
@@ -16330,7 +15895,7 @@ fn main() {
 	// - 'darwin' (Charles Darwin's Origin of Species)
 	// - 'bard' (William Shakespeare's works)
 	println('\n--- 3. Specific Corpora Examples ---')
-	
+
 	corpora := ['lorem', 'poe', 'darwin', 'bard']
 	for corpus in corpora {
 		text := lorem.generate(lorem.LoremCfg{
@@ -16356,7 +15921,7 @@ fn main() {
 		sentences_per_paragraph: 2
 		words_per_sentence: 8
 	})
-	
+
 	deterministic_lorem_2 := lorem.generate(lorem.LoremCfg{
 		corpus_name: 'poe'
 		rng_seed: 42
@@ -16382,6 +15947,7 @@ fn main() {
 ## WebAssembly Compilation
 
 V has first-class support for WebAssembly (WASM). There are two distinct methods for compiling and working with WebAssembly in V:
+
 1. **Compiling V source code to WASM** (using direct/native backends or Emscripten).
 2. **Programmatic WASM generation** (using the built-in `wasm` instruction-level builder).
 
@@ -16390,36 +15956,43 @@ V has first-class support for WebAssembly (WASM). There are two distinct methods
 ### Compiling V Source to WebAssembly
 
 #### 1. Native Direct Backend (`-b wasm`)
+
 V contains a native compiler backend that bypasses C intermediate code and outputs WebAssembly binary files (`.wasm`) directly. This backend has zero dependencies and is extremely fast, though it is currently in active development and supports a subset of the language.
 
 To compile a V file directly to WASM:
+
 ```bash
 v -b wasm -o main.wasm main.v
 ```
 
 ##### Executing in JavaScript/Node.js:
+
 To run the natively compiled WASM binary, instantiate it using the standard JavaScript `WebAssembly` API:
+
 ```javascript
-const fs = require('fs');
+const fs = require("fs");
 
 async function run() {
-	const wasmBuffer = fs.readFileSync('main.wasm');
-	const { instance } = await WebAssembly.instantiate(wasmBuffer, {
-		env: {
-			// Import host functions here if needed
-		}
-	});
-	// Call exported V functions from JS
-	console.log(instance.exports.add(5, 10));
+  const wasmBuffer = fs.readFileSync("main.wasm");
+  const { instance } = await WebAssembly.instantiate(wasmBuffer, {
+    env: {
+      // Import host functions here if needed
+    },
+  });
+  // Call exported V functions from JS
+  console.log(instance.exports.add(5, 10));
 }
 run();
 ```
 
 #### 2. Emscripten C Backend (`-os wasm`)
+
 For compiling complex applications, standard library features, or C-linked dependencies to WASM, V relies on the Emscripten toolchain. V translates the V code to intermediate C, and Emscripten compiles it to highly optimized WebAssembly.
 
 ##### Prerequisites:
+
 Ensure the Emscripten SDK (`emsdk`) is installed and active on your PATH:
+
 ```bash
 git clone https://github.com/emscripten-core/emsdk.git
 cd emsdk
@@ -16429,14 +16002,18 @@ source ./emsdk_env.sh
 ```
 
 ##### Compiling with V:
+
 ```bash
 v -os wasm -o main.js main.v
 ```
+
 This produces:
+
 - `main.wasm`: The compiled WebAssembly binary.
 - `main.js`: Emscripten glue code to load the WASM module and map runtime environments (I/O, memory, filesystem).
 
 ##### Running in Node.js:
+
 ```bash
 node main.js
 ```
@@ -16452,13 +16029,14 @@ _File location: [language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v]
 V provides a built-in `wasm` module in its standard library that allows developers to programmatically build WebAssembly binary (`.wasm`) files directly using instruction-level builder patterns. This is extremely useful for compilers, runtime engines, or dynamic code generation targeting the browser and other WebAssembly runtimes.
 
 This example demonstrates how to:
+
 1. Initialize a WebAssembly module (`wasm.Module`).
 2. Generate exported arithmetic functions (`add`, `sub`, `mul`).
 3. Construct and read mutable global variables (`new_global`, `global_get`, `global_set`).
 4. Build recursive control structures (a factorial `fac` function utilizing `c_if`, `c_else`, `c_end`, and recursive `call`).
 5. Compile the module down to a `.wasm` binary slice (`[]u8`) and save it to disk.
 
-``` v
+```v
 module main
 
 import wasm
@@ -16473,7 +16051,7 @@ fn main() {
 
 	// --- 1. Basic Arithmetic Functions ---
 	println('\n1. Generating Arithmetic Functions (add, sub, mul)...')
-	
+
 	// Exported 'add' function: taking two i32 parameters, returning one i32 result
 	mut add_fn := m.new_function('add', [.i32_t, .i32_t], [.i32_t])
 	{
@@ -16506,7 +16084,7 @@ fn main() {
 	println('\n2. Creating Global Variables...')
 	// Global variable named '__vsp' (Stack Pointer), internal/non-exported, type i32, mutable, init value 10
 	vsp := m.new_global('__vsp', false, .i32_t, true, wasm.constexpr_value(10))
-	
+
 	// Create a function that retrieves the global value, adds 20, stores it back, and returns the new value
 	mut vsp_fn := m.new_function('update_vsp', [], [.i32_t])
 	{
@@ -16526,7 +16104,7 @@ fn main() {
 	{
 		fac_fn.local_get(0)
 		fac_fn.eqz(.i64_t)
-		
+
 		// If block: if n == 0, return 1
 		ifs := fac_fn.c_if([], [.i64_t])
 		{
@@ -16536,12 +16114,12 @@ fn main() {
 		{
 			// Else: return n * fac(n - 1)
 			fac_fn.local_get(0) // push n
-			
+
 			fac_fn.local_get(0)
 			fac_fn.i64_const(1)
 			fac_fn.sub(.i64_t)   // n - 1
 			fac_fn.call('fac')   // recursive call to fac(n - 1)
-			
+
 			fac_fn.mul(.i64_t)   // n * fac(n - 1)
 		}
 		fac_fn.c_end(ifs)
