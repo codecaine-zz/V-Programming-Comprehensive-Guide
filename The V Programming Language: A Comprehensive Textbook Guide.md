@@ -49,6 +49,115 @@ These projects will make the guide feel much more practical:
 - A simple file organizer or text search tool
 - A notes app that stores data in JSON or SQLite
 
+## What Most Programmers Want Next
+
+A strong guide should help readers move from learning syntax to building and debugging real software. The following topics are especially useful for most programmers:
+
+### Quick Reference
+
+- Run a file: `v run hello.v`
+- Build an executable: `v -o hello hello.v`
+- Use `mut` when a value needs to change
+- Use functions to keep logic organized
+- Use modules to split larger projects into manageable files
+- Use tests to verify behavior as you grow your program
+
+### Common Beginner Mistakes
+
+- Forgetting to make a variable `mut` before changing it
+- Mixing up declaration and assignment
+- Writing code without small, testable functions
+- Trying to learn too many concepts at once instead of building one small feature
+
+### Debugging and Reading Errors
+
+When something fails, focus on the first compiler error, reduce the problem to a smaller example, and test one change at a time. This is often faster than changing many lines at once.
+
+### Real-World Workflow
+
+As your projects grow, you will want to know how to:
+
+- split code into modules
+- write tests
+- structure folders clearly
+- read documentation and standard library examples
+- move from small scripts to larger applications
+
+## V Cheat Sheet
+
+Here is a compact reference for the most common V patterns you will see in everyday code.
+
+### Variables and Mutability
+
+```v
+mut x := 1
+x = 2
+```
+
+- Use `mut` when a variable needs to change.
+- Variables are immutable by default.
+
+### Loops
+
+```v
+for i in 0..5 {
+	println(i)
+}
+```
+
+- `for ... in` is the common loop form in V.
+- Ranges like `0..5` are useful for simple iteration.
+
+### Functions
+
+```v
+fn add(a int, b int) int {
+	return a + b
+}
+```
+
+- Functions help break code into small, testable units.
+- V uses explicit types in function signatures.
+
+### Structs
+
+```v
+struct User {
+	name string
+	age  int
+}
+```
+
+- Structs are used to group related data.
+- They are a core building block for models and records.
+
+### Option and Result
+
+```v
+fn maybe_value() ?int {
+	return 42
+}
+
+fn main() {
+	value := maybe_value() or { 0 }
+	println(value)
+}
+```
+
+- `?` marks functions that may return an error or no value.
+- `or {}` provides a fallback for handling it cleanly.
+
+### Modules
+
+```v
+module main
+
+import math
+```
+
+- Modules help organize code and separate concerns.
+- Importing standard library packages is a normal part of larger programs.
+
 ## Table of Contents
 
 - [Chapter 1: Getting Started with V](#chapter-1-getting-started-with-v)
