@@ -10,17 +10,25 @@ Welcome to the ultimate learning guide for the V programming language! This text
 
 ## Repository Structure
 
-This book is paired with a topic-based repository layout so it is easier to explore examples by concept:
+This book is paired with a topic-based repository layout so it is easier to explore examples by concept. The structure is intentionally arranged in a learning sequence rather than as a flat list of files:
 
-- `variables_and_constants/` for variables, mutability, constants, and comments
-- `primitive_types/` for booleans, numbers, strings, and runes
-- `control_flow/` for conditionals, `match`, and loops
-- `functions/` for function basics and advanced function features
-- `structs/` for custom data types and methods
+- `variables_and_constants/`, `primitive_types/`, and `control_flow/` for the foundation of the language
+- `functions/` and `structs/` for building reusable programs and modeling data
 - `error_handling/`, `modules/`, and `testing/` for reliability and organization
 - `concurrency/`, `channels/`, `json_and_orm/`, `sqlite/`, and `notes_api/` for real-world applications
+- `language_updates_and_stdlib/` for newer language features and grouped standard library examples that are easier to browse by topic
 
-Following this structure makes it simpler to move from small examples to larger projects.
+Following this structure makes it simpler to move from small examples to larger projects, and it also gives contributors a clear place to add new lessons.
+
+### A better way to think about the repo
+
+- Start with the introductory folders when you are learning V for the first time.
+- Use the middle sections when you are ready to write more structured programs.
+- Explore the application-oriented folders once you want to build something practical.
+
+### Contributing new content
+
+When adding a new lesson, keep it in the most relevant topic folder and use a numbered naming pattern such as `01_topic_name/` so the learning flow stays predictable.
 
 ## Quick Start: Learn V by Building Things
 

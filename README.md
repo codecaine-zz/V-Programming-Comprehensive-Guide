@@ -4,20 +4,25 @@ Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers every
 
 ## Repository Layout
 
-The repository is organized by topic so you can move through the material in a natural learning order:
+The repository is organized by learning progression, so it is easier to move from beginner concepts to more practical application topics:
 
-- `variables_and_constants/` — variables, mutability, constants, and comments
-- `primitive_types/` — booleans, numbers, strings, and runes
-- `control_flow/` — conditionals, pattern matching, and loops
-- `functions/` — function basics and advanced usage
-- `structs/` — custom types, fields, and methods
-- `error_handling/` — option and result patterns
-- `modules/` — organizing code into reusable modules
-- `testing/` — assertions and test suites
-- `concurrency/` and `channels/` — concurrent programming and communication
-- `json_and_orm/`, `sqlite/`, and `notes_api/` — data persistence and APIs
+- Foundations: `variables_and_constants/`, `primitive_types/`, `control_flow/`, and `functions/`
+- Data and program design: `structs/`, `error_handling/`, `modules/`, and `testing/`
+- Applied topics: `concurrency/`, `channels/`, `json_and_orm/`, `sqlite/`, and `notes_api/`- Reference material: `language_updates_and_stdlib/` now has a clearer split between newer language features and grouped standard library examples
+  This structure makes it easier to jump straight to the concept you want to study and to understand how the topics build on one another.
 
-This structure makes it easier to jump straight to the concept you want to study.
+### Recommended way to use the repo
+
+1. Start with the foundational folders to learn the core syntax and mindset.
+2. Move to data modeling and correctness topics once the basics feel comfortable.
+3. Finish with the applied examples to see V used in real-world style programs.
+
+### Contributing a new lesson
+
+- Keep each topic in its own folder.
+- Use numbered lesson folders such as `01_topic_name/` and `02_topic_name/` for consistency.
+- Add a short explanation or README when a topic needs more context.
+- Keep examples runnable and focused on one idea at a time.
 
 > [!TIP]
 > **Interactive Viewer**: Read this guide and other tutorials as a responsive HTML site on the [Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/) (source code available in the [GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
