@@ -638,6 +638,56 @@
             color: var(--color-caution);
         }
 
+        .alert-exercise {
+            border-left-color: #8b5cf6;
+        }
+        .alert-exercise .alert-title {
+            color: #8b5cf6;
+        }
+
+        .alert-solution {
+            border-left-color: #10b981;
+        }
+        .alert-solution .alert-title {
+            color: #10b981;
+        }
+
+        .alert-output {
+            border-left-color: #38bdf8;
+        }
+        .alert-output .alert-title {
+            color: #38bdf8;
+        }
+
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 14px;
+            margin: 20px 0 24px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .lesson-nav a {
+            color: var(--accent-glow);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .lesson-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .lesson-nav .nav-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
         /* Premium Code block layouts */
         .code-wrapper {
             background-color: var(--code-bg);
@@ -23299,11 +23349,65 @@ fn main() {
             });
         }
 
+        function renderLessonNavigation() {
+            const lessonEntries = [];
+            (bookStructure || []).forEach(chapter => {
+                (chapter.sections || []).forEach(section => {
+                    (section.lessons || []).forEach(lesson => {
+                        lessonEntries.push({
+                            id: lesson.id,
+                            title: lesson.title,
+                            chapter: chapter.title,
+                            section: section.title
+                        });
+                    });
+                });
+            });
+
+            const headings = Array.from(document.querySelectorAll('.lesson-title'));
+            headings.forEach((heading, index) => {
+                const lessonIndex = lessonEntries.findIndex(entry => entry.id === heading.id);
+                if (lessonIndex === -1) return;
+
+                const prevEntry = lessonIndex > 0 ? lessonEntries[lessonIndex - 1] : null;
+                const nextEntry = lessonIndex < lessonEntries.length - 1 ? lessonEntries[lessonIndex + 1] : null;
+
+                const nav = document.createElement('div');
+                nav.className = 'lesson-nav';
+                const prevHtml = prevEntry
+                    ? `<a href="#${prevEntry.id}"><span class="nav-label">Previous</span><br />${prevEntry.title}</a>`
+                    : '<span class="nav-label">Start of guide</span>';
+                const nextHtml = nextEntry
+                    ? `<a href="#${nextEntry.id}"><span class="nav-label">Next</span><br />${nextEntry.title}</a>`
+                    : '<span class="nav-label">End of guide</span>';
+                nav.innerHTML = `
+                    <div>
+                        ${prevHtml}
+                    </div>
+                    <div style="text-align:right;">
+                        ${nextHtml}
+                    </div>
+                `;
+
+                let insertAfter = heading;
+                let sibling = heading.nextElementSibling;
+                while (sibling) {
+                    if (sibling.classList && (sibling.classList.contains('lesson-title') || sibling.classList.contains('section-title') || sibling.classList.contains('chapter-title'))) {
+                        break;
+                    }
+                    insertAfter = sibling;
+                    sibling = sibling.nextElementSibling;
+                }
+                insertAfter.insertAdjacentElement('afterend', nav);
+            });
+        }
+
         // Trigger initial highlight and expand on load
         setTimeout(() => {
             if (window.Prism) {
                 Prism.highlightAll();
             }
+            renderLessonNavigation();
             window.dispatchEvent(new Event('scroll'));
         }, 100);
     </script>

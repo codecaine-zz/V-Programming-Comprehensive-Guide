@@ -85,6 +85,12 @@ function parseMarkdownToHtmlAndIndex(md) {
                 return '<path d="M6.457 1.047c.659-1.14 2.427-1.14 3.086 0l6.03 10.437C16.233 12.624 15.349 14 14.03 14H1.97c-1.319 0-2.204-1.376-1.543-2.516L6.457 1.047ZM8 4c-.552 0-1 .448-1 1v3c0 .552.448 1 1 1s1-.448 1-1V5c0-.552-.448-1-1-1Zm0 6.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path>';
             case 'caution':
                 return '<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14Zm0 1.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Zm0-9a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 8 7.5ZM8 4.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5Z"></path>';
+            case 'exercise':
+                return '<path d="M8 1.5A6.5 6.5 0 1 0 14.5 8 6.507 6.507 0 0 0 8 1.5Zm.75 3.25a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 1.5 0Zm0 4.5a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"></path>';
+            case 'solution':
+                return '<path d="M13.78 4.22a.75.75 0 0 1 0 1.06L6.56 12.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.97 2.97 6.97-8.97a.75.75 0 0 1 1.06 0Z"></path>';
+            case 'output':
+                return '<path d="M5.75 3a.75.75 0 0 0 0 1.5h4.5A.75.75 0 0 0 10.25 3h-4.5Zm-2.5 4.5A.75.75 0 0 0 3 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5Zm7.5 0A.75.75 0 0 0 10.5 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5ZM8 10.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 10.25Z"></path>';
             default:
                 return '';
         }
@@ -218,6 +224,15 @@ function parseMarkdownToHtmlAndIndex(md) {
             } else if (cleanLine.startsWith('[!CAUTION]')) {
                 alertType = 'caution';
                 cleanLine = cleanLine.substring(10).trim();
+            } else if (cleanLine.startsWith('[!EXERCISE]')) {
+                alertType = 'exercise';
+                cleanLine = cleanLine.substring(10).trim();
+            } else if (cleanLine.startsWith('[!SOLUTION]')) {
+                alertType = 'solution';
+                cleanLine = cleanLine.substring(10).trim();
+            } else if (cleanLine.startsWith('[!OUTPUT]')) {
+                alertType = 'output';
+                cleanLine = cleanLine.substring(8).trim();
             }
             
             if (cleanLine) {
@@ -1059,6 +1074,56 @@ const template = `<!DOCTYPE html>
             color: var(--color-caution);
         }
 
+        .alert-exercise {
+            border-left-color: #8b5cf6;
+        }
+        .alert-exercise .alert-title {
+            color: #8b5cf6;
+        }
+
+        .alert-solution {
+            border-left-color: #10b981;
+        }
+        .alert-solution .alert-title {
+            color: #10b981;
+        }
+
+        .alert-output {
+            border-left-color: #38bdf8;
+        }
+        .alert-output .alert-title {
+            color: #38bdf8;
+        }
+
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 14px;
+            margin: 20px 0 24px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .lesson-nav a {
+            color: var(--accent-glow);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .lesson-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .lesson-nav .nav-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
         /* Premium Code block layouts */
         .code-wrapper {
             background-color: var(--code-bg);
@@ -1777,11 +1842,65 @@ const template = `<!DOCTYPE html>
             });
         }
 
+        function renderLessonNavigation() {
+            const lessonEntries = [];
+            (bookStructure || []).forEach(chapter => {
+                (chapter.sections || []).forEach(section => {
+                    (section.lessons || []).forEach(lesson => {
+                        lessonEntries.push({
+                            id: lesson.id,
+                            title: lesson.title,
+                            chapter: chapter.title,
+                            section: section.title
+                        });
+                    });
+                });
+            });
+
+            const headings = Array.from(document.querySelectorAll('.lesson-title'));
+            headings.forEach((heading, index) => {
+                const lessonIndex = lessonEntries.findIndex(entry => entry.id === heading.id);
+                if (lessonIndex === -1) return;
+
+                const prevEntry = lessonIndex > 0 ? lessonEntries[lessonIndex - 1] : null;
+                const nextEntry = lessonIndex < lessonEntries.length - 1 ? lessonEntries[lessonIndex + 1] : null;
+
+                const nav = document.createElement('div');
+                nav.className = 'lesson-nav';
+                const prevHtml = prevEntry
+                    ? \`<a href="#\${prevEntry.id}"><span class="nav-label">Previous</span><br />\${prevEntry.title}</a>\`
+                    : '<span class="nav-label">Start of guide</span>';
+                const nextHtml = nextEntry
+                    ? \`<a href="#\${nextEntry.id}"><span class="nav-label">Next</span><br />\${nextEntry.title}</a>\`
+                    : '<span class="nav-label">End of guide</span>';
+                nav.innerHTML = \`
+                    <div>
+                        \${prevHtml}
+                    </div>
+                    <div style="text-align:right;">
+                        \${nextHtml}
+                    </div>
+                \`;
+
+                let insertAfter = heading;
+                let sibling = heading.nextElementSibling;
+                while (sibling) {
+                    if (sibling.classList && (sibling.classList.contains('lesson-title') || sibling.classList.contains('section-title') || sibling.classList.contains('chapter-title'))) {
+                        break;
+                    }
+                    insertAfter = sibling;
+                    sibling = sibling.nextElementSibling;
+                }
+                insertAfter.insertAdjacentElement('afterend', nav);
+            });
+        }
+
         // Trigger initial highlight and expand on load
         setTimeout(() => {
             if (window.Prism) {
                 Prism.highlightAll();
             }
+            renderLessonNavigation();
             window.dispatchEvent(new Event('scroll'));
         }, 100);
     </script>
