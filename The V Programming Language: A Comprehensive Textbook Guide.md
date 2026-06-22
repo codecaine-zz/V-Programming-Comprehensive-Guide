@@ -4527,7 +4527,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 ---
 
-Functions allow you to break your program into reusable blocks of logic. This chapter explains how to declare functions, handle multiple return values, write anonymous functions and closures, and use the `defer` keyword to clean up resources.
+Functions let you turn repeated or complex logic into small, named building blocks. A useful mental model is: define the task, give it inputs if needed, do the work, and return a useful result. This chapter starts with simple functions and then introduces multiple returns, optional results, higher-order functions, and cleanup with `defer`.
 
 ## Advanced Function Features
 
@@ -4537,14 +4537,7 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 
 ### Lesson: Function Returns Value Example 1
 
-A function is a named block of code that performs one job and can return a value. The simplest pattern is:
-
-1. define a function
-2. give it inputs
-3. compute something
-4. return the result
-
-This example shows a function that adds two numbers and returns the total.
+A simple function is a small helper that turns inputs into a useful result. The basic pattern is: define the function, pass in values, do some work, and return the answer. In this example, `add` takes two integers and returns their sum.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function returns value example 1**.
@@ -4568,7 +4561,7 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 
 ### Lesson: Function Returns Value Example 2
 
-Functions do not have to print anything directly. They can return a value that the caller uses later. In this example, a function creates a friendly greeting string and the main program prints it.
+A function does not need to print anything itself. It can build a value and hand it back to the caller. Here, `say_hello` returns a greeting string, and `main` decides how to display it.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function returns value example 2**.
@@ -4586,13 +4579,13 @@ fn main() {
 
 ---
 
-### Funtions Without Return Type
+### Functions Without Return Type
 
 _File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v)_
 
-### Lesson: Funtions Without Return Type
+### Lesson: Functions Without Return Type
 
-Some functions are used for actions rather than returning a computed value. In that case, you can leave out the return type and simply perform work such as printing, writing files, or updating a value.
+Some functions are used for actions rather than calculations. They may print output, write files, or update state. In that case, you can leave out the return type and focus on the side effect.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **funtions without return type**.
@@ -4639,28 +4632,21 @@ _File location: [functions/02_understanding_funtion_features/03_function_return_
 
 ### Lesson: Function Return Multiple Values
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+A function can return more than one value when those values belong together. A common pattern is returning both the main result and a related detail, such as a length or status. Here, `greet_and_message_length` returns both the greeting and its length.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function return multiple values**.
 
 ```v
 fn greet_and_message_length(name string) (string, int) {
-	mut greeting := 'Hello, ' + name + '!'
+	greeting := 'Hello, ${name}!'
 	return greeting, greeting.len
 }
 
 fn main() {
-	i, j := greet_and_message_length('Navule')
-	println(i)
-	println(j)
+	greeting, length := greet_and_message_length('Navule')
+	println(greeting)
+	println('Length: ${length}')
 }
 ```
 
@@ -4672,27 +4658,20 @@ _File location: [functions/02_understanding_funtion_features/04_ignore_function_
 
 ### Lesson: Ignore Function Return Value
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Sometimes you only care about one returned value. V lets you ignore the rest with `_`, which keeps the code readable when you are only interested in part of the result.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **ignore function return value**.
 
 ```v
 fn greet_and_message_length(name string) (string, int) {
-	mut greeting := 'Hello, ' + name + '!'
+	greeting := 'Hello, ${name}!'
 	return greeting, greeting.len
 }
 
 fn main() {
-	i, _ := greet_and_message_length('Navule')
-	println(i)
+	greeting, _ := greet_and_message_length('Navule')
+	println(greeting)
 }
 ```
 
@@ -4704,14 +4683,7 @@ _File location: [functions/02_understanding_funtion_features/05_function_calls_o
 
 ### Lesson: Function Calls Other Function
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Functions can call other functions to split a bigger problem into smaller steps. This makes the code easier to understand and easier to reuse later.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function calls other function**.
@@ -5145,14 +5117,7 @@ _File location: [functions/02_understanding_funtion_features/11_functions_with_d
 
 ### Lesson: Function With Defer Block
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+`defer` is useful when a function needs to clean up something before it exits, such as closing a file or releasing a resource. The deferred block runs automatically at the end of the function.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with defer block**.
@@ -5183,14 +5148,7 @@ _File location: [functions/02_understanding_funtion_features/12_functions_as_ele
 
 ### Lesson: Functions As Elements Of Array Or Map
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Functions can be stored in arrays and maps just like other values. This allows you to choose an operation dynamically at runtime, which is helpful in flexible programs.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions as elements of array or map**.
@@ -5243,7 +5201,7 @@ _File location: [functions/01_function_types/00_main_function/hello.v](file:///U
 
 ### Lesson: Hello
 
-Functions are reusable blocks of logic. This lesson on **Hello** explains functional syntax, arguments, returns, or functional capabilities in V.
+Every V program starts with `main()`. It is the entry point where execution begins, so it is the first function most beginners learn.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **hello**.
@@ -5264,7 +5222,7 @@ _File location: [functions/01_function_types/01_basic_functions/basic_functions.
 
 ### Lesson: Basic Functions
 
-Functions are reusable blocks of logic. This lesson on **Basic Functions** explains functional syntax, arguments, returns, or functional capabilities in V.
+A basic function packages a task so you can call it later instead of repeating the same code. This example shows a function that prints a message when invoked.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **basic functions**.
@@ -5287,7 +5245,7 @@ _File location: [functions/01_function_types/02_anonymous_functions/anonymous_fu
 
 ### Lesson: Anonymous Functions
 
-Functions are reusable blocks of logic. This lesson on **Anonymous Functions** explains functional syntax, arguments, returns, or functional capabilities in V.
+Anonymous functions are defined inline and are useful for short, one-off behavior. They are handy when you want a quick callback without creating a named function.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **anonymous functions**.
