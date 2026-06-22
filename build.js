@@ -123,6 +123,11 @@ function parseMarkdownToHtmlAndIndex(md) {
             .replace(/^-+|-+$/g, '');
     }
 
+    function normalizeCodeLanguage(language) {
+        const normalized = (language || 'text').toLowerCase();
+        return normalized === 'vlang' ? 'v' : normalized;
+    }
+
     const structure = [];
 
     for (let i = 0; i < lines.length; i++) {
@@ -152,18 +157,23 @@ function parseMarkdownToHtmlAndIndex(md) {
                     </button>`;
                 }
 
+                const normalizedLanguage = normalizeCodeLanguage(codeLanguage);
                 html += `<div class="code-wrapper">
                     <div class="code-header">
                         <span class="code-lang">${codeLanguage || 'text'}</span>
                         <div class="code-actions">
                             ${playgroundBtn}
+                            <button class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
+                                Zoom
+                            </button>
                             <button class="btn-copy" onclick="copyCode(this)" title="Copy Code">
                                 <svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                 Copy
                             </button>
                         </div>
                     </div>
-                    <pre><code class="language-${codeLanguage || 'text'}">${codeHtml}</code></pre>
+                    <pre><code class="language-${normalizedLanguage}">${codeHtml}</code></pre>
                 </div>\n`;
 
                 // Add to current lesson content
@@ -1082,7 +1092,7 @@ const template = `<!DOCTYPE html>
             gap: 8px;
         }
 
-        .btn-copy, .btn-playground, .btn-playground-copy {
+        .btn-copy, .btn-playground, .btn-playground-copy, .btn-zoom, .btn-close-zoom {
             background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
@@ -1097,7 +1107,7 @@ const template = `<!DOCTYPE html>
             transition: background-color var(--transition-speed), color var(--transition-speed), transform var(--transition-speed);
         }
 
-        .btn-copy:hover, .btn-playground:hover, .btn-playground-copy:hover {
+        .btn-copy:hover, .btn-playground:hover, .btn-playground-copy:hover, .btn-zoom:hover, .btn-close-zoom:hover {
             background-color: rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
         }
@@ -1130,6 +1140,37 @@ const template = `<!DOCTYPE html>
             overflow-x: auto;
             margin: 0;
             background: none !important;
+        }
+
+        .code-zoom-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 2000;
+        }
+
+        .code-zoom-modal.active {
+            display: flex;
+        }
+
+        .code-zoom-panel {
+            width: min(1100px, 100%);
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .code-zoom-panel .code-wrapper {
+            margin: 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .code-zoom-panel pre {
+            max-height: 75vh;
+            overflow: auto;
         }
 
         code {
@@ -1360,6 +1401,7 @@ const template = `<!DOCTYPE html>
     
     <!-- Prism Syntax Highlighting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-v.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     
     <script>
@@ -1625,11 +1667,82 @@ const template = `<!DOCTYPE html>
         function escapeRegExp(string) {
             return string.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\$&');
         }
+
+        function closeCodeZoom() {
+            const modal = document.getElementById('code-zoom-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function toggleCodeZoom(btn) {
+            const sourceWrapper = btn.closest('.code-wrapper');
+            const existingModal = document.getElementById('code-zoom-modal');
+            if (existingModal) {
+                existingModal.remove();
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.id = 'code-zoom-modal';
+            modal.className = 'code-zoom-modal active';
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeCodeZoom();
+                }
+            });
+
+            const panel = document.createElement('div');
+            panel.className = 'code-zoom-panel';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-wrapper code-wrapper-zoomed';
+
+            const header = document.createElement('div');
+            header.className = 'code-header';
+
+            const lang = document.createElement('span');
+            lang.className = 'code-lang';
+            lang.textContent = sourceWrapper.querySelector('.code-lang').textContent;
+            header.appendChild(lang);
+
+            const actions = document.createElement('div');
+            actions.className = 'code-actions';
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'btn-close-zoom';
+            closeBtn.title = 'Close Zoom';
+            closeBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Close';
+            closeBtn.addEventListener('click', closeCodeZoom);
+            actions.appendChild(closeBtn);
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'btn-copy';
+            copyBtn.title = 'Copy Code';
+            copyBtn.innerHTML = '<svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy';
+            copyBtn.onclick = () => copyCode(copyBtn);
+            actions.appendChild(copyBtn);
+
+            header.appendChild(actions);
+            wrapper.appendChild(header);
+
+            const pre = document.createElement('pre');
+            const code = document.createElement('code');
+            code.className = sourceWrapper.querySelector('code').className;
+            code.textContent = sourceWrapper.querySelector('code').innerText;
+            pre.appendChild(code);
+            wrapper.appendChild(pre);
+            panel.appendChild(wrapper);
+            modal.appendChild(panel);
+            document.body.appendChild(modal);
+            if (window.Prism) {
+                Prism.highlightElement(code);
+            }
+        }
         
         // Copy Code utility
         function copyCode(btn) {
             const codeBlock = btn.closest('.code-wrapper').querySelector('code');
-            const range = document.createRange();
             
             navigator.clipboard.writeText(codeBlock.innerText).then(() => {
                 const originalText = btn.innerHTML;
@@ -1666,6 +1779,9 @@ const template = `<!DOCTYPE html>
 
         // Trigger initial highlight and expand on load
         setTimeout(() => {
+            if (window.Prism) {
+                Prism.highlightAll();
+            }
             window.dispatchEvent(new Event('scroll'));
         }, 100);
     </script>
