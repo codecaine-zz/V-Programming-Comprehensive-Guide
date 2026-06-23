@@ -190,31 +190,80 @@ As your projects grow, you will want to know how to:
 
 ## V Cheat Sheet
 
-Here is a compact reference for the most common V patterns you will see in everyday code.
+This cheat sheet gathers the most common V patterns in one place. Use it as a quick reference while you move from examples to small programs.
 
-### Variables and Mutability
+### Run and build
+
+```bash
+v run hello.v
+v -o hello hello.v
+```
+
+### Practical examples programmers reach for
+
+#### Read input and greet the user
+
+```v
+import os
+
+fn main() {
+	name := os.input('What is your name? ')
+	println('Hello, ${name}!')
+}
+```
+
+#### Work with strings
 
 ```v
 fn main() {
-	mut score := 0
-	score += 5
-	println(score)
+	msg := 'v is simple'
+	println(msg.to_upper())
+	println(msg.len)
 }
 ```
 
-- Use `mut` when a variable needs to change.
-- Variables are immutable by default.
-
-### Loops
+#### Read a file
 
 ```v
-for i in 0..5 {
-	println(i)
+import os
+
+fn main() {
+	content := os.read_file('notes.txt') or { '' }
+	println(content)
 }
 ```
 
-- `for ... in` is the common loop form in V.
-- Ranges like `0..5` are useful for simple iteration.
+#### Variables and mutability
+
+```v
+fn main() {
+	mut count := 0
+	count++
+	println(count)
+}
+```
+
+- `:=` declares and initializes a variable.
+- `mut` makes a variable changeable.
+- Variables are immutable by default.
+
+### Conditionals and loops
+
+```v
+fn main() {
+	age := 20
+
+	if age >= 18 {
+		println('adult')
+	} else {
+		println('minor')
+	}
+
+	for i in 0..5 {
+		println(i)
+	}
+}
+```
 
 ### Functions
 
@@ -222,14 +271,22 @@ for i in 0..5 {
 fn add(a int, b int) int {
 	return a + b
 }
-
-fn main() {
-	println(add(2, 3))
-}
 ```
 
-- Functions help break code into small, testable units.
-- V uses explicit types in function signatures.
+- Keep functions small and focused.
+- Use explicit parameter and return types.
+
+### Arrays and maps
+
+```v
+fn main() {
+	nums := [1, 2, 3]
+	println(nums[0])
+
+	grades := {'alice': 90, 'bob': 85}
+	println(grades['alice'])
+}
+```
 
 ### Structs
 
@@ -238,12 +295,17 @@ struct User {
 	name string
 	age  int
 }
+
+fn main() {
+	user := User{
+		name: 'Ada'
+		age: 36
+	}
+	println(user.name)
+}
 ```
 
-- Structs are used to group related data.
-- They are a core building block for models and records.
-
-### Option and Result
+### Error handling
 
 ```v
 fn maybe_value() ?int {
@@ -256,8 +318,8 @@ fn main() {
 }
 ```
 
-- `?` marks functions that may return an error or no value.
-- `or {}` provides a fallback for handling it cleanly.
+- `?` marks a function that may fail or produce no value.
+- `or {}` provides a clear fallback.
 
 ### Modules
 
@@ -267,8 +329,29 @@ module main
 import math
 ```
 
-- Modules help organize code and separate concerns.
-- Importing standard library packages is a normal part of larger programs.
+- Use modules to split larger projects into smaller files.
+- Imports make standard library features available.
+
+### Concurrency basics
+
+```v
+fn worker() {
+	println('working')
+}
+
+fn main() {
+	spawn worker()
+}
+```
+
+### Quick glossary
+
+- `mut`: make a variable changeable
+- `fn`: define a function
+- `struct`: define a custom data type
+- `module`: group related code together
+- `?`: represent optional or failing values
+- `spawn`: run work concurrently
 
 ## From Practice to Real Projects
 
