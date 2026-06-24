@@ -344,6 +344,136 @@ fn main() {
 }
 ```
 
+### More practical examples
+
+#### CLI arguments
+
+```v
+import os
+
+fn main() {
+	if os.args.len < 2 {
+		println('Usage: v run cli_args.v <name>')
+		return
+	}
+	println('Hello, ${os.args[1]}!')
+}
+```
+
+#### JSON encode and decode with structs
+
+```v
+import json
+
+struct User {
+	name string
+	age  int
+}
+
+fn main() {
+	user := User{
+		name: 'Ada'
+		age: 36
+	}
+	encoded := json.encode(user)
+	println(encoded)
+
+	decoded := json.decode(User, encoded) or { User{} }
+	println(decoded.name)
+}
+```
+
+#### Word count with a map
+
+```v
+fn main() {
+	text := 'v is simple and simple is fast'
+	mut counts := map[string]int{}
+	for word in text.to_lower().split(' ') {
+		counts[word] = counts[word] + 1
+	}
+	println(counts)
+}
+```
+
+#### A small channel worker
+
+```v
+fn worker(ch chan string) {
+	ch <- 'done'
+}
+
+fn main() {
+	ch := chan string{}
+	go worker(ch)
+	println(<-ch)
+}
+```
+
+#### A simple test
+
+```v
+fn add(a int, b int) int {
+	return a + b
+}
+
+fn test_add() {
+	assert add(2, 3) == 5
+}
+```
+
+#### A generic helper
+
+```v
+fn max[T](a T, b T) T {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+fn main() {
+	println(max(8, 3))
+	println(max('z', 'a'))
+}
+```
+
+#### Enum and match
+
+```v
+enum Mode {
+	start
+	run
+	stop
+}
+
+fn describe(mode Mode) string {
+	return match mode {
+		.start { 'starting' }
+		.run { 'running' }
+		.stop { 'stopped' }
+	}
+}
+
+fn main() {
+	println(describe(.run))
+}
+```
+
+#### Safe file reading
+
+```v
+import os
+
+fn main() {
+	content := os.read_file('notes.txt') or {
+		println('Could not read notes.txt')
+		return
+	}
+	println(content)
+}
+```
+
 ### Quick glossary
 
 - `mut`: make a variable changeable
@@ -10759,6 +10889,7 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/08_c_int
 V is designed with first-class support for C integration. Since V compiles directly to C, calling C library functions, passing C structs, and compiling legacy C code alongside V is highly performant and requires no heavy wrapper generator.
 
 This example demonstrates how to:
+
 1. Include standard C headers using `#include <header.h>`.
 2. Declare C functions using the `fn C.name(args) type` syntax.
 3. Map C structures in V using `@[typedef] struct C.name` to represent C typedefs.
