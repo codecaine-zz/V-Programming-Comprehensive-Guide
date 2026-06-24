@@ -5482,6 +5482,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Required Fields Example 02](#required-fields-example-02)
 - [Struct Fields With Default Values](#struct-fields-with-default-values)
 - [Methods For Struct](#methods-for-struct)
+- [Mutable Methods](#mutable-methods)
 - [Adding Struct As Struct Field](#adding-struct-as-struct-field)
 - [Updating Fields Of Type Struct](#updating-fields-of-type-struct)
 - [Struct As Trailing Literal Arguments To Function](#struct-as-trailing-literal-arguments-to-function)
@@ -5943,16 +5944,86 @@ fn main() {
 
 ### Methods For Struct
 
-_File location: [structs/04_methods_for_struct/01_methods_for_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/04_methods_for_struct/01_methods_for_struct.v)_
+_File location: [structs/04_methods_for_struct/01_methods_for_struct/01_methods_for_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/04_methods_for_struct/01_methods_for_struct/01_methods_for_struct.v)_
 
 ### Lesson: Methods For Struct
 
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
-These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
+This lesson demonstrates defining structs, updating fields, required fields, default values, and value receiver methods.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **methods for struct**.
+
+```v
+module main
+
+import time
+
+// 1. Define a Struct.
+// Structs are defined with the `struct` keyword. By default, structs are private
+// (only accessible within the current module) and all fields are immutable.
+// The `pub` keyword makes the struct visible to other modules.
+pub struct Note {
+// 2. Struct Access Modifiers:
+// - `pub:` makes the fields readable from outside the module, but still immutable.
+pub:
+	id      int
+	// Fields can have default values assigned at declaration.
+	created time.Time = time.now()
+
+// - `pub mut:` makes the fields readable and writable from outside the module.
+pub mut:
+	// Attributes can be attached to struct fields.
+	// `@[required]` specifies that this field must be explicitly provided when instantiating.
+	message string @[required]
+	status  bool
+	due     time.Time = time.now().add_days(1)
+}
+
+// 3. Define a Method (Value Receiver).
+// In V, a method is a function with a receiver argument.
+// The receiver is specified in parentheses before the function name: `(n Note)`.
+// This is a "value receiver" method, meaning it receives a copy of the struct instance.
+// It cannot modify fields on the original struct instance.
+pub fn (n Note) is_empty_message() bool {
+	return n.message.len < 1
+}
+
+fn main() {
+	// 4. Instantiate a Struct.
+	// We use the struct name and curly braces, listing field initializations.
+	// Because `message` is marked `@[required]`, we must specify it.
+	// The variable `n` is marked `mut` because we might want to update its `pub mut` fields.
+	mut n := Note{
+		id:      1
+		message: ''
+	}
+
+	// 5. Invoke Struct Methods.
+	// Methods are called on struct instances using the dot operator.
+	if n.is_empty_message() {
+		println('message is empty')
+	} else {
+		println('message not empty')
+	}
+}
+```
+
+---
+
+### Mutable Methods
+
+_File location: [structs/04_methods_for_struct/02_mutable_methods/02_mutable_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/04_methods_for_struct/02_mutable_methods/02_mutable_methods.v)_
+
+### Lesson: Mutable Methods
+
+By default, struct methods in V receive a read-only copy of the struct instance (value receiver). If a method needs to modify any fields of the struct, it must declare a mutable receiver using the `mut` keyword, e.g., `fn (mut n Note) mark_as_completed()`.
+
+Additionally, the struct instance variable must be declared with `mut` at the call site to allow mutable method invocations.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **mutable methods for struct**.
 
 ```v
 module main
@@ -5969,22 +6040,42 @@ pub mut:
 	due     time.Time = time.now().add_days(1)
 }
 
-// is_empty_message is a method that belongs to Note
-pub fn (n Note) is_empty_message() bool {
-	return n.message.len < 1
+// 1. Define a Mutable Struct Method.
+// To modify fields of a struct inside a method, the receiver must be marked mutable: `(mut n Note)`.
+// Under the hood, this passes a pointer/mutable reference, allowing the method to update
+// the original struct instance fields directly.
+pub fn (mut n Note) mark_as_completed() {
+	n.status = true
+	println('Note [ID: ${n.id}] marked as completed.')
+}
+
+// 2. Define another Mutable Method to update the message.
+pub fn (mut n Note) update_message(new_msg string) {
+	if new_msg.len > 0 {
+		n.message = new_msg
+		println('Note [ID: ${n.id}] message updated to: "${new_msg}"')
+	}
 }
 
 fn main() {
+	// 3. Instantiate a mutable struct instance.
+	// To call mutable methods on a struct, the variable MUST be declared as mutable (`mut`).
+	// If `n` was immutable, calling `n.mark_as_completed()` would result in a compilation error.
 	mut n := Note{
-		id:      1
-		message: ''
+		id:      42
+		message: 'Learn V programming'
+		status:  false
 	}
 
-	if n.is_empty_message() {
-		println('message is empty')
-	} else {
-		println('message not empty')
-	}
+	println('Initial state - Message: "${n.message}", Completed: ${n.status}')
+
+	// 4. Call the mutable methods.
+	n.update_message('Master V programming and C interop!')
+	n.mark_as_completed()
+
+	// 5. Verify the updates.
+	println('Final state - Message: "${n.message}", Completed: ${n.status}')
+	assert n.status == true
 }
 ```
 
@@ -8421,18 +8512,29 @@ _File location: [channels/01_define_channels/01_unbuffered_channel.v](file:///Us
 
 ### Lesson: Unbuffered Channel
 
-V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
-
-These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
+Unbuffered channels in V have a capacity of 0. Sending data into an unbuffered channel blocks the sender thread until a receiver thread is ready to pop the data. This provides a strong synchronization point between execution threads.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **unbuffered channel**.
 
 ```v
+module main
+
 fn main() {
+	// 1. Declare an unbuffered channel of type 'int'.
+	// In V, channels are declared using the `chan` keyword followed by the type.
+	// An empty initializer `{}` defaults the capacity (`cap`) to 0.
 	uc := chan int{}
-	println(uc.cap) // 0
-	println(typeof(uc).name) // chan int
+
+	// 2. Query the capacity of the channel.
+	// For unbuffered channels, the capacity is always 0.
+	// This means any send operation (pushing data) will block the sending thread
+	// until another thread is actively reading (popping data) from the channel.
+	println('Unbuffered channel capacity: ${uc.cap}') // Outputs: 0
+
+	// 3. Print the type name of the channel.
+	// V's `typeof().name` provides runtime type reflection names.
+	println('Type of channel: ${typeof(uc).name}') // Outputs: chan int
 }
 ```
 
@@ -8444,18 +8546,27 @@ _File location: [channels/01_define_channels/02_buffered_channel.v](file:///User
 
 ### Lesson: Define Buffered Channel
 
-V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
-
-These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
+Buffered channels in V are initialized with a specific capacity. The sender thread can push elements into the channel without blocking as long as the buffer is not completely full. Once the buffer is full, subsequent send operations will block until elements are read by another thread.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **buffered channel**.
 
 ```v
+module main
+
 fn main() {
+	// 1. Declare a buffered channel of type 'string' with a capacity of 2.
+	// We specify capacity using the `cap` initialization field.
 	bc := chan string{cap: 2}
-	println(bc.cap)
-	println(typeof(bc).name)
+
+	// 2. Query the capacity of the channel.
+	// For buffered channels, this returns the size of the buffer.
+	// The sending thread will NOT block when pushing items into the channel
+	// until the buffer is completely full (in this case, containing 2 elements).
+	println('Buffered channel capacity: ${bc.cap}') // Outputs: 2
+
+	// 3. Print the type name of the channel.
+	println('Type of channel: ${typeof(bc).name}') // Outputs: chan string
 }
 ```
 
@@ -9495,9 +9606,7 @@ _File location: [concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharin
 
 ### Lesson: Sharing Data Main And Concurrent Tasks
 
-V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
-
-These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
+In addition to channels, V supports shared-memory concurrency using the `shared` keyword. Multiple threads can safely read and write to the same struct using `lock` (exclusive write lock) and `rlock` (shared read lock) blocks. This prevents race conditions and ensures synchronization without manual mutex management.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sharing data main and concurrent tasks**.
@@ -9507,6 +9616,9 @@ module main
 
 import rand
 
+// 1. Define a shared struct type.
+// Structs that are intended to be shared across multiple threads should be defined normally.
+// Mutability of fields is indicated as usual (e.g., total and num_donors under mut:).
 struct Fund {
 	name   string
 	target f32
@@ -9515,37 +9627,61 @@ mut:
 	num_donors int
 }
 
+// 2. Define a method on a shared receiver.
+// In V, a receiver can be marked as 'shared' to indicate that the struct instance
+// passed to it will be accessed concurrently.
 fn (shared f Fund) collect(amt f32) {
-	lock f { // read - write lock
+	// 3. Acquire a write lock.
+	// The `lock` block ensures exclusive (read-write) access to the shared object 'f'.
+	// Only one thread can execute within the lock block at a time. Other threads attempting
+	// to lock 'f' will block until this block exits.
+	lock f {
 		if f.total < f.target {
 			f.num_donors += 1
 			f.total += amt
+			// We can safely read and write to the struct fields inside the lock block.
 			println('$f.num_donors \t before: ${f.total - amt} \t funds received: $amt \t total: $f.total')
 		}
 	}
 }
 
+// donation simulates generating a random donation amount.
 fn donation() f32 {
+	// rand.f32_in_range returns a result/option type, so we use `or` to handle default.
 	return rand.f32_in_range(100.00, 250.00) or { 100.00 }
 }
 
 fn main() {
+	// 4. Declare a shared variable.
+	// The `shared` keyword before the variable name makes it a shared object.
+	// Under the hood, V automatically associates a mutex with this object.
 	shared fund := Fund{
 		name: 'A noble cause'
 		target: 1000.00
 	}
 
 	for {
+		// 5. Acquire a read lock (rlock).
+		// A read lock allows multiple threads to read the shared object concurrently
+		// but prevents any thread from writing to it.
 		rlock fund {
 			if fund.total >= fund.target {
 				break
 			}
 		}
+
+		// 6. Spawn concurrent tasks.
+		// The `go` keyword (interchangeable with `spawn`) starts a function in a new thread.
+		// `go donation()` returns a thread handle `h`.
 		h := go donation()
+
+		// Spawning `fund.collect` concurrently and passing the result of `h.wait()`.
+		// `h.wait()` blocks the main loop until the `donation()` thread finishes and returns its f32 value.
 		go fund.collect(h.wait())
 	}
 
-	rlock fund { // acquire read lock
+	// 7. Final output with read lock.
+	rlock fund {
 		println('$fund.num_donors donors donated for $fund.name')
 		println('$fund.name raised total fund amount: \$ $fund.total')
 	}
@@ -10440,6 +10576,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 **Inline Assembly & C Interop**
 
 - [Inline Assembly](#inline-assembly)
+- [C Interop](#c-interop)
 
 **Networking (TCP, UDP, SSL, WebSockets)**
 
@@ -10608,6 +10745,77 @@ fn main() {
 	assert val_double == 42
 
 	println('All inline assembly assertions successfully verified!')
+}
+```
+
+---
+
+### C Interop
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/08_c_interop/c_interop.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/08_c_interop/c_interop.v)_
+
+### Lesson: C Interop
+
+V is designed with first-class support for C integration. Since V compiles directly to C, calling C library functions, passing C structs, and compiling legacy C code alongside V is highly performant and requires no heavy wrapper generator.
+
+This example demonstrates how to:
+1. Include standard C headers using `#include <header.h>`.
+2. Declare C functions using the `fn C.name(args) type` syntax.
+3. Map C structures in V using `@[typedef] struct C.name` to represent C typedefs.
+4. Interact with C variables, functions, and structs directly from V.
+
+```v
+module main
+
+// 1. Include C standard headers.
+// V compiles directly to C, so we can use C preprocessor directives like `#include`
+// to bring in C standard library definitions or external C headers.
+#include <math.h>
+#include <stdlib.h>
+
+// 2. Declare C functions.
+// We declare C functions using the `fn C.name(args) return_type` syntax.
+// The V compiler translates calls to these functions directly to the native C functions.
+fn C.abs(x int) int
+fn C.sqrt(x f64) f64
+
+// 3. Declare C Structs.
+// V can also interact with C structs. We use `struct C.name` to define them.
+// The `@[typedef]` attribute tells the V compiler that `div_t` is a typedef structure
+// in C (defined in <stdlib.h>) so it does not prefix it with the `struct` keyword in the C output.
+@[typedef]
+struct C.div_t {
+	quot int
+	rem  int
+}
+
+// Declare C.div function from stdlib.h which returns a C.div_t struct.
+fn C.div(numer int, denom int) C.div_t
+
+fn main() {
+	println('=== V C Interop Demo ===')
+
+	// 4. Calling C.abs
+	negative_val := -42
+	absolute_val := C.abs(negative_val)
+	println('C.abs(${negative_val}) = ${absolute_val}')
+	assert absolute_val == 42
+
+	// 5. Calling C.sqrt
+	float_val := 16.0
+	square_root := C.sqrt(float_val)
+	println('C.sqrt(${float_val}) = ${square_root}')
+	assert square_root == 4.0
+
+	// 6. Working with C Structs and functions returning C Structs
+	numerator := 10
+	denominator := 3
+	div_result := C.div(numerator, denominator)
+	println('C.div(${numerator}, ${denominator}) -> Quotient: ${div_result.quot}, Remainder: ${div_result.rem}')
+	assert div_result.quot == 3
+	assert div_result.rem == 1
+
+	println('All C Interop functions successfully executed and verified!')
 }
 ```
 
