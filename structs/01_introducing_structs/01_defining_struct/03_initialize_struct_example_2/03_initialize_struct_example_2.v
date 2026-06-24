@@ -4,11 +4,11 @@ struct Note {
 }
 
 fn main() {
-	n := Note{
-		message: 'a simple struct demo'
-		id:      1
+	note := Note{
+		message: 'A named-field struct demo'
+		id:      2
 	}
 
-	println(typeof(n).name)
-	// Note
+	println(typeof(note).name)
+	println(note)
 }

@@ -4,7 +4,8 @@ struct Note {
 }
 
 fn main() {
-	n := Note{1, 'a simple struct demo'}
+	note := Note{1, 'A simple struct demo'}
 
-	println(n)
+	println('ID: ${note.id}')
+	println('Message: ${note.message}')
 }

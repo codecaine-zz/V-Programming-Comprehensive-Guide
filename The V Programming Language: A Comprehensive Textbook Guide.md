@@ -879,8 +879,9 @@ This example demonstrates the concepts of **parallel declaration immutable varia
 
 ```v
 fn main() {
-	name, age, city := 'Ada', 36, 'London'
-	println('${name} is ${age} years old and lives in ${city}.')
+	first_name, last_name, age := 'Ada', 'Lovelace', 36
+	println('${first_name} ${last_name} is ${age} years old')
+	println('Next milestone: ${first_name} will speak at the conference')
 }
 ```
 
@@ -903,12 +904,12 @@ This example demonstrates the concepts of **parallel declaration mutable variabl
 // mutable variables parallel assignment
 
 fn main() {
-	mut i, mut j := 'Hi', 'Hello'
-	println(i)
-	println(j)
+	mut greeting, mut recipient := 'Hi', 'world'
+	println('${greeting}, ${recipient}!')
 
 	// updating mutable variables in parallel
-	i, j = 'Hi there', 'Hello, Good Day!'
+	greeting, recipient = 'Hello', 'Ada'
+	println('${greeting}, ${recipient}!')
 }
 ```
 
@@ -927,12 +928,12 @@ This example demonstrates the concepts of **parallel declaration mut and immutab
 
 ```v
 fn main() {
-	mut msg, i := 'Hello', 32
-	println(msg) // Hello
-	msg = 'Hi'
-	println(msg) // Hi
-	println(i) // 32
-	i = 2 // error: `i` is immutable, declare it with `mut` to make it mutable
+	mut message, count := 'Hello', 32
+	println(message)
+	message = 'Hi'
+	println(message)
+	println(count)
+	// count = 2 // Uncommenting this would fail because count is immutable.
 }
 ```
 
@@ -951,14 +952,14 @@ This example demonstrates the concepts of **augmented assignment string**.
 
 ```v
 fn main() {
-	mut greet := 'Hi'
-	println(greet)
+	mut greeting := 'Hi'
+	println(greeting)
 
-	greet = greet + ' there, How are you?'
-	println(greet)
+	greeting = greeting + ' there'
+	println(greeting)
 
-	greet += ' Hope you have a great day!'
-	println(greet)
+	greeting += ', how are you today?'
+	println(greeting)
 }
 ```
 
@@ -2116,8 +2117,8 @@ fn main() {
 	message := greeting + ', ' + name + '!'
 
 	println(message)
-	println(message.len)
-	println(typeof(message).name)
+	println('Length: ${message.len}')
+	println('Type: ${typeof(message).name}')
 }
 ```
 
@@ -5311,12 +5312,13 @@ A basic function packages a task so you can call it later instead of repeating t
 This example demonstrates the concepts of **basic functions**.
 
 ```v
-fn greet(msg string) {
-	println(msg)
+fn greet(name string) {
+	println('Hello, ${name}!')
 }
 
 fn main() {
-	greet('Hello, Welcome to the world of V programming')
+	greet('Ada')
+	greet('Grace')
 }
 ```
 
@@ -5510,6 +5512,12 @@ struct Note {
 }
 
 fn main() {
+	note := Note{
+		id:      1
+		message: 'A simple struct demo'
+	}
+
+	println(note)
 }
 ```
 
@@ -5535,9 +5543,10 @@ struct Note {
 }
 
 fn main() {
-	n := Note{1, 'a simple struct demo'}
+	note := Note{1, 'A simple struct demo'}
 
-	println(n)
+	println('ID: ${note.id}')
+	println('Message: ${note.message}')
 }
 ```
 
@@ -5563,13 +5572,13 @@ struct Note {
 }
 
 fn main() {
-	n := Note{
-		message: 'a simple struct demo'
-		id:      1
+	note := Note{
+		message: 'A named-field struct demo'
+		id:      2
 	}
 
-	println(typeof(n).name)
-	// Note
+	println(typeof(note).name)
+	println(note)
 }
 ```
 

@@ -2365,7 +2365,7 @@ pub fn do_work() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW5hbWUsIGFnZSwgY2l0eSA6PSAnQWRhJywgMzYsICdMb25kb24nCglwcmludGxuKCcke25hbWV9IGlzICR7YWdlfSB5ZWFycyBvbGQgYW5kIGxpdmVzIGluICR7Y2l0eX0uJykKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCWZpcnN0X25hbWUsIGxhc3RfbmFtZSwgYWdlIDo9ICdBZGEnLCAnTG92ZWxhY2UnLCAzNgoJcHJpbnRsbignJHtmaXJzdF9uYW1lfSAke2xhc3RfbmFtZX0gaXMgJHthZ2V9IHllYXJzIG9sZCcpCglwcmludGxuKCdOZXh0IG1pbGVzdG9uZTogJHtmaXJzdF9uYW1lfSB3aWxsIHNwZWFrIGF0IHRoZSBjb25mZXJlbmNlJykKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -2384,8 +2384,9 @@ pub fn do_work() {
                         </div>
                     </div>
                     <pre><code class="language-v">fn main() {
-	name, age, city := &#039;Ada&#039;, 36, &#039;London&#039;
-	println(&#039;${name} is ${age} years old and lives in ${city}.&#039;)
+	first_name, last_name, age := &#039;Ada&#039;, &#039;Lovelace&#039;, 36
+	println(&#039;${first_name} ${last_name} is ${age} years old&#039;)
+	println(&#039;Next milestone: ${first_name} will speak at the conference&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -2403,7 +2404,7 @@ pub fn do_work() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Ly8gbXV0YWJsZSB2YXJpYWJsZXMgcGFyYWxsZWwgYXNzaWdubWVudAoKZm4gbWFpbigpIHsKCW11dCBpLCBtdXQgaiA6PSAnSGknLCAnSGVsbG8nCglwcmludGxuKGkpCglwcmludGxuKGopCgoJLy8gdXBkYXRpbmcgbXV0YWJsZSB2YXJpYWJsZXMgaW4gcGFyYWxsZWwKCWksIGogPSAnSGkgdGhlcmUnLCAnSGVsbG8sIEdvb2QgRGF5IScKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Ly8gbXV0YWJsZSB2YXJpYWJsZXMgcGFyYWxsZWwgYXNzaWdubWVudAoKZm4gbWFpbigpIHsKCW11dCBncmVldGluZywgbXV0IHJlY2lwaWVudCA6PSAnSGknLCAnd29ybGQnCglwcmludGxuKCcke2dyZWV0aW5nfSwgJHtyZWNpcGllbnR9IScpCgoJLy8gdXBkYXRpbmcgbXV0YWJsZSB2YXJpYWJsZXMgaW4gcGFyYWxsZWwKCWdyZWV0aW5nLCByZWNpcGllbnQgPSAnSGVsbG8nLCAnQWRhJwoJcHJpbnRsbignJHtncmVldGluZ30sICR7cmVjaXBpZW50fSEnKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -2424,12 +2425,12 @@ pub fn do_work() {
                     <pre><code class="language-v">// mutable variables parallel assignment
 
 fn main() {
-	mut i, mut j := &#039;Hi&#039;, &#039;Hello&#039;
-	println(i)
-	println(j)
+	mut greeting, mut recipient := &#039;Hi&#039;, &#039;world&#039;
+	println(&#039;${greeting}, ${recipient}!&#039;)
 
 	// updating mutable variables in parallel
-	i, j = &#039;Hi there&#039;, &#039;Hello, Good Day!&#039;
+	greeting, recipient = &#039;Hello&#039;, &#039;Ada&#039;
+	println(&#039;${greeting}, ${recipient}!&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -2446,7 +2447,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW11dCBtc2csIGkgOj0gJ0hlbGxvJywgMzIKCXByaW50bG4obXNnKSAvLyBIZWxsbwoJbXNnID0gJ0hpJwoJcHJpbnRsbihtc2cpIC8vIEhpCglwcmludGxuKGkpIC8vIDMyCglpID0gMiAvLyBlcnJvcjogYGlgIGlzIGltbXV0YWJsZSwgZGVjbGFyZSBpdCB3aXRoIGBtdXRgIHRvIG1ha2UgaXQgbXV0YWJsZQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW11dCBtZXNzYWdlLCBjb3VudCA6PSAnSGVsbG8nLCAzMgoJcHJpbnRsbihtZXNzYWdlKQoJbWVzc2FnZSA9ICdIaScKCXByaW50bG4obWVzc2FnZSkKCXByaW50bG4oY291bnQpCgkvLyBjb3VudCA9IDIgLy8gVW5jb21tZW50aW5nIHRoaXMgd291bGQgZmFpbCBiZWNhdXNlIGNvdW50IGlzIGltbXV0YWJsZS4KfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -2465,12 +2466,12 @@ fn main() {
                         </div>
                     </div>
                     <pre><code class="language-v">fn main() {
-	mut msg, i := &#039;Hello&#039;, 32
-	println(msg) // Hello
-	msg = &#039;Hi&#039;
-	println(msg) // Hi
-	println(i) // 32
-	i = 2 // error: `i` is immutable, declare it with `mut` to make it mutable
+	mut message, count := &#039;Hello&#039;, 32
+	println(message)
+	message = &#039;Hi&#039;
+	println(message)
+	println(count)
+	// count = 2 // Uncommenting this would fail because count is immutable.
 }</code></pre>
                 </div>
 <hr />
@@ -2487,7 +2488,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW11dCBncmVldCA6PSAnSGknCglwcmludGxuKGdyZWV0KQoKCWdyZWV0ID0gZ3JlZXQgKyAnIHRoZXJlLCBIb3cgYXJlIHlvdT8nCglwcmludGxuKGdyZWV0KQoKCWdyZWV0ICs9ICcgSG9wZSB5b3UgaGF2ZSBhIGdyZWF0IGRheSEnCglwcmludGxuKGdyZWV0KQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCW11dCBncmVldGluZyA6PSAnSGknCglwcmludGxuKGdyZWV0aW5nKQoKCWdyZWV0aW5nID0gZ3JlZXRpbmcgKyAnIHRoZXJlJwoJcHJpbnRsbihncmVldGluZykKCglncmVldGluZyArPSAnLCBob3cgYXJlIHlvdSB0b2RheT8nCglwcmludGxuKGdyZWV0aW5nKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -2506,14 +2507,14 @@ fn main() {
                         </div>
                     </div>
                     <pre><code class="language-v">fn main() {
-	mut greet := &#039;Hi&#039;
-	println(greet)
+	mut greeting := &#039;Hi&#039;
+	println(greeting)
 
-	greet = greet + &#039; there, How are you?&#039;
-	println(greet)
+	greeting = greeting + &#039; there&#039;
+	println(greeting)
 
-	greet += &#039; Hope you have a great day!&#039;
-	println(greet)
+	greeting += &#039;, how are you today?&#039;
+	println(greeting)
 }</code></pre>
                 </div>
 <hr />
@@ -4172,7 +4173,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCWdyZWV0aW5nIDo9ICdoZWxsbycKCW5hbWUgOj0gJ0FkYScKCW1lc3NhZ2UgOj0gZ3JlZXRpbmcgKyAnLCAnICsgbmFtZSArICchJwoKCXByaW50bG4obWVzc2FnZSkKCXByaW50bG4obWVzc2FnZS5sZW4pCglwcmludGxuKHR5cGVvZihtZXNzYWdlKS5uYW1lKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gbWFpbigpIHsKCWdyZWV0aW5nIDo9ICdoZWxsbycKCW5hbWUgOj0gJ0FkYScKCW1lc3NhZ2UgOj0gZ3JlZXRpbmcgKyAnLCAnICsgbmFtZSArICchJwoKCXByaW50bG4obWVzc2FnZSkKCXByaW50bG4oJ0xlbmd0aDogJHttZXNzYWdlLmxlbn0nKQoJcHJpbnRsbignVHlwZTogJHt0eXBlb2YobWVzc2FnZSkubmFtZX0nKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -4196,8 +4197,8 @@ fn main() {
 	message := greeting + &#039;, &#039; + name + &#039;!&#039;
 
 	println(message)
-	println(message.len)
-	println(typeof(message).name)
+	println(&#039;Length: ${message.len}&#039;)
+	println(&#039;Type: ${typeof(message).name}&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -8899,7 +8900,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gZ3JlZXQobXNnIHN0cmluZykgewoJcHJpbnRsbihtc2cpCn0KCmZuIG1haW4oKSB7CglncmVldCgnSGVsbG8sIFdlbGNvbWUgdG8gdGhlIHdvcmxkIG9mIFYgcHJvZ3JhbW1pbmcnKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gZ3JlZXQobmFtZSBzdHJpbmcpIHsKCXByaW50bG4oJ0hlbGxvLCAke25hbWV9IScpCn0KCmZuIG1haW4oKSB7CglncmVldCgnQWRhJykKCWdyZWV0KCdHcmFjZScpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -8917,12 +8918,13 @@ fn main() {
                             </button>
                         </div>
                     </div>
-                    <pre><code class="language-v">fn greet(msg string) {
-	println(msg)
+                    <pre><code class="language-v">fn greet(name string) {
+	println(&#039;Hello, ${name}!&#039;)
 }
 
 fn main() {
-	greet(&#039;Hello, Welcome to the world of V programming&#039;)
+	greet(&#039;Ada&#039;)
+	greet(&#039;Grace&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -9155,7 +9157,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=c3RydWN0IE5vdGUgewoJaWQgICAgICBpbnQKCW1lc3NhZ2Ugc3RyaW5nCn0KCmZuIG1haW4oKSB7Cn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=c3RydWN0IE5vdGUgewoJaWQgICAgICBpbnQKCW1lc3NhZ2Ugc3RyaW5nCn0KCmZuIG1haW4oKSB7Cglub3RlIDo9IE5vdGV7CgkJaWQ6ICAgICAgMQoJCW1lc3NhZ2U6ICdBIHNpbXBsZSBzdHJ1Y3QgZGVtbycKCX0KCglwcmludGxuKG5vdGUpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -9179,6 +9181,12 @@ fn main() {
 }
 
 fn main() {
+	note := Note{
+		id:      1
+		message: &#039;A simple struct demo&#039;
+	}
+
+	println(note)
 }</code></pre>
                 </div>
 <hr />
@@ -9196,7 +9204,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=c3RydWN0IE5vdGUgewoJaWQgICAgICBpbnQKCW1lc3NhZ2Ugc3RyaW5nCn0KCmZuIG1haW4oKSB7CgluIDo9IE5vdGV7MSwgJ2Egc2ltcGxlIHN0cnVjdCBkZW1vJ30KCglwcmludGxuKG4pCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=c3RydWN0IE5vdGUgewoJaWQgICAgICBpbnQKCW1lc3NhZ2Ugc3RyaW5nCn0KCmZuIG1haW4oKSB7Cglub3RlIDo9IE5vdGV7MSwgJ0Egc2ltcGxlIHN0cnVjdCBkZW1vJ30KCglwcmludGxuKCdJRDogJHtub3RlLmlkfScpCglwcmludGxuKCdNZXNzYWdlOiAke25vdGUubWVzc2FnZX0nKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -9220,9 +9228,10 @@ fn main() {
 }
 
 fn main() {
-	n := Note{1, &#039;a simple struct demo&#039;}
+	note := Note{1, &#039;A simple struct demo&#039;}
 
-	println(n)
+	println(&#039;ID: ${note.id}&#039;)
+	println(&#039;Message: ${note.message}&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -9240,7 +9249,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=c3RydWN0IE5vdGUgewoJaWQgICAgICBpbnQKCW1lc3NhZ2Ugc3RyaW5nCn0KCmZuIG1haW4oKSB7CgluIDo9IE5vdGV7CgkJbWVzc2FnZTogJ2Egc2ltcGxlIHN0cnVjdCBkZW1vJwoJCWlkOiAgICAgIDEKCX0KCglwcmludGxuKHR5cGVvZihuKS5uYW1lKQoJLy8gTm90ZQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=c3RydWN0IE5vdGUgewoJaWQgICAgICBpbnQKCW1lc3NhZ2Ugc3RyaW5nCn0KCmZuIG1haW4oKSB7Cglub3RlIDo9IE5vdGV7CgkJbWVzc2FnZTogJ0EgbmFtZWQtZmllbGQgc3RydWN0IGRlbW8nCgkJaWQ6ICAgICAgMgoJfQoKCXByaW50bG4odHlwZW9mKG5vdGUpLm5hbWUpCglwcmludGxuKG5vdGUpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -9264,13 +9273,13 @@ fn main() {
 }
 
 fn main() {
-	n := Note{
-		message: &#039;a simple struct demo&#039;
-		id:      1
+	note := Note{
+		message: &#039;A named-field struct demo&#039;
+		id:      2
 	}
 
-	println(typeof(n).name)
-	// Note
+	println(typeof(note).name)
+	println(note)
 }</code></pre>
                 </div>
 <hr />

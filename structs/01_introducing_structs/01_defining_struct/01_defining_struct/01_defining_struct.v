@@ -4,4 +4,10 @@ struct Note {
 }
 
 fn main() {
+	note := Note{
+		id:      1
+		message: 'A simple struct demo'
+	}
+
+	println(note)
 }

@@ -4,4 +4,5 @@ fn greet(name string) {
 
 fn main() {
 	greet('Ada')
+	greet('Grace')
 }
