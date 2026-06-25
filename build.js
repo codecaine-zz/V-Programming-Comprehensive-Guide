@@ -644,6 +644,94 @@ const template = `<!DOCTYPE html>
             --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
         }
 
+        /* Rose Theme overrides */
+        html[data-theme="rose"] {
+            --bg-primary: #180c14;
+            --bg-secondary: #24131f;
+            --bg-tertiary: #311a2b;
+            
+            --text-primary: #fff1f7;
+            --text-secondary: #f9a8d4;
+            --text-muted: #f472b6;
+            
+            --accent-primary: #f472b6;
+            --accent-glow: #ec4899;
+            --accent-gradient: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+            
+            --border-color: #4a2438;
+            --border-hover: #f472b6;
+            
+            --code-bg: #11080f;
+            --glass-bg: rgba(36, 19, 31, 0.86);
+            --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.35), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Lavender Theme overrides */
+        html[data-theme="lavender"] {
+            --bg-primary: #140f22;
+            --bg-secondary: #1d1630;
+            --bg-tertiary: #292042;
+            
+            --text-primary: #f5f3ff;
+            --text-secondary: #c4b5fd;
+            --text-muted: #8b5cf6;
+            
+            --accent-primary: #8b5cf6;
+            --accent-glow: #a78bfa;
+            --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            
+            --border-color: #3d2f58;
+            --border-hover: #8b5cf6;
+            
+            --code-bg: #0d0a16;
+            --glass-bg: rgba(29, 22, 48, 0.86);
+            --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.35), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Sunset Theme overrides */
+        html[data-theme="sunset"] {
+            --bg-primary: #1a0f0a;
+            --bg-secondary: #2a1710;
+            --bg-tertiary: #3b2218;
+            
+            --text-primary: #fff7ed;
+            --text-secondary: #fdba74;
+            --text-muted: #fb923c;
+            
+            --accent-primary: #fb923c;
+            --accent-glow: #f97316;
+            --accent-gradient: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+            
+            --border-color: #57311f;
+            --border-hover: #fb923c;
+            
+            --code-bg: #120906;
+            --glass-bg: rgba(42, 23, 16, 0.86);
+            --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.35), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Mint Theme overrides */
+        html[data-theme="mint"] {
+            --bg-primary: #07150f;
+            --bg-secondary: #0f241f;
+            --bg-tertiary: #183731;
+            
+            --text-primary: #f0fdf4;
+            --text-secondary: #86efac;
+            --text-muted: #34d399;
+            
+            --accent-primary: #34d399;
+            --accent-glow: #10b981;
+            --accent-gradient: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            
+            --border-color: #225041;
+            --border-hover: #34d399;
+            
+            --code-bg: #030b09;
+            --glass-bg: rgba(15, 36, 31, 0.86);
+            --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.35), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -2462,6 +2550,18 @@ const template = `<!DOCTYPE html>
                     <button class="theme-btn" onclick="setTheme('ocean')" title="Ocean Breeze" id="theme-ocean">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
                     </button>
+                    <button class="theme-btn" onclick="setTheme('rose')" title="Rose Glow" id="theme-rose">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 2 5 5 5 8a5 5 0 1 1-10 0c0-3 2-6 5-8z"></path></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('lavender')" title="Lavender Mood" id="theme-lavender">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="M6 7c3 0 5 2 6 5 1-3 3-5 6-5"></path></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('sunset')" title="Sunset Glow" id="theme-sunset">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18a6 6 0 0 1 12 0"></path><path d="M8 14c1-3 3-4 4-7 1 3 3 4 4 7"></path></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('mint')" title="Mint Energy" id="theme-mint">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10"></path><path d="M6 8h12"></path><path d="M8 13h8"></path><path d="M9 18h6"></path></svg>
+                    </button>
                     <button class="theme-btn custom-theme-btn" onclick="setTheme('custom')" title="Custom color theme" id="theme-custom">Custom</button>
                 </div>
                 <div class="custom-theme-panel" id="customThemePanel">
@@ -2571,6 +2671,32 @@ const template = `<!DOCTYPE html>
             textPrimary: '#f1f5f9',
             accentPrimary: '#4f46e5'
         };
+        const themePresets = {
+            rose: {
+                bgPrimary: '#180c14',
+                bgSecondary: '#24131f',
+                textPrimary: '#fff1f7',
+                accentPrimary: '#f472b6'
+            },
+            lavender: {
+                bgPrimary: '#140f22',
+                bgSecondary: '#1d1630',
+                textPrimary: '#f5f3ff',
+                accentPrimary: '#8b5cf6'
+            },
+            sunset: {
+                bgPrimary: '#1a0f0a',
+                bgSecondary: '#2a1710',
+                textPrimary: '#fff7ed',
+                accentPrimary: '#fb923c'
+            },
+            mint: {
+                bgPrimary: '#07150f',
+                bgSecondary: '#0f241f',
+                textPrimary: '#f0fdf4',
+                accentPrimary: '#34d399'
+            }
+        };
 
         function hexToRgb(hex) {
             const normalized = hex.replace('#', '');
@@ -2669,6 +2795,7 @@ const template = `<!DOCTYPE html>
         function setTheme(theme) {
             const customThemePanel = document.getElementById('customThemePanel');
             const isCustomToggle = theme === 'custom' && document.documentElement.getAttribute('data-theme') === 'custom' && customThemePanel && customThemePanel.classList.contains('open');
+            const presetTheme = themePresets[theme];
 
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
@@ -2679,6 +2806,10 @@ const template = `<!DOCTYPE html>
                 if (customThemePanel) {
                     customThemePanel.classList.toggle('open', !isCustomToggle);
                 }
+            } else if (presetTheme) {
+                populateCustomThemeInputs(presetTheme);
+                clearCustomThemeOverrides();
+                if (customThemePanel) customThemePanel.classList.remove('open');
             } else {
                 clearCustomThemeOverrides();
                 if (customThemePanel) customThemePanel.classList.remove('open');
