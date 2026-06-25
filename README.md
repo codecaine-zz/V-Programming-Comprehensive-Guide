@@ -39,8 +39,10 @@ The repository is organized by learning progression, so it is easier to move fro
 
 - Foundations: `variables_and_constants/`, `primitive_types/`, `control_flow/`, and `functions/`
 - Data and program design: `structs/`, `error_handling/`, `modules/`, and `testing/`
-- Applied topics: `concurrency/`, `channels/`, `json_and_orm/`, `sqlite/`, and `notes_api/`- Reference material: `language_updates_and_stdlib/` now has a clearer split between newer language features and grouped standard library examples
-  This structure makes it easier to jump straight to the concept you want to study and to understand how the topics build on one another.
+- Applied topics: `concurrency/`, `channels/`, `json_and_orm/`, `sqlite/`, and `notes_api/`
+- Reference material: `language_updates_and_stdlib/` now has a clearer split between newer language features and grouped standard library examples
+
+This structure makes it easier to jump straight to the concept you want to study and to understand how the topics build on one another.
 
 ### Recommended way to use the repo
 

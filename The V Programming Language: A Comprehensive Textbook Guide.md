@@ -53,6 +53,38 @@ V has a few ideas that are worth remembering early:
 - `option` and `result` make error handling explicit.
 - `spawn` and channels make concurrency approachable.
 
+## Core Language Essentials to Learn Early
+
+A beginner-friendly roadmap becomes much clearer when you call out the core concepts that show up again and again in V programs:
+
+- `mut` and immutable-by-default variables
+- functions, parameters, and return values
+- structs and methods for modeling data
+- `enum` and `match` for branching on discrete choices
+- modules and imports for organizing code
+- `?` and `!` for option and result types
+- `defer` for cleanup work before a function exits
+- `unsafe` only when you truly need low-level access
+- type aliases and sum types once you are comfortable with structs and enums
+
+These ideas form the backbone of most V programs, so it is worth learning them in a small, practical order rather than trying to memorize every feature at once.
+
+## Must-Learn-Before-Building Checklist
+
+Before you start a larger project, make sure you can comfortably do the following:
+
+- write a small program with a `main` function
+- declare variables and explain when to use `mut`
+- define and call functions with clear parameters and return types
+- model simple data with structs
+- choose between `if`, `match`, and `for` for control flow
+- split code into modules and import them correctly
+- handle optional or failing values with `?` and `!`
+- use `defer` for cleanup work when needed
+- avoid `unsafe` unless you truly need it
+
+If you can do these reliably, you are ready to move from tiny examples to real programs.
+
 ## Why This Matters
 
 The goal is not just to memorize syntax. Each concept in this guide solves a real programming problem:
@@ -73,6 +105,19 @@ A beginner-friendly path through this guide is:
 - Move into functions, structs, and modules to structure your programs.
 - Practice with tests and error handling before tackling larger projects.
 - Finish with concurrency, JSON, and databases by building a small app.
+
+## Next-Level Language Features to Explore
+
+Once the basics feel natural, the next step is to expand your comfort with a few higher-level features:
+
+- type aliases for clearer naming
+- sum types for values that can be one of several shapes
+- generics for reusable data structures and helpers
+- interfaces for shared behavior across different types
+- higher-order functions and function values
+- `unsafe` and pointers only when you need low-level performance or interop
+
+These features are not required for every beginner project, but they become very useful once you start writing more structured or reusable code.
 
 ## Mini Projects to Try
 
@@ -654,7 +699,7 @@ _File location: [variables_and_constants/03_code_comments/02_multi_line_comments
 
 ### Lesson: Multi Line Comments
 
-In V, multi-line (or block) comments are enclosed between `/*` and `*/`. 
+In V, multi-line (or block) comments are enclosed between `/*` and `*/`.
 
 > [!NOTE]
 > **Nested Block Comments:** Unlike languages like C, C++, Java, or JavaScript, V supports **nested block comments**. This is a powerful feature that allows you to easily comment out large blocks of code even if they already contain block comments, without triggering syntax errors.
@@ -6598,20 +6643,27 @@ fn main() {
 ### Deep Dive Explanation
 
 #### 1. Option (`?T`) vs. Result (`!T`) Types
+
 V enforces safety by separating missing data from actual runtime failures at the type system level:
-* **Option Type (`?T`)**: Declares that a variable or function return value can either hold a value of type `T` or `none` (denoting absence). Use options for operations like lookups or querying optional attributes.
-* **Result Type (`!T`)**: Declares that an operation returns either a value of type `T` or an error that implements the `IError` interface. Use results for operations that can fail due to external factors (e.g., IO, math division, DB connection).
+
+- **Option Type (`?T`)**: Declares that a variable or function return value can either hold a value of type `T` or `none` (denoting absence). Use options for operations like lookups or querying optional attributes.
+- **Result Type (`!T`)**: Declares that an operation returns either a value of type `T` or an error that implements the `IError` interface. Use results for operations that can fail due to external factors (e.g., IO, math division, DB connection).
 
 #### 2. Unwrapping with the `or` Block
+
 When invoking a function that returns an Option or a Result, V requires you to explicitly unwrap it using an `or` block:
+
 ```v
 value := maybe_value() or { fallback_value }
 ```
+
 The `or` block acts as a recovery scope and **must** adhere to one of the following two rules:
+
 1. **Provide a Fallback Value**: It must evaluate to an expression matching type `T`.
 2. **Halt or Divert Control Flow**: It must use keywords like `return`, `panic()`, `exit()`, `break`, or `continue` to exit the current scope.
 
 For functions returning a Result type, V automatically exposes an implicit variable named `err` (of type `IError`) inside the `or` block. You can call `err.msg()` or `err.code()` to inspect the failure:
+
 ```v
 result := divide(10.0, 0.0) or {
     println('Math error: ' + err.msg())
@@ -6620,19 +6672,23 @@ result := divide(10.0, 0.0) or {
 ```
 
 #### 3. Error and Option Propagation
+
 Instead of handling errors immediately with an `or` block, you can bubble them up to the caller using propagation suffixes:
-* Use the **`?`** suffix to propagate `none` from an optional-returning function:
+
+- Use the **`?`** suffix to propagate `none` from an optional-returning function:
   ```v
   item := find_item(id)? // Returns none to the caller if find_item fails
   ```
-* Use the **`!`** suffix to propagate errors from a result-returning function:
+- Use the **`!`** suffix to propagate errors from a result-returning function:
   ```v
   res := divide(a, b)! // Propagates the IError up to the caller if b == 0.0
   ```
-*Note: A function can only use the propagation suffix if its own return type matches (i.e., returns `?U` or `!U` respectively).*
+  _Note: A function can only use the propagation suffix if its own return type matches (i.e., returns `?U` or `!U` respectively)._
 
 #### 4. Custom Error Structs and the `IError` Interface
+
 To build custom error types, define a struct and embed the builtin `Error` struct. Embedding `Error` ensures your custom struct implements the `IError` interface:
+
 ```v
 struct CustomError {
     Error       // Embed standard Error fields and methods
@@ -6640,19 +6696,23 @@ struct CustomError {
     code    int
 }
 ```
+
 You can override the `msg()` and `code()` methods to define how the error is printed and what status code it carries.
 
 #### 5. Type Assertions and Smart Casting with `is`
+
 When handling generic `IError` values inside an `or` block, you can query their concrete types using the `is` keyword:
+
 ```v
 fetch_data(false) or {
     if err is CustomError {
         // V smart-casts 'err' to CustomError here
-        println('Custom code: ${err.code}') 
+        println('Custom code: ${err.code}')
     }
     ''
 }
 ```
+
 If the type check matches, V automatically smart-casts `err` inside that block, allowing you to access custom fields (like `code` or `query`) without explicit casting.
 
 ---
@@ -8844,18 +8904,20 @@ fn main() {
 ### Deep Dive Explanation: Channels & Basic Operations
 
 #### 1. Unbuffered vs. Buffered Channels
-* **Unbuffered Channels (`cap: 0`)**: Initialized via `chan T{}`. They have no intermediate storage. Any send operation (`ch <- value`) blocks the sender until a receiver is ready to pop the data (`<-ch`), and vice versa.
+
+- **Unbuffered Channels (`cap: 0`)**: Initialized via `chan T{}`. They have no intermediate storage. Any send operation (`ch <- value`) blocks the sender until a receiver is ready to pop the data (`<-ch`), and vice versa.
   > [!WARNING]
   > **Deadlock Risk:** In the `Push Unbuffered` example, calling `ch <- 51` in the `main` thread without spawning a concurrent reader thread blocks the program permanently, resulting in a thread deadlock.
-* **Buffered Channels (`cap > 0`)**: Initialized via `chan T{cap: N}`. They can hold up to `N` items in a queue. Pushing to a buffered channel does **not** block as long as the current queue size is less than `N`. It only blocks when the buffer is full (`ch.len == N`). Popping blocks only when the buffer is empty (`ch.len == 0`).
+- **Buffered Channels (`cap > 0`)**: Initialized via `chan T{cap: N}`. They can hold up to `N` items in a queue. Pushing to a buffered channel does **not** block as long as the current queue size is less than `N`. It only blocks when the buffer is full (`ch.len == N`). Popping blocks only when the buffer is empty (`ch.len == 0`).
 
 #### 2. Channel Operations & Metadata Fields
-* **Pushing (`<-`)**: Sends data to the channel. Format: `channel_var <- data`.
-* **Popping (`<-`)**: Receives data from the channel. Format: `variable := <-channel_var`.
-* **Properties**:
-  * `.cap`: The static, defined capacity of the channel (0 for unbuffered).
-  * `.len`: The number of currently buffered elements waiting to be popped.
-  * `.closed`: A boolean indicating if the channel has been shut down via `close(ch)`.
+
+- **Pushing (`<-`)**: Sends data to the channel. Format: `channel_var <- data`.
+- **Popping (`<-`)**: Receives data from the channel. Format: `variable := <-channel_var`.
+- **Properties**:
+  - `.cap`: The static, defined capacity of the channel (0 for unbuffered).
+  - `.len`: The number of currently buffered elements waiting to be popped.
+  - `.closed`: A boolean indicating if the channel has been shut down via `close(ch)`.
 
 ---
 
@@ -9512,18 +9574,22 @@ fn main() {
 ### Deep Dive Explanation: Advanced Channel Operations & Multiplexing
 
 #### 1. Non-Blocking Senders & Receivers (`try_push` and `try_pop`)
+
 If your program cannot afford to block (e.g., in high-frequency game loops or real-time networking threads), V provides non-blocking channel API methods:
-* **`try_push(val)`**: Attempts to send `val` immediately. It returns a `ChanStatus` enum:
-  * `.success`: The value was written to the channel's buffer.
-  * `.not_ready`: The operation would block (either because the channel is unbuffered with no active reader, or the buffered channel is full).
-  * `.closed`: The channel was closed, and writing is invalid.
-* **`try_pop(&mut_var)`**: Attempts to read immediately. It takes a reference to a mutable variable where the received value will be stored and returns a `ChanStatus` enum.
+
+- **`try_push(val)`**: Attempts to send `val` immediately. It returns a `ChanStatus` enum:
+  - `.success`: The value was written to the channel's buffer.
+  - `.not_ready`: The operation would block (either because the channel is unbuffered with no active reader, or the buffered channel is full).
+  - `.closed`: The channel was closed, and writing is invalid.
+- **`try_pop(&mut_var)`**: Attempts to read immediately. It takes a reference to a mutable variable where the received value will be stored and returns a `ChanStatus` enum.
 
 #### 2. Channel Multiplexing with `select`
+
 V's `select` statement monitors multiple channel operations simultaneously:
-* **Blocking Mode**: The `select` block will halt execution until *at least one* of the specified channel reads or writes is ready. When a case is ready, its block executes, and control leaves the `select` block.
-* **Inactivity Timeouts**: You can declare a timeout block (e.g., `2 * time.second { ... }`). If all other monitored channels remain inactive for that duration, this case triggers. This is highly useful for implementing idle detection or connection timeouts.
-* **Non-Blocking Mode (`else`)**: Adding an `else { ... }` block to a `select` statement makes it entirely non-blocking. If no channels are immediately ready, the `else` block executes instantly.
+
+- **Blocking Mode**: The `select` block will halt execution until _at least one_ of the specified channel reads or writes is ready. When a case is ready, its block executes, and control leaves the `select` block.
+- **Inactivity Timeouts**: You can declare a timeout block (e.g., `2 * time.second { ... }`). If all other monitored channels remain inactive for that duration, this case triggers. This is highly useful for implementing idle detection or connection timeouts.
+- **Non-Blocking Mode (`else`)**: Adding an `else { ... }` block to a `select` statement makes it entirely non-blocking. If no channels are immediately ready, the `else` block executes instantly.
 
 ---
 
@@ -9920,16 +9986,20 @@ fn main() {
 ### Deep Dive Explanation: V-Routines & Shared Memory Concurrency
 
 #### 1. Coroutines (V-Routines) via `spawn` and `go`
-V supports lightweight concurrency using **v-routines**, which are spawned using the `spawn` keyword (the `go` keyword acts as an alias). 
-* When you call `spawn task()`, V runs the function concurrently.
-* V's runtime schedules these v-routines across an OS thread pool, making them highly efficient and lightweight.
+
+V supports lightweight concurrency using **v-routines**, which are spawned using the `spawn` keyword (the `go` keyword acts as an alias).
+
+- When you call `spawn task()`, V runs the function concurrently.
+- V's runtime schedules these v-routines across an OS thread pool, making them highly efficient and lightweight.
 
 #### 2. Thread Handles & Blocking on `.wait()`
+
 Every `spawn` operation returns a thread handle:
-* If the function returns a value of type `T`, the handle has the type `thread T`.
-* If the function does not return a value (void), the handle is of type `thread`.
-* Calling `.wait()` on a thread handle (e.g., `result := handle.wait()`) blocks the calling thread until the spawned routine completes, retrieving its return value.
-* You can manage multiple threads by pushing their handles into an array and waiting on all of them at once:
+
+- If the function returns a value of type `T`, the handle has the type `thread T`.
+- If the function does not return a value (void), the handle is of type `thread`.
+- Calling `.wait()` on a thread handle (e.g., `result := handle.wait()`) blocks the calling thread until the spawned routine completes, retrieving its return value.
+- You can manage multiple threads by pushing their handles into an array and waiting on all of them at once:
   ```v
   mut threads := []thread int{}
   threads << spawn worker(1)
@@ -9938,14 +10008,18 @@ Every `spawn` operation returns a thread handle:
   ```
 
 #### 3. Shared State Mutexes (`shared`)
+
 For shared-memory concurrency, V does not allow raw, unsynchronized access to global or heap variables across threads. Instead, variables must be explicitly marked as `shared`:
-* `shared fund := Fund{...}` instructs the compiler to automatically associate a mutex with the `fund` instance.
-* Struct methods can accept a shared receiver (e.g., `fn (shared f Fund) collect(...)`).
+
+- `shared fund := Fund{...}` instructs the compiler to automatically associate a mutex with the `fund` instance.
+- Struct methods can accept a shared receiver (e.g., `fn (shared f Fund) collect(...)`).
 
 #### 4. Safe Synchronization: `lock` and `rlock` Blocks
+
 To prevent data races, V enforces a strict compile-time lock check. You cannot access or modify a `shared` variable's fields directly. You must wrap the access in a lock block:
-* **`lock variable { ... }`**: Acquires an exclusive read-write lock. Use this block whenever you mutate fields of the shared structure. Only one thread can hold this lock at a time.
-* **`rlock variable { ... }`**: Acquires a shared read-only lock. Multiple threads can enter an `rlock` block concurrently to read fields, but any thread attempting to acquire a `lock` will be blocked until all readers exit.
+
+- **`lock variable { ... }`**: Acquires an exclusive read-write lock. Use this block whenever you mutate fields of the shared structure. Only one thread can hold this lock at a time.
+- **`rlock variable { ... }`**: Acquires a shared read-only lock. Multiple threads can enter an `rlock` block concurrently to read fields, but any thread attempting to acquire a `lock` will be blocked until all readers exit.
 
 ---
 
@@ -10304,11 +10378,13 @@ fn main() {
 ### Deep Dive Explanation: JSON Serialization & Deserialization
 
 #### 1. Compile-Time JSON Parsing
+
 Unlike many languages that rely on slow, runtime reflection to inspect structures, V's compiler generates encoding and decoding code statically at compile time. This ensures extremely fast performance and safety.
 
 #### 2. Decoding JSON (`json.decode`)
-* To decode a JSON string, invoke `json.decode(StructName, json_string)`.
-* **Result Type Return**: Since incoming JSON strings can be malformed, `json.decode` returns a Result type (`!StructName`). You **must** unwrap it with an `or` block:
+
+- To decode a JSON string, invoke `json.decode(StructName, json_string)`.
+- **Result Type Return**: Since incoming JSON strings can be malformed, `json.decode` returns a Result type (`!StructName`). You **must** unwrap it with an `or` block:
   ```v
   user := json.decode(User, raw_json) or {
       println('Failed to parse user JSON: ${err}')
@@ -10317,14 +10393,17 @@ Unlike many languages that rely on slow, runtime reflection to inspect structure
   ```
 
 #### 3. Encoding to JSON (`json.encode`)
-* To serialize a V struct instance into a JSON string, invoke `json.encode(instance)`.
-* This operation is guaranteed to succeed and returns a standard `string` directly (no `or` block required).
+
+- To serialize a V struct instance into a JSON string, invoke `json.encode(instance)`.
+- This operation is guaranteed to succeed and returns a standard `string` directly (no `or` block required).
 
 #### 4. Struct JSON Attribute Tags
+
 V provides structural attributes to customize JSON mapping. These are written inside `@[...]` brackets placed on the same line as the field:
-* **Custom Naming**: `field string @[json: 'custom_name']` maps the struct field to the `'custom_name'` JSON key.
-* **Skip Fields**: `secret string @[json: '-']` prevents the field from being serialized or deserialized.
-* **Required Keys**: `id int @[required]` ensures that if the `id` key is missing in the JSON payload, the decoder returns an error.
+
+- **Custom Naming**: `field string @[json: 'custom_name']` maps the struct field to the `'custom_name'` JSON key.
+- **Skip Fields**: `secret string @[json: '-']` prevents the field from being serialized or deserialized.
+- **Required Keys**: `id int @[required]` ensures that if the `id` key is missing in the JSON payload, the decoder returns an error.
 
 ---
 
@@ -10712,41 +10791,46 @@ fn main() {
 ### Deep Dive Explanation: V's Compile-Safe Database ORM
 
 #### 1. Compile-Time Query Safety
+
 V features a built-in ORM (supporting SQLite, PostgreSQL, and MySQL) that integrates directly with V's type system:
-* **The `sql` Block**: All ORM operations are written inside a special `sql db { ... }` block. 
-* **Type Safety**: The compiler validates table structures, column types, and query logic during compilation. For example, trying to compare a string field to an integer inside the `where` clause will fail to compile.
-* **SQL Injection Prevention**: All variables referenced in query clauses (like `where id == id_var`) are automatically treated as query parameters under the hood, making V's ORM immune to SQL injection attacks out of the box.
+
+- **The `sql` Block**: All ORM operations are written inside a special `sql db { ... }` block.
+- **Type Safety**: The compiler validates table structures, column types, and query logic during compilation. For example, trying to compare a string field to an integer inside the `where` clause will fail to compile.
+- **SQL Injection Prevention**: All variables referenced in query clauses (like `where id == id_var`) are automatically treated as query parameters under the hood, making V's ORM immune to SQL injection attacks out of the box.
 
 #### 2. Struct Attributes for ORM Schema Design
+
 You configure your database schema by annotating V structs with attributes:
-* **`@[table: 'name']`**: Customizes the table name in the database (defaults to the struct name).
-* **`@[primary; sql: serial]`**: Configures the field as an auto-incrementing primary key.
-* **`@[sql: 'col_name']`**: Customizes the column name in the database (defaults to the field name).
-* **`@[unique]`**: Adds a unique constraint to the column.
+
+- **`@[table: 'name']`**: Customizes the table name in the database (defaults to the struct name).
+- **`@[primary; sql: serial]`**: Configures the field as an auto-incrementing primary key.
+- **`@[sql: 'col_name']`**: Customizes the column name in the database (defaults to the field name).
+- **`@[unique]`**: Adds a unique constraint to the column.
 
 #### 3. ORM Operations
-* **Create Table**:
+
+- **Create Table**:
   ```v
   sql db { create table Note } or { ... }
   ```
   Generates the SQL DDL statements and creates the table based on the struct fields and attributes.
-* **Insert Records**:
+- **Insert Records**:
   ```v
   sql db { insert n1 into Note } or { ... }
   ```
   Inserts the struct instance into the database. If successful, V updates any auto-incrementing primary keys directly on the passed struct instance.
-* **Query Records (`select`)**:
+- **Query Records (`select`)**:
   Queries return a slice of structs (e.g. `[]Note`). Standard SQL clauses are fully supported:
-  * `where`: Filter records using standard V boolean operations.
-  * `order by`: Sort records (e.g., `order by id desc`).
-  * `limit`: Restrict the number of returned records.
-  * `offset`: Skip a number of records (used for pagination).
-* **Update Records**:
+  - `where`: Filter records using standard V boolean operations.
+  - `order by`: Sort records (e.g., `order by id desc`).
+  - `limit`: Restrict the number of returned records.
+  - `offset`: Skip a number of records (used for pagination).
+- **Update Records**:
   ```v
   sql db { update Note set status = true where id == 2 } or { ... }
   ```
   Updates the records matching the predicate.
-* **Delete Records**:
+- **Delete Records**:
   ```v
   sql db { delete from Note where id == 2 } or { ... }
   ```
@@ -11344,7 +11428,7 @@ fn main() {
 
 	// 1. Initialize and run local WebSocket server
 	mut ws_server := websocket.new_server(.ip, port, '/')
-	
+
 	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
 		println('Server: Client connected from ${s.client_key}')
 		return true
@@ -11354,7 +11438,7 @@ fn main() {
 	ws_server.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			
+
 			// Safety check: Enforce maximum payload size limit (e.g., 2048 bytes) to prevent DoS (OOM)
 			max_allowed_len := 2048
 			if payload.len > max_allowed_len {
@@ -11363,7 +11447,7 @@ fn main() {
 				ws.close(1009, 'Message size exceeds limit') or {}
 				return
 			}
-			
+
 			// Decode the JSON protocol message
 			ws_msg := json.decode(WsMessage, payload) or {
 				println('Server: Invalid JSON protocol: ${err}')
@@ -11371,9 +11455,9 @@ fn main() {
 				ws.write_string(err_resp) or {}
 				return
 			}
-			
+
 			println('Server received action "${ws_msg.action}" with data (len: ${ws_msg.data.len})')
-			
+
 			match ws_msg.action {
 				'ping' {
 					resp := json.encode(WsMessage{action: 'pong', data: ws_msg.data})
@@ -11501,7 +11585,7 @@ fn main() {
 
 	// Wait for the second flow to finish
 	time.sleep(500 * time.millisecond)
-	
+
 	// Clean close of server listener
 	println('\nWebSocket Protocol Demo finished.')
 }
@@ -12420,18 +12504,18 @@ fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
 fn read_msg(mut conn net.TcpConn, max_size int) !string {
 	// Read header: 4 magic bytes + 4 length bytes = 8 bytes
 	header_bytes := read_exact(mut conn, 8) or { return err }
-	
+
 	// Validate protocol magic bytes
 	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G` || header_bytes[3] != `0` {
 		return error('invalid protocol magic bytes')
 	}
-	
+
 	// Reconstruct big-endian length
 	len := int((u32(header_bytes[4]) << 24) |
 	           (u32(header_bytes[5]) << 16) |
 	           (u32(header_bytes[6]) << 8) |
 	           u32(header_bytes[7]))
-	       
+
 	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
 	if len > max_size {
 		return error('message size ${len} exceeds limit of ${max_size} bytes')
@@ -12439,7 +12523,7 @@ fn read_msg(mut conn net.TcpConn, max_size int) !string {
 	if len < 0 {
 		return error('invalid negative message length')
 	}
-	
+
 	// Read the actual payload
 	payload_bytes := read_exact(mut conn, len) or { return err }
 	return payload_bytes.bytestr()
@@ -12477,7 +12561,7 @@ fn run_server(port int) ! {
 			println('Server: Connection closed or protocol error: ${err}')
 			break
 		}
-		
+
 		// Preview message content
 		preview_len := if message.len > 30 { 30 } else { message.len }
 		println('Server received message (len: ${message.len}): "${message[..preview_len]}"...')
@@ -12583,23 +12667,30 @@ fn main() {
 ### Deep Dive Explanation: Persistent TCP & Custom Protocol Framing
 
 #### 1. Why Message Framing is Essential
+
 TCP is a byte-stream protocol. It does not have any concept of packet or message boundaries; it guarantees only that bytes arrive in order. If a client writes two messages of 100 bytes, the server might read them as a single chunk of 200 bytes, or as several chunks of arbitrary sizes (e.g., 50 and 150 bytes).
 To transmit individual messages safely over a persistent connection, we define a custom **Framing Protocol**:
-* **Magic Bytes (4 bytes)**: The message starts with a signature (`MSG0` in ASCII). This acts as a sanity check. If the server receives something else, it knows the stream is corrupted or the client is using an incorrect protocol.
-* **Length Prefix (4 bytes)**: A big-endian 32-bit integer indicating the exact size of the following payload.
-* **Payload**: The actual raw message bytes.
+
+- **Magic Bytes (4 bytes)**: The message starts with a signature (`MSG0` in ASCII). This acts as a sanity check. If the server receives something else, it knows the stream is corrupted or the client is using an incorrect protocol.
+- **Length Prefix (4 bytes)**: A big-endian 32-bit integer indicating the exact size of the following payload.
+- **Payload**: The actual raw message bytes.
 
 #### 2. Zero-Allocation Chunked Reading (`read_exact`)
+
 The `read_exact(mut conn, size)` function reads bytes in a loop until the full requested size is reached:
+
 ```v
 n := conn.read(mut data[read_bytes .. read_bytes + chunk_limit])
 ```
-* **Performance Optimization**: Instead of allocating new buffers in each iteration of the loop, V uses slice expressions (`data[start..end]`) to pass a mutable reference to a specific sub-range of the pre-allocated `data` array directly to the socket read function. This avoids any dynamic memory allocation, optimizing throughput and memory usage.
+
+- **Performance Optimization**: Instead of allocating new buffers in each iteration of the loop, V uses slice expressions (`data[start..end]`) to pass a mutable reference to a specific sub-range of the pre-allocated `data` array directly to the socket read function. This avoids any dynamic memory allocation, optimizing throughput and memory usage.
 
 #### 3. Security Boundaries & DoS Protection
+
 Production socket servers must defend against malicious input and network timeouts:
-* **Max Payload Checking**: In `read_msg`, the server reads the length prefix from the header. If `len > max_size` (e.g., larger than `8192` bytes), the server immediately rejects the message and closes the connection. Without this check, a client could claim a message size of 2 GB, forcing the server to allocate a huge array and crash due to Out-Of-Memory (OOM).
-* **Connection Timeouts**: Calling `conn.set_read_timeout` and `conn.set_write_timeout` prevents threads from blocking indefinitely. If a client connects and then stops sending data (a Slowloris attack), the server will automatically close the socket after the timeout expires (5 seconds in this demo).
+
+- **Max Payload Checking**: In `read_msg`, the server reads the length prefix from the header. If `len > max_size` (e.g., larger than `8192` bytes), the server immediately rejects the message and closes the connection. Without this check, a client could claim a message size of 2 GB, forcing the server to allocate a huge array and crash due to Out-Of-Memory (OOM).
+- **Connection Timeouts**: Calling `conn.set_read_timeout` and `conn.set_write_timeout` prevents threads from blocking indefinitely. If a client connects and then stops sending data (a Slowloris attack), the server will automatically close the socket after the timeout expires (5 seconds in this demo).
 
 ---
 
@@ -12725,13 +12816,13 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 	chunk_size := 1024
 	payload_bytes := payload.bytes()
 	total_frags := (payload_bytes.len + chunk_size - 1) / chunk_size
-	
+
 	if total_frags == 0 {
 		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
 		socket.write(header) or { return err }
 		return
 	}
-	
+
 	for i in 0 .. total_frags {
 		start := i * chunk_size
 		mut end := (i + 1) * chunk_size
@@ -12740,7 +12831,7 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 		}
 		frag_payload := payload_bytes[start..end]
 		frag_len := frag_payload.len
-		
+
 		header := [
 			u8(`U`), `D`, `P`, `0`,
 			u8(i),
@@ -12748,11 +12839,11 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 			u8((u32(frag_len) >> 8) & 0xff),
 			u8(u32(frag_len) & 0xff),
 		]
-		
+
 		mut packet := []u8{cap: 8 + frag_len}
 		packet << header
 		packet << frag_payload
-		
+
 		socket.write(packet) or { return err }
 		// Sleep briefly to avoid packet loss during loopback transmission
 		time.sleep(2 * time.millisecond)
@@ -12764,13 +12855,13 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 	chunk_size := 1024
 	payload_bytes := payload.bytes()
 	total_frags := (payload_bytes.len + chunk_size - 1) / chunk_size
-	
+
 	if total_frags == 0 {
 		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
 		socket.write_to(addr, header) or { return err }
 		return
 	}
-	
+
 	for i in 0 .. total_frags {
 		start := i * chunk_size
 		mut end := (i + 1) * chunk_size
@@ -12779,7 +12870,7 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 		}
 		frag_payload := payload_bytes[start..end]
 		frag_len := frag_payload.len
-		
+
 		header := [
 			u8(`U`), `D`, `P`, `0`,
 			u8(i),
@@ -12787,11 +12878,11 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 			u8((u32(frag_len) >> 8) & 0xff),
 			u8(u32(frag_len) & 0xff),
 		]
-		
+
 		mut packet := []u8{cap: 8 + frag_len}
 		packet << header
 		packet << frag_payload
-		
+
 		socket.write_to(addr, packet) or { return err }
 		time.sleep(2 * time.millisecond)
 	}
@@ -13029,26 +13120,33 @@ fn main() {
 ### Deep Dive Explanation: UDP Packet Fragmentation & Reassembly
 
 #### 1. UDP vs. TCP and the MTU Constraint
+
 Unlike TCP, which handles packet streaming and division transparently, UDP is a datagram-oriented protocol. It sends individual, self-contained packets.
-* **Maximum Packet Sizes**: The theoretical maximum size of a UDP packet is 65,535 bytes (including headers), but in practice, any packet larger than the network's **MTU (Maximum Transmission Unit)** (typically 1500 bytes on ethernet/internet routers) will be fragmented at the IP layer.
-* **Why IP Fragmentation is Bad**: If *any single* IP fragment is lost during transmission, the entire UDP packet is discarded. This dramatically increases packet loss rates for large payloads.
-* **Solution**: Implement **application-level fragmentation**. By splitting payloads into smaller chunks (e.g. 1024 bytes), we ensure each chunk fits comfortably inside a single MTU window, minimizing packet drops.
+
+- **Maximum Packet Sizes**: The theoretical maximum size of a UDP packet is 65,535 bytes (including headers), but in practice, any packet larger than the network's **MTU (Maximum Transmission Unit)** (typically 1500 bytes on ethernet/internet routers) will be fragmented at the IP layer.
+- **Why IP Fragmentation is Bad**: If _any single_ IP fragment is lost during transmission, the entire UDP packet is discarded. This dramatically increases packet loss rates for large payloads.
+- **Solution**: Implement **application-level fragmentation**. By splitting payloads into smaller chunks (e.g. 1024 bytes), we ensure each chunk fits comfortably inside a single MTU window, minimizing packet drops.
 
 #### 2. The Custom UDP Fragmentation Protocol
+
 This example implements application-level fragmentation and reassembly using a custom 8-byte header prefix:
-* **Protocol ID (`UDP0`)**: 4 bytes to identify valid application packets.
-* **Fragment Index (1 byte)**: The sequence index of the current packet (0-indexed).
-* **Total Fragments (1 byte)**: The total number of packets that make up the complete message.
-* **Fragment Length (2 bytes)**: The size of the payload following this header (max 1024 bytes).
+
+- **Protocol ID (`UDP0`)**: 4 bytes to identify valid application packets.
+- **Fragment Index (1 byte)**: The sequence index of the current packet (0-indexed).
+- **Total Fragments (1 byte)**: The total number of packets that make up the complete message.
+- **Fragment Length (2 bytes)**: The size of the payload following this header (max 1024 bytes).
 
 #### 3. Reassembly Mechanics & State Management
+
 Because UDP does not guarantee packet delivery order, packets can arrive out of sequence.
-* **State Tracking**: The server uses a `reassemblers` map, keyed by the client's socket address (`addr.str()`). This maps each client to its own `UdpReassembler` structure containing a map of packet indices to their payload bytes.
-* **Sequence Ordering**: Once the number of collected fragments matches `total_frags`, the server iterates from `0` to `total_frags - 1` to assemble the payload in the correct order, bypassing any network out-of-order delivery issues.
-* **State Cleanup**: As soon as a message is successfully reassembled, `reassemblers.delete(addr_str)` is called. This frees memory immediately and prevents state leak.
+
+- **State Tracking**: The server uses a `reassemblers` map, keyed by the client's socket address (`addr.str()`). This maps each client to its own `UdpReassembler` structure containing a map of packet indices to their payload bytes.
+- **Sequence Ordering**: Once the number of collected fragments matches `total_frags`, the server iterates from `0` to `total_frags - 1` to assemble the payload in the correct order, bypassing any network out-of-order delivery issues.
+- **State Cleanup**: As soon as a message is successfully reassembled, `reassemblers.delete(addr_str)` is called. This frees memory immediately and prevents state leak.
 
 #### 4. Safety & DOS Protections
-* **Max Fragment Constraints**: The server enforces `max_allowed_fragments := 5` (equivalent to a maximum total message size of ~5 KB). If a packet arrives claiming a higher fragment count, it is discarded immediately to prevent malicious clients from exhausting server memory by flooding it with un-reassemblable data.
+
+- **Max Fragment Constraints**: The server enforces `max_allowed_fragments := 5` (equivalent to a maximum total message size of ~5 KB). If a packet arrives claiming a higher fragment count, it is discarded immediately to prevent malicious clients from exhausting server memory by flooding it with un-reassemblable data.
 
 ---
 
@@ -13232,18 +13330,18 @@ fn read_exact(mut conn unix.StreamConn, size int) ![]u8 {
 fn read_msg(mut conn unix.StreamConn, max_size int) !string {
 	// Read header: 4 magic bytes + 4 length bytes = 8 bytes
 	header_bytes := read_exact(mut conn, 8) or { return err }
-	
+
 	// Validate protocol magic bytes
 	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G` || header_bytes[3] != `0` {
 		return error('invalid protocol magic bytes')
 	}
-	
+
 	// Reconstruct big-endian length
 	len := int((u32(header_bytes[4]) << 24) |
 	           (u32(header_bytes[5]) << 16) |
 	           (u32(header_bytes[6]) << 8) |
 	           u32(header_bytes[7]))
-	       
+
 	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
 	if len > max_size {
 		return error('message size ${len} exceeds limit of ${max_size} bytes')
@@ -13251,7 +13349,7 @@ fn read_msg(mut conn unix.StreamConn, max_size int) !string {
 	if len < 0 {
 		return error('invalid negative message length')
 	}
-	
+
 	// Read the actual payload
 	payload_bytes := read_exact(mut conn, len) or { return err }
 	return payload_bytes.bytestr()
@@ -13296,7 +13394,7 @@ fn run_server(socket_path string) ! {
 			println('Server: Connection closed or protocol error: ${err}')
 			break
 		}
-		
+
 		// Preview message content
 		preview_len := if message.len > 30 { 30 } else { message.len }
 		println('Server received message (len: ${message.len}): "${message[..preview_len]}"...')
