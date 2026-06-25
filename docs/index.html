@@ -505,6 +505,42 @@
             display: inline-flex;
         }
 
+        .sidebar-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .sidebar-action-btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: color var(--transition-speed), background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        .sidebar-action-btn:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-tertiary);
+            border-color: var(--border-hover);
+        }
+
+        .sidebar-context-bar {
+            margin-top: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: rgba(99, 102, 241, 0.06);
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
         .sidebar-menu {
             flex: 1;
             overflow-y: auto;
@@ -2406,6 +2442,11 @@
                         </svg>
                     </button>
                 </div>
+                <div class="sidebar-actions">
+                    <button class="sidebar-action-btn" id="expandAllSectionsBtn" type="button">Expand all</button>
+                    <button class="sidebar-action-btn" id="collapseAllSectionsBtn" type="button">Collapse all</button>
+                </div>
+                <div class="sidebar-context-bar" id="sidebarContextBar">Browse chapters</div>
             </div>
 
             <nav class="sidebar-menu" id="sidebarMenu">
@@ -2658,13 +2699,15 @@
                     of files:</p>
                 <ul>
                     <li><code>variables<em>and</em>constants/</code>, <code>primitive<em>types/</code>, and
-                        <code>control</em>flow/</code> for the foundation of the language</li>
+                        <code>control</em>flow/</code> for the foundation of the language
+                    </li>
                     <li><code>functions/</code> and <code>structs/</code> for building reusable programs and modeling
                         data</li>
                     <li><code>error_handling/</code>, <code>modules/</code>, and <code>testing/</code> for reliability
                         and organization</li>
                     <li><code>concurrency/</code>, <code>channels/</code>, <code>json<em>and</em>orm/</code>,
-                        <code>sqlite/</code>, and <code>notes_api/</code> for real-world applications</li>
+                        <code>sqlite/</code>, and <code>notes_api/</code> for real-world applications
+                    </li>
                     <li><code>language<em>updates</em>and_stdlib/</code> for newer language features and grouped
                         standard library examples that are easier to browse by topic</li>
                 </ul>
@@ -4586,7 +4629,8 @@ fn main() {
                         </button>
                     </h3>
                     <p>In V, multi-line (or block) comments are enclosed between <code>/<em></code> and
-                        <code></em>/</code>. </p>
+                        <code></em>/</code>.
+                    </p>
                     <div class="alert alert-note">
                         <div class="alert-title">
                             <svg class="alert-icon" viewBox="0 0 16 16" width="16" height="16">
@@ -5619,7 +5663,8 @@ pub fn do_work() {
                     </h3>
                     <p>In V, you can declare and initialize multiple variables in a single line. This is known as
                         <strong>parallel declaration</strong>. By default, variables in V are <strong>immutable</strong>
-                        (read-only). Once assigned a value, they cannot be changed.</p>
+                        (read-only). Once assigned a value, they cannot be changed.
+                    </p>
                     <p>This program demonstrates declaring two variables <code>a</code> and <code>b</code> at the same
                         time and assigning them initial values. Any attempt to modify <code>a</code> or <code>b</code>
                         later in the code will cause a compile-time error.</p>
@@ -5713,7 +5758,8 @@ pub fn do_work() {
                         safer and easier to reason about.</p>
                     <p>Here, we declare two mutable variables <code>a</code> and <code>b</code> at the same time using
                         <code>mut</code>. We then reassign their values using the standard assignment operator
-                        (<code>=</code>).</p>
+                        (<code>=</code>).
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>parallel declaration mutable
                             variables</strong>.</p>
@@ -7242,22 +7288,28 @@ fn main() {
                     <p>This comprehensive example demonstrates every primitive data type in V:</p>
                     <ul>
                         <li><strong>Boolean</strong>: <code>bool</code> (representing <code>true</code> or
-                            <code>false</code>).</li>
+                            <code>false</code>).
+                        </li>
                         <li><strong>String</strong>: <code>string</code> (representing an immutable array of bytes).
                         </li>
                         <li><strong>Rune</strong>: <code>rune</code> (representing a single Unicode code point, alias
                             for <code>u32</code>).</li>
                         <li><strong>Signed Integers</strong>: <code>i8</code> (8-bit), <code>i16</code> (16-bit),
-                            <code>int</code> (32-bit), <code>i64</code> (64-bit).</li>
+                            <code>int</code> (32-bit), <code>i64</code> (64-bit).
+                        </li>
                         <li><strong>Unsigned Integers</strong>: <code>u8</code> (8-bit, alias <code>byte</code>),
-                            <code>u16</code> (16-bit), <code>u32</code> (32-bit), <code>u64</code> (64-bit).</li>
+                            <code>u16</code> (16-bit), <code>u32</code> (32-bit), <code>u64</code> (64-bit).
+                        </li>
                         <li><strong>Platform-dependent sizes</strong>: <code>isize</code> (signed size of a pointer),
-                            <code>usize</code> (unsigned size of a pointer).</li>
+                            <code>usize</code> (unsigned size of a pointer).
+                        </li>
                         <li><strong>Floating Point Numbers</strong>: <code>f32</code> (32-bit single-precision),
-                            <code>f64</code> (64-bit double-precision).</li>
+                            <code>f64</code> (64-bit double-precision).
+                        </li>
                     </ul>
                     <p>For each type, the example initializes a value and prints its value, type (using
-                        <code>typeof(var).name</code>), and size in bytes (using <code>sizeof(var)</code>).</p>
+                        <code>typeof(var).name</code>), and size in bytes (using <code>sizeof(var)</code>).
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>primitive types demo</strong>.</p>
                     <div class="code-wrapper">
@@ -7727,7 +7779,8 @@ fn main() {
                         <code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code> for signed integers, and
                         <code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code> for unsigned integers). If
                         you declare an integer using <code>:=</code>, V defaults to the standard 32-bit integer
-                        (<code>int</code>).</p>
+                        (<code>int</code>).
+                    </p>
                     <p>This example demonstrates how to declare different integer types.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>declaring integers</strong>.</p>
@@ -7824,7 +7877,8 @@ fn main() {
                         <code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code> for signed integers, and
                         <code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code> for unsigned integers). If
                         you declare an integer using <code>:=</code>, V defaults to the standard 32-bit integer
-                        (<code>int</code>).</p>
+                        (<code>int</code>).
+                    </p>
                     <p>This example demonstrates how to declare different integer types.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>hex binary octa notation of declaring
@@ -9442,7 +9496,8 @@ fn main() {
                     </h3>
                     <p>While strings are immutable, you can declare a mutable string variable using <code>mut</code>.
                         This allows the variable to be reassigned to a new string value, or appended to using the
-                        <code>+=</code> operator.</p>
+                        <code>+=</code> operator.
+                    </p>
                     <p>This example shows how to declare a mutable string and append text to it.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>declaring mutable strings</strong>.</p>
@@ -9621,7 +9676,8 @@ fn main() {
                     </h3>
                     <p><strong>String interpolation</strong> is a clean way to insert variables or expressions inside a
                         string literal. In V, you do this by wrapping the variable or expression in
-                        <code>${variable}</code> inside a single-quoted string.</p>
+                        <code>${variable}</code> inside a single-quoted string.
+                    </p>
                     <p>This example demonstrates how to format strings with variable values.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>string interpolation</strong>.</p>
@@ -9811,7 +9867,8 @@ fn main() {
                     <p>If you want to write a string literal where escape sequences (like <code>\n</code>) are treated
                         as literal text instead of special commands, you can declare a <strong>raw string</strong> by
                         prefixing the string literal with <code>r</code> (e.g.,
-                        <code>r\&#039;hello\nworld\&#039;</code>).</p>
+                        <code>r\&#039;hello\nworld\&#039;</code>).
+                    </p>
                     <p>This is extremely useful when writing regular expressions or file paths.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>declare raw strings</strong>.</p>
@@ -10793,7 +10850,8 @@ fn main() {
                     <p>Control flow determines the execution path of your code. In this chapter, we cover conditionals
                         (<code>if-else</code>), pattern matching (<code>match</code>), and the versatile
                         <code>for</code> loop. V simplifies control flow by using fewer keywords, making code highly
-                        readable.</p>
+                        readable.
+                    </p>
                     <h2 class="section-title" id="control-flow-extras" data-chapter-id="chapter-4-control-flow">Control
                         Flow Extras</h2>
                     <h3 class="lesson-title" id="chaining-else-if" data-chapter-id="chapter-4-control-flow">
@@ -16348,7 +16406,8 @@ fn main() {
                     </h3>
                     <p>A simple function is a small helper that turns inputs into a useful result. The basic pattern is:
                         define the function, pass in values, do some work, and return the answer. In this example,
-                        <code>add</code> takes two integers and returns their sum.</p>
+                        <code>add</code> takes two integers and returns their sum.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>function returns value example 1</strong>.</p>
                     <div class="code-wrapper">
@@ -16703,7 +16762,8 @@ fn main() {
                     </h3>
                     <p>A function can return more than one value when those values belong together. A common pattern is
                         returning both the main result and a related detail, such as a length or status. Here,
-                        <code>greet<em>and</em>message_length</code> returns both the greeting and its length.</p>
+                        <code>greet<em>and</em>message_length</code> returns both the greeting and its length.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>function return multiple values</strong>.</p>
                     <div class="code-wrapper">
@@ -18940,7 +19000,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19039,7 +19100,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19136,7 +19198,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19235,7 +19298,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19327,7 +19391,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19423,7 +19488,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19524,7 +19590,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19627,7 +19694,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19727,7 +19795,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19841,7 +19910,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -19937,7 +20007,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -20034,7 +20105,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -20135,7 +20207,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -20239,7 +20312,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -20343,7 +20417,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>This lesson demonstrates defining structs, updating fields, required fields, default values, and
                         value receiver methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -20614,7 +20689,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -20728,7 +20804,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -20853,7 +20930,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -20953,7 +21031,8 @@ fn main() {
                 <section id="chap-wrapper-chapter-8-error-handling" class="chapter-section"
                     data-chapter-id="chapter-8-error-handling">
                     <h1 class="chapter-title" id="chapter-8-error-handling" data-chapter-id="chapter-8-error-handling">
-                        <span class="chap-badge">Chapter 8</span> Error Handling</h1>
+                        <span class="chap-badge">Chapter 8</span> Error Handling
+                    </h1>
                     <h2 class="section-title" id="quick-access" data-chapter-id="chapter-8-error-handling">Quick Access
                     </h2>
                     <p>Below is an index of all code examples in this chapter. You can use these links to jump directly
@@ -20965,7 +21044,8 @@ fn main() {
                     <hr />
                     <p>V has no exceptions. Instead, it handles errors using <strong>Option</strong> and
                         <strong>Result</strong> types, which are checked at compile time. This chapter teaches you how
-                        to write robust, error-free programs using V&#039;s clean error handling syntax.</p>
+                        to write robust, error-free programs using V&#039;s clean error handling syntax.
+                    </p>
                     <h2 class="section-title" id="option--result-types" data-chapter-id="chapter-8-error-handling">
                         Option &amp; Result Types</h2>
                     <h3 class="lesson-title" id="error-handling" data-chapter-id="chapter-8-error-handling">
@@ -20989,7 +21069,8 @@ fn main() {
                     </div>
                     <p>In many programming languages, errors are handled using exceptions (with <code>try</code>,
                         <code>catch</code>, and <code>throw</code> blocks). Exception blocks can make code hard to read
-                        and trace because control flow can jump unpredictably.</p>
+                        and trace because control flow can jump unpredictably.
+                    </p>
                     <p>V takes a different approach. <strong>V does not have exceptions.</strong> Instead, V handles
                         errors explicitly using two main concepts:</p>
                     <ul>
@@ -21294,14 +21375,17 @@ fn main() {
                         following two rules:</p>
                     <ol>
                         <li><strong>Provide a Fallback Value</strong>: It must evaluate to an expression matching type
-                            <code>T</code>.</li>
+                            <code>T</code>.
+                        </li>
                         <li><strong>Halt or Divert Control Flow</strong>: It must use keywords like <code>return</code>,
                             <code>panic()</code>, <code>exit()</code>, <code>break</code>, or <code>continue</code> to
-                            exit the current scope.</li>
+                            exit the current scope.
+                        </li>
                     </ol>
                     <p>For functions returning a Result type, V automatically exposes an implicit variable named
                         <code>err</code> (of type <code>IError</code>) inside the <code>or</code> block. You can call
-                        <code>err.msg()</code> or <code>err.code()</code> to inspect the failure:</p>
+                        <code>err.msg()</code> or <code>err.code()</code> to inspect the failure:
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -22451,7 +22535,8 @@ fn hello2() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Modulebasics</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>modulebasics</strong>.</p>
                     <div class="code-wrapper">
@@ -22541,7 +22626,8 @@ fn main() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>File1</strong> demonstrates code structure, module namespaces, access modifiers, or
-                        lifecycle rules.</p>
+                        lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>file1</strong>.</p>
                     <div class="code-wrapper">
@@ -22628,7 +22714,8 @@ pub fn hello() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>File2</strong> demonstrates code structure, module namespaces, access modifiers, or
-                        lifecycle rules.</p>
+                        lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>file2</strong>.</p>
                     <div class="code-wrapper">
@@ -22716,7 +22803,8 @@ fn main() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Modulebasics</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>modulebasics</strong>.</p>
                     <div class="code-wrapper">
@@ -22892,7 +22980,8 @@ pub fn hello() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>File2</strong> demonstrates code structure, module namespaces, access modifiers, or
-                        lifecycle rules.</p>
+                        lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>file2</strong>.</p>
                     <div class="code-wrapper">
@@ -22979,7 +23068,8 @@ fn hello2() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Modulebasics</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>modulebasics</strong>.</p>
                     <div class="code-wrapper">
@@ -23068,7 +23158,8 @@ fn main() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>File1</strong> demonstrates code structure, module namespaces, access modifiers, or
-                        lifecycle rules.</p>
+                        lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>file1</strong>.</p>
                     <div class="code-wrapper">
@@ -23155,7 +23246,8 @@ pub fn hello() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>File2</strong> demonstrates code structure, module namespaces, access modifiers, or
-                        lifecycle rules.</p>
+                        lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>file2</strong>.</p>
                     <div class="code-wrapper">
@@ -23242,7 +23334,8 @@ fn hello2() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Modulebasics</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>modulebasics</strong>.</p>
                     <div class="code-wrapper">
@@ -23420,7 +23513,8 @@ pub fn hello() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>File1</strong> demonstrates code structure, module namespaces, access modifiers, or
-                        lifecycle rules.</p>
+                        lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>file1</strong>.</p>
                     <div class="code-wrapper">
@@ -23511,7 +23605,8 @@ pub fn hello() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Modulebasics</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>modulebasics</strong>.</p>
                     <div class="code-wrapper">
@@ -23690,7 +23785,8 @@ fn init() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Modulebasics</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>modulebasics</strong>.</p>
                     <div class="code-wrapper">
@@ -23861,7 +23957,8 @@ pub const greet_msg = &#039;Greeting from mod1!&#039;</code></pre>
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Modulebasics</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>modulebasics</strong>.</p>
                     <div class="code-wrapper">
@@ -23952,7 +24049,8 @@ fn main() {
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -24059,7 +24157,8 @@ pub mut:
                         fields) together. Structs are fundamental to V&#039;s object-oriented programming model. By
                         default, struct fields are private and immutable. V provides access modifiers like
                         <code>mut:</code>, <code>pub:</code>, and <code>pub mut:</code> to control field access and
-                        mutability.</p>
+                        mutability.
+                    </p>
                     <p>These examples demonstrate defining structs, updating fields, required fields, default values,
                         and struct methods.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -24170,7 +24269,8 @@ fn main() {
                     </div>
                     <p>This downloads the package and installs it into the V modules directory (typically located at
                         <code>~/.vmodules/</code> on Linux/macOS or <code>C:\Users\Username\.vmodules\</code> on
-                        Windows).</p>
+                        Windows).
+                    </p>
                     <h3 class="lesson-title" id="common-vpm-commands"
                         data-chapter-id="chapter-9-organizing-code-with-modules">
                         <span>Common vpm Commands</span>
@@ -24424,13 +24524,16 @@ fn main() {
                     </div>
                     <p>This example demonstrates how to use the external <code>xiusin.vredis</code> client package in a
                         console application and demonstrates key namespacing with the custom
-                        <code>NamespacedRedis</code> helper. It covers:</p>
+                        <code>NamespacedRedis</code> helper. It covers:
+                    </p>
                     <ul>
                         <li>Establishing a connection and handling errors gracefully.</li>
                         <li>Basic String operations (<code>set</code>, <code>get</code>, <code>incr</code>,
-                            <code>expire</code>, <code>ttl</code>, <code>del</code>).</li>
+                            <code>expire</code>, <code>ttl</code>, <code>del</code>).
+                        </li>
                         <li>List operations (<code>rpush</code>, <code>llen</code>, <code>lrange</code>,
-                            <code>lpop</code>).</li>
+                            <code>lpop</code>).
+                        </li>
                         <li>Hash operations (<code>hset</code>, <code>hget</code>, <code>hgetall</code>).</li>
                         <li>Set operations (<code>sadd</code>, <code>sismember</code>, <code>smembers</code>).</li>
                         <li>Namespaced Redis helper operations using <code>NamespacedRedis</code>.</li>
@@ -24837,7 +24940,8 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Redis Helper</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -25025,7 +25129,8 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
                     </div>
                     <p>This example provides an easy, dedicated demo showing how to use the <code>NamespacedRedis</code>
                         helper wrapper to manage multiple independent namespaces (like <code>cache</code> and
-                        <code>session</code>) over a single underlying Redis connection without key collisions.</p>
+                        <code>session</code>) over a single underlying Redis connection without key collisions.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -25168,7 +25273,8 @@ fn main() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Redis Webview Demo</strong> demonstrates code structure, module namespaces, access
-                        modifiers, or lifecycle rules.</p>
+                        modifiers, or lifecycle rules.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -25523,7 +25629,8 @@ fn main() {
                     </h3>
                     <p>Modules help modularize V projects, managing imports and symbol visibility. This lesson on
                         <strong>Webview Demo</strong> demonstrates code structure, module namespaces, access modifiers,
-                        or lifecycle rules.</p>
+                        or lifecycle rules.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>installing external packages and webview
                             bindings</strong>.</p>
@@ -25758,7 +25865,8 @@ fn main() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -25853,7 +25961,8 @@ fn main() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -25941,7 +26050,8 @@ fn main() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26028,7 +26138,8 @@ fn main() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26138,7 +26249,8 @@ fn testsuite_end() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26241,7 +26353,8 @@ fn test_greet_when_empty() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26333,7 +26446,8 @@ fn main() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26429,7 +26543,8 @@ fn test_greet() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26529,7 +26644,8 @@ fn test_hello() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26616,7 +26732,8 @@ pub fn hello() string {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26710,7 +26827,8 @@ fn test_hello() {
                     <p>V has built-in testing support. Any file ending with <code><em>test.v</code> is considered a test
                         file. Inside test files, you write functions starting with <code>test</em></code> and use
                         <code>assert</code> statements to check if conditions are true. You can run all tests in a
-                        folder using the <code>v test .</code> command.</p>
+                        folder using the <code>v test .</code> command.
+                    </p>
                     <p>These examples cover writing simple assertions, test suites, and testing functions that return
                         options or errors.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -26827,7 +26945,8 @@ fn main() {
                     <hr />
                     <p>V makes concurrent programming easy and safe. This chapter covers spawning threads using
                         <code>spawn</code>, communicating safely between threads using channels, and sharing state
-                        safely using <code>shared</code> and <code>lock</code> primitives.</p>
+                        safely using <code>shared</code> and <code>lock</code> primitives.
+                    </p>
                     <h2 class="section-title" id="channels--communication"
                         data-chapter-id="chapter-11-concurrency-and-channels">Channels &amp; Communication</h2>
                     <h3 class="lesson-title" id="unbuffered-channel"
@@ -27063,7 +27182,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27152,7 +27272,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27240,7 +27361,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27314,7 +27436,8 @@ fn main() {
                     <p>* <strong>Unbuffered Channels (<code>cap: 0</code>)</strong>: Initialized via
                         <code>chan T{}</code>. They have no intermediate storage. Any send operation
                         (<code>ch &lt;- value</code>) blocks the sender until a receiver is ready to pop the data
-                        (<code>&lt;-ch</code>), and vice versa.</p>
+                        (<code>&lt;-ch</code>), and vice versa.
+                    </p>
                     <div class="alert alert-warning">
                         <div class="alert-title">
                             <svg class="alert-icon" viewBox="0 0 16 16" width="16" height="16">
@@ -27333,17 +27456,21 @@ fn main() {
                         <code>chan T{cap: N}</code>. They can hold up to <code>N</code> items in a queue. Pushing to a
                         buffered channel does <strong>not</strong> block as long as the current queue size is less than
                         <code>N</code>. It only blocks when the buffer is full (<code>ch.len == N</code>). Popping
-                        blocks only when the buffer is empty (<code>ch.len == 0</code>).</p>
+                        blocks only when the buffer is empty (<code>ch.len == 0</code>).
+                    </p>
                     <h4 id="2-channel-operations--metadata-fields">2. Channel Operations &amp; Metadata Fields</h4>
                     <p>* <strong>Pushing (<code>&lt;-</code>)</strong>: Sends data to the channel. Format:
-                        <code>channel_var &lt;- data</code>.</p>
+                        <code>channel_var &lt;- data</code>.
+                    </p>
                     <p>* <strong>Popping (<code>&lt;-</code>)</strong>: Receives data from the channel. Format:
-                        <code>variable := &lt;-channel_var</code>.</p>
+                        <code>variable := &lt;-channel_var</code>.
+                    </p>
                     <p>* <strong>Properties</strong>:</p>
                     <p> * <code>.cap</code>: The static, defined capacity of the channel (0 for unbuffered).</p>
                     <p> * <code>.len</code>: The number of currently buffered elements waiting to be popped.</p>
                     <p> * <code>.closed</code>: A boolean indicating if the channel has been shut down via
-                        <code>close(ch)</code>.</p>
+                        <code>close(ch)</code>.
+                    </p>
                     <hr />
                     <h3 class="lesson-title" id="channel-properties"
                         data-chapter-id="chapter-11-concurrency-and-channels">
@@ -27382,7 +27509,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27475,7 +27603,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27566,7 +27695,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27662,7 +27792,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27754,7 +27885,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27856,7 +27988,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -27962,7 +28095,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28057,7 +28191,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28155,7 +28290,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28257,7 +28393,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28368,7 +28505,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28481,7 +28619,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28579,7 +28718,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28689,7 +28829,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28801,7 +28942,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -28915,7 +29057,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29032,7 +29175,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29157,7 +29301,8 @@ fn main() {
                     <p> * <code>.closed</code>: The channel was closed, and writing is invalid.</p>
                     <p>* <strong><code>try<em>pop(&amp;mut</em>var)</code></strong>: Attempts to read immediately. It
                         takes a reference to a mutable variable where the received value will be stored and returns a
-                        <code>ChanStatus</code> enum.</p>
+                        <code>ChanStatus</code> enum.
+                    </p>
                     <h4 id="2-channel-multiplexing-with-select">2. Channel Multiplexing with `select`</h4>
                     <p>V&#039;s <code>select</code> statement monitors multiple channel operations simultaneously:</p>
                     <p><em> <strong>Blocking Mode</strong>: The <code>select</code> block will halt execution until
@@ -29207,7 +29352,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29305,7 +29451,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29401,7 +29548,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29498,7 +29646,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29614,7 +29763,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29733,7 +29883,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29860,7 +30011,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -29959,7 +30111,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -30196,14 +30349,16 @@ fn main() {
                     <h4 id="1-coroutines-v-routines-via-spawn-and-go">1. Coroutines (V-Routines) via `spawn` and `go`
                     </h4>
                     <p>V supports lightweight concurrency using <strong>v-routines</strong>, which are spawned using the
-                        <code>spawn</code> keyword (the <code>go</code> keyword acts as an alias). </p>
+                        <code>spawn</code> keyword (the <code>go</code> keyword acts as an alias).
+                    </p>
                     <p>* When you call <code>spawn task()</code>, V runs the function concurrently.</p>
                     <p>* V&#039;s runtime schedules these v-routines across an OS thread pool, making them highly
                         efficient and lightweight.</p>
                     <h4 id="2-thread-handles--blocking-on-wait">2. Thread Handles &amp; Blocking on `.wait()`</h4>
                     <p>Every <code>spawn</code> operation returns a thread handle:</p>
                     <p>* If the function returns a value of type <code>T</code>, the handle has the type
-                        <code>thread T</code>.</p>
+                        <code>thread T</code>.
+                    </p>
                     <p>* If the function does not return a value (void), the handle is of type <code>thread</code>.</p>
                     <p>* Calling <code>.wait()</code> on a thread handle (e.g., <code>result := handle.wait()</code>)
                         blocks the calling thread until the spawned routine completes, retrieving its return value.</p>
@@ -30263,7 +30418,8 @@ fn main() {
                     <p>* <code>shared fund := Fund{...}</code> instructs the compiler to automatically associate a mutex
                         with the <code>fund</code> instance.</p>
                     <p>* Struct methods can accept a shared receiver (e.g.,
-                        <code>fn (shared f Fund) collect(...)</code>).</p>
+                        <code>fn (shared f Fund) collect(...)</code>).
+                    </p>
                     <h4 id="4-safe-synchronization-lock-and-rlock-blocks">4. Safe Synchronization: `lock` and `rlock`
                         Blocks</h4>
                     <p>To prevent data races, V enforces a strict compile-time lock check. You cannot access or modify a
@@ -30974,7 +31130,8 @@ fn main() {
                     <p>* To decode a JSON string, invoke <code>json.decode(StructName, json_string)</code>.</p>
                     <p>* <strong>Result Type Return</strong>: Since incoming JSON strings can be malformed,
                         <code>json.decode</code> returns a Result type (<code>!StructName</code>). You
-                        <strong>must</strong> unwrap it with an <code>or</code> block:</p>
+                        <strong>must</strong> unwrap it with an <code>or</code> block:
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -31026,16 +31183,19 @@ fn main() {
                     <p>* To serialize a V struct instance into a JSON string, invoke <code>json.encode(instance)</code>.
                     </p>
                     <p>* This operation is guaranteed to succeed and returns a standard <code>string</code> directly (no
-                        <code>or</code> block required).</p>
+                        <code>or</code> block required).
+                    </p>
                     <h4 id="4-struct-json-attribute-tags">4. Struct JSON Attribute Tags</h4>
                     <p>V provides structural attributes to customize JSON mapping. These are written inside
-                        <code>@[...]</code> brackets placed on the same line as the field:</p>
+                        <code>@[...]</code> brackets placed on the same line as the field:
+                    </p>
                     <p>* <strong>Custom Naming</strong>: <code>field string @[json: &#039;custom<em>name&#039;]</code>
                         maps the struct field to the <code>&#039;custom</em>name&#039;</code> JSON key.</p>
                     <p>* <strong>Skip Fields</strong>: <code>secret string @[json: &#039;-&#039;]</code> prevents the
                         field from being serialized or deserialized.</p>
                     <p>* <strong>Required Keys</strong>: <code>id int @[required]</code> ensures that if the
-                        <code>id</code> key is missing in the JSON payload, the decoder returns an error.</p>
+                        <code>id</code> key is missing in the JSON payload, the decoder returns an error.
+                    </p>
                     <hr />
                     <h3 class="lesson-title" id="json-to-from-file"
                         data-chapter-id="chapter-12-working-with-databases-and-json">
@@ -31425,10 +31585,12 @@ fn main() {
                         V:</p>
                     <ol>
                         <li><strong>JSON Serialization</strong>: Best for primitive numeric/boolean arrays (e.g.
-                            <code>[]int</code>).</li>
+                            <code>[]int</code>).
+                        </li>
                         <li><strong>Raw Line-by-Line (Plain Text)</strong>: Best for string lists (e.g.
                             <code>[]string</code>), joining with newlines on write and using V&#039;s standard
-                            <code>os.read_lines()</code> on read.</li>
+                            <code>os.read_lines()</code> on read.
+                        </li>
                     </ol>
                     <div class="code-wrapper">
                         <div class="code-header">
@@ -31725,13 +31887,16 @@ fn main() {
                     <p>V features a built-in ORM (supporting SQLite, PostgreSQL, and MySQL) that integrates directly
                         with V&#039;s type system:</p>
                     <p>* <strong>The <code>sql</code> Block</strong>: All ORM operations are written inside a special
-                        <code>sql db { ... }</code> block. </p>
+                        <code>sql db { ... }</code> block.
+                    </p>
                     <p>* <strong>Type Safety</strong>: The compiler validates table structures, column types, and query
                         logic during compilation. For example, trying to compare a string field to an integer inside the
-                        <code>where</code> clause will fail to compile.</p>
+                        <code>where</code> clause will fail to compile.
+                    </p>
                     <p>* <strong>SQL Injection Prevention</strong>: All variables referenced in query clauses (like
                         <code>where id == id_var</code>) are automatically treated as query parameters under the hood,
-                        making V&#039;s ORM immune to SQL injection attacks out of the box.</p>
+                        making V&#039;s ORM immune to SQL injection attacks out of the box.
+                    </p>
                     <h4 id="2-struct-attributes-for-orm-schema-design">2. Struct Attributes for ORM Schema Design</h4>
                     <p>You configure your database schema by annotating V structs with attributes:</p>
                     <p>* <strong><code>@[table: &#039;name&#039;]</code></strong>: Customizes the table name in the
@@ -32042,9 +32207,11 @@ pub fn connect(path string) !DB {
                     <ol>
                         <li>Connecting with <code>sqlite.connect</code>.</li>
                         <li>Executing statements that do not return tabular results (like DDL/DML) via
-                            <code>db.exec</code>.</li>
+                            <code>db.exec</code>.
+                        </li>
                         <li>Executing parameterized DML queries (INSERT, SELECT, UPDATE, DELETE) using
-                            <code>db.exec<em>param</em>many</code> and <code>?</code> placeholders.</li>
+                            <code>db.exec<em>param</em>many</code> and <code>?</code> placeholders.
+                        </li>
                         <li>Fetching result sets from <code>SELECT</code> statements into <code>[]sqlite.Row</code>.
                         </li>
                         <li>Iterating and accessing row values from <code>row.vals</code> by index.</li>
@@ -32062,7 +32229,8 @@ pub fn connect(path string) !DB {
                         <div class="alert-content"><strong>SQL Injection Prevention:</strong> Avoid raw string
                             interpolation (e.g. <code>&quot;$name&quot;</code>) inside raw queries. Using
                             <code>db.exec<em>param</em>many</code> forces parameter binding, rendering the query secure
-                            from malicious inputs.</div>
+                            from malicious inputs.
+                        </div>
                     </div>
                     <div class="code-wrapper">
                         <div class="code-header">
@@ -32330,11 +32498,13 @@ fn main() {
                     <p>This example demonstrates how to:</p>
                     <ol>
                         <li>Write inline assembly blocks targeted at specific architectures (e.g. <code>arm64</code> and
-                            <code>amd64</code>).</li>
+                            <code>amd64</code>).
+                        </li>
                         <li>Utilize V&#039;s compile-time conditional block <code>$if</code> to compile
                             architecture-specific assembly blocks.</li>
                         <li>Map V variables to assembly inputs and outputs using semicolon constraint annotations (e.g.
-                            <code>; +r (res)</code>).</li>
+                            <code>; +r (res)</code>).
+                        </li>
                     </ol>
                     <div class="code-wrapper">
                         <div class="code-header">
@@ -33269,7 +33439,8 @@ fn main() {
                     </div>
                     <p>This example demonstrates implementing JSON-RPC 2.0 servers and clients using V&#039;s
                         <code>net.jsonrpc</code> module, utilizing a Unix domain socket connection as the transport
-                        layer.</p>
+                        layer.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -33485,7 +33656,8 @@ fn main() {
                     </div>
                     <p>This example demonstrates how to build a persistent JSON-RPC 2.0 connection. The server calls
                         <code>server.start()</code> to continuously process incoming requests, and the client sends
-                        multiple method invocations sequentially over a single socket connection.</p>
+                        multiple method invocations sequentially over a single socket connection.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -34595,7 +34767,8 @@ fn main() {
                         server might read them as a single chunk of 200 bytes, or as several chunks of arbitrary sizes
                         (e.g., 50 and 150 bytes).</p>
                     <p>To transmit individual messages safely over a persistent connection, we define a custom
-                        <strong>Framing Protocol</strong>:</p>
+                        <strong>Framing Protocol</strong>:
+                    </p>
                     <p>* <strong>Magic Bytes (4 bytes)</strong>: The message starts with a signature (<code>MSG0</code>
                         in ASCII). This acts as a sanity check. If the server receives something else, it knows the
                         stream is corrupted or the client is using an incorrect protocol.</p>
@@ -34661,11 +34834,13 @@ fn main() {
                         prefix from the header. If <code>len &gt; max</em>size</code> (e.g., larger than
                         <code>8192</code> bytes), the server immediately rejects the message and closes the connection.
                         Without this check, a client could claim a message size of 2 GB, forcing the server to allocate
-                        a huge array and crash due to Out-Of-Memory (OOM).</p>
+                        a huge array and crash due to Out-Of-Memory (OOM).
+                    </p>
                     <p>* <strong>Connection Timeouts</strong>: Calling <code>conn.set<em>read</em>timeout</code> and
                         <code>conn.set<em>write</em>timeout</code> prevents threads from blocking indefinitely. If a
                         client connects and then stops sending data (a Slowloris attack), the server will automatically
-                        close the socket after the timeout expires (5 seconds in this demo).</p>
+                        close the socket after the timeout expires (5 seconds in this demo).
+                    </p>
                     <hr />
                     <h3 class="lesson-title" id="net-udp"
                         data-chapter-id="chapter-13-standard-library--advanced-features">
@@ -34689,7 +34864,8 @@ fn main() {
                     </div>
                     <p>This example demonstrates sending and receiving connectionless UDP packets. The server binds to a
                         local port and receives a message along with the sender&#039;s address, and responds to it using
-                        <code>write_to</code>.</p>
+                        <code>write_to</code>.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -35221,7 +35397,8 @@ fn main() {
                     <p>* <strong>Maximum Packet Sizes</strong>: The theoretical maximum size of a UDP packet is 65,535
                         bytes (including headers), but in practice, any packet larger than the network&#039;s
                         <strong>MTU (Maximum Transmission Unit)</strong> (typically 1500 bytes on ethernet/internet
-                        routers) will be fragmented at the IP layer.</p>
+                        routers) will be fragmented at the IP layer.
+                    </p>
                     <p><em> <strong>Why IP Fragmentation is Bad</strong>: If </em>any single* IP fragment is lost during
                         transmission, the entire UDP packet is discarded. This dramatically increases packet loss rates
                         for large payloads.</p>
@@ -35249,16 +35426,19 @@ fn main() {
                     <p>* <strong>Sequence Ordering</strong>: Once the number of collected fragments matches
                         <code>total<em>frags</code>, the server iterates from <code>0</code> to
                         <code>total</em>frags - 1</code> to assemble the payload in the correct order, bypassing any
-                        network out-of-order delivery issues.</p>
+                        network out-of-order delivery issues.
+                    </p>
                     <p>* <strong>State Cleanup</strong>: As soon as a message is successfully reassembled,
                         <code>reassemblers.delete(addr_str)</code> is called. This frees memory immediately and prevents
-                        state leak.</p>
+                        state leak.
+                    </p>
                     <h4 id="4-safety--dos-protections">4. Safety &amp; DOS Protections</h4>
                     <p>* <strong>Max Fragment Constraints</strong>: The server enforces
                         <code>max<em>allowed</em>fragments := 5</code> (equivalent to a maximum total message size of ~5
                         KB). If a packet arrives claiming a higher fragment count, it is discarded immediately to
                         prevent malicious clients from exhausting server memory by flooding it with un-reassemblable
-                        data.</p>
+                        data.
+                    </p>
                     <hr />
                     <h3 class="lesson-title" id="net-unix"
                         data-chapter-id="chapter-13-standard-library--advanced-features">
@@ -35281,7 +35461,8 @@ fn main() {
                             href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v">language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v</a>
                     </div>
                     <p>This example demonstrates Unix domain socket client-server communication using the
-                        <code>net.unix</code> module.</p>
+                        <code>net.unix</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -35879,7 +36060,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Options And Results</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>options and results</strong>.</p>
                     <div class="code-wrapper">
@@ -36008,7 +36190,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Generics</strong> showcases modern standard library packages, system calls, network
-                        sockets, inline assembly, or WASM support.</p>
+                        sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>generics</strong>.</p>
                     <div class="code-wrapper">
@@ -36135,7 +36318,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Interfaces</strong> showcases modern standard library packages, system calls, network
-                        sockets, inline assembly, or WASM support.</p>
+                        sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>interfaces</strong>.</p>
                     <div class="code-wrapper">
@@ -36264,7 +36448,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Sum Types</strong> showcases modern standard library packages, system calls, network
-                        sockets, inline assembly, or WASM support.</p>
+                        sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>sum types</strong>.</p>
                     <div class="code-wrapper">
@@ -36411,7 +36596,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Attributes</strong> showcases modern standard library packages, system calls, network
-                        sockets, inline assembly, or WASM support.</p>
+                        sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>attributes</strong>.</p>
                     <div class="code-wrapper">
@@ -36676,7 +36862,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Strings Builder</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>strings builder</strong>.</p>
                     <div class="code-wrapper">
@@ -37405,7 +37592,8 @@ fn main() {
                     <p>This example demonstrates calling system diagnostics (<code>os.uname</code>), retrieving current
                         host/user identities, assessing disk capacity and usage metrics (<code>os.disk_usage</code>),
                         and parsing detailed file metadata using POSIX stat/lstat mappings (<code>os.Stat</code> and
-                        <code>os.FileMode</code>).</p>
+                        <code>os.FileMode</code>).
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -37583,7 +37771,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Time And Stopwatch</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>time and stopwatch</strong>.</p>
                     <div class="code-wrapper">
@@ -37693,7 +37882,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Http Client</strong> showcases modern standard library packages, system calls, network
-                        sockets, inline assembly, or WASM support.</p>
+                        sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>http client</strong>.</p>
                     <div class="code-wrapper">
@@ -37802,7 +37992,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Regex Matching</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>regex matching</strong>.</p>
                     <div class="code-wrapper">
@@ -37918,7 +38109,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Command Line Flags</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>command line flags</strong>.</p>
                     <div class="code-wrapper">
@@ -38042,7 +38234,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Datatypes Collections</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>datatypes collections</strong>.</p>
                     <div class="code-wrapper">
@@ -38504,7 +38697,8 @@ fn on_event(e &amp;gg.Event, data voidptr) {
                             href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v">language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v</a>
                     </div>
                     <p>This example demonstrates how to directly access and parse command-line arguments using
-                        <code>os.args</code> to build simple command-line applications.</p>
+                        <code>os.args</code> to build simple command-line applications.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -38632,7 +38826,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Math And Rand</strong> showcases modern standard library packages, system calls, network
-                        sockets, inline assembly, or WASM support.</p>
+                        sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>math and rand</strong>.</p>
                     <div class="code-wrapper">
@@ -38768,7 +38963,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Crypto Asymmetric</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -38931,7 +39127,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Crypto Entropy</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -39194,7 +39391,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Crypto Kdf</strong> showcases modern standard library packages, system calls, network
-                        sockets, inline assembly, or WASM support.</p>
+                        sockets, inline assembly, or WASM support.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -39323,7 +39521,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Crypto Mac</strong> showcases modern standard library packages, system calls, network
-                        sockets, inline assembly, or WASM support.</p>
+                        sockets, inline assembly, or WASM support.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -39435,7 +39634,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Crypto Symmetric</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -39597,7 +39797,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Log And Crypto</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>log and crypto</strong>.</p>
                     <div class="code-wrapper">
@@ -39713,7 +39914,8 @@ fn main() {
                         keyword (which spawns a function in a new thread). Threads communicate safely using
                         <strong>channels</strong>, which prevent race conditions. For shared memory concurrency, V
                         provides the <code>shared</code> keyword alongside <code>lock</code> and <code>unlock</code>
-                        blocks to safely synchronize access to variables.</p>
+                        blocks to safely synchronize access to variables.
+                    </p>
                     <p>These examples cover spawning tasks, reading/writing channels, buffering, select statements, and
                         thread synchronization.</p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
@@ -39830,7 +40032,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Encoding Formats</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>encoding formats</strong>.</p>
                     <div class="code-wrapper">
@@ -39948,7 +40151,8 @@ fn main() {
                     </h3>
                     <p>V has a very rich and growing standard library and is actively updated. This lesson on
                         <strong>Arrays Utility</strong> showcases modern standard library packages, system calls,
-                        network sockets, inline assembly, or WASM support.</p>
+                        network sockets, inline assembly, or WASM support.
+                    </p>
                     <p><strong>Additional Context from Repository docs:</strong></p>
                     <p>This example demonstrates the concepts of <strong>arrays utility</strong>.</p>
                     <div class="code-wrapper">
@@ -40047,7 +40251,8 @@ fn main() {
                             href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/15_toml/toml.v">language_updates_and_stdlib/02_standard_library/15_toml/toml.v</a>
                     </div>
                     <p>This example demonstrates how to parse and query TOML configuration files using V&#039;s built-in
-                        <code>toml</code> module.</p>
+                        <code>toml</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -40175,7 +40380,8 @@ fn main() {
                     </div>
                     <p>This example demonstrates how to convert strings to numbers, parse numbers in different bases and
                         bit-sizes, and convert numbers back to base string representations using the
-                        <code>strconv</code> module.</p>
+                        <code>strconv</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -40491,7 +40697,8 @@ fn main() {
                             href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v">language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v</a>
                     </div>
                     <p>This example demonstrates writing to and reading from the system clipboard on macOS using the
-                        <code>clipboard</code> module, including a backup and restore mechanism.</p>
+                        <code>clipboard</code> module, including a backup and restore mechanism.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -41079,7 +41286,8 @@ fn main() {
                             href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v">language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v</a>
                     </div>
                     <p>This example demonstrates standard Deflate byte stream compression and decompression using the
-                        <code>compress.deflate</code> module.</p>
+                        <code>compress.deflate</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -41175,7 +41383,8 @@ fn main() {
                             href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v">language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v</a>
                     </div>
                     <p>This example demonstrates compressing and decompressing binary or text data using the
-                        <code>compress.gzip</code> module.</p>
+                        <code>compress.gzip</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -41272,7 +41481,8 @@ fn main() {
                     </div>
                     <p>This example demonstrates packaging multiple files into zip archives recursively, inspecting zip
                         contents/meta-data (size, CRC32), and extracting zip files to folders using the
-                        <code>compress.szip</code> module.</p>
+                        <code>compress.szip</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -41434,7 +41644,8 @@ fn main() {
                             href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v">language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v</a>
                     </div>
                     <p>This example demonstrates standard Zlib byte stream compression and decompression using the
-                        <code>compress.zlib</code> module.</p>
+                        <code>compress.zlib</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -41631,7 +41842,8 @@ fn main() {
                     </div>
                     <p>This example demonstrates how <code>os.File</code> implements <code>io.Reader</code> and
                         <code>io.Writer</code> interfaces, allowing standard file operations to utilize stream-oriented
-                        utilities like <code>io.cp</code> and <code>io.BufferedReader</code>.</p>
+                        utilities like <code>io.cp</code> and <code>io.BufferedReader</code>.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -41781,7 +41993,8 @@ fn main() {
                             href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/28_io/io.v">language_updates_and_stdlib/02_standard_library/28_io/io.v</a>
                     </div>
                     <p>This example demonstrates implementing custom Reader and Writer structs and using the
-                        <code>io.cp</code> utility to copy data between streams using the <code>io</code> module.</p>
+                        <code>io.cp</code> utility to copy data between streams using the <code>io</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -42130,7 +42343,8 @@ fn main() {
                     </div>
                     <p>This example demonstrates creating bitfields, getting/setting individual bits, performing logical
                         operations (AND, OR, XOR, NOT), and converting to string representation using the
-                        <code>bitfield</code> module.</p>
+                        <code>bitfield</code> module.
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">v</span>
@@ -42839,7 +43053,8 @@ fn main() {
                     </div>
                     <h5 id="executing-in-javascriptnodejs">Executing in JavaScript/Node.js:</h5>
                     <p>To run the natively compiled WASM binary, instantiate it using the standard JavaScript
-                        <code>WebAssembly</code> API:</p>
+                        <code>WebAssembly</code> API:
+                    </p>
                     <div class="code-wrapper">
                         <div class="code-header">
                             <span class="code-lang">javascript</span>
@@ -43013,12 +43228,15 @@ source ./emsdk_env.sh</code></pre>
                     <ol>
                         <li>Initialize a WebAssembly module (<code>wasm.Module</code>).</li>
                         <li>Generate exported arithmetic functions (<code>add</code>, <code>sub</code>,
-                            <code>mul</code>).</li>
+                            <code>mul</code>).
+                        </li>
                         <li>Construct and read mutable global variables (<code>new<em>global</code>,
-                            <code>global</em>get</code>, <code>global_set</code>).</li>
+                            <code>global</em>get</code>, <code>global_set</code>).
+                        </li>
                         <li>Build recursive control structures (a factorial <code>fac</code> function utilizing
                             <code>c<em>if</code>, <code>c</em>else</code>, <code>c_end</code>, and recursive
-                            <code>call</code>).</li>
+                            <code>call</code>).
+                        </li>
                         <li>Compile the module down to a <code>.wasm</code> binary slice (<code>[]u8</code>) and save it
                             to disk.</li>
                     </ol>
@@ -43510,9 +43728,12 @@ fn main() {
 
         window.addEventListener('hashchange', () => {
             scrollToHashTarget(window.location.hash, 'auto', document.body);
+            updateSidebarContext();
+            syncExpandedSectionFromHash(window.location.hash);
         });
 
         window.addEventListener('load', () => {
+            updateSidebarContext();
             if (window.location.hash) {
                 setTimeout(() => scrollToHashTarget(window.location.hash, 'auto', document.body), 0);
             }
@@ -43520,8 +43741,12 @@ fn main() {
 
         // Populate Sidebar menu
         const menuEl = document.getElementById('sidebarMenu');
+        const sidebarContextBar = document.getElementById('sidebarContextBar');
+        const expandAllSectionsBtn = document.getElementById('expandAllSectionsBtn');
+        const collapseAllSectionsBtn = document.getElementById('collapseAllSectionsBtn');
         const sectionStateStorageKey = 'vguide-section-state';
         const currentHash = (window.location.hash || '').replace(/^#/, '');
+        let suppressActiveSectionAutoExpand = false;
 
         function getSectionState() {
             try {
@@ -43554,6 +43779,47 @@ fn main() {
             }
         }
 
+        function expandAllSections(expand = true) {
+            suppressActiveSectionAutoExpand = !expand;
+            document.querySelectorAll('.menu-section-wrapper').forEach(sectionWrapper => {
+                setSectionExpanded(sectionWrapper, expand, true);
+            });
+            document.querySelectorAll('.chapter-items').forEach(itemsDiv => itemsDiv.classList.toggle('collapsed', !expand));
+            document.querySelectorAll('.chapter-heading').forEach(heading => heading.classList.toggle('collapsed', !expand));
+        }
+
+        function updateSidebarContext() {
+            if (!sidebarContextBar) return;
+            const activeLesson = document.querySelector('.menu-lesson-link.active');
+            const activeSection = document.querySelector('.menu-link.active');
+            if (activeLesson) {
+                const sectionWrapper = activeLesson.closest('.menu-section-wrapper');
+                const sectionTitle = sectionWrapper?.querySelector('.menu-link-text')?.textContent?.trim() || '';
+                const chapterTitle = activeLesson.closest('.menu-chapter')?.querySelector('.chapter-heading > span')?.textContent?.trim() || '';
+                const lessonTitle = activeLesson.textContent.replace(/■/g, '').trim();
+                sidebarContextBar.textContent = lessonTitle ? `${sectionTitle || 'Section'} • ${lessonTitle}` : 'Browse chapters';
+                if (chapterTitle) {
+                    sidebarContextBar.textContent = `${chapterTitle} › ${sidebarContextBar.textContent}`;
+                }
+            } else if (activeSection) {
+                const sectionTitle = activeSection.querySelector('.menu-link-text')?.textContent?.trim() || activeSection.textContent.trim();
+                sidebarContextBar.textContent = sectionTitle ? `Section: ${sectionTitle}` : 'Browse chapters';
+            } else {
+                sidebarContextBar.textContent = 'Browse chapters';
+            }
+        }
+
+        function syncExpandedSectionFromHash(hash = window.location.hash) {
+            const normalizedHash = (hash || '').replace(/^#/, '');
+            if (!normalizedHash) {
+                return;
+            }
+            document.querySelectorAll('.menu-section-wrapper').forEach(sectionWrapper => {
+                const matchesHash = sectionWrapper.dataset.sectionId === normalizedHash || sectionWrapper.querySelector(`[data-target="${normalizedHash}"]`) !== null;
+                setSectionExpanded(sectionWrapper, matchesHash, false);
+            });
+        }
+
         const persistedSectionState = getSectionState();
         bookStructure.forEach(chap => {
             const chapDiv = document.createElement('div');
@@ -43570,6 +43836,7 @@ fn main() {
 
             // Toggle collapse
             heading.addEventListener('click', () => {
+                suppressActiveSectionAutoExpand = false;
                 const isCollapsed = itemsDiv.classList.toggle('collapsed');
                 heading.classList.toggle('collapsed', isCollapsed);
             });
@@ -43591,12 +43858,14 @@ fn main() {
                 link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg><span class="menu-link-text">${sec.title}</span>${sec.lessons && sec.lessons.length > 0 ? `<span class="section-meta">${sec.lessons.length} ${sec.lessons.length === 1 ? 'lesson' : 'lessons'}</span>` : ''}`;
 
                 link.addEventListener('click', () => {
+                    suppressActiveSectionAutoExpand = false;
                     if (window.innerWidth <= 1024) {
                         document.getElementById('sidebar').classList.remove('open');
                     }
                     if (sec.lessons && sec.lessons.length > 0) {
                         setSectionExpanded(secWrapper, true);
                     }
+                    updateSidebarContext();
                 });
 
                 sectionHeader.appendChild(link);
@@ -43639,9 +43908,11 @@ fn main() {
                         lesLink.innerHTML = `<span class="bullet">■</span> ${les.title}`;
 
                         lesLink.addEventListener('click', (e) => {
+                            suppressActiveSectionAutoExpand = false;
                             if (window.innerWidth <= 1024) {
                                 document.getElementById('sidebar').classList.remove('open');
                             }
+                            updateSidebarContext();
                         });
                         lessonsDiv.appendChild(lesLink);
                     });
@@ -43661,6 +43932,16 @@ fn main() {
             chapDiv.appendChild(itemsDiv);
             menuEl.appendChild(chapDiv);
         });
+
+        updateSidebarContext();
+
+        if (expandAllSectionsBtn) {
+            expandAllSectionsBtn.addEventListener('click', () => expandAllSections(true));
+        }
+
+        if (collapseAllSectionsBtn) {
+            collapseAllSectionsBtn.addEventListener('click', () => expandAllSections(false));
+        }
 
         // Mobile & Desktop Sidebar toggler
         const sidebar = document.getElementById('sidebar');
@@ -44073,7 +44354,7 @@ fn main() {
                     }
 
                     // Handle lessons expansion for this section
-                    if (wrapper) {
+                    if (wrapper && !suppressActiveSectionAutoExpand) {
                         const lessonsDiv = wrapper.querySelector('.section-lessons');
                         if (lessonsDiv) {
                             if (isDirectActive || hasActiveLessonInside) {
@@ -44093,11 +44374,13 @@ fn main() {
                         link.classList.add('active');
 
                         // Automatically expand parent chapter items
-                        const parentItems = link.closest('.chapter-items');
-                        if (parentItems && parentItems.classList.contains('collapsed')) {
-                            parentItems.classList.remove('collapsed');
-                            const heading = parentItems.previousElementSibling;
-                            if (heading) heading.classList.remove('collapsed');
+                        if (!suppressActiveSectionAutoExpand) {
+                            const parentItems = link.closest('.chapter-items');
+                            if (parentItems && parentItems.classList.contains('collapsed')) {
+                                parentItems.classList.remove('collapsed');
+                                const heading = parentItems.previousElementSibling;
+                                if (heading) heading.classList.remove('collapsed');
+                            }
                         }
                     } else {
                         link.classList.remove('active');
@@ -44105,14 +44388,16 @@ fn main() {
                 });
 
                 // Also make sure chapter items are expanded for active section
-                document.querySelectorAll('.menu-link.active').forEach(link => {
-                    const parentItems = link.closest('.chapter-items');
-                    if (parentItems && parentItems.classList.contains('collapsed')) {
-                        parentItems.classList.remove('collapsed');
-                        const heading = parentItems.previousElementSibling;
-                        if (heading) heading.classList.remove('collapsed');
-                    }
-                });
+                if (!suppressActiveSectionAutoExpand) {
+                    document.querySelectorAll('.menu-link.active').forEach(link => {
+                        const parentItems = link.closest('.chapter-items');
+                        if (parentItems && parentItems.classList.contains('collapsed')) {
+                            parentItems.classList.remove('collapsed');
+                            const heading = parentItems.previousElementSibling;
+                            if (heading) heading.classList.remove('collapsed');
+                        }
+                    });
+                }
 
                 currentSectionTitleEl.innerText = currentTitle;
             } else {
@@ -44124,6 +44409,7 @@ fn main() {
             });
 
             renderBreadcrumbs();
+            updateSidebarContext();
             scheduleSaveReadingState();
         });
 
