@@ -8,13 +8,15 @@ struct UdpReassembler {
 mut:
 	fragments map[int][]u8
 	total     int
+	last_seen time.Time
 }
 
 // write_udp_msg fragments and sends a message to dialed destination.
+// Real-world performance optimization: Avoids allocating a full payload copy by writing fragments
+// directly from string memory slices using C.memcpy.
 fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 	chunk_size := 1024
-	payload_bytes := payload.bytes()
-	total_frags := (payload_bytes.len + chunk_size - 1) / chunk_size
+	total_frags := (payload.len + chunk_size - 1) / chunk_size
 	
 	if total_frags == 0 {
 		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
@@ -25,23 +27,26 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 	for i in 0 .. total_frags {
 		start := i * chunk_size
 		mut end := (i + 1) * chunk_size
-		if end > payload_bytes.len {
-			end = payload_bytes.len
+		if end > payload.len {
+			end = payload.len
 		}
-		frag_payload := payload_bytes[start..end]
-		frag_len := frag_payload.len
+		frag_len := end - start
 		
-		header := [
-			u8(`U`), `D`, `P`, `0`,
-			u8(i),
-			u8(total_frags),
-			u8((u32(frag_len) >> 8) & 0xff),
-			u8(u32(frag_len) & 0xff),
-		]
+		mut packet := []u8{len: 8 + frag_len}
+		packet[0] = `U`
+		packet[1] = `D`
+		packet[2] = `P`
+		packet[3] = `0`
+		packet[4] = u8(i)
+		packet[5] = u8(total_frags)
+		packet[6] = u8((u32(frag_len) >> 8) & 0xff)
+		packet[7] = u8(u32(frag_len) & 0xff)
 		
-		mut packet := []u8{cap: 8 + frag_len}
-		packet << header
-		packet << frag_payload
+		if frag_len > 0 {
+			unsafe {
+				C.memcpy(&packet[8], payload.str + start, frag_len)
+			}
+		}
 		
 		socket.write(packet) or { return err }
 		// Sleep briefly to avoid packet loss during loopback transmission
@@ -50,10 +55,11 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 }
 
 // write_udp_msg_to fragments and sends a message to a specific address using write_to.
+// Real-world performance optimization: Avoids allocating a full payload copy by writing fragments
+// directly from string memory slices using C.memcpy.
 fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 	chunk_size := 1024
-	payload_bytes := payload.bytes()
-	total_frags := (payload_bytes.len + chunk_size - 1) / chunk_size
+	total_frags := (payload.len + chunk_size - 1) / chunk_size
 	
 	if total_frags == 0 {
 		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
@@ -64,23 +70,26 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 	for i in 0 .. total_frags {
 		start := i * chunk_size
 		mut end := (i + 1) * chunk_size
-		if end > payload_bytes.len {
-			end = payload_bytes.len
+		if end > payload.len {
+			end = payload.len
 		}
-		frag_payload := payload_bytes[start..end]
-		frag_len := frag_payload.len
+		frag_len := end - start
 		
-		header := [
-			u8(`U`), `D`, `P`, `0`,
-			u8(i),
-			u8(total_frags),
-			u8((u32(frag_len) >> 8) & 0xff),
-			u8(u32(frag_len) & 0xff),
-		]
+		mut packet := []u8{len: 8 + frag_len}
+		packet[0] = `U`
+		packet[1] = `D`
+		packet[2] = `P`
+		packet[3] = `0`
+		packet[4] = u8(i)
+		packet[5] = u8(total_frags)
+		packet[6] = u8((u32(frag_len) >> 8) & 0xff)
+		packet[7] = u8(u32(frag_len) & 0xff)
 		
-		mut packet := []u8{cap: 8 + frag_len}
-		packet << header
-		packet << frag_payload
+		if frag_len > 0 {
+			unsafe {
+				C.memcpy(&packet[8], payload.str + start, frag_len)
+			}
+		}
 		
 		socket.write_to(addr, packet) or { return err }
 		time.sleep(2 * time.millisecond)
@@ -88,6 +97,8 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 }
 
 // read_udp_msg reads packets from a socket and reassembles them into a single string.
+// Security boundary: Filters out packets from unexpected addresses during reassembly,
+// verifies index boundaries, and checks fragment total counts.
 fn read_udp_msg(mut socket net.UdpConn, max_allowed_fragments int) !(string, net.Addr) {
 	mut fragments := map[int][]u8{}
 	mut total_frags := -1
@@ -117,10 +128,25 @@ fn read_udp_msg(mut socket net.UdpConn, max_allowed_fragments int) !(string, net
 		if total > max_allowed_fragments {
 			return error('incoming message total fragments ${total} exceeds limit of ${max_allowed_fragments}')
 		}
+		if total <= 0 {
+			return error('invalid total fragments count')
+		}
+		if frag_idx < 0 || frag_idx >= total {
+			return error('invalid fragment index')
+		}
 
 		if total_frags == -1 {
 			total_frags = total
 			remote_addr = addr
+		} else {
+			// Injection defense: Ignore packets from other addresses during this reassembly
+			if addr.str() != remote_addr.str() {
+				continue
+			}
+			// Security validation: Mismatched fragment count from client mid-stream
+			if total != total_frags {
+				return error('fragment total count mismatch during reassembly')
+			}
 		}
 
 		fragments[frag_idx] = buf[8 .. 8 + frag_len].clone()
@@ -156,6 +182,14 @@ fn run_server(port int) ! {
 	mut buf := []u8{len: 2048}
 
 	for {
+		// Real-world security pruning: Sweeps stale reassembler states to prevent memory exhaustion DoS
+		now := time.now()
+		for key, state in reassemblers {
+			if now - state.last_seen > 5 * time.second {
+				reassemblers.delete(key)
+			}
+		}
+
 		read, addr := socket.read(mut buf) or {
 			println('Server: Read failed: ${err}')
 			break
@@ -194,15 +228,34 @@ fn run_server(port int) ! {
 			}
 			continue
 		}
+		if total_frags <= 0 {
+			println('Server: Invalid total fragments count ${total_frags}')
+			continue
+		}
+		if frag_idx < 0 || frag_idx >= total_frags {
+			println('Server: Invalid fragment index ${frag_idx} for total ${total_frags}')
+			continue
+		}
 
 		addr_str := addr.str()
 		if addr_str !in reassemblers {
 			reassemblers[addr_str] = UdpReassembler{
 				total: total_frags
+				last_seen: now
 			}
 		}
 
 		mut r := reassemblers[addr_str]
+		// Reset state if fragment total count changes mid-stream
+		if r.total != total_frags {
+			println('Server: Resetting reassembler for ${addr} due to fragment total count change')
+			r = UdpReassembler{
+				total: total_frags
+				last_seen: now
+			}
+		}
+		
+		r.last_seen = now
 		r.fragments[frag_idx] = buf[8 .. 8 + frag_len].clone()
 
 		if r.fragments.len == r.total {

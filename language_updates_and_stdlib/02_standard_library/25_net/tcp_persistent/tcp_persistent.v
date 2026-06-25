@@ -5,24 +5,29 @@ import time
 
 const max_message_size = 8192
 
-// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length.
+// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length in a single write syscall.
 fn write_msg(mut conn net.TcpConn, payload string) ! {
-	magic := [u8(`M`), `S`, `G`, `0`]
-	len := payload.len
-	len_bytes := [
-		u8((u32(len) >> 24) & 0xff),
-		u8((u32(len) >> 16) & 0xff),
-		u8((u32(len) >> 8) & 0xff),
-		u8(u32(len) & 0xff),
-	]
-	// Send header (magic signature + message length)
-	conn.write(magic) or { return err }
-	conn.write(len_bytes) or { return err }
-	// Send the actual message payload
-	conn.write(payload.bytes()) or { return err }
+	mut buf := []u8{len: 8 + payload.len}
+	buf[0] = `M`
+	buf[1] = `S`
+	buf[2] = `G`
+	buf[3] = `0`
+	buf[4] = u8((u32(payload.len) >> 24) & 0xff)
+	buf[5] = u8((u32(payload.len) >> 16) & 0xff)
+	buf[6] = u8((u32(payload.len) >> 8) & 0xff)
+	buf[7] = u8(u32(payload.len) & 0xff)
+	if payload.len > 0 {
+		unsafe {
+			C.memcpy(&buf[8], payload.str, payload.len)
+		}
+	}
+	// Send consolidated buffer in a single system call
+	conn.write(buf) or { return err }
 }
 
 // read_exact reads exactly `size` bytes from the connection, processing data in chunks.
+// Real-world performance optimization: Reads directly into mutable slice views of our pre-allocated
+// buffer to achieve zero-allocation reads inside the chunking loop.
 fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
 	mut data := []u8{len: size}
 	mut read_bytes := 0
@@ -30,13 +35,12 @@ fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
 		remaining := size - read_bytes
 		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
 		chunk_limit := if remaining > 512 { 512 } else { remaining }
-		mut temp_buf := []u8{len: chunk_limit}
-		n := conn.read(mut temp_buf) or { return err }
+		n := conn.read(mut data[read_bytes .. read_bytes + chunk_limit]) or { return err }
 		if n == 0 {
+			if read_bytes == 0 {
+				return error('EOF')
+			}
 			return error('unexpected end of stream')
-		}
-		for i in 0 .. n {
-			data[read_bytes + i] = temp_buf[i]
 		}
 		read_bytes += n
 	}
@@ -95,9 +99,17 @@ fn run_server(port int) ! {
 
 	println('Server: Client connected!')
 
+	// Real-world safety practice: Set read and write timeouts to prevent connection hang-ups (Slowloris DoS)
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
+
 	for {
 		message := read_msg(mut conn, max_message_size) or {
-			println('Server: Connection closed or protocol error: ${err}')
+			if err.msg() == 'EOF' {
+				println('Server: Client disconnected cleanly (EOF).')
+			} else {
+				println('Server: Connection closed or protocol error: ${err}')
+			}
 			break
 		}
 		
@@ -135,6 +147,10 @@ fn run_client(port int) ! {
 	}
 
 	println('Client: Connected!')
+
+	// Set connection timeouts for the client too
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
 
 	// 1. Send a standard small message
 	msg1 := 'Ping 1'

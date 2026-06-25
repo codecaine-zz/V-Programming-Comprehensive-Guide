@@ -12201,6 +12201,8 @@ fn write_msg(mut conn net.TcpConn, payload string) ! {
 }
 
 // read_exact reads exactly `size` bytes from the connection, processing data in chunks.
+// Real-world performance optimization: Reads directly into mutable slice views of our pre-allocated
+// buffer to achieve zero-allocation reads inside the chunking loop.
 fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
 	mut data := []u8{len: size}
 	mut read_bytes := 0
@@ -12208,13 +12210,9 @@ fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
 		remaining := size - read_bytes
 		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
 		chunk_limit := if remaining > 512 { 512 } else { remaining }
-		mut temp_buf := []u8{len: chunk_limit}
-		n := conn.read(mut temp_buf) or { return err }
+		n := conn.read(mut data[read_bytes .. read_bytes + chunk_limit]) or { return err }
 		if n == 0 {
 			return error('unexpected end of stream')
-		}
-		for i in 0 .. n {
-			data[read_bytes + i] = temp_buf[i]
 		}
 		read_bytes += n
 	}
@@ -12273,6 +12271,10 @@ fn run_server(port int) ! {
 
 	println('Server: Client connected!')
 
+	// Real-world safety practice: Set read and write timeouts to prevent connection hang-ups (Slowloris DoS)
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
+
 	for {
 		message := read_msg(mut conn, max_message_size) or {
 			println('Server: Connection closed or protocol error: ${err}')
@@ -12313,6 +12315,10 @@ fn run_client(port int) ! {
 	}
 
 	println('Client: Connected!')
+
+	// Set connection timeouts for the client too
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
 
 	// 1. Send a standard small message
 	msg1 := 'Ping 1'
@@ -12962,6 +12968,8 @@ fn write_msg(mut conn unix.StreamConn, payload string) ! {
 }
 
 // read_exact reads exactly `size` bytes from the connection, processing data in chunks.
+// Real-world performance optimization: Reads directly into mutable slice views of our pre-allocated
+// buffer to achieve zero-allocation reads inside the chunking loop.
 fn read_exact(mut conn unix.StreamConn, size int) ![]u8 {
 	mut data := []u8{len: size}
 	mut read_bytes := 0
@@ -12969,13 +12977,9 @@ fn read_exact(mut conn unix.StreamConn, size int) ![]u8 {
 		remaining := size - read_bytes
 		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
 		chunk_limit := if remaining > 512 { 512 } else { remaining }
-		mut temp_buf := []u8{len: chunk_limit}
-		n := conn.read(mut temp_buf) or { return err }
+		n := conn.read(mut data[read_bytes .. read_bytes + chunk_limit]) or { return err }
 		if n == 0 {
 			return error('unexpected end of stream')
-		}
-		for i in 0 .. n {
-			data[read_bytes + i] = temp_buf[i]
 		}
 		read_bytes += n
 	}
@@ -13041,6 +13045,10 @@ fn run_server(socket_path string) ! {
 
 	println('Server: Client connected!')
 
+	// Real-world safety practice: Set read and write timeouts to prevent connection hang-ups (Slowloris DoS)
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
+
 	for {
 		message := read_msg(mut conn, max_message_size) or {
 			println('Server: Connection closed or protocol error: ${err}')
@@ -13081,6 +13089,10 @@ fn run_client(socket_path string) ! {
 	}
 
 	println('Client: Connected!')
+
+	// Set connection timeouts for the client too
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
 
 	// 1. Send a standard small message
 	msg1 := 'Ping 1'
