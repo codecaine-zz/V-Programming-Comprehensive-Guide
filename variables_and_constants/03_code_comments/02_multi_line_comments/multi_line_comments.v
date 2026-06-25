@@ -1,12 +1,15 @@
 module main
 
 /*
-multiply is a function that accepts two integer arguments
-namely x and y.
-It then performs multiplication of input arguments and returns the product which is again a type of integer as specified in the function signature.
-x is an input argument accepts values of type of int
-y is an input argument accepts values of type of int
-multiply function returns the result of type int which is a multiplication of input arguments x and y
+multiply is a function that accepts two integer arguments (x and y).
+It performs multiplication and returns the integer product.
+
+/*
+Note: In V, block comments can be nested.
+This is a nested block comment. In standard C, nesting block comments
+would cause a compile error, but V's compiler parses them correctly.
+*/
+This is the end of the outer block comment.
 */
 fn multiply(x int, y int) int {
 	return x * y

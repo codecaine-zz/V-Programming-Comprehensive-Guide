@@ -11,7 +11,8 @@ fn test_greet_given_a_name() {
 }
 
 fn test_greet_propagates_error() ! {
-	greet('')!
+	res := greet('Pavan')!
+	assert res == 'Hello Pavan!'
 }
 
 fn test_greet_when_empty() {

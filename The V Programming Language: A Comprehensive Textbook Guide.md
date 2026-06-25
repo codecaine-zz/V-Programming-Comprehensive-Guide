@@ -654,7 +654,10 @@ _File location: [variables_and_constants/03_code_comments/02_multi_line_comments
 
 ### Lesson: Multi Line Comments
 
-Comments are non-executable lines of text in a program that explain what the code does. They are ignored by the compiler but are essential for human developers. This lesson on **Multi Line Comments** demonstrates how to write and format comments in V.
+In V, multi-line (or block) comments are enclosed between `/*` and `*/`. 
+
+> [!NOTE]
+> **Nested Block Comments:** Unlike languages like C, C++, Java, or JavaScript, V supports **nested block comments**. This is a powerful feature that allows you to easily comment out large blocks of code even if they already contain block comments, without triggering syntax errors.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **multi line comments**.
@@ -663,12 +666,15 @@ This example demonstrates the concepts of **multi line comments**.
 module main
 
 /*
-multiply is a function that accepts two integer arguments
-namely x and y.
-It then performs multiplication of input arguments and returns the product which is again a type of integer as specified in the function signature.
-x is an input argument accepts values of type of int
-y is an input argument accepts values of type of int
-multiply function returns the result of type int which is a multiplication of input arguments x and y
+multiply is a function that accepts two integer arguments (x and y).
+It performs multiplication and returns the integer product.
+
+/*
+Note: In V, block comments can be nested.
+This is a nested block comment. In standard C, nesting block comments
+would cause a compile error, but V's compiler parses them correctly.
+*/
+This is the end of the outer block comment.
 */
 fn multiply(x int, y int) int {
 	return x * y
@@ -812,7 +818,7 @@ This example shows how to declare multiple constants (integers, strings, floats)
 This example demonstrates the concepts of **define multiple constants**.
 
 ```v
-const app_name2 = 'V on Wheels'
+const app_name = 'V on Wheels'
 const max_connections = 1000
 const decimal_places = 2
 const pi = 3.14
@@ -8464,7 +8470,8 @@ fn test_greet_given_a_name() {
 }
 
 fn test_greet_propagates_error() ! {
-	greet('')!
+	res := greet('Pavan')!
+	assert res == 'Hello Pavan!'
 }
 
 fn test_greet_when_empty() {
