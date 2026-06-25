@@ -1337,6 +1337,69 @@ const template = `<!DOCTYPE html>
             background: rgba(99, 102, 241, 0.16);
         }
 
+        .continue-reading-card {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 0 0 16px;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            box-shadow: var(--shadow-premium);
+        }
+
+        .continue-reading-card.visible {
+            display: flex;
+        }
+
+        .continue-reading-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .continue-reading-copy {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .continue-reading-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .continue-reading-btn,
+        .continue-reading-dismiss {
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: 999px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color var(--transition-speed), color var(--transition-speed), background-color var(--transition-speed);
+        }
+
+        .continue-reading-btn {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .continue-reading-btn:hover,
+        .continue-reading-dismiss:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
         .focus-mode-btn {
             border: 1px solid var(--border-color);
             background: var(--bg-secondary);
@@ -2618,6 +2681,16 @@ const template = `<!DOCTYPE html>
             </div>
             
             <div class="content-body" id="contentBody">
+                <div class="continue-reading-card" id="continueReadingCard" style="display:none;">
+                    <div>
+                        <div class="continue-reading-title">Continue reading</div>
+                        <div class="continue-reading-copy" id="continueReadingCopy">Pick up where you left off.</div>
+                    </div>
+                    <div class="continue-reading-actions">
+                        <button class="continue-reading-btn" id="continueReadingBtn" type="button">Resume</button>
+                        <button class="continue-reading-dismiss" id="dismissContinueReadingBtn" type="button">Dismiss</button>
+                    </div>
+                </div>
                 <div class="breadcrumb-bar" id="breadcrumbBar"></div>
                 ${contentHtml}
             </div>
@@ -3152,6 +3225,7 @@ const template = `<!DOCTYPE html>
         const currentSectionTitleEl = document.getElementById('currentSectionTitle');
         const LAST_READ_KEY = 'vguide-last-read';
         const COMPLETED_LESSONS_KEY = 'vguide-completed-lessons';
+        const CONTINUE_READING_DISMISS_KEY = 'vguide-continue-reading-dismissed';
         const progressState = {
             completedLessons: []
         };
@@ -3211,24 +3285,58 @@ const template = `<!DOCTYPE html>
             try { localStorage.setItem(LAST_READ_KEY, JSON.stringify(payload)); } catch (e) {}
         }
 
+        function getSavedReadingState() {
+            try {
+                return JSON.parse(localStorage.getItem(LAST_READ_KEY) || 'null');
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function getHeadingTextForId(targetId) {
+            const target = targetId ? document.getElementById(targetId) : null;
+            if (!target) return '';
+            return target.textContent.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
+        }
+
+        function showContinueReadingCard(saved = getSavedReadingState()) {
+            const card = document.getElementById('continueReadingCard');
+            const copy = document.getElementById('continueReadingCopy');
+            if (!card || !copy) return;
+
+            if (!saved || typeof saved.scrollY !== 'number' || window.location.hash || localStorage.getItem(CONTINUE_READING_DISMISS_KEY) === '1') {
+                card.classList.remove('visible');
+                return;
+            }
+
+            const targetId = saved.hash ? saved.hash.replace(/^#/, '') : '';
+            const title = getHeadingTextForId(targetId) || 'your last lesson';
+            copy.textContent = \`Resume from “\${title}” and pick up right where you left off.\`;
+            card.classList.add('visible');
+        }
+
+        function hideContinueReadingCard() {
+            const card = document.getElementById('continueReadingCard');
+            if (card) card.classList.remove('visible');
+        }
+
         function scheduleSaveReadingState() {
             clearTimeout(saveReadingStateTimer);
             saveReadingStateTimer = setTimeout(saveReadingState, 180);
         }
 
-        function restoreReadingState() {
-            if (window.location.hash) return;
-            try {
-                const saved = JSON.parse(localStorage.getItem(LAST_READ_KEY) || 'null');
-                if (!saved || typeof saved.scrollY !== 'number') return;
-                const targetId = saved.hash ? saved.hash.replace(/^#/, '') : '';
-                const target = targetId ? document.getElementById(targetId) : null;
-                if (target) {
-                    setTimeout(() => scrollToHashTarget(saved.hash, 'auto', document.body), 220);
-                } else {
-                    window.scrollTo({ top: Math.max(0, saved.scrollY), behavior: 'auto' });
-                }
-            } catch (e) {}
+        function restoreReadingState(force = false) {
+            if (!force && window.location.hash) return false;
+            const saved = getSavedReadingState();
+            if (!saved || typeof saved.scrollY !== 'number') return false;
+            const targetId = saved.hash ? saved.hash.replace(/^#/, '') : '';
+            const target = targetId ? document.getElementById(targetId) : null;
+            if (target) {
+                setTimeout(() => scrollToHashTarget(saved.hash, 'auto', document.body), 220);
+            } else {
+                window.scrollTo({ top: Math.max(0, saved.scrollY), behavior: 'auto' });
+            }
+            return true;
         }
 
         function renderBreadcrumbs() {
@@ -3520,6 +3628,23 @@ const template = `<!DOCTYPE html>
             updateLessonCompletionButtons();
         }
         
+        const continueReadingBtn = document.getElementById('continueReadingBtn');
+        const dismissContinueReadingBtn = document.getElementById('dismissContinueReadingBtn');
+
+        if (continueReadingBtn) {
+            continueReadingBtn.addEventListener('click', () => {
+                restoreReadingState(true);
+                hideContinueReadingCard();
+            });
+        }
+
+        if (dismissContinueReadingBtn) {
+            dismissContinueReadingBtn.addEventListener('click', () => {
+                try { localStorage.setItem(CONTINUE_READING_DISMISS_KEY, '1'); } catch (e) {}
+                hideContinueReadingCard();
+            });
+        }
+
         // Search functionality
         const searchInput = document.getElementById('searchInput');
         const searchClearBtn = document.getElementById('searchClearBtn');
@@ -4042,6 +4167,7 @@ const template = `<!DOCTYPE html>
             injectReadingTimes();
             updateSearchClearButton();
             restoreReadingState();
+            showContinueReadingCard();
             window.dispatchEvent(new Event('scroll'));
         }, 100);
     </script>
