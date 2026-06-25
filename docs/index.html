@@ -2445,6 +2445,7 @@
                 <div class="sidebar-actions">
                     <button class="sidebar-action-btn" id="expandAllSectionsBtn" type="button">Expand all</button>
                     <button class="sidebar-action-btn" id="collapseAllSectionsBtn" type="button">Collapse all</button>
+                    <button class="sidebar-action-btn" id="focusActivePathBtn" type="button">Focus current path</button>
                 </div>
                 <div class="sidebar-context-bar" id="sidebarContextBar">Browse chapters</div>
             </div>
@@ -43744,6 +43745,7 @@ fn main() {
         const sidebarContextBar = document.getElementById('sidebarContextBar');
         const expandAllSectionsBtn = document.getElementById('expandAllSectionsBtn');
         const collapseAllSectionsBtn = document.getElementById('collapseAllSectionsBtn');
+        const focusActivePathBtn = document.getElementById('focusActivePathBtn');
         const sectionStateStorageKey = 'vguide-section-state';
         const currentHash = (window.location.hash || '').replace(/^#/, '');
         let suppressActiveSectionAutoExpand = false;
@@ -43786,6 +43788,30 @@ fn main() {
             });
             document.querySelectorAll('.chapter-items').forEach(itemsDiv => itemsDiv.classList.toggle('collapsed', !expand));
             document.querySelectorAll('.chapter-heading').forEach(heading => heading.classList.toggle('collapsed', !expand));
+        }
+
+        function focusCurrentPath() {
+            const activeLesson = document.querySelector('.menu-lesson-link.active');
+            const activeSectionLink = document.querySelector('.menu-link.active');
+            const activeSectionWrapper = activeLesson?.closest('.menu-section-wrapper') || activeSectionLink?.closest('.menu-section-wrapper');
+            if (!activeSectionWrapper) return;
+
+            const targetChapterItems = activeSectionWrapper.closest('.chapter-items');
+
+            document.querySelectorAll('.menu-section-wrapper').forEach(sectionWrapper => {
+                const isTarget = sectionWrapper === activeSectionWrapper;
+                setSectionExpanded(sectionWrapper, isTarget, true);
+            });
+
+            document.querySelectorAll('.chapter-items').forEach(itemsDiv => {
+                const belongsToTargetChapter = itemsDiv === targetChapterItems;
+                itemsDiv.classList.toggle('collapsed', !belongsToTargetChapter);
+            });
+
+            document.querySelectorAll('.chapter-heading').forEach(heading => {
+                const belongsToTargetChapter = heading.nextElementSibling === targetChapterItems;
+                heading.classList.toggle('collapsed', !belongsToTargetChapter);
+            });
         }
 
         function updateSidebarContext() {
@@ -43941,6 +43967,10 @@ fn main() {
 
         if (collapseAllSectionsBtn) {
             collapseAllSectionsBtn.addEventListener('click', () => expandAllSections(false));
+        }
+
+        if (focusActivePathBtn) {
+            focusActivePathBtn.addEventListener('click', () => focusCurrentPath());
         }
 
         // Mobile & Desktop Sidebar toggler
