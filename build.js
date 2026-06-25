@@ -134,6 +134,16 @@ function parseMarkdownToHtmlAndIndex(md) {
         return normalized === 'vlang' ? 'v' : normalized;
     }
 
+    function normalizeTitleForComparison(text) {
+        return text
+            .replace(/^Lesson:\s*/i, '')
+            .replace(/\s*\([^)]+\)\s*$/, '')
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
     const structure = [];
 
     for (let i = 0; i < lines.length; i++) {
@@ -364,27 +374,49 @@ function parseMarkdownToHtmlAndIndex(md) {
                     cleanTitle = title.substring(7).trim();
                 }
 
-                currentLesson = {
-                    id: slug,
-                    title: cleanTitle,
-                    content: ''
-                };
-
-                if (currentSection) {
-                    currentSection.lessons.push(currentLesson);
+                // Check if this is a duplicate of the last lesson in the current section
+                let duplicateLesson = null;
+                if (currentSection && currentSection.lessons.length > 0) {
+                    const lastLesson = currentSection.lessons[currentSection.lessons.length - 1];
+                    if (normalizeTitleForComparison(lastLesson.title) === normalizeTitleForComparison(title)) {
+                        duplicateLesson = lastLesson;
+                    }
                 }
 
-                const lessonClass = isLesson ? ' lesson-header' : '';
-                html += `<h3 class="lesson-title${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">${escapeHtml(cleanTitle)}</h3>\n`;
-                
-                searchIndex.push({
-                    id: `${slug}`,
-                    title: cleanTitle,
-                    type: 'lesson',
-                    content: cleanTitle,
-                    chapter: currentChapter ? currentChapter.title : '',
-                    section: currentSection ? currentSection.title : ''
-                });
+                if (duplicateLesson) {
+                    // Update duplicate lesson's title if this is a cleaner lesson header (with "Lesson:")
+                    if (isLesson) {
+                        duplicateLesson.title = cleanTitle;
+                    }
+                    // Keep currentLesson pointing to the existing duplicate so content appends to it
+                    currentLesson = duplicateLesson;
+
+                    // Render with .lesson-subtitle instead of .lesson-title to keep scroll active highlighting and navigation builder correct
+                    const lessonClass = isLesson ? ' lesson-header' : '';
+                    html += `<h3 class="lesson-subtitle${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">${escapeHtml(cleanTitle)}</h3>\n`;
+                } else {
+                    currentLesson = {
+                        id: slug,
+                        title: cleanTitle,
+                        content: ''
+                    };
+
+                    if (currentSection) {
+                        currentSection.lessons.push(currentLesson);
+                    }
+
+                    const lessonClass = isLesson ? ' lesson-header' : '';
+                    html += `<h3 class="lesson-title${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">${escapeHtml(cleanTitle)}</h3>\n`;
+                    
+                    searchIndex.push({
+                        id: `${slug}`,
+                        title: cleanTitle,
+                        type: 'lesson',
+                        content: cleanTitle,
+                        chapter: currentChapter ? currentChapter.title : '',
+                        section: currentSection ? currentSection.title : ''
+                    });
+                }
             } else {
                 html += `<h${level} id="${slug}">${escapeHtml(title)}</h${level}>\n`;
             }
@@ -759,6 +791,62 @@ const template = `<!DOCTYPE html>
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
         }
 
+        .menu-section-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-lessons {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding-left: 20px;
+            margin-top: 2px;
+            margin-bottom: 4px;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            overflow: hidden;
+        }
+
+        .section-lessons.collapsed {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .menu-lesson-link {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color var(--transition-speed), background-color var(--transition-speed);
+        }
+
+        .menu-lesson-link .bullet {
+            color: var(--text-muted);
+            font-size: 8px;
+            opacity: 0.7;
+        }
+
+        .menu-lesson-link:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-tertiary);
+        }
+
+        .menu-lesson-link.active {
+            color: #ffffff;
+            background-color: var(--bg-tertiary);
+            font-weight: 500;
+            border-left: 2px solid var(--accent-glow);
+            border-radius: 0 4px 4px 0;
+            padding-left: 8px;
+        }
+
         /* Sidebar Footer / Config */
         .sidebar-footer {
             padding: 16px 20px;
@@ -926,7 +1014,7 @@ const template = `<!DOCTYPE html>
             scroll-margin-top: 90px;
         }
 
-        .lesson-title {
+        .lesson-title, .lesson-subtitle {
             font-family: var(--font-heading);
             font-size: 18px;
             font-weight: 600;
@@ -1574,6 +1662,9 @@ const template = `<!DOCTYPE html>
             });
             
             chap.sections.forEach(sec => {
+                const secWrapper = document.createElement('div');
+                secWrapper.className = 'menu-section-wrapper';
+                
                 const link = document.createElement('a');
                 link.href = '#' + sec.id;
                 link.className = 'menu-link';
@@ -1588,7 +1679,41 @@ const template = `<!DOCTYPE html>
                     }
                 });
                 
-                itemsDiv.appendChild(link);
+                secWrapper.appendChild(link);
+                
+                if (sec.lessons && sec.lessons.length > 0) {
+                    const lessonsDiv = document.createElement('div');
+                    lessonsDiv.className = 'section-lessons collapsed';
+                    
+                    const renderedTitles = new Set();
+                    sec.lessons.forEach(les => {
+                        if (renderedTitles.has(les.title)) {
+                            return;
+                        }
+                        renderedTitles.add(les.title);
+                        
+                        const targetId = les.id;
+                        
+                        const lesLink = document.createElement('a');
+                        lesLink.href = '#' + targetId;
+                        lesLink.className = 'menu-lesson-link';
+                        lesLink.dataset.target = targetId;
+                        lesLink.dataset.title = les.title.toLowerCase();
+                        lesLink.setAttribute('data-chapter-id', chap.id);
+                        lesLink.innerHTML = \`<span class="bullet">■</span> \${les.title}\`;
+                        
+                        lesLink.addEventListener('click', (e) => {
+                            if (window.innerWidth <= 1024) {
+                                document.getElementById('sidebar').classList.remove('open');
+                            }
+                        });
+                        lessonsDiv.appendChild(lesLink);
+                    });
+                    
+                    secWrapper.appendChild(lessonsDiv);
+                }
+                
+                itemsDiv.appendChild(secWrapper);
             });
             
             chapDiv.appendChild(heading);
@@ -1620,23 +1745,54 @@ const template = `<!DOCTYPE html>
             } else {
                 btnTop.classList.remove('visible');
             }
-            
-            // Highlight active navigation section
-            const sections = document.querySelectorAll('h2.section-title, h1.chapter-title');
+                       // Highlight active navigation section or lesson
+            const headings = document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title');
             let activeId = '';
             let currentTitle = 'Welcome';
             
-            sections.forEach(sec => {
-                const rect = sec.getBoundingClientRect();
+            headings.forEach(head => {
+                const rect = head.getBoundingClientRect();
                 if (rect.top < 120) {
-                    activeId = sec.id;
-                    currentTitle = sec.innerText.replace(/Chapter \\d+:/i, '').trim();
+                    activeId = head.id;
+                    currentTitle = head.innerText.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
                 }
             });
             
             if (activeId) {
+                // Highlight section links
+                const targetId = activeId;
+
                 document.querySelectorAll('.menu-link').forEach(link => {
-                    if (link.dataset.target === activeId || link.getAttribute('href') === '#' + activeId) {
+                    const isDirectActive = (link.dataset.target === targetId || link.getAttribute('href') === '#' + targetId);
+                    
+                    // Check if targetId is a lesson inside this section's wrapper
+                    const wrapper = link.closest('.menu-section-wrapper');
+                    const hasActiveLessonInside = wrapper && wrapper.querySelector('.menu-lesson-link[data-target="' + targetId + '"]');
+                    
+                    if (isDirectActive) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+
+                    // Handle lessons expansion for this section
+                    if (wrapper) {
+                        const lessonsDiv = wrapper.querySelector('.section-lessons');
+                        if (lessonsDiv) {
+                            if (isDirectActive || hasActiveLessonInside) {
+                                lessonsDiv.classList.remove('collapsed');
+                            } else {
+                                lessonsDiv.classList.add('collapsed');
+                            }
+                        }
+                    }
+                });
+
+                // Highlight lesson links
+                document.querySelectorAll('.menu-lesson-link').forEach(link => {
+                    const isDirectActive = (link.dataset.target === targetId || link.getAttribute('href') === '#' + targetId);
+                    
+                    if (isDirectActive) {
                         link.classList.add('active');
                         
                         // Automatically expand parent chapter items
@@ -1650,6 +1806,17 @@ const template = `<!DOCTYPE html>
                         link.classList.remove('active');
                     }
                 });
+
+                // Also make sure chapter items are expanded for active section
+                document.querySelectorAll('.menu-link.active').forEach(link => {
+                    const parentItems = link.closest('.chapter-items');
+                    if (parentItems && parentItems.classList.contains('collapsed')) {
+                        parentItems.classList.remove('collapsed');
+                        const heading = parentItems.previousElementSibling;
+                        if (heading) heading.classList.remove('collapsed');
+                    }
+                });
+
                 currentSectionTitleEl.innerText = currentTitle;
             }
         });
@@ -1676,8 +1843,15 @@ const template = `<!DOCTYPE html>
                     itemsDiv.classList.remove('collapsed');
                     heading.classList.remove('collapsed');
                     
+                    chapDiv.querySelectorAll('.menu-section-wrapper').forEach(w => w.style.display = '');
                     chapDiv.querySelectorAll('.menu-link').forEach(link => {
                         link.style.display = '';
+                    });
+                    chapDiv.querySelectorAll('.menu-lesson-link').forEach(link => {
+                        link.style.display = '';
+                    });
+                    chapDiv.querySelectorAll('.section-lessons').forEach(div => {
+                        div.classList.add('collapsed');
                     });
                 });
                 overlay.style.display = 'none';
@@ -1688,19 +1862,42 @@ const template = `<!DOCTYPE html>
                 const chapTitle = chapDiv.dataset.title || '';
                 const heading = chapDiv.querySelector('.chapter-heading');
                 const itemsDiv = chapDiv.querySelector('.chapter-items');
-                let hasVisibleLink = false;
+                let hasVisibleSectionOrLesson = false;
                 
-                chapDiv.querySelectorAll('.menu-link').forEach(link => {
-                    const linkTitle = link.dataset.title || '';
-                    if (linkTitle.includes(query) || chapTitle.includes(query)) {
-                        link.style.display = '';
-                        hasVisibleLink = true;
+                chapDiv.querySelectorAll('.menu-section-wrapper').forEach(wrapper => {
+                    const sectionLink = wrapper.querySelector('.menu-link');
+                    const sectionTitle = sectionLink.dataset.title || '';
+                    let hasVisibleLesson = false;
+                    
+                    wrapper.querySelectorAll('.menu-lesson-link').forEach(lessonLink => {
+                        const lessonTitle = lessonLink.dataset.title || '';
+                        if (lessonTitle.includes(query) || sectionTitle.includes(query) || chapTitle.includes(query)) {
+                            lessonLink.style.display = '';
+                            hasVisibleLesson = true;
+                        } else {
+                            lessonLink.style.display = 'none';
+                        }
+                    });
+                    
+                    const lessonsDiv = wrapper.querySelector('.section-lessons');
+                    if (lessonsDiv) {
+                        if (hasVisibleLesson && query.length > 0) {
+                            lessonsDiv.classList.remove('collapsed');
+                        } else {
+                            lessonsDiv.classList.add('collapsed');
+                        }
+                    }
+
+                    if (sectionTitle.includes(query) || hasVisibleLesson || chapTitle.includes(query)) {
+                        wrapper.style.display = '';
+                        sectionLink.style.display = '';
+                        hasVisibleSectionOrLesson = true;
                     } else {
-                        link.style.display = 'none';
+                        wrapper.style.display = 'none';
                     }
                 });
                 
-                if (hasVisibleLink || chapTitle.includes(query)) {
+                if (hasVisibleSectionOrLesson || chapTitle.includes(query)) {
                     chapDiv.style.display = '';
                     itemsDiv.classList.remove('collapsed');
                     heading.classList.remove('collapsed');
@@ -1781,8 +1978,15 @@ const template = `<!DOCTYPE html>
                     // Reset sidebar filter so rest of items are visible
                     document.querySelectorAll('.menu-chapter').forEach(chapDiv => {
                         chapDiv.style.display = '';
+                        chapDiv.querySelectorAll('.menu-section-wrapper').forEach(w => w.style.display = '');
                         chapDiv.querySelectorAll('.menu-link').forEach(link => {
                             link.style.display = '';
+                        });
+                        chapDiv.querySelectorAll('.menu-lesson-link').forEach(link => {
+                            link.style.display = '';
+                        });
+                        chapDiv.querySelectorAll('.section-lessons').forEach(div => {
+                            div.classList.add('collapsed');
                         });
                     });
                     
