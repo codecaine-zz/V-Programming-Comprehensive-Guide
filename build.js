@@ -732,6 +732,94 @@ const template = `<!DOCTYPE html>
             --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.35), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
         }
 
+        /* Aurora Theme overrides */
+        html[data-theme="aurora"] {
+            --bg-primary: #060816;
+            --bg-secondary: #10192d;
+            --bg-tertiary: #1a2850;
+            
+            --text-primary: #f4fbff;
+            --text-secondary: #95c9ff;
+            --text-muted: #6ca8f5;
+            
+            --accent-primary: #22d3ee;
+            --accent-glow: #38bdf8;
+            --accent-gradient: linear-gradient(135deg, #22d3ee 0%, #818cf8 100%);
+            
+            --border-color: #22355c;
+            --border-hover: #38bdf8;
+            
+            --code-bg: #030611;
+            --glass-bg: rgba(16, 25, 45, 0.88);
+            --shadow-premium: 0 14px 32px -8px rgba(34, 211, 238, 0.18), 0 8px 16px -10px rgba(15, 23, 42, 0.35);
+        }
+
+        /* Plum Theme overrides */
+        html[data-theme="plum"] {
+            --bg-primary: #130b17;
+            --bg-secondary: #22152b;
+            --bg-tertiary: #301b3d;
+            
+            --text-primary: #fbefff;
+            --text-secondary: #d8b4fe;
+            --text-muted: #a78bfa;
+            
+            --accent-primary: #c084fc;
+            --accent-glow: #f0abfc;
+            --accent-gradient: linear-gradient(135deg, #c084fc 0%, #f472b6 100%);
+            
+            --border-color: #47304f;
+            --border-hover: #c084fc;
+            
+            --code-bg: #0b0711;
+            --glass-bg: rgba(34, 21, 43, 0.88);
+            --shadow-premium: 0 14px 32px -8px rgba(192, 132, 252, 0.2), 0 8px 16px -10px rgba(19, 11, 23, 0.35);
+        }
+
+        /* Ember Theme overrides */
+        html[data-theme="ember"] {
+            --bg-primary: #17110c;
+            --bg-secondary: #241711;
+            --bg-tertiary: #32211a;
+            
+            --text-primary: #fff5e9;
+            --text-secondary: #fbd0a3;
+            --text-muted: #ffb574;
+            
+            --accent-primary: #f97316;
+            --accent-glow: #fb923c;
+            --accent-gradient: linear-gradient(135deg, #fb923c 0%, #ef4444 100%);
+            
+            --border-color: #4b2e22;
+            --border-hover: #f97316;
+            
+            --code-bg: #110b06;
+            --glass-bg: rgba(36, 23, 17, 0.88);
+            --shadow-premium: 0 14px 32px -8px rgba(249, 115, 22, 0.2), 0 8px 16px -10px rgba(23, 17, 12, 0.35);
+        }
+
+        /* Glacier Theme overrides */
+        html[data-theme="glacier"] {
+            --bg-primary: #07141d;
+            --bg-secondary: #102335;
+            --bg-tertiary: #183447;
+            
+            --text-primary: #f2fcff;
+            --text-secondary: #a5f3fc;
+            --text-muted: #67e8f9;
+            
+            --accent-primary: #38bdf8;
+            --accent-glow: #22d3ee;
+            --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+            
+            --border-color: #22495c;
+            --border-hover: #38bdf8;
+            
+            --code-bg: #020a10;
+            --glass-bg: rgba(16, 35, 53, 0.88);
+            --shadow-premium: 0 14px 32px -8px rgba(56, 189, 248, 0.18), 0 8px 16px -10px rgba(7, 20, 29, 0.35);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -2712,6 +2800,18 @@ const template = `<!DOCTYPE html>
                     <button class="theme-btn" onclick="setTheme('mint')" title="Mint Energy" id="theme-mint">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10"></path><path d="M6 8h12"></path><path d="M8 13h8"></path><path d="M9 18h6"></path></svg>
                     </button>
+                    <button class="theme-btn" onclick="setTheme('aurora')" title="Aurora Glow" id="theme-aurora">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16c2-6 5-8 7-10 2 2 5 4 7 10"></path><path d="M4 20h16"></path></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('plum')" title="Plum Velvet" id="theme-plum">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4c-3 3-5 6-5 10a5 5 0 0 0 10 0c0-4-2-7-5-10z"></path></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('ember')" title="Ember Glow" id="theme-ember">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 4 4 6 4 9a4 4 0 1 1-8 0c0-3 2-5 4-9z"></path></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('glacier')" title="Glacier Ice" id="theme-glacier">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l6 8H6l6-8z"></path><path d="M6 11h12"></path><path d="M8 15h8"></path><path d="M9 19h6"></path></svg>
+                    </button>
                     <button class="theme-btn custom-theme-btn" onclick="setTheme('custom')" title="Custom color theme" id="theme-custom">Custom</button>
                 </div>
                 <div class="custom-theme-panel" id="customThemePanel">
@@ -2864,6 +2964,30 @@ const template = `<!DOCTYPE html>
                 bgSecondary: '#0f241f',
                 textPrimary: '#f0fdf4',
                 accentPrimary: '#34d399'
+            },
+            aurora: {
+                bgPrimary: '#060816',
+                bgSecondary: '#10192d',
+                textPrimary: '#f4fbff',
+                accentPrimary: '#22d3ee'
+            },
+            plum: {
+                bgPrimary: '#130b17',
+                bgSecondary: '#22152b',
+                textPrimary: '#fbefff',
+                accentPrimary: '#c084fc'
+            },
+            ember: {
+                bgPrimary: '#17110c',
+                bgSecondary: '#241711',
+                textPrimary: '#fff5e9',
+                accentPrimary: '#f97316'
+            },
+            glacier: {
+                bgPrimary: '#07141d',
+                bgSecondary: '#102335',
+                textPrimary: '#f2fcff',
+                accentPrimary: '#38bdf8'
             }
         };
 
