@@ -43784,10 +43784,19 @@ fn main() {
         function expandAllSections(expand = true) {
             suppressActiveSectionAutoExpand = !expand;
             document.querySelectorAll('.menu-section-wrapper').forEach(sectionWrapper => {
-                setSectionExpanded(sectionWrapper, expand, true);
+                const isBookmarksSection = sectionWrapper.closest('#bookmarksItems') !== null;
+                if (!isBookmarksSection) {
+                    setSectionExpanded(sectionWrapper, expand, true);
+                }
             });
-            document.querySelectorAll('.chapter-items').forEach(itemsDiv => itemsDiv.classList.toggle('collapsed', !expand));
-            document.querySelectorAll('.chapter-heading').forEach(heading => heading.classList.toggle('collapsed', !expand));
+            document.querySelectorAll('.chapter-items').forEach(itemsDiv => {
+                if (itemsDiv.id === 'bookmarksItems') return;
+                itemsDiv.classList.toggle('collapsed', !expand);
+            });
+            document.querySelectorAll('.chapter-heading').forEach(heading => {
+                if (heading.closest('#bookmarksSection')) return;
+                heading.classList.toggle('collapsed', !expand);
+            });
         }
 
         function focusCurrentPath() {
