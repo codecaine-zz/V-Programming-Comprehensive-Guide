@@ -2,6 +2,8 @@
 
 Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers everything from basic variables to advanced concurrency and standard library usage.
 
+![Screenshot of the interactive V guide website](Screenshot.png)
+
 ## What this website can do
 
 The interactive guide turns the V tutorial into a full learning experience with a rich set of built-in tools:
