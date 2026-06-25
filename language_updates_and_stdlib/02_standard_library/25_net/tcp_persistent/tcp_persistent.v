@@ -3,8 +3,77 @@ module main
 import net
 import time
 
+const max_message_size = 8192
+
+// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length.
+fn write_msg(mut conn net.TcpConn, payload string) ! {
+	magic := [u8(`M`), `S`, `G`, `0`]
+	len := payload.len
+	len_bytes := [
+		u8((u32(len) >> 24) & 0xff),
+		u8((u32(len) >> 16) & 0xff),
+		u8((u32(len) >> 8) & 0xff),
+		u8(u32(len) & 0xff),
+	]
+	// Send header (magic signature + message length)
+	conn.write(magic) or { return err }
+	conn.write(len_bytes) or { return err }
+	// Send the actual message payload
+	conn.write(payload.bytes()) or { return err }
+}
+
+// read_exact reads exactly `size` bytes from the connection, processing data in chunks.
+fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
+	mut data := []u8{len: size}
+	mut read_bytes := 0
+	for read_bytes < size {
+		remaining := size - read_bytes
+		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
+		chunk_limit := if remaining > 512 { 512 } else { remaining }
+		mut temp_buf := []u8{len: chunk_limit}
+		n := conn.read(mut temp_buf) or { return err }
+		if n == 0 {
+			return error('unexpected end of stream')
+		}
+		for i in 0 .. n {
+			data[read_bytes + i] = temp_buf[i]
+		}
+		read_bytes += n
+	}
+	return data
+}
+
+// read_msg reads a single framed message.
+fn read_msg(mut conn net.TcpConn, max_size int) !string {
+	// Read header: 4 magic bytes + 4 length bytes = 8 bytes
+	header_bytes := read_exact(mut conn, 8) or { return err }
+	
+	// Validate protocol magic bytes
+	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G` || header_bytes[3] != `0` {
+		return error('invalid protocol magic bytes')
+	}
+	
+	// Reconstruct big-endian length
+	len := int((u32(header_bytes[4]) << 24) |
+	           (u32(header_bytes[5]) << 16) |
+	           (u32(header_bytes[6]) << 8) |
+	           u32(header_bytes[7]))
+	       
+	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
+	if len > max_size {
+		return error('message size ${len} exceeds limit of ${max_size} bytes')
+	}
+	if len < 0 {
+		return error('invalid negative message length')
+	}
+	
+	// Read the actual payload
+	payload_bytes := read_exact(mut conn, len) or { return err }
+	return payload_bytes.bytestr()
+}
+
 // run_server starts the TCP server on the specified port, accepts a connection,
-// and processes incoming messages in a loop until the client sends "Goodbye".
+// and processes incoming messages in a loop according to our framing protocol.
 fn run_server(port int) ! {
 	mut listener := net.listen_tcp(.ip, '127.0.0.1:${port}') or {
 		println('Server: Failed to listen on port ${port}: ${err}')
@@ -26,32 +95,26 @@ fn run_server(port int) ! {
 
 	println('Server: Client connected!')
 
-	// Loop to handle back-and-forth messages on the same connection
 	for {
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Server: Connection closed or read error: ${err}')
+		message := read_msg(mut conn, max_message_size) or {
+			println('Server: Connection closed or protocol error: ${err}')
 			break
 		}
-		if n == 0 {
-			println('Server: Client disconnected.')
-			break
-		}
-
-		message := buf[..n].bytestr()
-		println('Server received: "${message}"')
+		
+		// Preview message content
+		preview_len := if message.len > 30 { 30 } else { message.len }
+		println('Server received message (len: ${message.len}): "${message[..preview_len]}"...')
 
 		if message == 'Goodbye' {
 			println('Server received Goodbye. Replying and closing connection...')
-			conn.write('Goodbye!'.bytes()) or {
+			write_msg(mut conn, 'Goodbye!') or {
 				println('Server: Write failed: ${err}')
 			}
 			break
 		}
 
 		response := 'Echo: ${message}'
-		println('Server sending: "${response}"')
-		conn.write(response.bytes()) or {
+		write_msg(mut conn, response) or {
 			println('Server: Write failed: ${err}')
 			break
 		}
@@ -59,8 +122,8 @@ fn run_server(port int) ! {
 	println('Server finished.')
 }
 
-// run_client connects to the TCP server, sends multiple messages,
-// receives replies, and finally sends a goodbye message.
+// run_client connects to the TCP server, sends multiple messages (including
+// a large chunked message and an invalid/overflow message), and validates responses.
 fn run_client(port int) ! {
 	println('Client: Connecting to 127.0.0.1:${port}...')
 	mut conn := net.dial_tcp('127.0.0.1:${port}') or {
@@ -73,53 +136,46 @@ fn run_client(port int) ! {
 
 	println('Client: Connected!')
 
-	// Exchange multiple messages
-	for i in 1 .. 4 {
-		message := 'Ping ${i}'
-		println('Client sending: "${message}"')
-		conn.write(message.bytes()) or {
-			println('Client: Write failed: ${err}')
-			return err
-		}
+	// 1. Send a standard small message
+	msg1 := 'Ping 1'
+	println('Client sending small message: "${msg1}"')
+	write_msg(mut conn, msg1)!
+	resp1 := read_msg(mut conn, max_message_size)!
+	println('Client received response: "${resp1}"')
 
-		// Read response
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Client: Read failed: ${err}')
-			return err
-		}
-		if n == 0 {
-			println('Client: Server closed connection.')
-			return error('Server closed connection unexpectedly')
-		}
+	time.sleep(50 * time.millisecond)
 
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
-		
-		time.sleep(50 * time.millisecond)
-	}
+	// 2. Send a large message within limit (5000 bytes) to trigger chunked read assembly
+	msg2 := 'A'.repeat(5000)
+	println('Client sending large message of length ${msg2.len}...')
+	write_msg(mut conn, msg2)!
+	resp2 := read_msg(mut conn, max_message_size)!
+	println('Client received response of length ${resp2.len} successfully!')
 
-	// Send Goodbye to cleanly terminate the persistent session
-	println('Client sending: "Goodbye"')
-	conn.write('Goodbye'.bytes()) or {
-		println('Client: Write failed: ${err}')
-		return err
-	}
+	time.sleep(50 * time.millisecond)
 
-	mut buf := []u8{len: 1024}
+	// 3. Attempt to send an invalid/overflow message (header length > max_message_size)
+	println('Client sending invalid header claiming 100,000 bytes payload...')
+	magic := [u8(`M`), `S`, `G`, `0`]
+	bad_len_bytes := [u8(0), 1, 134, 160] // 100,000 big-endian
+	conn.write(magic)!
+	conn.write(bad_len_bytes)!
+
+	// The server must reject the message and terminate the connection
+	mut buf := []u8{len: 1}
 	n := conn.read(mut buf) or {
-		println('Client: Read failed: ${err}')
-		return err
+		println('Client: Successfully verified server rejected overflow and closed connection: ${err}')
+		return
 	}
-	if n > 0 {
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	if n == 0 {
+		println('Client: Successfully verified server rejected overflow (EOF received).')
+	} else {
+		println('Client: Warning - Server did not close connection on overflow!')
 	}
-	println('Client finished.')
 }
 
 fn main() {
-	println('=== Persistent TCP Demo ===')
+	println('=== Persistent TCP Protocol Demo ===')
 	port := 38293
 
 	// Spawn the server in a background thread
@@ -139,5 +195,5 @@ fn main() {
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
-	println('TCP Sockets Demo finished.')
+	println('TCP Protocol Demo finished.')
 }

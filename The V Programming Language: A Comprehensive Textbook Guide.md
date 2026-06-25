@@ -11118,47 +11118,80 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v)_
 
-This example demonstrates a persistent WebSocket connection maintaining an active back-and-forth ping-pong conversation between client and server, terminating with a handshake exchange.
+This example demonstrates a persistent WebSocket connection with structured JSON message routing, validation of payload size, and connection closure on limit violation.
 
 ```v
 module main
 
 import net.websocket
 import time
+import json
 
-// ClientState maintains state across client callbacks
+// WsMessage represents a structured application-level WebSocket message.
+struct WsMessage {
+pub:
+	action string
+	data   string
+}
+
+// ClientState maintains state for the WebSocket client across callbacks.
 struct ClientState {
 mut:
 	count int
 }
 
 fn main() {
-	println('=== Persistent WebSocket Demo ===')
+	println('=== Persistent WebSocket Protocol Demo ===')
 	port := 38292
 	uri := 'ws://localhost:${port}'
 
-	// 1. Initialize and run a local WebSocket server
+	// 1. Initialize and run local WebSocket server
 	mut ws_server := websocket.new_server(.ip, port, '/')
-
+	
 	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
 		println('Server: Client connected from ${s.client_key}')
 		return true
 	})!
 
-	// Server message handler responds back to ping messages
+	// Server message handler: validates payload size, decodes JSON, and routes actions.
 	ws_server.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			println('Server received text: "${payload}"')
-
-			if payload.starts_with('Ping ') {
-				num := payload.replace('Ping ', '')
-				response := 'Pong ${num}'
-				println('Server responding with: "${response}"')
-				ws.write_string(response)!
-			} else if payload == 'Goodbye' {
-				println('Server received goodbye. Sending confirmation and closing...')
-				ws.write_string('Goodbye!')!
+			
+			// Safety check: Enforce maximum payload size limit (e.g., 2048 bytes) to prevent DoS (OOM)
+			max_allowed_len := 2048
+			if payload.len > max_allowed_len {
+				println('Server: Rejected message of size ${payload.len} (exceeds ${max_allowed_len} limit)')
+				// Close connection with code 1009 (Message Too Big)
+				ws.close(1009, 'Message size exceeds limit') or {}
+				return
+			}
+			
+			// Decode the JSON protocol message
+			ws_msg := json.decode(WsMessage, payload) or {
+				println('Server: Invalid JSON protocol: ${err}')
+				err_resp := json.encode(WsMessage{action: 'error', data: 'invalid json'})
+				ws.write_string(err_resp) or {}
+				return
+			}
+			
+			println('Server received action "${ws_msg.action}" with data (len: ${ws_msg.data.len})')
+			
+			match ws_msg.action {
+				'ping' {
+					resp := json.encode(WsMessage{action: 'pong', data: ws_msg.data})
+					ws.write_string(resp)!
+				}
+				'goodbye' {
+					println('Server received goodbye action. Replying and closing...')
+					resp := json.encode(WsMessage{action: 'goodbye_ack', data: 'Goodbye!'})
+					ws.write_string(resp)!
+					// Clean close from server side
+					ws.close(1000, 'done') or {}
+				}
+				else {
+					println('Server: Unknown action: ${ws_msg.action}')
+				}
 			}
 		}
 	})
@@ -11173,68 +11206,107 @@ fn main() {
 	// Allow the server a moment to start
 	time.sleep(100 * time.millisecond)
 
-	// 2. Initialize the WebSocket client
-	mut ws_client := websocket.new_client(uri) or {
-		println('Client init failed: ${err}')
+	// 2. RUN CLIENT CONNECTION 1: Clean ping-pong and goodbye handshake
+	println('\n--- Connection 1: Standard Chat / Ping-Pong ---')
+	mut ws_client1 := websocket.new_client(uri) or {
+		println('Client 1 init failed: ${err}')
 		return
 	}
 
-	mut state := &ClientState{
+	mut state1 := &ClientState{
 		count: 0
 	}
 
-	ws_client.on_open(fn (mut c websocket.Client) ! {
-		println('Client: Connection opened!')
+	ws_client1.on_open(fn (mut c websocket.Client) ! {
+		println('Client 1: Connection opened!')
 		// Initiate the first Ping message
-		c.write_string('Ping 1')!
+		ping_msg := json.encode(WsMessage{action: 'ping', data: '1'})
+		c.write_string(ping_msg)!
 	})
 
-	// Client message handler processes the Pong responses and decides
-	// whether to send another Ping, or bid Goodbye.
-	ws_client.on_message(fn [mut state] (mut c websocket.Client, msg &websocket.Message) ! {
+	ws_client1.on_message(fn [mut state1] (mut c websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			println('Client received response: "${payload}"')
+			ws_msg := json.decode(WsMessage, payload) or { return }
+			println('Client 1 received response action "${ws_msg.action}" with data: "${ws_msg.data}"')
 
-			if payload.starts_with('Pong ') {
-				state.count++
-				if state.count < 3 {
-					next_msg := 'Ping ${state.count + 1}'
-					println('Client sending next message: "${next_msg}"')
-					c.write_string(next_msg)!
+			if ws_msg.action == 'pong' {
+				state1.count++
+				if state1.count < 3 {
+					next_ping := json.encode(WsMessage{action: 'ping', data: '${state1.count + 1}'})
+					println('Client 1 sending: "${next_ping}"')
+					c.write_string(next_ping)!
 				} else {
-					println('Client sending goodbye: "Goodbye"')
-					c.write_string('Goodbye')!
+					goodbye := json.encode(WsMessage{action: 'goodbye', data: 'Goodbye'})
+					println('Client 1 sending goodbye: "${goodbye}"')
+					c.write_string(goodbye)!
 				}
-			} else if payload == 'Goodbye!' {
-				println('Client received goodbye response. Closing connection...')
-				c.close(1000, 'Done') or {
-					println('Client close error: ${err}')
-				}
+			} else if ws_msg.action == 'goodbye_ack' {
+				println('Client 1 received goodbye ack. Client closing connection.')
+				c.close(1000, 'Done') or {}
 			}
 		}
 	})
 
-	ws_client.on_close(fn (mut c websocket.Client, code int, reason string) ! {
-		println('Client: Connection closed (code: ${code}, reason: "${reason}")')
+	ws_client1.on_close(fn (mut c websocket.Client, code int, reason string) ! {
+		println('Client 1: Connection closed (code: ${code}, reason: "${reason}")')
 	})
 
-	ws_client.on_error(fn (mut c websocket.Client, error_msg string) ! {
-		println('Client error: ${error_msg}')
+	ws_client1.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client 1 error: ${error_msg}')
 	})
 
-	// Connect and run the client listener
-	ws_client.connect() or {
-		println('Client failed to connect: ${err}')
+	ws_client1.connect() or {
+		println('Client 1 failed to connect: ${err}')
+		return
+	}
+	spawn ws_client1.listen()
+
+	// Wait for the first flow to complete
+	time.sleep(600 * time.millisecond)
+
+	// 3. RUN CLIENT CONNECTION 2: Reject oversized message
+	println('\n--- Connection 2: Security Validation (Oversized Message) ---')
+	mut ws_client2 := websocket.new_client(uri) or {
+		println('Client 2 init failed: ${err}')
 		return
 	}
 
-	// Start the client listen loop in a background thread
-	spawn ws_client.listen()
+	ws_client2.on_open(fn (mut c websocket.Client) ! {
+		println('Client 2: Connection opened!')
+		// Send oversized data (3000 bytes, exceeding server 2048-byte limit)
+		large_payload := 'A'.repeat(3000)
+		large_msg := json.encode(WsMessage{action: 'ping', data: large_payload})
+		println('Client 2 sending oversized payload (size: ${large_msg.len} bytes)...')
+		c.write_string(large_msg)!
+	})
 
-	// Wait for the conversational flow to finish
-	time.sleep(1000 * time.millisecond)
-	println('WebSocket Demo finished.')
+	ws_client2.on_close(fn (mut c websocket.Client, code int, reason string) ! {
+		println('Client 2: Connection closed (code: ${code}, reason: "${reason}")')
+		if code == 1009 {
+			println('Client 2: Successfully verified server rejected oversized message with code 1009!')
+		} else if code == 1000 {
+			// Ignore standard teardown close
+		} else {
+			println('Client 2: Unexpected close code: ${code}')
+		}
+	})
+
+	ws_client2.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client 2 error: ${error_msg}')
+	})
+
+	ws_client2.connect() or {
+		println('Client 2 failed to connect: ${err}')
+		return
+	}
+	spawn ws_client2.listen()
+
+	// Wait for the second flow to finish
+	time.sleep(500 * time.millisecond)
+	
+	// Clean close of server listener
+	println('\nWebSocket Protocol Demo finished.')
 }
 ```
 
@@ -12101,7 +12173,7 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v)_
 
-This example demonstrates a persistent TCP connection. The client connects to the server, and they exchange multiple messages back-and-forth in a loop before closing the connection cleanly.
+This example demonstrates a persistent length-prefixed TCP connection, processing payloads in chunks, and rejecting messages exceeding safety size boundaries.
 
 ```v
 module main
@@ -12109,8 +12181,77 @@ module main
 import net
 import time
 
+const max_message_size = 8192
+
+// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length.
+fn write_msg(mut conn net.TcpConn, payload string) ! {
+	magic := [u8(`M`), `S`, `G`, `0`]
+	len := payload.len
+	len_bytes := [
+		u8((u32(len) >> 24) & 0xff),
+		u8((u32(len) >> 16) & 0xff),
+		u8((u32(len) >> 8) & 0xff),
+		u8(u32(len) & 0xff),
+	]
+	// Send header (magic signature + message length)
+	conn.write(magic) or { return err }
+	conn.write(len_bytes) or { return err }
+	// Send the actual message payload
+	conn.write(payload.bytes()) or { return err }
+}
+
+// read_exact reads exactly `size` bytes from the connection, processing data in chunks.
+fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
+	mut data := []u8{len: size}
+	mut read_bytes := 0
+	for read_bytes < size {
+		remaining := size - read_bytes
+		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
+		chunk_limit := if remaining > 512 { 512 } else { remaining }
+		mut temp_buf := []u8{len: chunk_limit}
+		n := conn.read(mut temp_buf) or { return err }
+		if n == 0 {
+			return error('unexpected end of stream')
+		}
+		for i in 0 .. n {
+			data[read_bytes + i] = temp_buf[i]
+		}
+		read_bytes += n
+	}
+	return data
+}
+
+// read_msg reads a single framed message.
+fn read_msg(mut conn net.TcpConn, max_size int) !string {
+	// Read header: 4 magic bytes + 4 length bytes = 8 bytes
+	header_bytes := read_exact(mut conn, 8) or { return err }
+	
+	// Validate protocol magic bytes
+	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G` || header_bytes[3] != `0` {
+		return error('invalid protocol magic bytes')
+	}
+	
+	// Reconstruct big-endian length
+	len := int((u32(header_bytes[4]) << 24) |
+	           (u32(header_bytes[5]) << 16) |
+	           (u32(header_bytes[6]) << 8) |
+	           u32(header_bytes[7]))
+	       
+	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
+	if len > max_size {
+		return error('message size ${len} exceeds limit of ${max_size} bytes')
+	}
+	if len < 0 {
+		return error('invalid negative message length')
+	}
+	
+	// Read the actual payload
+	payload_bytes := read_exact(mut conn, len) or { return err }
+	return payload_bytes.bytestr()
+}
+
 // run_server starts the TCP server on the specified port, accepts a connection,
-// and processes incoming messages in a loop until the client sends "Goodbye".
+// and processes incoming messages in a loop according to our framing protocol.
 fn run_server(port int) ! {
 	mut listener := net.listen_tcp(.ip, '127.0.0.1:${port}') or {
 		println('Server: Failed to listen on port ${port}: ${err}')
@@ -12132,32 +12273,26 @@ fn run_server(port int) ! {
 
 	println('Server: Client connected!')
 
-	// Loop to handle back-and-forth messages on the same connection
 	for {
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Server: Connection closed or read error: ${err}')
+		message := read_msg(mut conn, max_message_size) or {
+			println('Server: Connection closed or protocol error: ${err}')
 			break
 		}
-		if n == 0 {
-			println('Server: Client disconnected.')
-			break
-		}
-
-		message := buf[..n].bytestr()
-		println('Server received: "${message}"')
+		
+		// Preview message content
+		preview_len := if message.len > 30 { 30 } else { message.len }
+		println('Server received message (len: ${message.len}): "${message[..preview_len]}"...')
 
 		if message == 'Goodbye' {
 			println('Server received Goodbye. Replying and closing connection...')
-			conn.write('Goodbye!'.bytes()) or {
+			write_msg(mut conn, 'Goodbye!') or {
 				println('Server: Write failed: ${err}')
 			}
 			break
 		}
 
 		response := 'Echo: ${message}'
-		println('Server sending: "${response}"')
-		conn.write(response.bytes()) or {
+		write_msg(mut conn, response) or {
 			println('Server: Write failed: ${err}')
 			break
 		}
@@ -12165,8 +12300,8 @@ fn run_server(port int) ! {
 	println('Server finished.')
 }
 
-// run_client connects to the TCP server, sends multiple messages,
-// receives replies, and finally sends a goodbye message.
+// run_client connects to the TCP server, sends multiple messages (including
+// a large chunked message and an invalid/overflow message), and validates responses.
 fn run_client(port int) ! {
 	println('Client: Connecting to 127.0.0.1:${port}...')
 	mut conn := net.dial_tcp('127.0.0.1:${port}') or {
@@ -12179,53 +12314,46 @@ fn run_client(port int) ! {
 
 	println('Client: Connected!')
 
-	// Exchange multiple messages
-	for i in 1 .. 4 {
-		message := 'Ping ${i}'
-		println('Client sending: "${message}"')
-		conn.write(message.bytes()) or {
-			println('Client: Write failed: ${err}')
-			return err
-		}
+	// 1. Send a standard small message
+	msg1 := 'Ping 1'
+	println('Client sending small message: "${msg1}"')
+	write_msg(mut conn, msg1)!
+	resp1 := read_msg(mut conn, max_message_size)!
+	println('Client received response: "${resp1}"')
 
-		// Read response
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Client: Read failed: ${err}')
-			return err
-		}
-		if n == 0 {
-			println('Client: Server closed connection.')
-			return error('Server closed connection unexpectedly')
-		}
+	time.sleep(50 * time.millisecond)
 
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	// 2. Send a large message within limit (5000 bytes) to trigger chunked read assembly
+	msg2 := 'A'.repeat(5000)
+	println('Client sending large message of length ${msg2.len}...')
+	write_msg(mut conn, msg2)!
+	resp2 := read_msg(mut conn, max_message_size)!
+	println('Client received response of length ${resp2.len} successfully!')
 
-		time.sleep(50 * time.millisecond)
-	}
+	time.sleep(50 * time.millisecond)
 
-	// Send Goodbye to cleanly terminate the persistent session
-	println('Client sending: "Goodbye"')
-	conn.write('Goodbye'.bytes()) or {
-		println('Client: Write failed: ${err}')
-		return err
-	}
+	// 3. Attempt to send an invalid/overflow message (header length > max_message_size)
+	println('Client sending invalid header claiming 100,000 bytes payload...')
+	magic := [u8(`M`), `S`, `G`, `0`]
+	bad_len_bytes := [u8(0), 1, 134, 160] // 100,000 big-endian
+	conn.write(magic)!
+	conn.write(bad_len_bytes)!
 
-	mut buf := []u8{len: 1024}
+	// The server must reject the message and terminate the connection
+	mut buf := []u8{len: 1}
 	n := conn.read(mut buf) or {
-		println('Client: Read failed: ${err}')
-		return err
+		println('Client: Successfully verified server rejected overflow and closed connection: ${err}')
+		return
 	}
-	if n > 0 {
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	if n == 0 {
+		println('Client: Successfully verified server rejected overflow (EOF received).')
+	} else {
+		println('Client: Warning - Server did not close connection on overflow!')
 	}
-	println('Client finished.')
 }
 
 fn main() {
-	println('=== Persistent TCP Demo ===')
+	println('=== Persistent TCP Protocol Demo ===')
 	port := 38293
 
 	// Spawn the server in a background thread
@@ -12245,7 +12373,7 @@ fn main() {
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
-	println('TCP Sockets Demo finished.')
+	println('TCP Protocol Demo finished.')
 }
 ```
 
@@ -12353,7 +12481,7 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v)_
 
-This example demonstrates how to maintain a persistent ping-pong message exchange over UDP. The client continuously sends datagrams using a bound socket, and the server receives them in a loop while retaining the sender's details to write back.
+This example demonstrates application-level packet fragmentation, reassembly, and fragment count limit enforcement over UDP.
 
 ```v
 module main
@@ -12361,9 +12489,144 @@ module main
 import net
 import time
 
-// run_server starts the UDP server on the specified port, listens for packets,
-// prints incoming messages and their source addresses, and responds to each
-// in a loop until the client sends "Goodbye".
+// UdpReassembler stores state for reassembling fragmented UDP packets.
+struct UdpReassembler {
+mut:
+	fragments map[int][]u8
+	total     int
+}
+
+// write_udp_msg fragments and sends a message to dialed destination.
+fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
+	chunk_size := 1024
+	payload_bytes := payload.bytes()
+	total_frags := (payload_bytes.len + chunk_size - 1) / chunk_size
+	
+	if total_frags == 0 {
+		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
+		socket.write(header) or { return err }
+		return
+	}
+	
+	for i in 0 .. total_frags {
+		start := i * chunk_size
+		mut end := (i + 1) * chunk_size
+		if end > payload_bytes.len {
+			end = payload_bytes.len
+		}
+		frag_payload := payload_bytes[start..end]
+		frag_len := frag_payload.len
+		
+		header := [
+			u8(`U`), `D`, `P`, `0`,
+			u8(i),
+			u8(total_frags),
+			u8((u32(frag_len) >> 8) & 0xff),
+			u8(u32(frag_len) & 0xff),
+		]
+		
+		mut packet := []u8{cap: 8 + frag_len}
+		packet << header
+		packet << frag_payload
+		
+		socket.write(packet) or { return err }
+		// Sleep briefly to avoid packet loss during loopback transmission
+		time.sleep(2 * time.millisecond)
+	}
+}
+
+// write_udp_msg_to fragments and sends a message to a specific address using write_to.
+fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
+	chunk_size := 1024
+	payload_bytes := payload.bytes()
+	total_frags := (payload_bytes.len + chunk_size - 1) / chunk_size
+	
+	if total_frags == 0 {
+		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
+		socket.write_to(addr, header) or { return err }
+		return
+	}
+	
+	for i in 0 .. total_frags {
+		start := i * chunk_size
+		mut end := (i + 1) * chunk_size
+		if end > payload_bytes.len {
+			end = payload_bytes.len
+		}
+		frag_payload := payload_bytes[start..end]
+		frag_len := frag_payload.len
+		
+		header := [
+			u8(`U`), `D`, `P`, `0`,
+			u8(i),
+			u8(total_frags),
+			u8((u32(frag_len) >> 8) & 0xff),
+			u8(u32(frag_len) & 0xff),
+		]
+		
+		mut packet := []u8{cap: 8 + frag_len}
+		packet << header
+		packet << frag_payload
+		
+		socket.write_to(addr, packet) or { return err }
+		time.sleep(2 * time.millisecond)
+	}
+}
+
+// read_udp_msg reads packets from a socket and reassembles them into a single string.
+fn read_udp_msg(mut socket net.UdpConn, max_allowed_fragments int) !(string, net.Addr) {
+	mut fragments := map[int][]u8{}
+	mut total_frags := -1
+	mut remote_addr := net.Addr{}
+	mut buf := []u8{len: 2048}
+
+	for {
+		read, addr := socket.read(mut buf) or { return err }
+		if read == 0 {
+			return error('empty packet read')
+		}
+		if read < 8 {
+			return error('packet too small to contain header')
+		}
+		if buf[0] != `U` || buf[1] != `D` || buf[2] != `P` || buf[3] != `0` {
+			return error('invalid packet magic bytes')
+		}
+
+		frag_idx := int(buf[4])
+		total := int(buf[5])
+		frag_len := int((u32(buf[6]) << 8) | u32(buf[7]))
+
+		if read < 8 + frag_len {
+			return error('packet payload length mismatch')
+		}
+
+		if total > max_allowed_fragments {
+			return error('incoming message total fragments ${total} exceeds limit of ${max_allowed_fragments}')
+		}
+
+		if total_frags == -1 {
+			total_frags = total
+			remote_addr = addr
+		}
+
+		fragments[frag_idx] = buf[8 .. 8 + frag_len].clone()
+
+		if fragments.len == total_frags {
+			mut full_payload := []u8{}
+			for i in 0 .. total_frags {
+				if i !in fragments {
+					return error('missing fragment ${i} in reassembly')
+				}
+				full_payload << fragments[i]
+			}
+			return full_payload.bytestr(), remote_addr
+		}
+	}
+	return error('unexpected read loop termination')
+}
+
+// run_server starts the UDP server, processes fragments, reassembles them,
+// and echoes back the full message or an error if size is exceeded.
 fn run_server(port int) ! {
 	mut socket := net.listen_udp('127.0.0.1:${port}') or {
 		println('Server: Failed to listen on port ${port}: ${err}')
@@ -12375,9 +12638,10 @@ fn run_server(port int) ! {
 
 	println('Server: Listening for UDP packets on port ${port}...')
 
-	// Loop to handle incoming UDP datagrams continuously
+	mut reassemblers := map[string]UdpReassembler{}
+	mut buf := []u8{len: 2048}
+
 	for {
-		mut buf := []u8{len: 1024}
 		read, addr := socket.read(mut buf) or {
 			println('Server: Read failed: ${err}')
 			break
@@ -12386,29 +12650,88 @@ fn run_server(port int) ! {
 			break
 		}
 
-		message := buf[..read].bytestr()
-		println('Server received from ${addr}: "${message}"')
-
-		if message == 'Goodbye' {
-			println('Server received Goodbye. Replying and exiting...')
-			socket.write_to(addr, 'Goodbye!'.bytes()) or {
-				println('Server: Write failed: ${err}')
-			}
-			break
+		if read < 8 {
+			println('Server: Received packet too small to contain header')
+			continue
 		}
 
-		response := 'Echo: ${message}'
-		println('Server sending to ${addr}: "${response}"')
-		socket.write_to(addr, response.bytes()) or {
-			println('Server: Write failed: ${err}')
-			break
+		// Verify header magic bytes
+		if buf[0] != `U` || buf[1] != `D` || buf[2] != `P` || buf[3] != `0` {
+			println('Server: Invalid packet magic bytes')
+			continue
+		}
+
+		frag_idx := int(buf[4])
+		total_frags := int(buf[5])
+		frag_len := int((u32(buf[6]) << 8) | u32(buf[7]))
+
+		if read < 8 + frag_len {
+			println('Server: Packet payload length mismatch')
+			continue
+		}
+
+		// Real-world safety limit check: Reject if fragment count exceeds threshold (max 5 fragments = 5KB)
+		max_allowed_fragments := 5
+		if total_frags > max_allowed_fragments {
+			println('Server: Rejected message from ${addr}. Total fragments ${total_frags} exceeds limit of ${max_allowed_fragments}.')
+			// Only send one error packet (on the first fragment index) to avoid flooding the client's socket queue
+			if frag_idx == 0 {
+				write_udp_msg_to(mut socket, addr, 'Error: Message size exceeds limit') or {}
+			}
+			continue
+		}
+
+		addr_str := addr.str()
+		if addr_str !in reassemblers {
+			reassemblers[addr_str] = UdpReassembler{
+				total: total_frags
+			}
+		}
+
+		mut r := reassemblers[addr_str]
+		r.fragments[frag_idx] = buf[8 .. 8 + frag_len].clone()
+
+		if r.fragments.len == r.total {
+			mut full_payload := []u8{}
+			mut success := true
+			for i in 0 .. r.total {
+				if i !in r.fragments {
+					success = false
+					break
+				}
+				full_payload << r.fragments[i]
+			}
+
+			// Clean up reassembler state
+			reassemblers.delete(addr_str)
+
+			if success {
+				message := full_payload.bytestr()
+				preview_len := if message.len > 30 { 30 } else { message.len }
+				println('Server received full message from ${addr} (len: ${message.len}): "${message[..preview_len]}"...')
+
+				if message == 'Goodbye' {
+					println('Server received Goodbye. Replying and exiting...')
+					write_udp_msg_to(mut socket, addr, 'Goodbye!') or {
+						println('Server: Write failed: ${err}')
+					}
+					break
+				}
+
+				response := 'Echo: ${message}'
+				write_udp_msg_to(mut socket, addr, response) or {
+					println('Server: Write failed: ${err}')
+					break
+				}
+			}
+		} else {
+			reassemblers[addr_str] = r
 		}
 	}
 	println('Server finished.')
 }
 
-// run_client creates a UDP socket bound to a remote destination address,
-// and sends multiple messages in sequence, receiving responses from the server.
+// run_client connects to the UDP server and runs test cases (small, fragmented, overflow, goodbye).
 fn run_client(port int) ! {
 	mut socket := net.dial_udp('127.0.0.1:${port}') or {
 		println('Client: Failed to dial server: ${err}')
@@ -12418,49 +12741,44 @@ fn run_client(port int) ! {
 		socket.close() or {}
 	}
 
-	// Exchange multiple messages
-	for i in 1 .. 4 {
-		message := 'Ping ${i}'
-		println('Client sending: "${message}"')
-		socket.write(message.bytes()) or {
-			println('Client: Write failed: ${err}')
-			return err
-		}
+	println('Client: Bound to server destination.')
 
-		// Read response
-		mut buf := []u8{len: 1024}
-		read, addr := socket.read(mut buf) or {
-			println('Client: Read failed: ${err}')
-			return err
-		}
+	// 1. Send standard small message
+	msg1 := 'Ping 1'
+	println('Client sending small message: "${msg1}"')
+	write_udp_msg(mut socket, msg1)!
+	resp1, _ := read_udp_msg(mut socket, 5)!
+	println('Client received response: "${resp1}"')
 
-		response := buf[..read].bytestr()
-		println('Client received response from ${addr}: "${response}"')
+	time.sleep(50 * time.millisecond)
 
-		time.sleep(50 * time.millisecond)
-	}
+	// 2. Send fragmented message within limit (3000 bytes -> 3 fragments)
+	msg2 := 'A'.repeat(3000)
+	println('Client sending fragmented message of length ${msg2.len} (3 fragments)...')
+	write_udp_msg(mut socket, msg2)!
+	resp2, _ := read_udp_msg(mut socket, 5)!
+	println('Client received response of length ${resp2.len} successfully!')
 
-	// Send Goodbye to cleanly terminate the session
+	time.sleep(50 * time.millisecond)
+
+	// 3. Attempt to send message exceeding fragments limit (5500 bytes -> 6 fragments)
+	msg3 := 'B'.repeat(5500)
+	println('Client sending large message of length ${msg3.len} (6 fragments)...')
+	write_udp_msg(mut socket, msg3)!
+	resp3, _ := read_udp_msg(mut socket, 10)!
+	println('Client received response for overflow message: "${resp3}"')
+
+	time.sleep(50 * time.millisecond)
+
+	// 4. Send Goodbye to exit
 	println('Client sending: "Goodbye"')
-	socket.write('Goodbye'.bytes()) or {
-		println('Client: Write failed: ${err}')
-		return err
-	}
-
-	mut buf := []u8{len: 1024}
-	read, addr := socket.read(mut buf) or {
-		println('Client: Read failed: ${err}')
-		return err
-	}
-	if read > 0 {
-		response := buf[..read].bytestr()
-		println('Client received response from ${addr}: "${response}"')
-	}
-	println('Client finished.')
+	write_udp_msg(mut socket, 'Goodbye')!
+	resp4, _ := read_udp_msg(mut socket, 5)!
+	println('Client received response: "${resp4}"')
 }
 
 fn main() {
-	println('=== Persistent UDP Demo ===')
+	println('=== Persistent UDP Protocol Demo ===')
 	port := 38294
 
 	// Spawn the server in a background thread
@@ -12480,7 +12798,7 @@ fn main() {
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
-	println('UDP Sockets Demo finished.')
+	println('UDP Protocol Demo finished.')
 }
 ```
 
@@ -12615,7 +12933,7 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v)_
 
-This example demonstrates establishing a Unix domain socket server and client, keeping the connection open for multiple rounds of back-and-forth communication, and terminating cleanly.
+This example demonstrates a persistent length-prefixed Unix domain socket connection, processing payloads in chunks, and rejecting messages exceeding safety size boundaries.
 
 ```v
 module main
@@ -12624,8 +12942,77 @@ import net.unix
 import os
 import time
 
-// run_server starts the Unix socket server, accepts one client connection,
-// and processes incoming messages in a loop until the client says "Goodbye".
+const max_message_size = 8192
+
+// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length.
+fn write_msg(mut conn unix.StreamConn, payload string) ! {
+	magic := [u8(`M`), `S`, `G`, `0`]
+	len := payload.len
+	len_bytes := [
+		u8((u32(len) >> 24) & 0xff),
+		u8((u32(len) >> 16) & 0xff),
+		u8((u32(len) >> 8) & 0xff),
+		u8(u32(len) & 0xff),
+	]
+	// Send header (magic signature + message length)
+	conn.write(magic) or { return err }
+	conn.write(len_bytes) or { return err }
+	// Send the actual message payload
+	conn.write(payload.bytes()) or { return err }
+}
+
+// read_exact reads exactly `size` bytes from the connection, processing data in chunks.
+fn read_exact(mut conn unix.StreamConn, size int) ![]u8 {
+	mut data := []u8{len: size}
+	mut read_bytes := 0
+	for read_bytes < size {
+		remaining := size - read_bytes
+		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
+		chunk_limit := if remaining > 512 { 512 } else { remaining }
+		mut temp_buf := []u8{len: chunk_limit}
+		n := conn.read(mut temp_buf) or { return err }
+		if n == 0 {
+			return error('unexpected end of stream')
+		}
+		for i in 0 .. n {
+			data[read_bytes + i] = temp_buf[i]
+		}
+		read_bytes += n
+	}
+	return data
+}
+
+// read_msg reads a single framed message.
+fn read_msg(mut conn unix.StreamConn, max_size int) !string {
+	// Read header: 4 magic bytes + 4 length bytes = 8 bytes
+	header_bytes := read_exact(mut conn, 8) or { return err }
+	
+	// Validate protocol magic bytes
+	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G` || header_bytes[3] != `0` {
+		return error('invalid protocol magic bytes')
+	}
+	
+	// Reconstruct big-endian length
+	len := int((u32(header_bytes[4]) << 24) |
+	           (u32(header_bytes[5]) << 16) |
+	           (u32(header_bytes[6]) << 8) |
+	           u32(header_bytes[7]))
+	       
+	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
+	if len > max_size {
+		return error('message size ${len} exceeds limit of ${max_size} bytes')
+	}
+	if len < 0 {
+		return error('invalid negative message length')
+	}
+	
+	// Read the actual payload
+	payload_bytes := read_exact(mut conn, len) or { return err }
+	return payload_bytes.bytestr()
+}
+
+// run_server starts the Unix socket server, accepts a connection,
+// and processes incoming messages in a loop according to our framing protocol.
 fn run_server(socket_path string) ! {
 	// Clean up any stale socket file from a previous run
 	if os.exists(socket_path) {
@@ -12644,7 +13031,6 @@ fn run_server(socket_path string) ! {
 
 	println('Server: Listening on socket path: ${socket_path}')
 
-	// Accept a connection
 	mut conn := listener.accept() or {
 		println('Server: Failed to accept connection: ${err}')
 		return err
@@ -12655,32 +13041,26 @@ fn run_server(socket_path string) ! {
 
 	println('Server: Client connected!')
 
-	// Loop to handle back-and-forth messages on the same connection
 	for {
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Server: Connection closed or read error: ${err}')
+		message := read_msg(mut conn, max_message_size) or {
+			println('Server: Connection closed or protocol error: ${err}')
 			break
 		}
-		if n == 0 {
-			println('Server: Client disconnected.')
-			break
-		}
-
-		message := buf[..n].bytestr()
-		println('Server received: "${message}"')
+		
+		// Preview message content
+		preview_len := if message.len > 30 { 30 } else { message.len }
+		println('Server received message (len: ${message.len}): "${message[..preview_len]}"...')
 
 		if message == 'Goodbye' {
-			println('Server received Goodbye. Replying and shutting down connection...')
-			conn.write('Goodbye!'.bytes()) or {
+			println('Server received Goodbye. Replying and closing connection...')
+			write_msg(mut conn, 'Goodbye!') or {
 				println('Server: Write failed: ${err}')
 			}
 			break
 		}
 
 		response := 'Echo: ${message}'
-		println('Server sending: "${response}"')
-		conn.write(response.bytes()) or {
+		write_msg(mut conn, response) or {
 			println('Server: Write failed: ${err}')
 			break
 		}
@@ -12688,8 +13068,8 @@ fn run_server(socket_path string) ! {
 	println('Server finished.')
 }
 
-// run_client connects to the Unix socket server, sends multiple messages,
-// receives replies, and finally sends a goodbye message.
+// run_client connects to the Unix socket server, sends multiple messages (including
+// a large chunked message and an invalid/overflow message), and validates responses.
 fn run_client(socket_path string) ! {
 	println('Client: Connecting to ${socket_path}...')
 	mut conn := unix.connect_stream(socket_path) or {
@@ -12702,53 +13082,46 @@ fn run_client(socket_path string) ! {
 
 	println('Client: Connected!')
 
-	// Exchange multiple messages
-	for i in 1 .. 4 {
-		message := 'Ping ${i}'
-		println('Client sending: "${message}"')
-		conn.write(message.bytes()) or {
-			println('Client: Write failed: ${err}')
-			return err
-		}
+	// 1. Send a standard small message
+	msg1 := 'Ping 1'
+	println('Client sending small message: "${msg1}"')
+	write_msg(mut conn, msg1)!
+	resp1 := read_msg(mut conn, max_message_size)!
+	println('Client received response: "${resp1}"')
 
-		// Read response
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Client: Read failed: ${err}')
-			return err
-		}
-		if n == 0 {
-			println('Client: Server closed connection.')
-			return error('Server closed connection unexpectedly')
-		}
+	time.sleep(50 * time.millisecond)
 
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	// 2. Send a large message within limit (5000 bytes) to trigger chunked read assembly
+	msg2 := 'A'.repeat(5000)
+	println('Client sending large message of length ${msg2.len}...')
+	write_msg(mut conn, msg2)!
+	resp2 := read_msg(mut conn, max_message_size)!
+	println('Client received response of length ${resp2.len} successfully!')
 
-		time.sleep(50 * time.millisecond)
-	}
+	time.sleep(50 * time.millisecond)
 
-	// Send Goodbye to cleanly terminate the persistent session
-	println('Client sending: "Goodbye"')
-	conn.write('Goodbye'.bytes()) or {
-		println('Client: Write failed: ${err}')
-		return err
-	}
+	// 3. Attempt to send an invalid/overflow message (header length > max_message_size)
+	println('Client sending invalid header claiming 100,000 bytes payload...')
+	magic := [u8(`M`), `S`, `G`, `0`]
+	bad_len_bytes := [u8(0), 1, 134, 160] // 100,000 big-endian
+	conn.write(magic)!
+	conn.write(bad_len_bytes)!
 
-	mut buf := []u8{len: 1024}
+	// The server must reject the message and terminate the connection
+	mut buf := []u8{len: 1}
 	n := conn.read(mut buf) or {
-		println('Client: Read failed: ${err}')
-		return err
+		println('Client: Successfully verified server rejected overflow and closed connection: ${err}')
+		return
 	}
-	if n > 0 {
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	if n == 0 {
+		println('Client: Successfully verified server rejected overflow (EOF received).')
+	} else {
+		println('Client: Warning - Server did not close connection on overflow!')
 	}
-	println('Client finished.')
 }
 
 fn main() {
-	println('=== Persistent Unix Sockets Demo ===')
+	println('=== Persistent Unix Sockets Protocol Demo ===')
 	socket_path := os.join_path(os.temp_dir(), 'v_unix_socket_persistent')
 
 	// Spawn the server in a background thread
@@ -12768,7 +13141,7 @@ fn main() {
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
-	println('Unix Sockets Demo finished.')
+	println('Unix Sockets Protocol Demo finished.')
 }
 ```
 

@@ -2,19 +2,27 @@ module main
 
 import net.websocket
 import time
+import json
 
-// ClientState maintains state across client callbacks
+// WsMessage represents a structured application-level WebSocket message.
+struct WsMessage {
+pub:
+	action string
+	data   string
+}
+
+// ClientState maintains state for the WebSocket client across callbacks.
 struct ClientState {
 mut:
 	count int
 }
 
 fn main() {
-	println('=== Persistent WebSocket Demo ===')
+	println('=== Persistent WebSocket Protocol Demo ===')
 	port := 38292
 	uri := 'ws://localhost:${port}'
 
-	// 1. Initialize and run a local WebSocket server
+	// 1. Initialize and run local WebSocket server
 	mut ws_server := websocket.new_server(.ip, port, '/')
 	
 	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
@@ -22,20 +30,45 @@ fn main() {
 		return true
 	})!
 
-	// Server message handler responds back to ping messages
+	// Server message handler: validates payload size, decodes JSON, and routes actions.
 	ws_server.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			println('Server received text: "${payload}"')
 			
-			if payload.starts_with('Ping ') {
-				num := payload.replace('Ping ', '')
-				response := 'Pong ${num}'
-				println('Server responding with: "${response}"')
-				ws.write_string(response)!
-			} else if payload == 'Goodbye' {
-				println('Server received goodbye. Sending confirmation and closing...')
-				ws.write_string('Goodbye!')!
+			// Safety check: Enforce maximum payload size limit (e.g., 2048 bytes) to prevent DoS (OOM)
+			max_allowed_len := 2048
+			if payload.len > max_allowed_len {
+				println('Server: Rejected message of size ${payload.len} (exceeds ${max_allowed_len} limit)')
+				// Close connection with code 1009 (Message Too Big)
+				ws.close(1009, 'Message size exceeds limit') or {}
+				return
+			}
+			
+			// Decode the JSON protocol message
+			ws_msg := json.decode(WsMessage, payload) or {
+				println('Server: Invalid JSON protocol: ${err}')
+				err_resp := json.encode(WsMessage{action: 'error', data: 'invalid json'})
+				ws.write_string(err_resp) or {}
+				return
+			}
+			
+			println('Server received action "${ws_msg.action}" with data (len: ${ws_msg.data.len})')
+			
+			match ws_msg.action {
+				'ping' {
+					resp := json.encode(WsMessage{action: 'pong', data: ws_msg.data})
+					ws.write_string(resp)!
+				}
+				'goodbye' {
+					println('Server received goodbye action. Replying and closing...')
+					resp := json.encode(WsMessage{action: 'goodbye_ack', data: 'Goodbye!'})
+					ws.write_string(resp)!
+					// Clean close from server side
+					ws.close(1000, 'done') or {}
+				}
+				else {
+					println('Server: Unknown action: ${ws_msg.action}')
+				}
 			}
 		}
 	})
@@ -50,66 +83,105 @@ fn main() {
 	// Allow the server a moment to start
 	time.sleep(100 * time.millisecond)
 
-	// 2. Initialize the WebSocket client
-	mut ws_client := websocket.new_client(uri) or {
-		println('Client init failed: ${err}')
+	// 2. RUN CLIENT CONNECTION 1: Clean ping-pong and goodbye handshake
+	println('\n--- Connection 1: Standard Chat / Ping-Pong ---')
+	mut ws_client1 := websocket.new_client(uri) or {
+		println('Client 1 init failed: ${err}')
 		return
 	}
 
-	mut state := &ClientState{
+	mut state1 := &ClientState{
 		count: 0
 	}
 
-	ws_client.on_open(fn (mut c websocket.Client) ! {
-		println('Client: Connection opened!')
+	ws_client1.on_open(fn (mut c websocket.Client) ! {
+		println('Client 1: Connection opened!')
 		// Initiate the first Ping message
-		c.write_string('Ping 1')!
+		ping_msg := json.encode(WsMessage{action: 'ping', data: '1'})
+		c.write_string(ping_msg)!
 	})
 
-	// Client message handler processes the Pong responses and decides
-	// whether to send another Ping, or bid Goodbye.
-	ws_client.on_message(fn [mut state] (mut c websocket.Client, msg &websocket.Message) ! {
+	ws_client1.on_message(fn [mut state1] (mut c websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			println('Client received response: "${payload}"')
+			ws_msg := json.decode(WsMessage, payload) or { return }
+			println('Client 1 received response action "${ws_msg.action}" with data: "${ws_msg.data}"')
 
-			if payload.starts_with('Pong ') {
-				state.count++
-				if state.count < 3 {
-					next_msg := 'Ping ${state.count + 1}'
-					println('Client sending next message: "${next_msg}"')
-					c.write_string(next_msg)!
+			if ws_msg.action == 'pong' {
+				state1.count++
+				if state1.count < 3 {
+					next_ping := json.encode(WsMessage{action: 'ping', data: '${state1.count + 1}'})
+					println('Client 1 sending: "${next_ping}"')
+					c.write_string(next_ping)!
 				} else {
-					println('Client sending goodbye: "Goodbye"')
-					c.write_string('Goodbye')!
+					goodbye := json.encode(WsMessage{action: 'goodbye', data: 'Goodbye'})
+					println('Client 1 sending goodbye: "${goodbye}"')
+					c.write_string(goodbye)!
 				}
-			} else if payload == 'Goodbye!' {
-				println('Client received goodbye response. Closing connection...')
-				c.close(1000, 'Done') or {
-					println('Client close error: ${err}')
-				}
+			} else if ws_msg.action == 'goodbye_ack' {
+				println('Client 1 received goodbye ack. Client closing connection.')
+				c.close(1000, 'Done') or {}
 			}
 		}
 	})
 
-	ws_client.on_close(fn (mut c websocket.Client, code int, reason string) ! {
-		println('Client: Connection closed (code: ${code}, reason: "${reason}")')
+	ws_client1.on_close(fn (mut c websocket.Client, code int, reason string) ! {
+		println('Client 1: Connection closed (code: ${code}, reason: "${reason}")')
 	})
 
-	ws_client.on_error(fn (mut c websocket.Client, error_msg string) ! {
-		println('Client error: ${error_msg}')
+	ws_client1.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client 1 error: ${error_msg}')
 	})
 
-	// Connect and run the client listener
-	ws_client.connect() or {
-		println('Client failed to connect: ${err}')
+	ws_client1.connect() or {
+		println('Client 1 failed to connect: ${err}')
+		return
+	}
+	spawn ws_client1.listen()
+
+	// Wait for the first flow to complete
+	time.sleep(600 * time.millisecond)
+
+	// 3. RUN CLIENT CONNECTION 2: Reject oversized message
+	println('\n--- Connection 2: Security Validation (Oversized Message) ---')
+	mut ws_client2 := websocket.new_client(uri) or {
+		println('Client 2 init failed: ${err}')
 		return
 	}
 
-	// Start the client listen loop in a background thread
-	spawn ws_client.listen()
+	ws_client2.on_open(fn (mut c websocket.Client) ! {
+		println('Client 2: Connection opened!')
+		// Send oversized data (3000 bytes, exceeding server 2048-byte limit)
+		large_payload := 'A'.repeat(3000)
+		large_msg := json.encode(WsMessage{action: 'ping', data: large_payload})
+		println('Client 2 sending oversized payload (size: ${large_msg.len} bytes)...')
+		c.write_string(large_msg)!
+	})
 
-	// Wait for the conversational flow to finish
-	time.sleep(1000 * time.millisecond)
-	println('WebSocket Demo finished.')
+	ws_client2.on_close(fn (mut c websocket.Client, code int, reason string) ! {
+		println('Client 2: Connection closed (code: ${code}, reason: "${reason}")')
+		if code == 1009 {
+			println('Client 2: Successfully verified server rejected oversized message with code 1009!')
+		} else if code == 1000 {
+			// Ignore standard teardown close
+		} else {
+			println('Client 2: Unexpected close code: ${code}')
+		}
+	})
+
+	ws_client2.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client 2 error: ${error_msg}')
+	})
+
+	ws_client2.connect() or {
+		println('Client 2 failed to connect: ${err}')
+		return
+	}
+	spawn ws_client2.listen()
+
+	// Wait for the second flow to finish
+	time.sleep(500 * time.millisecond)
+	
+	// Clean close of server listener
+	println('\nWebSocket Protocol Demo finished.')
 }
