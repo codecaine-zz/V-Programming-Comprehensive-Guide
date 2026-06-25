@@ -566,6 +566,72 @@ const template = `<!DOCTYPE html>
             --shadow-premium: 0 0 15px rgba(255, 0, 127, 0.2), 0 0 30px rgba(0, 255, 204, 0.1);
         }
 
+        /* Forest Theme overrides */
+        html[data-theme="forest"] {
+            --bg-primary: #0a0e0a;
+            --bg-secondary: #101611;
+            --bg-tertiary: #172219;
+            
+            --text-primary: #ecfdf5;
+            --text-secondary: #a7f3d0;
+            --text-muted: #6ee7b7;
+            
+            --accent-primary: #10b981;
+            --accent-glow: #34d399;
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            
+            --border-color: #1a261c;
+            --border-hover: #34d399;
+            
+            --code-bg: #050805;
+            --glass-bg: rgba(16, 22, 17, 0.85);
+            --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Amber Theme overrides */
+        html[data-theme="amber"] {
+            --bg-primary: #fdfaf2;
+            --bg-secondary: #f6ebd4;
+            --bg-tertiary: #eddcb9;
+            
+            --text-primary: #3b2314;
+            --text-secondary: #573a24;
+            --text-muted: #846248;
+            
+            --accent-primary: #b45309;
+            --accent-glow: #d97706;
+            --accent-gradient: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            
+            --border-color: #dfcca7;
+            --border-hover: #b45309;
+            
+            --code-bg: #22170f;
+            --glass-bg: rgba(246, 235, 212, 0.85);
+            --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Ocean Theme overrides */
+        html[data-theme="ocean"] {
+            --bg-primary: #050b14;
+            --bg-secondary: #0c1524;
+            --bg-tertiary: #132135;
+            
+            --text-primary: #e0f2fe;
+            --text-secondary: #7dd3fc;
+            --text-muted: #38bdf8;
+            
+            --accent-primary: #0ea5e9;
+            --accent-glow: #06b6d4;
+            --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            
+            --border-color: #172c44;
+            --border-hover: #0ea5e9;
+            
+            --code-bg: #02070e;
+            --glass-bg: rgba(12, 21, 36, 0.85);
+            --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -1521,6 +1587,15 @@ const template = `<!DOCTYPE html>
                     </button>
                     <button class="theme-btn" onclick="setTheme('cyberpunk')" title="Neon Cyberpunk" id="theme-cyberpunk">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('forest')" title="Forest Sage" id="theme-forest">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 22h20L12 2z"></path><path d="M12 2v20"></path></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('amber')" title="Solarized Amber" id="theme-amber">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </button>
+                    <button class="theme-btn" onclick="setTheme('ocean')" title="Ocean Breeze" id="theme-ocean">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
                     </button>
                 </div>
             </div>
