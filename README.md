@@ -2,6 +2,34 @@
 
 Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers everything from basic variables to advanced concurrency and standard library usage.
 
+## What this website can do
+
+The interactive guide turns the V tutorial into a full learning experience with a rich set of built-in tools:
+
+- Browse lessons through a collapsible sidebar with chapter and section navigation.
+- Search lessons, topics, and syntax instantly using the built-in search overlay.
+- Bookmark important sections so they are easy to return to later.
+- Resume reading from your last position with automatic reading-state saving.
+- Track lesson completion and see progress for each chapter.
+- Switch between light, dark, cyberpunk, and custom color themes.
+- Enter focus mode to hide distractions and concentrate on the current lesson.
+- Adjust the reading font size and use quick-jump controls to move through the guide faster.
+- Copy section links to share a specific lesson or topic.
+- Copy code examples or open them directly in the V Playground.
+- Use keyboard shortcuts for search, focus mode, and font-size adjustments.
+- Read comfortably on desktop and mobile thanks to the responsive layout.
+
+### Keyboard shortcuts
+
+- / or Ctrl+K: focus the search box
+- F: toggle focus mode
+- Esc: exit focus mode
+- Ctrl+[ / Ctrl+]: decrease or increase font size
+
+### How the site is built
+
+The website is generated from the source builder script into the published page at docs/index.html, so updates to the guide content or interface are reflected by rebuilding the site.
+
 ## Repository Layout
 
 The repository is organized by learning progression, so it is easier to move from beginner concepts to more practical application topics:

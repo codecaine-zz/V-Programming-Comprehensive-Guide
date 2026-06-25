@@ -489,6 +489,7 @@
 
         .theme-selector {
             display: flex;
+            flex-wrap: wrap;
             gap: 6px;
             background-color: var(--bg-primary);
             padding: 4px;
@@ -510,6 +511,14 @@
             transition: color var(--transition-speed), background-color var(--transition-speed);
         }
 
+        .theme-btn.custom-theme-btn {
+            width: auto;
+            padding: 0 8px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
         .theme-btn:hover {
             color: var(--text-primary);
         }
@@ -517,6 +526,62 @@
         .theme-btn.active {
             background-color: var(--bg-tertiary);
             color: var(--accent-glow);
+        }
+
+        .custom-theme-panel {
+            display: none;
+            margin-top: 8px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            width: 100%;
+            gap: 8px;
+        }
+
+        .custom-theme-panel.open {
+            display: grid;
+        }
+
+        .custom-theme-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .custom-theme-row input[type="color"] {
+            width: 36px;
+            height: 28px;
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .custom-theme-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .custom-theme-actions button {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        .custom-theme-actions button:hover {
+            background-color: var(--bg-tertiary);
+            border-color: var(--accent-primary);
         }
 
         /* Main Scrollable Content Panel */
@@ -579,6 +644,370 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .shortcuts-toggle {
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 7px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .shortcuts-toggle:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .shortcuts-panel {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-width: 220px;
+            box-shadow: var(--shadow-premium);
+            display: none;
+            z-index: 120;
+        }
+
+        .shortcuts-panel.visible {
+            display: block;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            padding: 4px 0;
+        }
+
+        .shortcut-item strong {
+            color: var(--text-primary);
+        }
+
+        .sidebar-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.55);
+            backdrop-filter: blur(2px);
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-speed);
+        }
+
+        .sidebar-backdrop.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sidebar-close-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .sidebar-resizer {
+            position: absolute;
+            top: 0;
+            right: -4px;
+            width: 8px;
+            height: 100%;
+            cursor: col-resize;
+            z-index: 110;
+        }
+
+        .breadcrumb-bar {
+            position: sticky;
+            top: calc(var(--header-height) + 1px);
+            z-index: 80;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            margin: 0 0 16px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-backdrop);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+
+        .breadcrumb-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .breadcrumb-pill.current {
+            color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.16);
+        }
+
+        .focus-mode-btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 7px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .focus-mode-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .progress-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .chapter-progress-wrap {
+            margin: 8px 0 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .chapter-progress-bar {
+            height: 6px;
+            border-radius: 999px;
+            background: var(--bg-tertiary);
+            overflow: hidden;
+        }
+
+        .chapter-progress-fill {
+            height: 100%;
+            border-radius: inherit;
+            background: var(--accent-gradient);
+            width: 0%;
+            transition: width var(--transition-speed);
+        }
+
+        .chapter-progress-label {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .lesson-complete-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .lesson-complete-btn.active {
+            background: rgba(52, 211, 153, 0.16);
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.32);
+        }
+
+        .lesson-complete-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .quick-jump {
+            position: fixed;
+            left: 24px;
+            top: calc(var(--header-height) + 16px);
+            z-index: 95;
+        }
+
+        .quick-jump-btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 10px 12px;
+            border-radius: 999px;
+            box-shadow: var(--shadow-premium);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .quick-jump-panel {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-width: 220px;
+            max-height: 60vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-premium);
+            display: none;
+        }
+
+        .quick-jump.open .quick-jump-panel {
+            display: block;
+        }
+
+        .quick-jump-link {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            text-decoration: none;
+        }
+
+        .quick-jump-link:last-child {
+            border-bottom: none;
+        }
+
+        .quick-jump-link:hover {
+            color: var(--accent-primary);
+        }
+
+        .quick-jump-actions {
+            display: grid;
+            gap: 8px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .quick-jump-action {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .quick-jump-action:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        body.focus-mode .sidebar,
+        body.focus-mode .toc-widget,
+        body.focus-mode .font-size-widget,
+        body.focus-mode .btn-top {
+            display: none !important;
+        }
+
+        body.focus-mode main.main-content {
+            margin-left: 0 !important;
+        }
+
+        body.focus-mode .content-body {
+            max-width: 1100px;
+        }
+
+        .toc-widget {
+            position: fixed;
+            right: 24px;
+            top: calc(var(--header-height) + 16px);
+            z-index: 95;
+        }
+
+        .toc-toggle {
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 10px 12px;
+            border-radius: 999px;
+            box-shadow: var(--shadow-premium);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .toc-panel {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-width: 240px;
+            max-height: 60vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-premium);
+            display: none;
+        }
+
+        .toc-widget.open .toc-panel {
+            display: block;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            text-decoration: none;
+            border-bottom-style: solid;
+        }
+
+        .toc-link:last-child {
+            border-bottom: none;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            color: var(--accent-primary);
         }
 
         .btn-font-size {
@@ -1210,12 +1639,17 @@
             border: 1px solid var(--border-color);
             border-radius: 22px;
             box-shadow: var(--shadow-premium);
-            overflow: hidden;
+            overflow: visible;
             transition: box-shadow var(--transition-speed);
+            position: relative;
         }
 
         .font-size-widget:hover {
             box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+
+        .font-size-widget.open .toc-panel {
+            display: block;
         }
 
         .fs-btn {
@@ -1240,6 +1674,52 @@
         .fs-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
+        }
+
+        .fs-btn-contents {
+            width: auto;
+            min-width: 72px;
+            padding: 0 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .toc-panel {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-width: 240px;
+            max-height: 60vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-premium);
+            display: none;
+            z-index: 100;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            text-decoration: none;
+            border-bottom-style: solid;
+        }
+
+        .toc-link:last-child {
+            border-bottom: none;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            color: var(--accent-primary);
         }
 
         .fs-label {
@@ -1330,6 +1810,16 @@
 
         /* Mobile adjustments */
         @media (max-width: 1024px) {
+            .sidebar-close-btn {
+                display: inline-flex;
+            }
+
+            .toc-widget {
+                top: auto;
+                bottom: 24px;
+                right: 16px;
+            }
+
             aside.sidebar {
                 transform: translateX(-100%);
             }
@@ -1440,11 +1930,17 @@
     <div class="progress-container">
         <div class="progress-bar" id="readingProgress"></div>
     </div>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
+            <div class="sidebar-header" style="position: relative;">
+                <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close sidebar">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <div class="sidebar-resizer" id="sidebarResizer" title="Resize sidebar"></div>
                 <div class="logo-area">
                     <div class="logo-v">V</div>
                     <span class="logo-title">V Language Guide</span>
@@ -1488,6 +1984,29 @@
                     <button class="theme-btn" onclick="setTheme('ocean')" title="Ocean Breeze" id="theme-ocean">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
                     </button>
+                    <button class="theme-btn custom-theme-btn" onclick="setTheme('custom')" title="Custom color theme" id="theme-custom">Custom</button>
+                </div>
+                <div class="custom-theme-panel" id="customThemePanel">
+                    <div class="custom-theme-row">
+                        <span>Background</span>
+                        <input type="color" id="customBgPrimary" value="#0b0f19">
+                    </div>
+                    <div class="custom-theme-row">
+                        <span>Surface</span>
+                        <input type="color" id="customBgSecondary" value="#131a2c">
+                    </div>
+                    <div class="custom-theme-row">
+                        <span>Text</span>
+                        <input type="color" id="customTextPrimary" value="#f1f5f9">
+                    </div>
+                    <div class="custom-theme-row">
+                        <span>Accent</span>
+                        <input type="color" id="customAccentPrimary" value="#4f46e5">
+                    </div>
+                    <div class="custom-theme-actions">
+                        <button type="button" id="applyCustomThemeBtn">Apply</button>
+                        <button type="button" id="resetCustomThemeBtn">Reset</button>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -1500,6 +2019,16 @@
                 </button>
                 <div class="header-title-info" id="currentSectionTitle">Welcome</div>
                 <div class="header-actions" id="headerActions">
+                    <button class="focus-mode-btn" id="focusModeBtn" type="button" title="Toggle focus mode">Focus mode</button>
+                    <div style="position:relative;">
+                        <button class="shortcuts-toggle" id="shortcutsToggle" type="button" title="Keyboard shortcuts">⌨ Shortcuts</button>
+                        <div class="shortcuts-panel" id="shortcutsPanel">
+                            <div class="shortcut-item"><strong>Search</strong><span>/ or Ctrl+K</span></div>
+                            <div class="shortcut-item"><strong>Focus mode</strong><span>F / Esc</span></div>
+                            <div class="shortcut-item"><strong>Font size</strong><span>Ctrl+[ ]</span></div>
+                            <div class="shortcut-item"><strong>Share section</strong><span>Click the link icon</span></div>
+                        </div>
+                    </div>
                     <span class="reading-progress-label" id="readingPct">0%</span>
                 </div>
             </header>
@@ -1511,6 +2040,7 @@
             </div>
             
             <div class="content-body" id="contentBody">
+                <div class="breadcrumb-bar" id="breadcrumbBar"></div>
                 <h1 class="doc-main-title" id="the-v-programming-language-a-comprehensive-textbook-guide">The V Programming Language: A Comprehensive Textbook Guide</h1>
 <p>Welcome to the ultimate learning guide for the V programming language! This textbook is structured specifically to take you from a complete beginner (zero programming experience) to an advanced V developer capable of building high-performance, concurrent, and safe systems applications. Rather than treating V as a list of syntax rules, this guide emphasizes a practical path: learn the core ideas, run the examples, and build small projects as you go.</p>
 <div class="alert alert-note">
@@ -28375,10 +28905,21 @@ fn main() {
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
     </button>
 
+    <div class="quick-jump" id="quickJumpWidget">
+        <button class="quick-jump-btn" id="quickJumpToggle" type="button">Jump to</button>
+        <div class="quick-jump-panel" id="quickJumpPanel">
+            <div class="quick-jump-actions">
+                <button class="quick-jump-action" id="quickJumpBackToTop" type="button">Back to top</button>
+                <button class="quick-jump-action" id="quickJumpToggleFocus" type="button">Toggle focus</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast-notification" id="toastNotification"></div>
 
-    <!-- Floating Font Size Control -->
+    <!-- Floating Reading Controls -->
     <div class="font-size-widget" id="fontSizeWidget">
+        <button class="fs-btn fs-btn-contents" id="tocToggle" type="button" title="Open contents">Contents</button>
         <button class="fs-btn" id="btnFontDec" title="Decrease font size (Ctrl+[)" aria-label="Decrease font size">
             <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         </button>
@@ -28386,6 +28927,7 @@ fn main() {
         <button class="fs-btn" id="btnFontInc" title="Increase font size (Ctrl+])" aria-label="Increase font size">
             <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         </button>
+        <div class="toc-panel" id="tocPanel"></div>
     </div>
     
     <!-- Prism Syntax Highlighting -->
@@ -28399,14 +28941,173 @@ fn main() {
         const searchIndex = [{"id":"the-v-programming-language-a-comprehensive-textbook-guide","title":"The V Programming Language: A Comprehensive Textbook Guide","type":"title","content":"The V Programming Language: A Comprehensive Textbook Guide"},{"id":"repository-structure","title":"Repository Structure","type":"section","content":"Repository Structure","chapter":""},{"id":"a-better-way-to-think-about-the-repo","title":"A better way to think about the repo","type":"lesson","content":"A better way to think about the repo","chapter":"","section":"Repository Structure"},{"id":"contributing-new-content","title":"Contributing new content","type":"lesson","content":"Contributing new content","chapter":"","section":"Repository Structure"},{"id":"quick-start-learn-v-by-building-things","title":"Quick Start: Learn V by Building Things","type":"section","content":"Quick Start: Learn V by Building Things","chapter":""},{"id":"why-this-matters","title":"Why This Matters","type":"section","content":"Why This Matters","chapter":""},{"id":"suggested-learning-path","title":"Suggested Learning Path","type":"section","content":"Suggested Learning Path","chapter":""},{"id":"mini-projects-to-try","title":"Mini Projects to Try","type":"section","content":"Mini Projects to Try","chapter":""},{"id":"practice-exercises","title":"Practice Exercises","type":"section","content":"Practice Exercises","chapter":""},{"id":"your-first-project-a-tiny-cli-greeting-app","title":"Your First Project: A Tiny CLI Greeting App","type":"section","content":"Your First Project: A Tiny CLI Greeting App","chapter":""},{"id":"step-1-start-with-a-simple-main-function","title":"Step 1: Start with a simple main function","type":"lesson","content":"Step 1: Start with a simple main function","chapter":"","section":"Your First Project: A Tiny CLI Greeting App"},{"id":"step-2-add-a-name-variable","title":"Step 2: Add a name variable","type":"lesson","content":"Step 2: Add a name variable","chapter":"","section":"Your First Project: A Tiny CLI Greeting App"},{"id":"step-3-make-it-interactive","title":"Step 3: Make it interactive","type":"lesson","content":"Step 3: Make it interactive","chapter":"","section":"Your First Project: A Tiny CLI Greeting App"},{"id":"step-4-improve-it-with-a-function","title":"Step 4: Improve it with a function","type":"lesson","content":"Step 4: Improve it with a function","chapter":"","section":"Your First Project: A Tiny CLI Greeting App"},{"id":"why-this-project-is-useful","title":"Why this project is useful","type":"lesson","content":"Why this project is useful","chapter":"","section":"Your First Project: A Tiny CLI Greeting App"},{"id":"what-most-programmers-want-next","title":"What Most Programmers Want Next","type":"section","content":"What Most Programmers Want Next","chapter":""},{"id":"quick-reference","title":"Quick Reference","type":"lesson","content":"Quick Reference","chapter":"","section":"What Most Programmers Want Next"},{"id":"common-beginner-mistakes","title":"Common Beginner Mistakes","type":"lesson","content":"Common Beginner Mistakes","chapter":"","section":"What Most Programmers Want Next"},{"id":"debugging-and-reading-errors","title":"Debugging and Reading Errors","type":"lesson","content":"Debugging and Reading Errors","chapter":"","section":"What Most Programmers Want Next"},{"id":"real-world-workflow","title":"Real-World Workflow","type":"lesson","content":"Real-World Workflow","chapter":"","section":"What Most Programmers Want Next"},{"id":"v-cheat-sheet","title":"V Cheat Sheet","type":"section","content":"V Cheat Sheet","chapter":""},{"id":"run-and-build","title":"Run and build","type":"lesson","content":"Run and build","chapter":"","section":"V Cheat Sheet"},{"id":"practical-examples-programmers-reach-for","title":"Practical examples programmers reach for","type":"lesson","content":"Practical examples programmers reach for","chapter":"","section":"V Cheat Sheet"},{"id":"conditionals-and-loops","title":"Conditionals and loops","type":"lesson","content":"Conditionals and loops","chapter":"","section":"V Cheat Sheet"},{"id":"functions","title":"Functions","type":"lesson","content":"Functions","chapter":"","section":"V Cheat Sheet"},{"id":"arrays-and-maps","title":"Arrays and maps","type":"lesson","content":"Arrays and maps","chapter":"","section":"V Cheat Sheet"},{"id":"structs","title":"Structs","type":"lesson","content":"Structs","chapter":"","section":"V Cheat Sheet"},{"id":"error-handling","title":"Error handling","type":"lesson","content":"Error handling","chapter":"","section":"V Cheat Sheet"},{"id":"modules","title":"Modules","type":"lesson","content":"Modules","chapter":"","section":"V Cheat Sheet"},{"id":"concurrency-basics","title":"Concurrency basics","type":"lesson","content":"Concurrency basics","chapter":"","section":"V Cheat Sheet"},{"id":"more-practical-examples","title":"More practical examples","type":"lesson","content":"More practical examples","chapter":"","section":"V Cheat Sheet"},{"id":"quick-glossary","title":"Quick glossary","type":"lesson","content":"Quick glossary","chapter":"","section":"V Cheat Sheet"},{"id":"from-practice-to-real-projects","title":"From Practice to Real Projects","type":"section","content":"From Practice to Real Projects","chapter":""},{"id":"where-to-go-next","title":"Where to Go Next","type":"section","content":"Where to Go Next","chapter":""},{"id":"beginner-project-roadmap","title":"Beginner Project Roadmap","type":"section","content":"Beginner Project Roadmap","chapter":""},{"id":"milestone-1-cli-app","title":"Milestone 1: CLI App","type":"lesson","content":"Milestone 1: CLI App","chapter":"","section":"Beginner Project Roadmap"},{"id":"milestone-2-data-app","title":"Milestone 2: Data App","type":"lesson","content":"Milestone 2: Data App","chapter":"","section":"Beginner Project Roadmap"},{"id":"milestone-3-structured-app","title":"Milestone 3: Structured App","type":"lesson","content":"Milestone 3: Structured App","chapter":"","section":"Beginner Project Roadmap"},{"id":"milestone-4-tested-app","title":"Milestone 4: Tested App","type":"lesson","content":"Milestone 4: Tested App","chapter":"","section":"Beginner Project Roadmap"},{"id":"milestone-5-concurrent-app","title":"Milestone 5: Concurrent App","type":"lesson","content":"Milestone 5: Concurrent App","chapter":"","section":"Beginner Project Roadmap"},{"id":"setup-checklist","title":"Setup Checklist","type":"section","content":"Setup Checklist","chapter":""},{"id":"quick-glossary","title":"Quick Glossary","type":"section","content":"Quick Glossary","chapter":""},{"id":"how-to-use-this-guide-effectively","title":"How to Use This Guide Effectively","type":"section","content":"How to Use This Guide Effectively","chapter":""},{"id":"chapter-1-getting-started-with-v","title":"Chapter 1: Getting Started with V","type":"chapter","content":"Chapter 1: Getting Started with V"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Getting Started with V"},{"id":"code-comments","title":"Code Comments","type":"section","content":"Code Comments","chapter":"Getting Started with V"},{"id":"single-line-comments","title":"Single Line Comments","type":"lesson","content":"Single Line Comments","chapter":"Getting Started with V","section":"Code Comments"},{"id":"multi-line-comments","title":"Multi Line Comments","type":"lesson","content":"Multi Line Comments","chapter":"Getting Started with V","section":"Code Comments"},{"id":"programm-commented-all-places","title":"Programm Commented All Places","type":"lesson","content":"Programm Commented All Places","chapter":"Getting Started with V","section":"Code Comments"},{"id":"chapter-2-variables-and-constants","title":"Chapter 2: Variables and Constants","type":"chapter","content":"Chapter 2: Variables and Constants"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Variables and Constants"},{"id":"constants","title":"Constants","type":"section","content":"Constants","chapter":"Variables and Constants"},{"id":"define-single-constant","title":"Define Single Constant","type":"lesson","content":"Define Single Constant","chapter":"Variables and Constants","section":"Constants"},{"id":"define-multiple-constants","title":"Define Multiple Constants","type":"lesson","content":"Define Multiple Constants","chapter":"Variables and Constants","section":"Constants"},{"id":"define-constant-of-type-struct","title":"Define Constant Of Type Struct","type":"lesson","content":"Define Constant Of Type Struct","chapter":"Variables and Constants","section":"Constants"},{"id":"define-constant-of-type-function","title":"Define Constant Of Type Function","type":"lesson","content":"Define Constant Of Type Function","chapter":"Variables and Constants","section":"Constants"},{"id":"define-module-level-constants","title":"Define Module Level Constants","type":"lesson","content":"Define Module Level Constants","chapter":"Variables and Constants","section":"Constants"},{"id":"cannot-define-constants-inside-functions","title":"Cannot Define Constants Inside Functions","type":"lesson","content":"Cannot Define Constants Inside Functions","chapter":"Variables and Constants","section":"Constants"},{"id":"constants-module---main-mainv","title":"Constants Module - Main (main.v)","type":"lesson","content":"Constants Module - Main (main.v)","chapter":"Variables and Constants","section":"Constants"},{"id":"constant-module-prefix---helper-file1v","title":"Constant Module Prefix - Helper (file1.v)","type":"lesson","content":"Constant Module Prefix - Helper (file1.v)","chapter":"Variables and Constants","section":"Constants"},{"id":"variables","title":"Variables","type":"section","content":"Variables","chapter":"Variables and Constants"},{"id":"parallel-declaration-immutable-variables","title":"Parallel Declaration Immutable Variables","type":"lesson","content":"Parallel Declaration Immutable Variables","chapter":"Variables and Constants","section":"Variables"},{"id":"parallel-declaration-mutable-variables","title":"Parallel Declaration Mutable Variables","type":"lesson","content":"Parallel Declaration Mutable Variables","chapter":"Variables and Constants","section":"Variables"},{"id":"parallel-declaration-mut-and-immutable-vars","title":"Parallel Declaration Mut And Immutable Vars","type":"lesson","content":"Parallel Declaration Mut And Immutable Vars","chapter":"Variables and Constants","section":"Variables"},{"id":"augmented-assignment-string","title":"Augmented Assignment String","type":"lesson","content":"Augmented Assignment String","chapter":"Variables and Constants","section":"Variables"},{"id":"augmented-assignment-integer","title":"Augmented Assignment Integer","type":"lesson","content":"Augmented Assignment Integer","chapter":"Variables and Constants","section":"Variables"},{"id":"declare-mutable-variable","title":"Declare Mutable Variable","type":"lesson","content":"Declare Mutable Variable","chapter":"Variables and Constants","section":"Variables"},{"id":"cannot-update-mutable-with-another-type","title":"Cannot Update Mutable With Another Type","type":"lesson","content":"Cannot Update Mutable With Another Type","chapter":"Variables and Constants","section":"Variables"},{"id":"declare-immutable-variable","title":"Declare Immutable Variable","type":"lesson","content":"Declare Immutable Variable","chapter":"Variables and Constants","section":"Variables"},{"id":"cannot-update-immutable-variables","title":"Cannot Update Immutable Variables","type":"lesson","content":"Cannot Update Immutable Variables","chapter":"Variables and Constants","section":"Variables"},{"id":"declared-and-assigned","title":"Declared And Assigned","type":"lesson","content":"Declared And Assigned","chapter":"Variables and Constants","section":"Variables"},{"id":"declared-and-not-assigned","title":"Declared And Not Assigned","type":"lesson","content":"Declared And Not Assigned","chapter":"Variables and Constants","section":"Variables"},{"id":"unused-variables-will-be-warned","title":"Unused Variables Will Be Warned","type":"lesson","content":"Unused Variables Will Be Warned","chapter":"Variables and Constants","section":"Variables"},{"id":"global-variables-not-allowed---scope-demo","title":"Global Variables Not Allowed - Scope Demo","type":"lesson","content":"Global Variables Not Allowed - Scope Demo","chapter":"Variables and Constants","section":"Variables"},{"id":"global-variables-not-allowed---file-scope-demo","title":"Global Variables Not Allowed - File Scope Demo","type":"lesson","content":"Global Variables Not Allowed - File Scope Demo","chapter":"Variables and Constants","section":"Variables"},{"id":"variable-redeclaration","title":"Variable Redeclaration","type":"lesson","content":"Variable Redeclaration","chapter":"Variables and Constants","section":"Variables"},{"id":"variable-scope-for-same-variable-names","title":"Variable Scope For Same Variable Names","type":"lesson","content":"Variable Scope For Same Variable Names","chapter":"Variables and Constants","section":"Variables"},{"id":"variable-shadowing-not-allowed","title":"Variable Shadowing Not Allowed","type":"lesson","content":"Variable Shadowing Not Allowed","chapter":"Variables and Constants","section":"Variables"},{"id":"chapter-3-primitive-data-types","title":"Chapter 3: Primitive Data Types","type":"chapter","content":"Chapter 3: Primitive Data Types"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Primitive Data Types"},{"id":"primitive-types-demo","title":"Primitive Types Demo","type":"section","content":"Primitive Types Demo","chapter":"Primitive Data Types"},{"id":"primitive-types-demo-code","title":"Primitive Types Demo Code","type":"lesson","content":"Primitive Types Demo Code","chapter":"Primitive Data Types","section":"Primitive Types Demo"},{"id":"boolean-type","title":"Boolean Type","type":"section","content":"Boolean Type","chapter":"Primitive Data Types"},{"id":"logical-operators","title":"Logical Operators","type":"lesson","content":"Logical Operators","chapter":"Primitive Data Types","section":"Boolean Type"},{"id":"relational-operators","title":"Relational Operators","type":"lesson","content":"Relational Operators","chapter":"Primitive Data Types","section":"Boolean Type"},{"id":"boolean-methods","title":"Boolean Methods","type":"lesson","content":"Boolean Methods","chapter":"Primitive Data Types","section":"Boolean Type"},{"id":"numeric-types","title":"Numeric Types","type":"section","content":"Numeric Types","chapter":"Primitive Data Types"},{"id":"declaring-integers","title":"Declaring Integers","type":"lesson","content":"Declaring Integers","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"hex-binary-octa-notation-of-declaring-integers","title":"Hex Binary Octa Notation Of Declaring Integers","type":"lesson","content":"Hex Binary Octa Notation Of Declaring Integers","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"promoting-numeric-types","title":"Promoting Numeric Types","type":"lesson","content":"Promoting Numeric Types","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"arithmetic-operators","title":"Arithmetic Operators","type":"lesson","content":"Arithmetic Operators","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"bitwise-operators","title":"Bitwise Operators","type":"lesson","content":"Bitwise Operators","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"shift-operators","title":"Shift Operators","type":"lesson","content":"Shift Operators","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"shift-operator-on-range-of-integers","title":"Shift Operator On Range Of Integers","type":"lesson","content":"Shift Operator On Range Of Integers","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"integer-methods","title":"Integer Methods","type":"lesson","content":"Integer Methods","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"float-methods","title":"Float Methods","type":"lesson","content":"Float Methods","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"u8-methods","title":"U8 Methods","type":"lesson","content":"U8 Methods","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"size-pointer-methods","title":"Size Pointer Methods","type":"lesson","content":"Size Pointer Methods","chapter":"Primitive Data Types","section":"Numeric Types"},{"id":"rune-type","title":"Rune Type","type":"section","content":"Rune Type","chapter":"Primitive Data Types"},{"id":"declare-rune","title":"Declare Rune","type":"lesson","content":"Declare Rune","chapter":"Primitive Data Types","section":"Rune Type"},{"id":"rune-operations-with-strings","title":"Rune Operations With Strings","type":"lesson","content":"Rune Operations With Strings","chapter":"Primitive Data Types","section":"Rune Type"},{"id":"rune-methods","title":"Rune Methods","type":"lesson","content":"Rune Methods","chapter":"Primitive Data Types","section":"Rune Type"},{"id":"string-type","title":"String Type","type":"section","content":"String Type","chapter":"Primitive Data Types"},{"id":"declare-string","title":"Declare String","type":"lesson","content":"Declare String","chapter":"Primitive Data Types","section":"String Type"},{"id":"string-read-only-array-of-bytes","title":"String Read Only Array Of Bytes","type":"lesson","content":"String Read Only Array Of Bytes","chapter":"Primitive Data Types","section":"String Type"},{"id":"strings-immutable-by-default","title":"Strings Immutable By Default","type":"lesson","content":"Strings Immutable By Default","chapter":"Primitive Data Types","section":"String Type"},{"id":"declaring-mutable-strings","title":"Declaring Mutable Strings","type":"lesson","content":"Declaring Mutable Strings","chapter":"Primitive Data Types","section":"String Type"},{"id":"cannot-mutate-string-elements","title":"Cannot Mutate String Elements","type":"lesson","content":"Cannot Mutate String Elements","chapter":"Primitive Data Types","section":"String Type"},{"id":"string-interpolation","title":"String Interpolation","type":"lesson","content":"String Interpolation","chapter":"Primitive Data Types","section":"String Type"},{"id":"escape-special-characters","title":"Escape Special Characters","type":"lesson","content":"Escape Special Characters","chapter":"Primitive Data Types","section":"String Type"},{"id":"declare-raw-strings","title":"Declare Raw Strings","type":"lesson","content":"Declare Raw Strings","chapter":"Primitive Data Types","section":"String Type"},{"id":"string-concatenation-using-plus-sign","title":"String Concatenation Using Plus Sign","type":"lesson","content":"String Concatenation Using Plus Sign","chapter":"Primitive Data Types","section":"String Type"},{"id":"string-concatenation-using-interpolation","title":"String Concatenation Using Interpolation","type":"lesson","content":"String Concatenation Using Interpolation","chapter":"Primitive Data Types","section":"String Type"},{"id":"extract-substring-from-string-literal","title":"Extract Substring From String Literal","type":"lesson","content":"Extract Substring From String Literal","chapter":"Primitive Data Types","section":"String Type"},{"id":"split-string","title":"Split String","type":"lesson","content":"Split String","chapter":"Primitive Data Types","section":"String Type"},{"id":"string-to-runes-array","title":"String To Runes Array","type":"lesson","content":"String To Runes Array","chapter":"Primitive Data Types","section":"String Type"},{"id":"count-sub-string-occurences","title":"Count Sub String Occurences","type":"lesson","content":"Count Sub String Occurences","chapter":"Primitive Data Types","section":"String Type"},{"id":"check-string-contains-substring","title":"Check String Contains Substring","type":"lesson","content":"Check String Contains Substring","chapter":"Primitive Data Types","section":"String Type"},{"id":"string-contains-is-case-sensitive","title":"String Contains Is Case Sensitive","type":"lesson","content":"String Contains Is Case Sensitive","chapter":"Primitive Data Types","section":"String Type"},{"id":"common-string-methods","title":"Common String Methods","type":"lesson","content":"Common String Methods","chapter":"Primitive Data Types","section":"String Type"},{"id":"chapter-4-control-flow","title":"Chapter 4: Control Flow","type":"chapter","content":"Chapter 4: Control Flow"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Control Flow"},{"id":"control-flow-extras","title":"Control Flow Extras","type":"section","content":"Control Flow Extras","chapter":"Control Flow"},{"id":"chaining-else-if","title":"Chaining Else If","type":"lesson","content":"Chaining Else If","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"if-with-goto","title":"If With Goto","type":"lesson","content":"If With Goto","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"cascade-match-conditions","title":"Cascade Match Conditions","type":"lesson","content":"Cascade Match Conditions","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"match-as-switch-case","title":"Match As Switch Case","type":"lesson","content":"Match As Switch Case","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"match-pattern-matching","title":"Match Pattern Matching","type":"lesson","content":"Match Pattern Matching","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"match-with-enum","title":"Match With Enum","type":"lesson","content":"Match With Enum","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"match-with-enum-and-else","title":"Match With Enum And Else","type":"lesson","content":"Match With Enum And Else","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"bare-for","title":"Bare For","type":"lesson","content":"Bare For","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"break-for","title":"Break For","type":"lesson","content":"Break For","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"continue-for","title":"Continue For","type":"lesson","content":"Continue For","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"for-c-style","title":"For C Style","type":"lesson","content":"For C Style","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"for-on-array-without-index","title":"For On Array Without Index","type":"lesson","content":"For On Array Without Index","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"for-on-arrays","title":"For On Arrays","type":"lesson","content":"For On Arrays","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"for-on-maps","title":"For On Maps","type":"lesson","content":"For On Maps","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"for-on-maps-ignore-key","title":"For On Maps Ignore Key","type":"lesson","content":"For On Maps Ignore Key","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"for-on-range","title":"For On Range","type":"lesson","content":"For On Range","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"for-with-continue-break-and-labels","title":"For With Continue Break And Labels","type":"lesson","content":"For With Continue Break And Labels","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"reverse-for","title":"Reverse For","type":"lesson","content":"Reverse For","chapter":"Control Flow","section":"Control Flow Extras"},{"id":"chapter-5-collections-arrays-and-maps","title":"Chapter 5: Collections: Arrays and Maps","type":"chapter","content":"Chapter 5: Collections: Arrays and Maps"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Collections: Arrays and Maps"},{"id":"arrays","title":"Arrays","type":"section","content":"Arrays","chapter":"Collections: Arrays and Maps"},{"id":"declare-and-initialize","title":"Declare And Initialize","type":"lesson","content":"Declare And Initialize","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"declare-empty-array","title":"Declare Empty Array","type":"lesson","content":"Declare Empty Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"declare-array-with-len","title":"Declare Array With Len","type":"lesson","content":"Declare Array With Len","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"declare-array-with-init-and-len","title":"Declare Array With Init And Len","type":"lesson","content":"Declare Array With Init And Len","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"declare-array-with-cap","title":"Declare Array With Cap","type":"lesson","content":"Declare Array With Cap","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"working-with-array-properties","title":"Working With Array Properties","type":"lesson","content":"Working With Array Properties","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"access-array-elements-using-index","title":"Access Array Elements Using Index","type":"lesson","content":"Access Array Elements Using Index","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"access-array-elements-using-slices","title":"Access Array Elements Using Slices","type":"lesson","content":"Access Array Elements Using Slices","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"in-operator-with-array","title":"In Operator With Array","type":"lesson","content":"In Operator With Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"append-array","title":"Append Array","type":"lesson","content":"Append Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"define-fixed-size-array","title":"Define Fixed Size Array","type":"lesson","content":"Define Fixed Size Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"update-fixed-size-array-elements","title":"Update Fixed Size Array Elements","type":"lesson","content":"Update Fixed Size Array Elements","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"determining-type-of-fixed-array","title":"Determining Type Of Fixed Array","type":"lesson","content":"Determining Type Of Fixed Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"slicing-fixed-size-array-results-in-ordinary-array","title":"Slicing Fixed Size Array Results In Ordinary Array","type":"lesson","content":"Slicing Fixed Size Array Results In Ordinary Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"declaring-multi-dimensional-arrays","title":"Declaring Multi Dimensional Arrays","type":"lesson","content":"Declaring Multi Dimensional Arrays","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"updating-multi-dimensional-array-indices","title":"Updating Multi Dimensional Array Indices","type":"lesson","content":"Updating Multi Dimensional Array Indices","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"reassigning-multi-dimensional-arrays","title":"Reassigning Multi Dimensional Arrays","type":"lesson","content":"Reassigning Multi Dimensional Arrays","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"clone-array","title":"Clone Array","type":"lesson","content":"Clone Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"copy-array","title":"Copy Array","type":"lesson","content":"Copy Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"sort-integer-array","title":"Sort Integer Array","type":"lesson","content":"Sort Integer Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"sort-string-array","title":"Sort String Array","type":"lesson","content":"Sort String Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"sort-struct-array","title":"Sort Struct Array","type":"lesson","content":"Sort Struct Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"filter-array","title":"Filter Array","type":"lesson","content":"Filter Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"filter-with-anonymous-funcs-on-array","title":"Filter With Anonymous Funcs On Array","type":"lesson","content":"Filter With Anonymous Funcs On Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"map-array-items","title":"Map Array Items","type":"lesson","content":"Map Array Items","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"map-using-anonymous-funcs-on-array","title":"Map Using Anonymous Funcs On Array","type":"lesson","content":"Map Using Anonymous Funcs On Array","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"array-methods","title":"Array Methods","type":"lesson","content":"Array Methods","chapter":"Collections: Arrays and Maps","section":"Arrays"},{"id":"maps","title":"Maps","type":"section","content":"Maps","chapter":"Collections: Arrays and Maps"},{"id":"explicit-map-initialization","title":"Explicit Map Initialization","type":"lesson","content":"Explicit Map Initialization","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"short-syntax-initialization-of-map","title":"Short Syntax Initialization Of Map","type":"lesson","content":"Short Syntax Initialization Of Map","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"count-key-value-pairs-in-map","title":"Count Key Value Pairs In Map","type":"lesson","content":"Count Key Value Pairs In Map","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"value-given-key-of-map","title":"Value Given Key Of Map","type":"lesson","content":"Value Given Key Of Map","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"value-given-non-existent-key-of-map","title":"Value Given Non Existent Key Of Map","type":"lesson","content":"Value Given Non Existent Key Of Map","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"handling-missing-keys-in-map","title":"Handling Missing Keys In Map","type":"lesson","content":"Handling Missing Keys In Map","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"update-value-given-a-key-in-map","title":"Update Value Given A Key In Map","type":"lesson","content":"Update Value Given A Key In Map","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"delete-key-value-pair-from-map","title":"Delete Key Value Pair From Map","type":"lesson","content":"Delete Key Value Pair From Map","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"map-methods","title":"Map Methods","type":"lesson","content":"Map Methods","chapter":"Collections: Arrays and Maps","section":"Maps"},{"id":"chapter-6-functions","title":"Chapter 6: Functions","type":"chapter","content":"Chapter 6: Functions"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Functions"},{"id":"advanced-function-features","title":"Advanced Function Features","type":"section","content":"Advanced Function Features","chapter":"Functions"},{"id":"function-returns-value-example-1","title":"Function Returns Value Example 1","type":"lesson","content":"Function Returns Value Example 1","chapter":"Functions","section":"Advanced Function Features"},{"id":"function-returns-value-example-2","title":"Function Returns Value Example 2","type":"lesson","content":"Function Returns Value Example 2","chapter":"Functions","section":"Advanced Function Features"},{"id":"functions-without-return-type","title":"Functions Without Return Type","type":"lesson","content":"Functions Without Return Type","chapter":"Functions","section":"Advanced Function Features"},{"id":"function-with-input-arguments","title":"Function With Input Arguments","type":"lesson","content":"Function With Input Arguments","chapter":"Functions","section":"Advanced Function Features"},{"id":"function-return-multiple-values","title":"Function Return Multiple Values","type":"lesson","content":"Function Return Multiple Values","chapter":"Functions","section":"Advanced Function Features"},{"id":"ignore-function-return-value","title":"Ignore Function Return Value","type":"lesson","content":"Ignore Function Return Value","chapter":"Functions","section":"Advanced Function Features"},{"id":"function-calls-other-function","title":"Function Calls Other Function","type":"lesson","content":"Function Calls Other Function","chapter":"Functions","section":"Advanced Function Features"},{"id":"example-1","title":"Example 1","type":"lesson","content":"Example 1","chapter":"Functions","section":"Advanced Function Features"},{"id":"example-2","title":"Example 2","type":"lesson","content":"Example 2","chapter":"Functions","section":"Advanced Function Features"},{"id":"error-script-functions","title":"Error Script Functions","type":"lesson","content":"Error Script Functions","chapter":"Functions","section":"Advanced Function Features"},{"id":"script-functions","title":"Script Functions","type":"lesson","content":"Script Functions","chapter":"Functions","section":"Advanced Function Features"},{"id":"functions-module-variables---main-mainv","title":"Functions Module Variables - Main (main.v)","type":"lesson","content":"Functions Module Variables - Main (main.v)","chapter":"Functions","section":"Advanced Function Features"},{"id":"mymod","title":"Mymod","type":"lesson","content":"Mymod","chapter":"Functions","section":"Advanced Function Features"},{"id":"functions-with-optional-return-types-example-1","title":"Functions With Optional Return Types Example 1","type":"lesson","content":"Functions With Optional Return Types Example 1","chapter":"Functions","section":"Advanced Function Features"},{"id":"function-with-optional-return-type-example-2","title":"Function With Optional Return Type Example 2","type":"lesson","content":"Function With Optional Return Type Example 2","chapter":"Functions","section":"Advanced Function Features"},{"id":"mod1","title":"Mod1","type":"lesson","content":"Mod1","chapter":"Functions","section":"Advanced Function Features"},{"id":"public-function-demo1","title":"Public Function Demo1","type":"lesson","content":"Public Function Demo1","chapter":"Functions","section":"Advanced Function Features"},{"id":"public-function-demo2","title":"Public Function Demo2","type":"lesson","content":"Public Function Demo2","chapter":"Functions","section":"Advanced Function Features"},{"id":"public-function-demo3","title":"Public Function Demo3","type":"lesson","content":"Public Function Demo3","chapter":"Functions","section":"Advanced Function Features"},{"id":"function-with-defer-block","title":"Function With Defer Block","type":"lesson","content":"Function With Defer Block","chapter":"Functions","section":"Advanced Function Features"},{"id":"functions-as-elements-of-array-or-map","title":"Functions As Elements Of Array Or Map","type":"lesson","content":"Functions As Elements Of Array Or Map","chapter":"Functions","section":"Advanced Function Features"},{"id":"function-extras","title":"Function Extras","type":"section","content":"Function Extras","chapter":"Functions"},{"id":"hello","title":"Hello","type":"lesson","content":"Hello","chapter":"Functions","section":"Function Extras"},{"id":"basic-functions","title":"Basic Functions","type":"lesson","content":"Basic Functions","chapter":"Functions","section":"Function Extras"},{"id":"anonymous-functions","title":"Anonymous Functions","type":"lesson","content":"Anonymous Functions","chapter":"Functions","section":"Function Extras"},{"id":"functions-as-input-arguments","title":"Functions As Input Arguments","type":"lesson","content":"Functions As Input Arguments","chapter":"Functions","section":"Function Extras"},{"id":"functions-that-return-other-functions","title":"Functions That Return Other Functions","type":"lesson","content":"Functions That Return Other Functions","chapter":"Functions","section":"Function Extras"},{"id":"chapter-7-structs-custom-types","title":"Chapter 7: Structs (Custom Types)","type":"chapter","content":"Chapter 7: Structs (Custom Types)"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Structs (Custom Types)"},{"id":"struct-basics--fields","title":"Struct Basics & Fields","type":"section","content":"Struct Basics & Fields","chapter":"Structs (Custom Types)"},{"id":"defining-struct","title":"Defining Struct","type":"lesson","content":"Defining Struct","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"initialize-struct-example-1","title":"Initialize Struct Example 1","type":"lesson","content":"Initialize Struct Example 1","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"initialize-struct-example-2","title":"Initialize Struct Example 2","type":"lesson","content":"Initialize Struct Example 2","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"access-struct-fields","title":"Access Struct Fields","type":"lesson","content":"Access Struct Fields","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"heap-structs","title":"Heap Structs","type":"lesson","content":"Heap Structs","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"updating-immutable-struct-variable-throws-error","title":"Updating Immutable Struct Variable Throws Error","type":"lesson","content":"Updating Immutable Struct Variable Throws Error","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"updating-mutable-fields-of-struct","title":"Updating Mutable Fields Of Struct","type":"lesson","content":"Updating Mutable Fields Of Struct","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"updating-immutable-fields-throws-error","title":"Updating Immutable Fields Throws Error","type":"lesson","content":"Updating Immutable Fields Throws Error","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"updating-struct-with-unspecified-fields-are-zeroed","title":"Updating Struct With Unspecified Fields Are Zeroed","type":"lesson","content":"Updating Struct With Unspecified Fields Are Zeroed","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"struct-with-multiple-fields","title":"Struct With Multiple Fields","type":"lesson","content":"Struct With Multiple Fields","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"grouping-struct-fields-based-on-access-modifiers","title":"Grouping Struct Fields Based On Access Modifiers","type":"lesson","content":"Grouping Struct Fields Based On Access Modifiers","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"required-fields-example-01","title":"Required Fields Example 01","type":"lesson","content":"Required Fields Example 01","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"required-fields-example-02","title":"Required Fields Example 02","type":"lesson","content":"Required Fields Example 02","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"struct-fields-with-default-values","title":"Struct Fields With Default Values","type":"lesson","content":"Struct Fields With Default Values","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"methods-for-struct","title":"Methods For Struct","type":"lesson","content":"Methods For Struct","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"mutable-methods","title":"Mutable Methods","type":"lesson","content":"Mutable Methods","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"adding-struct-as-struct-field","title":"Adding Struct As Struct Field","type":"lesson","content":"Adding Struct As Struct Field","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"updating-fields-of-type-struct","title":"Updating Fields Of Type Struct","type":"lesson","content":"Updating Fields Of Type Struct","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"struct-as-trailing-literal-arguments-to-function","title":"Struct As Trailing Literal Arguments To Function","type":"lesson","content":"Struct As Trailing Literal Arguments To Function","chapter":"Structs (Custom Types)","section":"Struct Basics & Fields"},{"id":"chapter-8-error-handling","title":"Chapter 8: Error Handling","type":"chapter","content":"Chapter 8: Error Handling"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Error Handling"},{"id":"option--result-types","title":"Option & Result Types","type":"section","content":"Option & Result Types","chapter":"Error Handling"},{"id":"error-handling","title":"Error Handling","type":"lesson","content":"Error Handling","chapter":"Error Handling","section":"Option & Result Types"},{"id":"deep-dive-explanation","title":"Deep Dive Explanation","type":"lesson","content":"Deep Dive Explanation","chapter":"Error Handling","section":"Option & Result Types"},{"id":"chapter-9-organizing-code-with-modules","title":"Chapter 9: Organizing Code with Modules","type":"chapter","content":"Chapter 9: Organizing Code with Modules"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Organizing Code with Modules"},{"id":"modules--project-structure","title":"Modules & Project Structure","type":"section","content":"Modules & Project Structure","chapter":"Organizing Code with Modules"},{"id":"creating-a-simple-v-project---main-modulebasicsv","title":"Creating a Simple V Project - Main (modulebasics.v)","type":"lesson","content":"Creating a Simple V Project - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-creating-a-simple-v-project","title":"Creating a Simple V Project","type":"lesson","content":"Creating a Simple V Project","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"creating-a-module---helper-file1v","title":"Creating a Module - Helper (file1.v)","type":"lesson","content":"Creating a Module - Helper (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-a-reusable-helper-module","title":"A Reusable Helper Module","type":"lesson","content":"A Reusable Helper Module","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"creating-a-module---main-modulebasicsv","title":"Creating a Module - Main (modulebasics.v)","type":"lesson","content":"Creating a Module - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-module-main-entry","title":"Module Main Entry","type":"lesson","content":"Module Main Entry","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"importing-a-module---helper-file1v","title":"Importing a Module - Helper (file1.v)","type":"lesson","content":"Importing a Module - Helper (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-imported-module-helper","title":"Imported Module Helper","type":"lesson","content":"Imported Module Helper","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"importing-a-module---main-modulebasicsv","title":"Importing a Module - Main (modulebasics.v)","type":"lesson","content":"Importing a Module - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-imported-module-main","title":"Imported Module Main","type":"lesson","content":"Imported Module Main","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"accessing-module-members---helper-file1v","title":"Accessing Module Members - Helper (file1.v)","type":"lesson","content":"Accessing Module Members - Helper (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-public-vs-private-members","title":"Public vs Private Members","type":"lesson","content":"Public vs Private Members","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"accessing-module-members---main-modulebasicsv","title":"Accessing Module Members - Main (modulebasics.v)","type":"lesson","content":"Accessing Module Members - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-member-visibility-main","title":"Member Visibility Main","type":"lesson","content":"Member Visibility Main","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"multiple-files-after-refactoring---helper-1-file1v","title":"Multiple Files (After Refactoring) - Helper 1 (file1.v)","type":"lesson","content":"Multiple Files (After Refactoring) - Helper 1 (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"multiple-files-after-refactoring---helper-2-file2v","title":"Multiple Files (After Refactoring) - Helper 2 (file2.v)","type":"lesson","content":"Multiple Files (After Refactoring) - Helper 2 (file2.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"multiple-files-after-refactoring---main-modulebasicsv","title":"Multiple Files (After Refactoring) - Main (modulebasics.v)","type":"lesson","content":"Multiple Files (After Refactoring) - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-multiple-files-after-refactoring---main-entry","title":"Multiple Files (After Refactoring) - Main Entry","type":"lesson","content":"Multiple Files (After Refactoring) - Main Entry","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"multiple-files-before-refactoring---helper-1-file1v","title":"Multiple Files (Before Refactoring) - Helper 1 (file1.v)","type":"lesson","content":"Multiple Files (Before Refactoring) - Helper 1 (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"multiple-files-before-refactoring---helper-2-file2v","title":"Multiple Files (Before Refactoring) - Helper 2 (file2.v)","type":"lesson","content":"Multiple Files (Before Refactoring) - Helper 2 (file2.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"multiple-files-before-refactoring---main-modulebasicsv","title":"Multiple Files (Before Refactoring) - Main (modulebasics.v)","type":"lesson","content":"Multiple Files (Before Refactoring) - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-multiple-files-before-refactoring---main-entry","title":"Multiple Files (Before Refactoring) - Main Entry","type":"lesson","content":"Multiple Files (Before Refactoring) - Main Entry","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"member-scope-after-refactoring---helper-1-file1v","title":"Member Scope (After Refactoring) - Helper 1 (file1.v)","type":"lesson","content":"Member Scope (After Refactoring) - Helper 1 (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"member-scope-after-refactoring---helper-2-file2v","title":"Member Scope (After Refactoring) - Helper 2 (file2.v)","type":"lesson","content":"Member Scope (After Refactoring) - Helper 2 (file2.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"member-scope-after-refactoring---main-modulebasicsv","title":"Member Scope (After Refactoring) - Main (modulebasics.v)","type":"lesson","content":"Member Scope (After Refactoring) - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-member-scope-after-refactoring---main-entry","title":"Member Scope (After Refactoring) - Main Entry","type":"lesson","content":"Member Scope (After Refactoring) - Main Entry","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"member-scope-before-refactoring---helper-1-file1v","title":"Member Scope (Before Refactoring) - Helper 1 (file1.v)","type":"lesson","content":"Member Scope (Before Refactoring) - Helper 1 (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"member-scope-before-refactoring---helper-2-file2v","title":"Member Scope (Before Refactoring) - Helper 2 (file2.v)","type":"lesson","content":"Member Scope (Before Refactoring) - Helper 2 (file2.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"member-scope-before-refactoring---main-modulebasicsv","title":"Member Scope (Before Refactoring) - Main (modulebasics.v)","type":"lesson","content":"Member Scope (Before Refactoring) - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-member-scope-before-refactoring---main-entry","title":"Member Scope (Before Refactoring) - Main Entry","type":"lesson","content":"Member Scope (Before Refactoring) - Main Entry","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"cyclic-imports---module-1-helper-file1v","title":"Cyclic Imports - Module 1 Helper (file1.v)","type":"lesson","content":"Cyclic Imports - Module 1 Helper (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-cyclic-imports---module-1","title":"Cyclic Imports - Module 1","type":"lesson","content":"Cyclic Imports - Module 1","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"cyclic-imports---module-2-helper-file1v","title":"Cyclic Imports - Module 2 Helper (file1.v)","type":"lesson","content":"Cyclic Imports - Module 2 Helper (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-cyclic-imports---module-2","title":"Cyclic Imports - Module 2","type":"lesson","content":"Cyclic Imports - Module 2","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"cyclic-imports---main-modulebasicsv","title":"Cyclic Imports - Main (modulebasics.v)","type":"lesson","content":"Cyclic Imports - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-cyclic-imports---main-entry","title":"Cyclic Imports - Main Entry","type":"lesson","content":"Cyclic Imports - Main Entry","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"module-init-function---helper-file1v","title":"Module Init Function - Helper (file1.v)","type":"lesson","content":"Module Init Function - Helper (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-module-init-function-helper","title":"Module Init Function Helper","type":"lesson","content":"Module Init Function Helper","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"module-init-function---main-modulebasicsv","title":"Module Init Function - Main (modulebasics.v)","type":"lesson","content":"Module Init Function - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-module-init-function","title":"Module Init Function","type":"lesson","content":"Module Init Function","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"accessing-module-constants---helper-file1v","title":"Accessing Module Constants - Helper (file1.v)","type":"lesson","content":"Accessing Module Constants - Helper (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-accessing-module-constants-helper","title":"Accessing Module Constants Helper","type":"lesson","content":"Accessing Module Constants Helper","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"accessing-module-constants---main-modulebasicsv","title":"Accessing Module Constants - Main (modulebasics.v)","type":"lesson","content":"Accessing Module Constants - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-accessing-module-constants","title":"Accessing Module Constants","type":"lesson","content":"Accessing Module Constants","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"accessing-module-structs---helper-file1v","title":"Accessing Module Structs - Helper (file1.v)","type":"lesson","content":"Accessing Module Structs - Helper (file1.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-accessing-module-structs-helper","title":"Accessing Module Structs Helper","type":"lesson","content":"Accessing Module Structs Helper","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"accessing-module-structs---main-modulebasicsv","title":"Accessing Module Structs - Main (modulebasics.v)","type":"lesson","content":"Accessing Module Structs - Main (modulebasics.v)","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"lesson-accessing-module-structs","title":"Accessing Module Structs","type":"lesson","content":"Accessing Module Structs","chapter":"Organizing Code with Modules","section":"Modules & Project Structure"},{"id":"installing-external-packages","title":"Installing External Packages","type":"section","content":"Installing External Packages","chapter":"Organizing Code with Modules"},{"id":"how-to-install-packages-with-vpm","title":"How to Install Packages with vpm","type":"lesson","content":"How to Install Packages with vpm","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"common-vpm-commands","title":"Common vpm Commands","type":"lesson","content":"Common vpm Commands","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"importing-and-using-external-packages","title":"Importing and Using External Packages","type":"lesson","content":"Importing and Using External Packages","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"redis-console-demo","title":"Redis Console Demo","type":"lesson","content":"Redis Console Demo","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"redis-console-demo---helper-redis_helperv","title":"Redis Console Demo - Helper (redis_helper.v)","type":"lesson","content":"Redis Console Demo - Helper (redis_helper.v)","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"redis-namespaced-demo---helper-redis_helperv","title":"Redis Namespaced Demo - Helper (redis_helper.v)","type":"lesson","content":"Redis Namespaced Demo - Helper (redis_helper.v)","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"lesson-redis-namespaced-helper","title":"Redis Namespaced Helper","type":"lesson","content":"Redis Namespaced Helper","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"redis-namespaced-demo","title":"Redis Namespaced Demo","type":"lesson","content":"Redis Namespaced Demo","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"redis-webview-demo","title":"Redis Webview Demo","type":"lesson","content":"Redis Webview Demo","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"webview-demo","title":"Webview Demo","type":"lesson","content":"Webview Demo","chapter":"Organizing Code with Modules","section":"Installing External Packages"},{"id":"chapter-10-writing-tests-in-v","title":"Chapter 10: Writing Tests in V","type":"chapter","content":"Chapter 10: Writing Tests in V"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Writing Tests in V"},{"id":"assertions--unit-testing","title":"Assertions & Unit Testing","type":"section","content":"Assertions & Unit Testing","chapter":"Writing Tests in V"},{"id":"assert-demo","title":"Assert Demo","type":"lesson","content":"Assert Demo","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"simple-test---before-demo_testv","title":"Simple Test - Before (demo_test.v)","type":"lesson","content":"Simple Test - Before (demo_test.v)","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"simple-test---after-demo_testv","title":"Simple Test - After (demo_test.v)","type":"lesson","content":"Simple Test - After (demo_test.v)","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"testsuite-demo-test","title":"Testsuite Demo Test","type":"lesson","content":"Testsuite Demo Test","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"testing-optional-return-functions-demo_testv","title":"Testing Optional Return Functions (demo_test.v)","type":"lesson","content":"Testing Optional Return Functions (demo_test.v)","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"greet","title":"Greet","type":"lesson","content":"Greet","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"greet-test","title":"Greet Test","type":"lesson","content":"Greet Test","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"main-test","title":"Main Test","type":"lesson","content":"Main Test","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"testing-program-modules---helper-file1v","title":"Testing Program Modules - Helper (file1.v)","type":"lesson","content":"Testing Program Modules - Helper (file1.v)","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"mod1-test","title":"Mod1 Test","type":"lesson","content":"Mod1 Test","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"modulebasics","title":"Modulebasics","type":"lesson","content":"Modulebasics","chapter":"Writing Tests in V","section":"Assertions & Unit Testing"},{"id":"chapter-11-concurrency-and-channels","title":"Chapter 11: Concurrency and Channels","type":"chapter","content":"Chapter 11: Concurrency and Channels"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Concurrency and Channels"},{"id":"channels--communication","title":"Channels & Communication","type":"section","content":"Channels & Communication","chapter":"Concurrency and Channels"},{"id":"unbuffered-channel","title":"Unbuffered Channel","type":"lesson","content":"Unbuffered Channel","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"define-buffered-channel-buffered_channelv","title":"Define Buffered Channel (buffered_channel.v)","type":"lesson","content":"Define Buffered Channel (buffered_channel.v)","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"push-buffered","title":"Push Buffered","type":"lesson","content":"Push Buffered","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"push-unbuffered","title":"Push Unbuffered","type":"lesson","content":"Push Unbuffered","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"pop","title":"Pop","type":"lesson","content":"Pop","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"deep-dive-explanation-channels--basic-operations","title":"Deep Dive Explanation: Channels & Basic Operations","type":"lesson","content":"Deep Dive Explanation: Channels & Basic Operations","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"channel-properties","title":"Channel Properties","type":"lesson","content":"Channel Properties","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"try-push-unbuffered","title":"Try Push Unbuffered","type":"lesson","content":"Try Push Unbuffered","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"try-push-buffered","title":"Try Push Buffered","type":"lesson","content":"Try Push Buffered","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"try-pop","title":"Try Pop","type":"lesson","content":"Try Pop","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"close","title":"Close","type":"lesson","content":"Close","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"defer-close","title":"Defer Close","type":"lesson","content":"Defer Close","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"blocking-channels","title":"Blocking Channels","type":"lesson","content":"Blocking Channels","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"dealing-before","title":"Dealing Before","type":"lesson","content":"Dealing Before","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"dealing-after","title":"Dealing After","type":"lesson","content":"Dealing After","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"unbuffered-sync-before-sync_beforev","title":"Unbuffered Sync Before (sync_before.v)","type":"lesson","content":"Unbuffered Sync Before (sync_before.v)","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"unbuffered-sync-after-sync_afterv","title":"Unbuffered Sync After (sync_after.v)","type":"lesson","content":"Unbuffered Sync After (sync_after.v)","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"understanding-buffered-channel-buffered_channelv","title":"Understanding Buffered Channel (buffered_channel.v)","type":"lesson","content":"Understanding Buffered Channel (buffered_channel.v)","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"coroutines-communication","title":"Coroutines Communication","type":"lesson","content":"Coroutines Communication","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"buffered-sync-before-sync_beforev","title":"Buffered Sync Before (sync_before.v)","type":"lesson","content":"Buffered Sync Before (sync_before.v)","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"buffered-sync-after-sync_afterv","title":"Buffered Sync After (sync_after.v)","type":"lesson","content":"Buffered Sync After (sync_after.v)","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"channel-select-before","title":"Channel Select Before","type":"lesson","content":"Channel Select Before","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"channel-select","title":"Channel Select","type":"lesson","content":"Channel Select","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"deep-dive-explanation-advanced-channel-operations--multiplexing","title":"Deep Dive Explanation: Advanced Channel Operations & Multiplexing","type":"lesson","content":"Deep Dive Explanation: Advanced Channel Operations & Multiplexing","chapter":"Concurrency and Channels","section":"Channels & Communication"},{"id":"v-routines--concurrency","title":"V-Routines & Concurrency","type":"section","content":"V-Routines & Concurrency","chapter":"Concurrency and Channels"},{"id":"stopwatch-demo","title":"Stopwatch Demo","type":"lesson","content":"Stopwatch Demo","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"spawn-void-function","title":"Spawn Void Function","type":"lesson","content":"Spawn Void Function","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"waiting-on-concurrent-thread","title":"Waiting On Concurrent Thread","type":"lesson","content":"Waiting On Concurrent Thread","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"running-multiple-tasks-in-sequence","title":"Running Multiple Tasks In Sequence","type":"lesson","content":"Running Multiple Tasks In Sequence","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"spawning-multiple-tasks-concurrently","title":"Spawning Multiple Tasks Concurrently","type":"lesson","content":"Spawning Multiple Tasks Concurrently","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"functions-with-return-values","title":"Functions With Return Values","type":"lesson","content":"Functions With Return Values","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"spawn-anonymous-funcs-without-input-args","title":"Spawn Anonymous Funcs Without Input Args","type":"lesson","content":"Spawn Anonymous Funcs Without Input Args","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"spawn-anonymous-funcs-with-input-args","title":"Spawn Anonymous Funcs With Input Args","type":"lesson","content":"Spawn Anonymous Funcs With Input Args","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"sharing-data-main-and-concurrent-tasks","title":"Sharing Data Main And Concurrent Tasks","type":"lesson","content":"Sharing Data Main And Concurrent Tasks","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"deep-dive-explanation-v-routines--shared-memory-concurrency","title":"Deep Dive Explanation: V-Routines & Shared Memory Concurrency","type":"lesson","content":"Deep Dive Explanation: V-Routines & Shared Memory Concurrency","chapter":"Concurrency and Channels","section":"V-Routines & Concurrency"},{"id":"chapter-12-working-with-databases-and-json","title":"Chapter 12: Working with Databases and JSON","type":"chapter","content":"Chapter 12: Working with Databases and JSON"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Working with Databases and JSON"},{"id":"case-study-notes-api","title":"Case Study: Notes API","type":"section","content":"Case Study: Notes API","chapter":"Working with Databases and JSON"},{"id":"notes-api-case-study---main-mainv","title":"Notes API Case Study - Main (main.v)","type":"lesson","content":"Notes API Case Study - Main (main.v)","chapter":"Working with Databases and JSON","section":"Case Study: Notes API"},{"id":"note","title":"Note","type":"lesson","content":"Note","chapter":"Working with Databases and JSON","section":"Case Study: Notes API"},{"id":"util","title":"Util","type":"lesson","content":"Util","chapter":"Working with Databases and JSON","section":"Case Study: Notes API"},{"id":"json--orm","title":"JSON & ORM","type":"section","content":"JSON & ORM","chapter":"Working with Databases and JSON"},{"id":"decode","title":"Decode","type":"lesson","content":"Decode","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"encode","title":"Encode","type":"lesson","content":"Encode","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"deep-dive-explanation-json-serialization--deserialization","title":"Deep Dive Explanation: JSON Serialization & Deserialization","type":"lesson","content":"Deep Dive Explanation: JSON Serialization & Deserialization","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"json-to-from-file","title":"Json To From File","type":"lesson","content":"Json To From File","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"json-array-of-objects","title":"Json Array Of Objects","type":"lesson","content":"Json Array Of Objects","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"json-map-to-from-file","title":"Json Map To From File","type":"lesson","content":"Json Map To From File","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"json-array-to-from-file","title":"Json Array To From File","type":"lesson","content":"Json Array To From File","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"orm-demo","title":"Orm Demo","type":"lesson","content":"Orm Demo","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"deep-dive-explanation-vs-compile-safe-database-orm","title":"Deep Dive Explanation: V's Compile-Safe Database ORM","type":"lesson","content":"Deep Dive Explanation: V's Compile-Safe Database ORM","chapter":"Working with Databases and JSON","section":"JSON & ORM"},{"id":"sqlite-integration","title":"SQLite Integration","type":"section","content":"SQLite Integration","chapter":"Working with Databases and JSON"},{"id":"sqlite","title":"Sqlite","type":"lesson","content":"Sqlite","chapter":"Working with Databases and JSON","section":"SQLite Integration"},{"id":"sqlite-raw-crud","title":"Sqlite Raw Crud","type":"section","content":"Sqlite Raw Crud","chapter":"Working with Databases and JSON"},{"id":"chapter-13-standard-library--advanced-features","title":"Chapter 13: Standard Library & Advanced Features","type":"chapter","content":"Chapter 13: Standard Library & Advanced Features"},{"id":"quick-access","title":"Quick Access","type":"section","content":"Quick Access","chapter":"Standard Library & Advanced Features"},{"id":"inline-assembly--c-interop","title":"Inline Assembly & C Interop","type":"section","content":"Inline Assembly & C Interop","chapter":"Standard Library & Advanced Features"},{"id":"inline-assembly","title":"Inline Assembly","type":"lesson","content":"Inline Assembly","chapter":"Standard Library & Advanced Features","section":"Inline Assembly & C Interop"},{"id":"c-interop","title":"C Interop","type":"lesson","content":"C Interop","chapter":"Standard Library & Advanced Features","section":"Inline Assembly & C Interop"},{"id":"networking-tcp-udp-ssl-websockets","title":"Networking (TCP, UDP, SSL, WebSockets)","type":"section","content":"Networking (TCP, UDP, SSL, WebSockets)","chapter":"Standard Library & Advanced Features"},{"id":"net-urllib","title":"Net Urllib","type":"lesson","content":"Net Urllib","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"net-websocket","title":"Net Websocket","type":"lesson","content":"Net Websocket","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"websocket-persistent","title":"Websocket Persistent","type":"lesson","content":"Websocket Persistent","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"net-html","title":"Net Html","type":"lesson","content":"Net Html","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"net-jsonrpc","title":"Net Jsonrpc","type":"lesson","content":"Net Jsonrpc","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"net-jsonrpc-persistent","title":"Net Jsonrpc Persistent","type":"lesson","content":"Net Jsonrpc Persistent","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"net-ssl","title":"Net Ssl","type":"lesson","content":"Net Ssl","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"ssl-persistent","title":"Ssl Persistent","type":"lesson","content":"Ssl Persistent","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"net-tcp","title":"Net Tcp","type":"lesson","content":"Net Tcp","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"tcp-persistent","title":"Tcp Persistent","type":"lesson","content":"Tcp Persistent","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"deep-dive-explanation-persistent-tcp--custom-protocol-framing","title":"Deep Dive Explanation: Persistent TCP & Custom Protocol Framing","type":"lesson","content":"Deep Dive Explanation: Persistent TCP & Custom Protocol Framing","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"net-udp","title":"Net Udp","type":"lesson","content":"Net Udp","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"udp-persistent","title":"Udp Persistent","type":"lesson","content":"Udp Persistent","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"deep-dive-explanation-udp-packet-fragmentation--reassembly","title":"Deep Dive Explanation: UDP Packet Fragmentation & Reassembly","type":"lesson","content":"Deep Dive Explanation: UDP Packet Fragmentation & Reassembly","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"net-unix","title":"Net Unix","type":"lesson","content":"Net Unix","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"unix-persistent","title":"Unix Persistent","type":"lesson","content":"Unix Persistent","chapter":"Standard Library & Advanced Features","section":"Networking (TCP, UDP, SSL, WebSockets)"},{"id":"other-stdlib-updates","title":"Other Stdlib Updates","type":"section","content":"Other Stdlib Updates","chapter":"Standard Library & Advanced Features"},{"id":"core-language-and-type-features","title":"Core Language and Type Features","type":"lesson","content":"Core Language and Type Features","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"standard-library-and-os-modules","title":"Standard Library and OS Modules","type":"lesson","content":"Standard Library and OS Modules","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"security-data-and-formats","title":"Security, Data, and Formats","type":"lesson","content":"Security, Data, and Formats","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"concurrency-cli-and-app-development","title":"Concurrency, CLI, and App Development","type":"lesson","content":"Concurrency, CLI, and App Development","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"io-streams-and-terminal","title":"I/O, Streams, and Terminal","type":"lesson","content":"I/O, Streams, and Terminal","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"options-and-results","title":"Options And Results","type":"lesson","content":"Options And Results","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"generics","title":"Generics","type":"lesson","content":"Generics","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"interfaces","title":"Interfaces","type":"lesson","content":"Interfaces","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"sum-types","title":"Sum Types","type":"lesson","content":"Sum Types","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"attributes","title":"Attributes","type":"lesson","content":"Attributes","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"compile-time-directives","title":"Compile-Time Directives","type":"lesson","content":"Compile-Time Directives","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"strings-builder","title":"Strings Builder","type":"lesson","content":"Strings Builder","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"os-advanced-io","title":"Os Advanced Io","type":"lesson","content":"Os Advanced Io","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"os-operations","title":"Os Operations","type":"lesson","content":"Os Operations","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"os-process-pipe","title":"Os Process Pipe","type":"lesson","content":"Os Process Pipe","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"os-system-info","title":"Os System Info","type":"lesson","content":"Os System Info","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"time-and-stopwatch","title":"Time And Stopwatch","type":"lesson","content":"Time And Stopwatch","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"http-client","title":"Http Client","type":"lesson","content":"Http Client","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"regex-matching","title":"Regex Matching","type":"lesson","content":"Regex Matching","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"command-line-flags","title":"Command Line Flags","type":"lesson","content":"Command Line Flags","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"datatypes-collections","title":"Datatypes Collections","type":"lesson","content":"Datatypes Collections","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"gg-graphics","title":"Gg Graphics","type":"lesson","content":"Gg Graphics","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"command-line-arguments","title":"Command Line Arguments","type":"lesson","content":"Command Line Arguments","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"math-and-rand","title":"Math And Rand","type":"lesson","content":"Math And Rand","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"crypto-asymmetric","title":"Crypto Asymmetric","type":"lesson","content":"Crypto Asymmetric","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"crypto-entropy","title":"Crypto Entropy","type":"lesson","content":"Crypto Entropy","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"crypto-hash","title":"Crypto Hash","type":"lesson","content":"Crypto Hash","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"crypto-kdf","title":"Crypto Kdf","type":"lesson","content":"Crypto Kdf","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"crypto-mac","title":"Crypto Mac","type":"lesson","content":"Crypto Mac","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"crypto-symmetric","title":"Crypto Symmetric","type":"lesson","content":"Crypto Symmetric","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"log-and-crypto","title":"Log And Crypto","type":"lesson","content":"Log And Crypto","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"sync-concurrency","title":"Sync Concurrency","type":"lesson","content":"Sync Concurrency","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"encoding-formats","title":"Encoding Formats","type":"lesson","content":"Encoding Formats","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"arrays-utility","title":"Arrays Utility","type":"lesson","content":"Arrays Utility","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"toml","title":"Toml","type":"lesson","content":"Toml","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"strconv","title":"Strconv","type":"lesson","content":"Strconv","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"term","title":"Term","type":"lesson","content":"Term","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"benchmark","title":"Benchmark","type":"lesson","content":"Benchmark","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"clipboard","title":"Clipboard","type":"lesson","content":"Clipboard","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"semver","title":"Semver","type":"lesson","content":"Semver","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"maps-standard-library-module-mapsv","title":"Maps Standard Library Module (maps.v)","type":"lesson","content":"Maps Standard Library Module (maps.v)","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"context","title":"Context","type":"lesson","content":"Context","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"archive-tar","title":"Archive Tar","type":"lesson","content":"Archive Tar","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"compress-deflate","title":"Compress Deflate","type":"lesson","content":"Compress Deflate","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"compress-gzip","title":"Compress Gzip","type":"lesson","content":"Compress Gzip","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"compress-szip","title":"Compress Szip","type":"lesson","content":"Compress Szip","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"compress-zlib","title":"Compress Zlib","type":"lesson","content":"Compress Zlib","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"compress-zstd","title":"Compress Zstd","type":"lesson","content":"Compress Zstd","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"io-fs","title":"Io Fs","type":"lesson","content":"Io Fs","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"io","title":"Io","type":"lesson","content":"Io","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"io-util","title":"Io Util","type":"lesson","content":"Io Util","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"hash","title":"Hash","type":"lesson","content":"Hash","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"bitfield","title":"Bitfield","type":"lesson","content":"Bitfield","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"cli","title":"Cli","type":"lesson","content":"Cli","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"veb","title":"Veb","type":"lesson","content":"Veb","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"readline","title":"Readline","type":"lesson","content":"Readline","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"runtime","title":"Runtime","type":"lesson","content":"Runtime","chapter":"Standard Library & Advanced Features","section":"Other Stdlib Updates"},{"id":"stringslorem-helper","title":"Strings.Lorem Helper","type":"section","content":"Strings.Lorem Helper","chapter":"Standard Library & Advanced Features"},{"id":"strings-lorem","title":"Strings Lorem","type":"lesson","content":"Strings Lorem","chapter":"Standard Library & Advanced Features","section":"Strings.Lorem Helper"},{"id":"webassembly-compilation","title":"WebAssembly Compilation","type":"section","content":"WebAssembly Compilation","chapter":"Standard Library & Advanced Features"},{"id":"compiling-v-source-to-webassembly","title":"Compiling V Source to WebAssembly","type":"lesson","content":"Compiling V Source to WebAssembly","chapter":"Standard Library & Advanced Features","section":"WebAssembly Compilation"},{"id":"programmatic-wasm-generation","title":"Programmatic WASM Generation","type":"lesson","content":"Programmatic WASM Generation","chapter":"Standard Library & Advanced Features","section":"WebAssembly Compilation"},{"id":"end-of-tutorial","title":"End of Tutorial","type":"title","content":"End of Tutorial"}];
         
         // Theme Management
+        const customThemeStorageKey = 'custom-theme-config';
+        const customThemeDefaults = {
+            bgPrimary: '#0b0f19',
+            bgSecondary: '#131a2c',
+            textPrimary: '#f1f5f9',
+            accentPrimary: '#4f46e5'
+        };
+
+        function hexToRgb(hex) {
+            const normalized = hex.replace('#', '');
+            const full = normalized.length === 3 ? normalized.split('').map(ch => ch + ch).join('') : normalized;
+            const value = parseInt(full, 16);
+            return {
+                r: (value >> 16) & 255,
+                g: (value >> 8) & 255,
+                b: value & 255
+            };
+        }
+
+        function rgbToHex(r, g, b) {
+            return '#' + [r, g, b].map(channel => Math.max(0, Math.min(255, Math.round(channel))).toString(16).padStart(2, '0')).join('');
+        }
+
+        function blendColors(colorA, colorB, amount) {
+            const rgbA = hexToRgb(colorA);
+            const rgbB = hexToRgb(colorB);
+            const mix = (a, b) => a + (b - a) * amount;
+            return rgbToHex(mix(rgbA.r, rgbB.r), mix(rgbA.g, rgbB.g), mix(rgbA.b, rgbB.b));
+        }
+
+        function hexToRgba(hex, alpha) {
+            const { r, g, b } = hexToRgb(hex);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function getStoredCustomTheme() {
+            try {
+                const stored = JSON.parse(localStorage.getItem(customThemeStorageKey) || 'null');
+                return stored && typeof stored === 'object' ? { ...customThemeDefaults, ...stored } : { ...customThemeDefaults };
+            } catch (e) {
+                return { ...customThemeDefaults };
+            }
+        }
+
+        function populateCustomThemeInputs(themeConfig = getStoredCustomTheme()) {
+            const inputs = {
+                bgPrimary: document.getElementById('customBgPrimary'),
+                bgSecondary: document.getElementById('customBgSecondary'),
+                textPrimary: document.getElementById('customTextPrimary'),
+                accentPrimary: document.getElementById('customAccentPrimary')
+            };
+            Object.entries(inputs).forEach(([key, input]) => {
+                if (input) input.value = themeConfig[key] || customThemeDefaults[key];
+            });
+        }
+
+        function collectCustomThemeFromInputs() {
+            return {
+                bgPrimary: document.getElementById('customBgPrimary')?.value || customThemeDefaults.bgPrimary,
+                bgSecondary: document.getElementById('customBgSecondary')?.value || customThemeDefaults.bgSecondary,
+                textPrimary: document.getElementById('customTextPrimary')?.value || customThemeDefaults.textPrimary,
+                accentPrimary: document.getElementById('customAccentPrimary')?.value || customThemeDefaults.accentPrimary
+            };
+        }
+
+        function applyCustomTheme(themeConfig = getStoredCustomTheme()) {
+            const config = { ...customThemeDefaults, ...themeConfig };
+            const bgPrimary = config.bgPrimary;
+            const bgSecondary = config.bgSecondary;
+            const textPrimary = config.textPrimary;
+            const accentPrimary = config.accentPrimary;
+            const textSecondary = blendColors(textPrimary, bgPrimary, 0.45);
+            const textMuted = blendColors(textPrimary, bgPrimary, 0.65);
+            const bgTertiary = blendColors(bgSecondary, bgPrimary, 0.2);
+            const borderColor = blendColors(bgPrimary, textPrimary, 0.15);
+            const borderHover = blendColors(bgPrimary, accentPrimary, 0.35);
+            const codeBg = blendColors(bgPrimary, '#000000', 0.3);
+            const glassBg = hexToRgba(bgSecondary, 0.86);
+            const shadowPremium = `0 10px 25px -5px ${hexToRgba(bgPrimary, 0.28)}, 0 8px 10px -6px ${hexToRgba(bgPrimary, 0.2)}`;
+
+            document.documentElement.style.setProperty('--bg-primary', bgPrimary);
+            document.documentElement.style.setProperty('--bg-secondary', bgSecondary);
+            document.documentElement.style.setProperty('--bg-tertiary', bgTertiary);
+            document.documentElement.style.setProperty('--text-primary', textPrimary);
+            document.documentElement.style.setProperty('--text-secondary', textSecondary);
+            document.documentElement.style.setProperty('--text-muted', textMuted);
+            document.documentElement.style.setProperty('--accent-primary', accentPrimary);
+            document.documentElement.style.setProperty('--accent-glow', accentPrimary);
+            document.documentElement.style.setProperty('--accent-gradient', `linear-gradient(135deg, ${accentPrimary} 0%, ${blendColors(accentPrimary, '#ffffff', 0.2)} 100%)`);
+            document.documentElement.style.setProperty('--border-color', borderColor);
+            document.documentElement.style.setProperty('--border-hover', borderHover);
+            document.documentElement.style.setProperty('--code-bg', codeBg);
+            document.documentElement.style.setProperty('--glass-bg', glassBg);
+            document.documentElement.style.setProperty('--shadow-premium', shadowPremium);
+            populateCustomThemeInputs(config);
+        }
+
+        function clearCustomThemeOverrides() {
+            const properties = ['--bg-primary', '--bg-secondary', '--bg-tertiary', '--text-primary', '--text-secondary', '--text-muted', '--accent-primary', '--accent-glow', '--accent-gradient', '--border-color', '--border-hover', '--code-bg', '--glass-bg', '--shadow-premium'];
+            properties.forEach(property => document.documentElement.style.removeProperty(property));
+        }
+
         function setTheme(theme) {
+            const customThemePanel = document.getElementById('customThemePanel');
+            const isCustomToggle = theme === 'custom' && document.documentElement.getAttribute('data-theme') === 'custom' && customThemePanel && customThemePanel.classList.contains('open');
+
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
+
+            if (theme === 'custom') {
+                const savedCustomTheme = getStoredCustomTheme();
+                applyCustomTheme(savedCustomTheme);
+                if (customThemePanel) {
+                    customThemePanel.classList.toggle('open', !isCustomToggle);
+                }
+            } else {
+                clearCustomThemeOverrides();
+                if (customThemePanel) customThemePanel.classList.remove('open');
+            }
             
             document.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.getElementById('theme-' + theme).classList.add('active');
+            const activeButton = document.getElementById('theme-' + theme);
+            if (activeButton) activeButton.classList.add('active');
+        }
+
+        const customThemePanel = document.getElementById('customThemePanel');
+        document.addEventListener('click', (event) => {
+            const customButton = document.getElementById('theme-custom');
+            if (customThemePanel && !customThemePanel.contains(event.target) && !customButton?.contains(event.target)) {
+                customThemePanel.classList.remove('open');
+            }
+        });
+
+        ['customBgPrimary', 'customBgSecondary', 'customTextPrimary', 'customAccentPrimary'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', () => {
+                    const previewTheme = collectCustomThemeFromInputs();
+                    if (document.documentElement.getAttribute('data-theme') === 'custom') {
+                        applyCustomTheme(previewTheme);
+                    }
+                });
+            }
+        });
+
+        const applyCustomThemeBtn = document.getElementById('applyCustomThemeBtn');
+        if (applyCustomThemeBtn) {
+            applyCustomThemeBtn.addEventListener('click', () => {
+                const config = collectCustomThemeFromInputs();
+                localStorage.setItem(customThemeStorageKey, JSON.stringify(config));
+                applyCustomTheme(config);
+                setTheme('custom');
+                showToast('Custom theme saved');
+            });
+        }
+
+        const resetCustomThemeBtn = document.getElementById('resetCustomThemeBtn');
+        if (resetCustomThemeBtn) {
+            resetCustomThemeBtn.addEventListener('click', () => {
+                localStorage.setItem(customThemeStorageKey, JSON.stringify(customThemeDefaults));
+                populateCustomThemeInputs(customThemeDefaults);
+                applyCustomTheme(customThemeDefaults);
+                setTheme('custom');
+                showToast('Custom theme reset');
+            });
         }
         
         // Init Theme
@@ -28560,18 +29261,332 @@ fn main() {
         // Mobile & Desktop Sidebar toggler
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleSidebarBtn');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+        const shortcutsToggle = document.getElementById('shortcutsToggle');
+        const shortcutsPanel = document.getElementById('shortcutsPanel');
+        const focusModeBtn = document.getElementById('focusModeBtn');
+        const tocWidget = document.getElementById('fontSizeWidget');
+        const sidebarResizer = document.getElementById('sidebarResizer');
+        const breadcrumbBar = document.getElementById('breadcrumbBar');
+        const tocToggle = document.getElementById('tocToggle');
+        const tocPanel = document.getElementById('tocPanel');
+
+        let sidebarWidth = parseInt(localStorage.getItem('vguide-sidebar-width') || '320', 10);
+
+        function applySidebarWidth(width) {
+            sidebarWidth = Math.max(260, Math.min(420, width));
+            document.documentElement.style.setProperty('--sidebar-width', sidebarWidth + 'px');
+            try { localStorage.setItem('vguide-sidebar-width', sidebarWidth); } catch (e) {}
+        }
+
+        function setSidebarOpen(isOpen) {
+            sidebar.classList.toggle('open', isOpen);
+            if (window.innerWidth <= 1024) {
+                document.body.classList.toggle('sidebar-open-mobile', isOpen);
+                sidebarBackdrop.classList.toggle('visible', isOpen);
+            } else {
+                document.body.classList.remove('sidebar-open-mobile');
+                sidebarBackdrop.classList.remove('visible');
+            }
+        }
+
         toggleBtn.addEventListener('click', () => {
             if (window.innerWidth <= 1024) {
-                sidebar.classList.toggle('open');
+                setSidebarOpen(!sidebar.classList.contains('open'));
             } else {
                 document.body.classList.toggle('sidebar-collapsed');
             }
         });
+
+        if (sidebarCloseBtn) {
+            sidebarCloseBtn.addEventListener('click', () => setSidebarOpen(false));
+        }
+
+        if (sidebarBackdrop) {
+            sidebarBackdrop.addEventListener('click', () => setSidebarOpen(false));
+        }
+
+        if (sidebarResizer) {
+            sidebarResizer.addEventListener('mousedown', (event) => {
+                event.preventDefault();
+                const startX = event.clientX;
+                const startWidth = sidebarWidth;
+                const onMove = (moveEvent) => {
+                    const delta = moveEvent.clientX - startX;
+                    applySidebarWidth(startWidth + delta);
+                };
+                const onUp = () => {
+                    window.removeEventListener('mousemove', onMove);
+                    window.removeEventListener('mouseup', onUp);
+                };
+                window.addEventListener('mousemove', onMove);
+                window.addEventListener('mouseup', onUp);
+            });
+        }
+
+        if (tocToggle) {
+            tocToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                tocWidget.classList.toggle('open');
+            });
+        }
+
+        if (quickJumpToggle) {
+            quickJumpToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                quickJumpWidget.classList.toggle('open');
+            });
+        }
+
+        const quickJumpBackToTop = document.getElementById('quickJumpBackToTop');
+        const quickJumpToggleFocus = document.getElementById('quickJumpToggleFocus');
+
+        if (quickJumpBackToTop) {
+            quickJumpBackToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                quickJumpWidget.classList.remove('open');
+            });
+        }
+
+        if (quickJumpToggleFocus) {
+            quickJumpToggleFocus.addEventListener('click', () => {
+                toggleFocusMode();
+                quickJumpWidget.classList.remove('open');
+            });
+        }
+
+        document.addEventListener('click', (event) => {
+            if (shortcutsToggle && shortcutsPanel && !shortcutsToggle.contains(event.target) && !shortcutsPanel.contains(event.target)) {
+                shortcutsPanel.classList.remove('visible');
+            }
+            if (tocWidget && !tocWidget.contains(event.target)) {
+                tocWidget.classList.remove('open');
+            }
+            if (quickJumpWidget && !quickJumpWidget.contains(event.target)) {
+                quickJumpWidget.classList.remove('open');
+            }
+        });
+
+        if (shortcutsToggle) {
+            shortcutsToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                shortcutsPanel.classList.toggle('visible');
+            });
+        }
+
+        function toggleFocusMode(forceState) {
+            const isEnabled = typeof forceState === 'boolean' ? forceState : !document.body.classList.contains('focus-mode');
+            document.body.classList.toggle('focus-mode', isEnabled);
+            if (focusModeBtn) {
+                focusModeBtn.textContent = isEnabled ? 'Exit focus' : 'Focus mode';
+                focusModeBtn.setAttribute('aria-pressed', isEnabled ? 'true' : 'false');
+            }
+            if (quickJumpToggleFocus) {
+                quickJumpToggleFocus.textContent = isEnabled ? 'Exit focus' : 'Toggle focus';
+            }
+            return isEnabled;
+        }
+
+        if (focusModeBtn) {
+            focusModeBtn.addEventListener('click', () => toggleFocusMode());
+        }
         
         // Scroll / Reading progress & Sidebar active link highlight
         const progress = document.getElementById('readingProgress');
         const btnTop = document.getElementById('btnTop');
         const currentSectionTitleEl = document.getElementById('currentSectionTitle');
+        const LAST_READ_KEY = 'vguide-last-read';
+        const COMPLETED_LESSONS_KEY = 'vguide-completed-lessons';
+        const progressState = {
+            completedLessons: []
+        };
+        let lessonEntries = [];
+        let saveReadingStateTimer = null;
+
+        function getActiveHeadingId() {
+            const headings = Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'));
+            let activeId = '';
+            headings.forEach(head => {
+                const rect = head.getBoundingClientRect();
+                if (rect.top < 140) {
+                    activeId = head.id;
+                }
+            });
+            return activeId;
+        }
+
+        function loadCompletedLessons() {
+            try {
+                progressState.completedLessons = JSON.parse(localStorage.getItem(COMPLETED_LESSONS_KEY) || '[]');
+            } catch (e) {
+                progressState.completedLessons = [];
+            }
+        }
+
+        function saveCompletedLessons() {
+            try { localStorage.setItem(COMPLETED_LESSONS_KEY, JSON.stringify(progressState.completedLessons)); } catch (e) {}
+        }
+
+        function markLessonComplete(lessonId) {
+            if (!lessonId) return;
+            const index = progressState.completedLessons.indexOf(lessonId);
+            if (index === -1) {
+                progressState.completedLessons.push(lessonId);
+            } else {
+                progressState.completedLessons.splice(index, 1);
+            }
+            saveCompletedLessons();
+            renderChapterProgress();
+            updateLessonCompletionButtons();
+        }
+
+        function updateLessonCompletionButtons() {
+            document.querySelectorAll('.lesson-complete-btn').forEach(btn => {
+                const lessonId = btn.getAttribute('data-lesson-id');
+                btn.classList.toggle('active', progressState.completedLessons.includes(lessonId));
+                btn.innerHTML = progressState.completedLessons.includes(lessonId) ? '✓ Completed' : '○ Mark done';
+            });
+        }
+
+        function saveReadingState() {
+            const payload = {
+                hash: getActiveHeadingId() ? '#' + getActiveHeadingId() : window.location.hash || '',
+                scrollY: window.scrollY
+            };
+            try { localStorage.setItem(LAST_READ_KEY, JSON.stringify(payload)); } catch (e) {}
+        }
+
+        function scheduleSaveReadingState() {
+            clearTimeout(saveReadingStateTimer);
+            saveReadingStateTimer = setTimeout(saveReadingState, 180);
+        }
+
+        function restoreReadingState() {
+            if (window.location.hash) return;
+            try {
+                const saved = JSON.parse(localStorage.getItem(LAST_READ_KEY) || 'null');
+                if (!saved || typeof saved.scrollY !== 'number') return;
+                const targetId = saved.hash ? saved.hash.replace(/^#/, '') : '';
+                const target = targetId ? document.getElementById(targetId) : null;
+                if (target) {
+                    setTimeout(() => scrollToHashTarget(saved.hash, 'auto', document.body), 220);
+                } else {
+                    window.scrollTo({ top: Math.max(0, saved.scrollY), behavior: 'auto' });
+                }
+            } catch (e) {}
+        }
+
+        function renderBreadcrumbs() {
+            if (!breadcrumbBar) return;
+            const headings = Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'));
+            const activeHeading = headings.find(heading => {
+                const rect = heading.getBoundingClientRect();
+                return rect.top < 140;
+            }) || headings[0];
+
+            if (!activeHeading) {
+                breadcrumbBar.innerHTML = '';
+                return;
+            }
+
+            const chapter = activeHeading.closest('.chapter-section')?.querySelector('h1.chapter-title') || null;
+            const section = activeHeading.tagName === 'H2' || activeHeading.tagName === 'H3' ? activeHeading : null;
+            const crumbs = [];
+            if (chapter) crumbs.push({ label: chapter.textContent.replace(/Chapter d+:/i, '').trim(), current: chapter.id === activeHeading.id });
+            if (section) crumbs.push({ label: section.textContent.trim(), current: section.id === activeHeading.id });
+            if (activeHeading.tagName === 'H3') crumbs.push({ label: activeHeading.textContent.trim(), current: true });
+
+            breadcrumbBar.innerHTML = '';
+            crumbs.forEach((crumb, index) => {
+                const pill = document.createElement('span');
+                pill.className = 'breadcrumb-pill' + (crumb.current ? ' current' : '');
+                pill.textContent = crumb.label;
+                breadcrumbBar.appendChild(pill);
+                if (index < crumbs.length - 1) {
+                    const sep = document.createElement('span');
+                    sep.textContent = '›';
+                    breadcrumbBar.appendChild(sep);
+                }
+            });
+        }
+
+        function renderChapterProgress() {
+            const chapterSections = Array.from(document.querySelectorAll('.chapter-section'));
+            chapterSections.forEach(section => {
+                const heading = section.querySelector('h1.chapter-title');
+                if (!heading) return;
+                const existing = section.querySelector('.chapter-progress-wrap');
+                if (existing) existing.remove();
+
+                const wrap = document.createElement('div');
+                wrap.className = 'chapter-progress-wrap';
+
+                const progressBar = document.createElement('div');
+                progressBar.className = 'chapter-progress-bar';
+                const fill = document.createElement('div');
+                fill.className = 'chapter-progress-fill';
+                progressBar.appendChild(fill);
+
+                const label = document.createElement('div');
+                label.className = 'chapter-progress-label';
+
+                const lessons = Array.from(section.querySelectorAll('h3.lesson-title'));
+                const completedCount = lessons.filter(lesson => progressState.completedLessons.includes(lesson.id)).length;
+                const percent = lessons.length ? Math.round((completedCount / lessons.length) * 100) : 0;
+                fill.style.width = percent + '%';
+                label.textContent = completedCount + ' of ' + lessons.length + ' lessons completed';
+
+                wrap.appendChild(progressBar);
+                wrap.appendChild(label);
+                heading.insertAdjacentElement('afterend', wrap);
+            });
+        }
+
+        function renderTableOfContents() {
+            if (!tocPanel) return;
+            const headings = Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'));
+            tocPanel.innerHTML = '';
+            headings.forEach(heading => {
+                if (!heading.id) return;
+                const link = document.createElement('a');
+                link.className = 'toc-link';
+                link.href = '#' + heading.id;
+                link.textContent = heading.textContent.replace(/Chapter d+:/i, '').replace(/^Lesson:s*/i, '').trim();
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    history.pushState(null, '', '#' + heading.id);
+                    scrollToHashTarget('#' + heading.id, 'smooth', heading);
+                    tocWidget.classList.remove('open');
+                });
+                tocPanel.appendChild(link);
+            });
+        }
+
+        function renderQuickJump() {
+            if (!quickJumpPanel) return;
+            const chapters = Array.from(document.querySelectorAll('.chapter-section'));
+            const actions = quickJumpPanel.querySelector('.quick-jump-actions');
+            quickJumpPanel.innerHTML = '';
+            if (actions) {
+                quickJumpPanel.appendChild(actions);
+            }
+            chapters.forEach(chapter => {
+                const heading = chapter.querySelector('h1.chapter-title');
+                if (!heading || !heading.id) return;
+                const link = document.createElement('a');
+                link.className = 'quick-jump-link';
+                link.href = '#' + heading.id;
+                link.textContent = heading.textContent.replace(/Chapter d+:/i, '').trim();
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    history.pushState(null, '', '#' + heading.id);
+                    scrollToHashTarget('#' + heading.id, 'smooth', heading);
+                    quickJumpWidget.classList.remove('open');
+                });
+                quickJumpPanel.appendChild(link);
+            });
+        }
         
         window.addEventListener('scroll', () => {
             const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -28661,7 +29676,16 @@ fn main() {
                 });
 
                 currentSectionTitleEl.innerText = currentTitle;
+            } else {
+                // keep the current view without inline lesson navigation
             }
+
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + activeId);
+            });
+
+            renderBreadcrumbs();
+            scheduleSaveReadingState();
         });
         
         function scrollToTop() {
@@ -28702,27 +29726,44 @@ fn main() {
 
         function attachHeadingActions() {
             document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title, h4.lesson-subtitle').forEach(heading => {
-                if (heading.querySelector('.heading-action-btn')) return;
                 if (!heading.id) {
                     heading.id = slugifyHeading(heading.textContent);
                 }
 
-                const actionBtn = document.createElement('button');
-                actionBtn.type = 'button';
-                actionBtn.className = 'heading-action-btn';
-                actionBtn.title = 'Copy link to this section';
-                actionBtn.setAttribute('aria-label', 'Copy link to this section');
-                actionBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>';
-                actionBtn.addEventListener('click', async (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    const url = window.location.href.split('#')[0] + '#' + heading.id;
-                    const copied = await copyLinkToClipboard(url);
-                    showToast(copied ? 'Link copied to clipboard' : 'Unable to copy link');
-                });
+                if (!heading.querySelector('.heading-action-btn')) {
+                    const actionBtn = document.createElement('button');
+                    actionBtn.type = 'button';
+                    actionBtn.className = 'heading-action-btn';
+                    actionBtn.title = 'Copy link to this section';
+                    actionBtn.setAttribute('aria-label', 'Copy link to this section');
+                    actionBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>';
+                    actionBtn.addEventListener('click', async (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        const url = window.location.href.split('#')[0] + '#' + heading.id;
+                        const copied = await copyLinkToClipboard(url);
+                        showToast(copied ? 'Link copied to clipboard' : 'Unable to copy link');
+                    });
+                    heading.appendChild(actionBtn);
+                }
 
-                heading.appendChild(actionBtn);
+                if (heading.tagName === 'H3' && heading.classList.contains('lesson-title') && !heading.querySelector('.lesson-complete-btn')) {
+                    const completeBtn = document.createElement('button');
+                    completeBtn.type = 'button';
+                    completeBtn.className = 'lesson-complete-btn';
+                    completeBtn.setAttribute('data-lesson-id', heading.id);
+                    completeBtn.title = 'Mark lesson complete';
+                    completeBtn.setAttribute('aria-label', 'Mark lesson complete');
+                    completeBtn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        markLessonComplete(heading.id);
+                        showToast(progressState.completedLessons.includes(heading.id) ? 'Lesson marked complete' : 'Lesson marked incomplete');
+                    });
+                    heading.appendChild(completeBtn);
+                }
             });
+            updateLessonCompletionButtons();
         }
         
         // Search functionality
@@ -29031,7 +30072,7 @@ fn main() {
         }
 
         function renderLessonNavigation() {
-            const lessonEntries = [];
+            lessonEntries = [];
             (bookStructure || []).forEach(chapter => {
                 (chapter.sections || []).forEach(section => {
                     (section.lessons || []).forEach(lesson => {
@@ -29150,14 +30191,28 @@ fn main() {
 
         // Search Keyboard Shortcut (Ctrl+K or /)
         document.addEventListener('keydown', (e) => {
+            const activeElement = document.activeElement;
+            const isTypingTarget = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT' || activeElement.isContentEditable);
             const isK = (e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey);
-            const isSlash = e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA';
-            
+            const isSlash = e.key === '/' && !isTypingTarget;
+            const isFocusShortcut = (e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && !isTypingTarget;
+            const isEscapeShortcut = e.key === 'Escape' && document.body.classList.contains('focus-mode') && !isTypingTarget;
+
             if (isK || isSlash) {
                 e.preventDefault();
                 const search = document.getElementById('searchInput');
                 search.focus();
                 search.select();
+            }
+
+            if (isFocusShortcut) {
+                e.preventDefault();
+                toggleFocusMode();
+            }
+
+            if (isEscapeShortcut) {
+                e.preventDefault();
+                toggleFocusMode(false);
             }
         });
 
@@ -29221,11 +30276,18 @@ fn main() {
             if (window.Prism) {
                 Prism.highlightAll();
             }
+            applySidebarWidth(sidebarWidth);
+            loadCompletedLessons();
+            attachHeadingActions();
             renderLessonNavigation();
+            renderTableOfContents();
+            renderQuickJump();
+            renderChapterProgress();
+            renderBreadcrumbs();
             updateBookmarksUI();
             injectReadingTimes();
-            attachHeadingActions();
             updateSearchClearButton();
+            restoreReadingState();
             window.dispatchEvent(new Event('scroll'));
         }, 100);
     </script>
