@@ -1250,6 +1250,93 @@ const template = `<!DOCTYPE html>
             display: block;
         }
 
+        .command-palette-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.72);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 80px 16px 16px;
+            z-index: 200;
+        }
+
+        .command-palette-overlay.visible {
+            display: flex;
+        }
+
+        .command-palette-panel {
+            width: min(640px, 100%);
+            background: linear-gradient(135deg, color-mix(in srgb, var(--bg-secondary) 92%, var(--bg-primary)), color-mix(in srgb, var(--bg-tertiary) 88%, var(--bg-secondary)));
+            border: 1px solid color-mix(in srgb, var(--border-color) 80%, var(--accent-primary));
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28), inset 0 1px 0 color-mix(in srgb, var(--text-primary) 8%, transparent);
+            overflow: hidden;
+        }
+
+        .command-palette-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-primary);
+            padding: 16px 18px;
+            font-size: 15px;
+            font-family: var(--font-ui);
+            border-bottom: 1px solid color-mix(in srgb, var(--border-color) 70%, transparent);
+        }
+
+        .command-palette-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .command-palette-results {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 0 8px 8px;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+
+        .command-palette-item {
+            border: 1px solid color-mix(in srgb, var(--border-color) 55%, transparent);
+            border-radius: 12px;
+            padding: 10px 12px;
+            cursor: pointer;
+            color: var(--text-primary);
+            background: color-mix(in srgb, var(--bg-tertiary) 70%, transparent);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .command-palette-item:hover,
+        .command-palette-item.active {
+            background: linear-gradient(90deg, color-mix(in srgb, var(--accent-primary) 16%, var(--bg-tertiary)), color-mix(in srgb, var(--accent-primary) 6%, var(--bg-tertiary)));
+            border-color: color-mix(in srgb, var(--accent-primary) 45%, var(--border-color));
+            transform: translateY(-1px);
+        }
+
+        .command-palette-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+        }
+
+        .command-palette-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .command-palette-item.muted {
+            cursor: default;
+            color: var(--text-muted);
+            font-size: 13px;
+            background: transparent;
+            border-color: transparent;
+        }
+
         .shortcut-item {
             display: flex;
             justify-content: space-between;
@@ -2660,11 +2747,13 @@ const template = `<!DOCTYPE html>
                 </button>
                 <div class="header-title-info" id="currentSectionTitle">Welcome</div>
                 <div class="header-actions" id="headerActions">
+                    <button class="focus-mode-btn" id="commandPaletteBtn" type="button" title="Quick navigate (Ctrl+P)">⌘ Navigate</button>
                     <button class="focus-mode-btn" id="focusModeBtn" type="button" title="Toggle focus mode">Focus mode</button>
                     <div style="position:relative;">
                         <button class="shortcuts-toggle" id="shortcutsToggle" type="button" title="Keyboard shortcuts">⌨ Shortcuts</button>
                         <div class="shortcuts-panel" id="shortcutsPanel">
                             <div class="shortcut-item"><strong>Search</strong><span>/ or Ctrl+K</span></div>
+                            <div class="shortcut-item"><strong>Quick navigate</strong><span>Ctrl+P</span></div>
                             <div class="shortcut-item"><strong>Focus mode</strong><span>F / Esc</span></div>
                             <div class="shortcut-item"><strong>Font size</strong><span>Ctrl+[ ]</span></div>
                             <div class="shortcut-item"><strong>Share section</strong><span>Click the link icon</span></div>
@@ -2674,6 +2763,13 @@ const template = `<!DOCTYPE html>
                 </div>
             </header>
             
+            <div class="command-palette-overlay" id="commandPaletteOverlay">
+                <div class="command-palette-panel" role="dialog" aria-modal="true" aria-label="Quick navigation">
+                    <input class="command-palette-input" id="commandPaletteInput" type="text" placeholder="Type to jump to a chapter, section, or lesson..." autocomplete="off" />
+                    <div class="command-palette-results" id="commandPaletteResults"></div>
+                </div>
+            </div>
+
             <!-- Global Search Overlay -->
             <div class="search-results-overlay" id="searchResultsOverlay">
                 <div class="search-results-title" id="resultsSummary">Search Results</div>
@@ -3645,6 +3741,127 @@ const template = `<!DOCTYPE html>
             });
         }
 
+        const commandPaletteBtn = document.getElementById('commandPaletteBtn');
+        const commandPaletteOverlay = document.getElementById('commandPaletteOverlay');
+        const commandPaletteInput = document.getElementById('commandPaletteInput');
+        const commandPaletteResults = document.getElementById('commandPaletteResults');
+        let commandPaletteIndex = 0;
+
+        function normalizePaletteText(text) {
+            return (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function getNavigationEntries() {
+            return Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'))
+                .map(heading => {
+                    const chapterTitle = heading.closest('.chapter-section')?.querySelector('h1.chapter-title')?.textContent || '';
+                    const sectionTitle = heading.tagName === 'H3' ? heading.closest('.chapter-section')?.querySelector('h2.section-title')?.textContent || '' : '';
+                    const displayTitle = heading.textContent.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
+                    const type = heading.tagName === 'H1' ? 'Chapter' : heading.tagName === 'H2' ? 'Section' : 'Lesson';
+                    const path = heading.tagName === 'H3' ? chapterTitle.replace(/Chapter \d+:/i, '').trim() + ' › ' + sectionTitle.replace(/Chapter \d+:/i, '').trim() : chapterTitle.replace(/Chapter \d+:/i, '').trim();
+                    return {
+                        id: heading.id,
+                        title: displayTitle,
+                        type,
+                        path: path || 'Guide'
+                    };
+                })
+                .filter(entry => entry.id && entry.title);
+        }
+
+        function renderCommandPaletteResults(query = '') {
+            if (!commandPaletteResults) return;
+            const normalizedQuery = normalizePaletteText(query);
+            const entries = getNavigationEntries().filter(entry => {
+                const haystack = normalizePaletteText(entry.title + ' ' + entry.path + ' ' + entry.type);
+                return !normalizedQuery || haystack.includes(normalizedQuery);
+            }).slice(0, 8);
+
+            commandPaletteIndex = 0;
+            commandPaletteResults.innerHTML = '';
+
+            if (!entries.length) {
+                const emptyItem = document.createElement('div');
+                emptyItem.className = 'command-palette-item muted';
+                emptyItem.textContent = 'No matching lessons or chapters';
+                commandPaletteResults.appendChild(emptyItem);
+                return;
+            }
+
+            entries.forEach((entry, index) => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'command-palette-item' + (index === 0 ? ' active' : '');
+                item.innerHTML = '<div class="command-palette-title">' + entry.title + '</div><div class="command-palette-meta">' + entry.type + ' · ' + entry.path + '</div>';
+                item.addEventListener('click', () => {
+                    const target = document.getElementById(entry.id);
+                    if (target) {
+                        history.pushState(null, '', '#' + entry.id);
+                        scrollToHashTarget('#' + entry.id, 'smooth', target);
+                    }
+                    closeCommandPalette();
+                });
+                commandPaletteResults.appendChild(item);
+            });
+        }
+
+        function openCommandPalette() {
+            if (!commandPaletteOverlay || !commandPaletteInput) return;
+            commandPaletteOverlay.classList.add('visible');
+            commandPaletteInput.value = '';
+            renderCommandPaletteResults();
+            setTimeout(() => commandPaletteInput.focus(), 0);
+        }
+
+        function closeCommandPalette() {
+            if (!commandPaletteOverlay) return;
+            commandPaletteOverlay.classList.remove('visible');
+            if (commandPaletteInput) commandPaletteInput.blur();
+        }
+
+        if (commandPaletteBtn) {
+            commandPaletteBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                openCommandPalette();
+            });
+        }
+
+        if (commandPaletteOverlay) {
+            commandPaletteOverlay.addEventListener('click', (event) => {
+                if (event.target === commandPaletteOverlay) {
+                    closeCommandPalette();
+                }
+            });
+        }
+
+        if (commandPaletteInput) {
+            commandPaletteInput.addEventListener('input', (event) => {
+                renderCommandPaletteResults(event.target.value);
+            });
+
+            commandPaletteInput.addEventListener('keydown', (event) => {
+                const items = commandPaletteResults?.querySelectorAll('.command-palette-item:not(.muted)') || [];
+                if (!items.length) return;
+
+                if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    commandPaletteIndex = (commandPaletteIndex + 1) % items.length;
+                    items.forEach((item, index) => item.classList.toggle('active', index === commandPaletteIndex));
+                } else if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    commandPaletteIndex = (commandPaletteIndex - 1 + items.length) % items.length;
+                    items.forEach((item, index) => item.classList.toggle('active', index === commandPaletteIndex));
+                } else if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const activeItem = items[commandPaletteIndex];
+                    if (activeItem) activeItem.click();
+                } else if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closeCommandPalette();
+                }
+            });
+        }
+
         // Search functionality
         const searchInput = document.getElementById('searchInput');
         const searchClearBtn = document.getElementById('searchClearBtn');
@@ -4074,6 +4291,7 @@ const template = `<!DOCTYPE html>
             const isTypingTarget = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT' || activeElement.isContentEditable);
             const isK = (e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey);
             const isSlash = e.key === '/' && !isTypingTarget;
+            const isCommandPaletteShortcut = (e.key === 'p' || e.key === 'P') && (e.metaKey || e.ctrlKey) && !e.altKey && !isTypingTarget;
             const isFocusShortcut = (e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && !isTypingTarget;
             const isEscapeShortcut = e.key === 'Escape' && document.body.classList.contains('focus-mode') && !isTypingTarget;
 
@@ -4082,6 +4300,11 @@ const template = `<!DOCTYPE html>
                 const search = document.getElementById('searchInput');
                 search.focus();
                 search.select();
+            }
+
+            if (isCommandPaletteShortcut) {
+                e.preventDefault();
+                openCommandPalette();
             }
 
             if (isFocusShortcut) {
