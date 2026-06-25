@@ -742,10 +742,12 @@ const template = `<!DOCTYPE html>
 
         .search-container {
             position: relative;
+            margin-bottom: 4px;
         }
 
         .search-input {
             width: 100%;
+            min-height: 44px;
             padding: 10px 14px 10px 36px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
@@ -754,6 +756,7 @@ const template = `<!DOCTYPE html>
             font-family: var(--font-ui);
             font-size: 14px;
             outline: none;
+            box-sizing: border-box;
             transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
         }
 
@@ -1671,27 +1674,35 @@ const template = `<!DOCTYPE html>
         }
 
         .btn-bookmark {
-            border: none;
-            background: none;
+            border: 1px solid transparent;
+            background: rgba(99, 102, 241, 0.1);
             color: var(--text-muted);
             cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
-            display: flex;
+            padding: 8px;
+            border-radius: 999px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: color var(--transition-speed), background-color var(--transition-speed), opacity var(--transition-speed);
-            opacity: 0;
+            min-width: 40px;
+            min-height: 40px;
+            flex-shrink: 0;
+            transition: color var(--transition-speed), background-color var(--transition-speed), border-color var(--transition-speed), transform var(--transition-speed), opacity var(--transition-speed);
+            opacity: 1;
         }
 
         .lesson-title:hover .btn-bookmark,
         .lesson-subtitle:hover .btn-bookmark,
-        .btn-bookmark.active {
+        .btn-bookmark.active,
+        .btn-bookmark:focus-visible {
             opacity: 1;
+            background-color: rgba(99, 102, 241, 0.16);
+            border-color: rgba(99, 102, 241, 0.24);
+            color: var(--accent-primary);
         }
 
         .btn-bookmark:hover {
-            background-color: var(--bg-tertiary);
+            transform: translateY(-1px);
+            background-color: rgba(99, 102, 241, 0.2);
             color: var(--accent-glow);
         }
 
@@ -1727,6 +1738,16 @@ const template = `<!DOCTYPE html>
 
             .btn-toggle-sidebar {
                 display: flex;
+            }
+
+            .btn-bookmark {
+                min-width: 44px;
+                min-height: 44px;
+            }
+
+            .search-input {
+                min-height: 48px;
+                font-size: 16px;
             }
 
             /* On mobile: update --content-pad */
@@ -2186,30 +2207,44 @@ const template = `<!DOCTYPE html>
         const overlay = document.getElementById('searchResultsOverlay');
         const resultsList = document.getElementById('resultsList');
         const resultsSummary = document.getElementById('resultsSummary');
+
+        function normalizeSearchText(text) {
+            return (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function textMatchesQuery(text, query) {
+            const normalizedText = normalizeSearchText(text);
+            if (!query || !normalizedText) return false;
+            const terms = query.split(/\s+/).filter(Boolean);
+            return terms.every(term => normalizedText.includes(term));
+        }
+
+        function resetSidebarSearchState() {
+            document.querySelectorAll('.menu-chapter').forEach(chapDiv => {
+                chapDiv.style.display = '';
+                const heading = chapDiv.querySelector('.chapter-heading');
+                const itemsDiv = chapDiv.querySelector('.chapter-items');
+                if (heading) heading.classList.remove('collapsed');
+                if (itemsDiv) itemsDiv.classList.remove('collapsed');
+
+                chapDiv.querySelectorAll('.menu-section-wrapper').forEach(w => w.style.display = '');
+                chapDiv.querySelectorAll('.menu-link').forEach(link => {
+                    link.style.display = '';
+                });
+                chapDiv.querySelectorAll('.menu-lesson-link').forEach(link => {
+                    link.style.display = '';
+                });
+                chapDiv.querySelectorAll('.section-lessons').forEach(div => {
+                    div.classList.add('collapsed');
+                });
+            });
+        }
         
         searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            
-            // 1. Filter Left Sidebar Table of Contents
+            const query = normalizeSearchText(e.target.value);
+
             if (query.length === 0) {
-                document.querySelectorAll('.menu-chapter').forEach(chapDiv => {
-                    chapDiv.style.display = '';
-                    const heading = chapDiv.querySelector('.chapter-heading');
-                    const itemsDiv = chapDiv.querySelector('.chapter-items');
-                    itemsDiv.classList.remove('collapsed');
-                    heading.classList.remove('collapsed');
-                    
-                    chapDiv.querySelectorAll('.menu-section-wrapper').forEach(w => w.style.display = '');
-                    chapDiv.querySelectorAll('.menu-link').forEach(link => {
-                        link.style.display = '';
-                    });
-                    chapDiv.querySelectorAll('.menu-lesson-link').forEach(link => {
-                        link.style.display = '';
-                    });
-                    chapDiv.querySelectorAll('.section-lessons').forEach(div => {
-                        div.classList.add('collapsed');
-                    });
-                });
+                resetSidebarSearchState();
                 overlay.style.display = 'none';
                 return;
             }
@@ -2222,12 +2257,13 @@ const template = `<!DOCTYPE html>
                 
                 chapDiv.querySelectorAll('.menu-section-wrapper').forEach(wrapper => {
                     const sectionLink = wrapper.querySelector('.menu-link');
-                    const sectionTitle = sectionLink.dataset.title || '';
+                    const sectionTitle = sectionLink ? (sectionLink.dataset.title || '') : '';
                     let hasVisibleLesson = false;
                     
                     wrapper.querySelectorAll('.menu-lesson-link').forEach(lessonLink => {
                         const lessonTitle = lessonLink.dataset.title || '';
-                        if (lessonTitle.includes(query) || sectionTitle.includes(query) || chapTitle.includes(query)) {
+                        const combinedLessonText = chapTitle + ' ' + sectionTitle + ' ' + lessonTitle;
+                        if (textMatchesQuery(combinedLessonText, query)) {
                             lessonLink.style.display = '';
                             hasVisibleLesson = true;
                         } else {
@@ -2237,73 +2273,71 @@ const template = `<!DOCTYPE html>
                     
                     const lessonsDiv = wrapper.querySelector('.section-lessons');
                     if (lessonsDiv) {
-                        if (hasVisibleLesson && query.length > 0) {
+                        if (hasVisibleLesson) {
                             lessonsDiv.classList.remove('collapsed');
                         } else {
                             lessonsDiv.classList.add('collapsed');
                         }
                     }
 
-                    if (sectionTitle.includes(query) || hasVisibleLesson || chapTitle.includes(query)) {
+                    const combinedSectionText = chapTitle + ' ' + sectionTitle;
+                    if (textMatchesQuery(combinedSectionText, query) || hasVisibleLesson) {
                         wrapper.style.display = '';
-                        sectionLink.style.display = '';
+                        if (sectionLink) sectionLink.style.display = '';
                         hasVisibleSectionOrLesson = true;
                     } else {
                         wrapper.style.display = 'none';
                     }
                 });
                 
-                if (hasVisibleSectionOrLesson || chapTitle.includes(query)) {
+                if (hasVisibleSectionOrLesson || textMatchesQuery(chapTitle, query)) {
                     chapDiv.style.display = '';
-                    itemsDiv.classList.remove('collapsed');
-                    heading.classList.remove('collapsed');
+                    if (itemsDiv) itemsDiv.classList.remove('collapsed');
+                    if (heading) heading.classList.remove('collapsed');
                 } else {
                     chapDiv.style.display = 'none';
                 }
             });
             
-            // 2. Perform global search and display overlay (min 2 chars)
-            if (query.length < 2) {
-                overlay.style.display = 'none';
-                return;
-            }
-            
             overlay.style.display = 'block';
             const hits = [];
             
             searchIndex.forEach(item => {
-                const titleIndex = item.title.toLowerCase().indexOf(query);
-                const contentIndex = item.content.toLowerCase().indexOf(query);
-                
-                if (titleIndex !== -1 || contentIndex !== -1) {
-                    // Extract a snippet around the match
-                    let snippet = '';
-                    if (contentIndex !== -1) {
-                        const start = Math.max(0, contentIndex - 40);
-                        const end = Math.min(item.content.length, contentIndex + 100);
-                        snippet = item.content.substring(start, end);
-                        
-                        // Highlight
-                        const regex = new RegExp('(' + escapeRegExp(query) + ')', 'gi');
-                        snippet = snippet.replace(regex, '<mark>$1</mark>');
-                        
-                        if (start > 0) snippet = '...' + snippet;
-                        if (end < item.content.length) snippet = snippet + '...';
-                    } else {
-                        snippet = item.content.substring(0, 100) + '...';
-                    }
-                    
-                    hits.push({
-                        ...item,
-                        snippet,
-                        score: titleIndex !== -1 ? 10 : 1 // Prioritize title matches
-                    });
+                const combinedText = [item.title, item.content, item.chapter || '', item.section || ''].join(' ');
+                if (!textMatchesQuery(combinedText, query)) {
+                    return;
                 }
+
+                const titleText = normalizeSearchText(item.title);
+                const contentText = normalizeSearchText(item.content);
+                const titleIndex = titleText.indexOf(query);
+                const contentIndex = contentText.indexOf(query);
+                
+                let snippet = '';
+                if (contentIndex !== -1) {
+                    const start = Math.max(0, contentIndex - 40);
+                    const end = Math.min(item.content.length, contentIndex + 100);
+                    snippet = item.content.substring(start, end);
+                    
+                    const regex = new RegExp('(' + escapeRegExp(query) + ')', 'gi');
+                    snippet = snippet.replace(regex, '<mark>$1</mark>');
+                    
+                    if (start > 0) snippet = '...' + snippet;
+                    if (end < item.content.length) snippet = snippet + '...';
+                } else {
+                    snippet = item.content.substring(0, 100) + '...';
+                }
+                
+                hits.push({
+                    ...item,
+                    snippet,
+                    score: titleIndex !== -1 ? 10 : 1
+                });
             });
             
             hits.sort((a, b) => b.score - a.score);
             
-            resultsSummary.innerText = \`Search Results (\${hits.length} found)\`;
+            resultsSummary.innerText = 'Search Results (' + hits.length + ' found)';
             resultsList.innerHTML = '';
             
             if (hits.length === 0) {
@@ -2318,33 +2352,18 @@ const template = `<!DOCTYPE html>
                 let pathStr = hit.chapter || '';
                 if (hit.section) pathStr += ' > ' + hit.section;
                 
-                itemDiv.innerHTML = \`
-                    <div class="result-meta">
-                        <span class="result-type">\${hit.type}</span>
-                        <span class="result-path">\${pathStr}</span>
-                    </div>
-                    <div class="result-title">\${hit.title}</div>
-                    <div class="result-snippet">\${hit.snippet}</div>
-                \`;
+                itemDiv.innerHTML = '<div class="result-meta">' +
+                    '<span class="result-type">' + hit.type + '</span>' +
+                    '<span class="result-path">' + pathStr + '</span>' +
+                    '</div>' +
+                    '<div class="result-title">' + hit.title + '</div>' +
+                    '<div class="result-snippet">' + hit.snippet + '</div>';
                 
                 itemDiv.addEventListener('click', () => {
                     overlay.style.display = 'none';
                     searchInput.value = '';
                     
-                    // Reset sidebar filter so rest of items are visible
-                    document.querySelectorAll('.menu-chapter').forEach(chapDiv => {
-                        chapDiv.style.display = '';
-                        chapDiv.querySelectorAll('.menu-section-wrapper').forEach(w => w.style.display = '');
-                        chapDiv.querySelectorAll('.menu-link').forEach(link => {
-                            link.style.display = '';
-                        });
-                        chapDiv.querySelectorAll('.menu-lesson-link').forEach(link => {
-                            link.style.display = '';
-                        });
-                        chapDiv.querySelectorAll('.section-lessons').forEach(div => {
-                            div.classList.add('collapsed');
-                        });
-                    });
+                    resetSidebarSearchState();
                     
                     window.location.hash = hit.id;
                 });
