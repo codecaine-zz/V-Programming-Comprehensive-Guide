@@ -8,7 +8,8 @@ Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers every
 
 The interactive guide turns the V tutorial into a full learning experience with a rich set of built-in tools:
 
-- Browse lessons through a collapsible sidebar with chapter and section navigation.
+- Browse lessons through a collapsible sidebar with chapter, section, and nested subtopic navigation.
+- Expand or collapse topic trees quickly, focus the current learning path, and keep track of your position with a sidebar context bar.
 - Search lessons, topics, and syntax instantly using the built-in search overlay.
 - Bookmark important sections so they are easy to return to later.
 - Resume reading from your last position with automatic reading-state saving.
