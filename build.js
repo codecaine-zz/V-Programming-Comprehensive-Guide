@@ -393,7 +393,12 @@ function parseMarkdownToHtmlAndIndex(md) {
 
                     // Render with .lesson-subtitle instead of .lesson-title to keep scroll active highlighting and navigation builder correct
                     const lessonClass = isLesson ? ' lesson-header' : '';
-                    html += `<h3 class="lesson-subtitle${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">${escapeHtml(cleanTitle)}</h3>\n`;
+                    html += `<h3 class="lesson-subtitle${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">
+                        <span>${escapeHtml(cleanTitle)}</span>
+                        <button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark('${slug}', '${escapeHtml(cleanTitle).replace(/'/g, "\\'")}')" title="Bookmark lesson">
+                            <svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                        </button>
+                    </h3>\n`;
                 } else {
                     currentLesson = {
                         id: slug,
@@ -406,7 +411,12 @@ function parseMarkdownToHtmlAndIndex(md) {
                     }
 
                     const lessonClass = isLesson ? ' lesson-header' : '';
-                    html += `<h3 class="lesson-title${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">${escapeHtml(cleanTitle)}</h3>\n`;
+                    html += `<h3 class="lesson-title${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">
+                        <span>${escapeHtml(cleanTitle)}</span>
+                        <button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark('${slug}', '${escapeHtml(cleanTitle).replace(/'/g, "\\'")}')" title="Bookmark lesson">
+                            <svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                        </button>
+                    </h3>\n`;
                     
                     searchIndex.push({
                         id: `${slug}`,
@@ -504,6 +514,8 @@ const template = `<!DOCTYPE html>
             --code-bg: #090d16;
             --sidebar-width: 320px;
             --header-height: 70px;
+            --content-pad: 60px;
+
             
             /* Alert colors */
             --color-note: #38bdf8;
@@ -959,11 +971,13 @@ const template = `<!DOCTYPE html>
         main.main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
+            min-width: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             position: relative;
             background-color: var(--bg-primary);
+            overflow-x: hidden;
             transition: margin var(--transition-speed) ease;
         }
 
@@ -985,7 +999,7 @@ const template = `<!DOCTYPE html>
         }
 
         .btn-toggle-sidebar {
-            display: none;
+            display: flex;
             background: none;
             border: 1px solid var(--border-color);
             color: var(--text-primary);
@@ -1009,12 +1023,60 @@ const template = `<!DOCTYPE html>
             color: var(--text-secondary);
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-font-size {
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            cursor: pointer;
+            height: 34px;
+            padding: 0 10px;
+            border-radius: 6px;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            display: none; /* moved to floating widget */
+        }
+
+        .reading-progress-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-glow);
+            font-family: var(--font-ui);
+            min-width: 38px;
+            text-align: right;
+        }
+
+        .reading-time {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-left: 12px;
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .reading-time svg {
+            flex-shrink: 0;
+            opacity: 0.7;
+        }
+
         /* Content Container */
         .content-body {
-            max-width: 900px;
             width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 60px 80px 60px;
+            padding: 40px var(--content-pad) 80px var(--content-pad);
             flex: 1;
         }
 
@@ -1526,6 +1588,129 @@ const template = `<!DOCTYPE html>
             visibility: visible;
         }
 
+        /* Floating Font Size Widget */
+        .font-size-widget {
+            position: fixed;
+            bottom: 84px;
+            right: 30px;
+            z-index: 95;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            box-shadow: var(--shadow-premium);
+            overflow: hidden;
+            transition: box-shadow var(--transition-speed);
+        }
+
+        .font-size-widget:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+
+        .fs-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            flex-shrink: 0;
+        }
+
+        .fs-btn:hover:not(:disabled) {
+            background-color: var(--accent-primary);
+            color: #fff;
+        }
+
+        .fs-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .fs-label {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-glow);
+            min-width: 32px;
+            text-align: center;
+            line-height: 1;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            padding: 0 4px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s;
+        }
+
+        .fs-label.bump {
+            animation: fsBump 0.2s ease;
+        }
+
+        @keyframes fsBump {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.35); color: var(--accent-primary); }
+            100% { transform: scale(1); }
+        }
+
+        /* Bookmark button styles */
+        .lesson-title, .lesson-subtitle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .btn-bookmark {
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--transition-speed), background-color var(--transition-speed), opacity var(--transition-speed);
+            opacity: 0;
+        }
+
+        .lesson-title:hover .btn-bookmark,
+        .lesson-subtitle:hover .btn-bookmark,
+        .btn-bookmark.active {
+            opacity: 1;
+        }
+
+        .btn-bookmark:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-glow);
+        }
+
+        .btn-bookmark.active {
+            color: var(--accent-primary);
+        }
+
+        .btn-bookmark.active .bookmark-icon {
+            fill: var(--accent-primary);
+        }
+
+        /* Desktop collapsed sidebar */
+        body.sidebar-collapsed aside.sidebar {
+            transform: translateX(-100%);
+        }
+        body.sidebar-collapsed main.main-content {
+            margin-left: 0;
+        }
+
         /* Mobile adjustments */
         @media (max-width: 1024px) {
             aside.sidebar {
@@ -1544,12 +1729,82 @@ const template = `<!DOCTYPE html>
                 display: flex;
             }
 
+            /* On mobile: update --content-pad */
+            :root {
+                --content-pad: 24px;
+            }
+
             .content-body {
-                padding: 30px 24px;
+                padding: 30px var(--content-pad);
+            }
+
+            .code-wrapper {
+                border-radius: 0;
             }
 
             header.nav-header {
                 padding: 0 24px;
+            }
+        }
+
+        /* Print / PDF export styles */
+        @media print {
+            aside.sidebar,
+            .progress-container,
+            .btn-top,
+            .font-size-widget,
+            .btn-toggle-sidebar,
+            .nav-header,
+            .btn-bookmark,
+            .btn-copy,
+            .btn-zoom,
+            .btn-playground,
+            .btn-playground-copy,
+            .lesson-nav,
+            .header-actions,
+            #searchResultsOverlay {
+                display: none !important;
+            }
+
+            main.main-content {
+                margin-left: 0 !important;
+            }
+
+            body, html {
+                background: #fff !important;
+                color: #000 !important;
+            }
+
+            .content-body {
+                max-width: 100% !important;
+                padding: 20px !important;
+            }
+
+            .code-wrapper {
+                border: 1px solid #ccc !important;
+                break-inside: avoid;
+                /* Reset breakout for print */
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: auto !important;
+                max-width: 100% !important;
+                border-radius: 6px !important;
+            }
+
+            pre, code {
+                color: #000 !important;
+                background: #f5f5f5 !important;
+                white-space: pre-wrap !important;
+            }
+
+            h1, h2, h3 {
+                color: #000 !important;
+                break-after: avoid;
+            }
+
+            p {
+                orphans: 3;
+                widows: 3;
             }
         }
     </style>
@@ -1569,11 +1824,17 @@ const template = `<!DOCTYPE html>
                 </div>
                 <div class="search-container">
                     <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search lessons, syntax...">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search lessons, syntax... (Ctrl+K or /)">
                 </div>
             </div>
             
             <nav class="sidebar-menu" id="sidebarMenu">
+                <div class="menu-chapter" id="bookmarksSection" style="display: none;">
+                    <div class="chapter-heading">
+                        <span>🔖 Bookmarked Lessons</span>
+                    </div>
+                    <div class="chapter-items" id="bookmarksItems"></div>
+                </div>
                 <!-- Will be populated dynamically via JavaScript -->
             </nav>
             
@@ -1608,7 +1869,9 @@ const template = `<!DOCTYPE html>
                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
                 <div class="header-title-info" id="currentSectionTitle">Welcome</div>
-                <div class="header-actions"></div>
+                <div class="header-actions" id="headerActions">
+                    <span class="reading-progress-label" id="readingPct">0%</span>
+                </div>
             </header>
             
             <!-- Global Search Overlay -->
@@ -1626,6 +1889,17 @@ const template = `<!DOCTYPE html>
     <button class="btn-top" id="btnTop" onclick="scrollToTop()" title="Back to Top">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
     </button>
+
+    <!-- Floating Font Size Control -->
+    <div class="font-size-widget" id="fontSizeWidget">
+        <button class="fs-btn" id="btnFontDec" title="Decrease font size (Ctrl+[)" aria-label="Decrease font size">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+        <span class="fs-label" id="fontSizeLabel">16</span>
+        <button class="fs-btn" id="btnFontInc" title="Increase font size (Ctrl+])" aria-label="Increase font size">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+    </div>
     
     <!-- Prism Syntax Highlighting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
@@ -1796,11 +2070,15 @@ const template = `<!DOCTYPE html>
             menuEl.appendChild(chapDiv);
         });
         
-        // Mobile Sidebar toggler
+        // Mobile & Desktop Sidebar toggler
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleSidebarBtn');
         toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.toggle('open');
+            } else {
+                document.body.classList.toggle('sidebar-collapsed');
+            }
         });
         
         // Scroll / Reading progress & Sidebar active link highlight
@@ -1813,7 +2091,10 @@ const template = `<!DOCTYPE html>
             if (totalHeight > 0) {
                 const scrolled = (window.scrollY / totalHeight) * 100;
                 progress.style.width = scrolled + '%';
+                const pctEl = document.getElementById('readingPct');
+                if (pctEl) pctEl.textContent = Math.round(scrolled) + '%';
             }
+
             
             if (window.scrollY > 300) {
                 btnTop.classList.add('visible');
@@ -2238,12 +2519,147 @@ const template = `<!DOCTYPE html>
             });
         }
 
+        // Bookmarks Management
+        let bookmarks = [];
+        try {
+            bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+        } catch (e) {
+            bookmarks = [];
+        }
+
+        function updateBookmarksUI() {
+            const bookmarksSec = document.getElementById('bookmarksSection');
+            const bookmarksItems = document.getElementById('bookmarksItems');
+            
+            // Highlight active state on all page buttons
+            document.querySelectorAll('.btn-bookmark').forEach(btn => {
+                const id = btn.getAttribute('data-id');
+                if (bookmarks.some(b => b.id === id)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (bookmarks.length === 0) {
+                bookmarksSec.style.display = 'none';
+                bookmarksItems.innerHTML = '';
+                return;
+            }
+
+            bookmarksSec.style.display = 'block';
+            bookmarksItems.innerHTML = '';
+
+            bookmarks.forEach(b => {
+                const secWrapper = document.createElement('div');
+                secWrapper.className = 'menu-section-wrapper';
+                
+                const link = document.createElement('a');
+                link.href = '#' + b.id;
+                link.className = 'menu-lesson-link active';
+                link.dataset.target = b.id;
+                link.innerHTML = \`<span class="bullet">🔖</span> \${b.title}\`;
+                
+                link.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 1024) {
+                        document.getElementById('sidebar').classList.remove('open');
+                    }
+                });
+                
+                secWrapper.appendChild(link);
+                bookmarksItems.appendChild(secWrapper);
+            });
+        }
+
+        function toggleBookmark(id, title) {
+            const index = bookmarks.findIndex(b => b.id === id);
+            if (index === -1) {
+                bookmarks.push({ id, title });
+            } else {
+                bookmarks.splice(index, 1);
+            }
+            try {
+                localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            } catch(e) {}
+            updateBookmarksUI();
+        }
+
+        // Search Keyboard Shortcut (Ctrl+K or /)
+        document.addEventListener('keydown', (e) => {
+            const isK = (e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey);
+            const isSlash = e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA';
+            
+            if (isK || isSlash) {
+                e.preventDefault();
+                const search = document.getElementById('searchInput');
+                search.focus();
+                search.select();
+            }
+        });
+
+        // Font size control
+        const FONT_MIN = 12;
+        const FONT_MAX = 22;
+        let contentFontSize = parseInt(localStorage.getItem('contentFontSize') || '16', 10);
+
+        function applyFontSize(size) {
+            contentFontSize = Math.max(FONT_MIN, Math.min(FONT_MAX, size));
+            document.getElementById('contentBody').style.fontSize = contentFontSize + 'px';
+            try { localStorage.setItem('contentFontSize', contentFontSize); } catch(e) {}
+
+            // Update the label with a bounce animation
+            const label = document.getElementById('fontSizeLabel');
+            if (label) {
+                label.textContent = contentFontSize + 'px';
+                label.classList.remove('bump');
+                void label.offsetWidth; // force reflow to restart animation
+                label.classList.add('bump');
+            }
+
+            // Dim / disable buttons at limits
+            const dec = document.getElementById('btnFontDec');
+            const inc = document.getElementById('btnFontInc');
+            if (dec) dec.disabled = contentFontSize <= FONT_MIN;
+            if (inc) inc.disabled = contentFontSize >= FONT_MAX;
+        }
+
+        applyFontSize(contentFontSize);
+        document.getElementById('btnFontInc').addEventListener('click', () => applyFontSize(contentFontSize + 1));
+        document.getElementById('btnFontDec').addEventListener('click', () => applyFontSize(contentFontSize - 1));
+
+        // Ctrl+[ and Ctrl+] for font size
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === ']') { e.preventDefault(); applyFontSize(contentFontSize + 1); }
+            if ((e.metaKey || e.ctrlKey) && e.key === '[') { e.preventDefault(); applyFontSize(contentFontSize - 1); }
+        });
+
+
+
+        // Inject reading time after each chapter h1
+        function injectReadingTimes() {
+            document.querySelectorAll('h1.chapter-title').forEach(h1 => {
+                // Count all text within the next sibling section
+                const section = h1.closest('section') || h1.parentElement;
+                const text = section ? section.innerText : '';
+                const words = text.trim().split(/\s+/).length;
+                const minutes = Math.ceil(words / 200);
+                if (h1.querySelector('.reading-time')) return;
+                const badge = document.createElement('span');
+                badge.className = 'reading-time';
+                badge.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ' + minutes + ' min read';
+
+                h1.appendChild(badge);
+            });
+        }
+
         // Trigger initial highlight and expand on load
         setTimeout(() => {
             if (window.Prism) {
                 Prism.highlightAll();
             }
             renderLessonNavigation();
+            updateBookmarksUI();
+            injectReadingTimes();
             window.dispatchEvent(new Event('scroll'));
         }, 100);
     </script>
