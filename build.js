@@ -748,7 +748,7 @@ const template = `<!DOCTYPE html>
         .search-input {
             width: 100%;
             min-height: 44px;
-            padding: 10px 14px 10px 36px;
+            padding: 10px 40px 10px 36px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             background-color: var(--bg-primary);
@@ -772,6 +772,33 @@ const template = `<!DOCTYPE html>
             transform: translateY(-50%);
             color: var(--text-muted);
             pointer-events: none;
+        }
+
+        .search-clear-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 999px;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        .search-clear-btn:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .search-clear-btn.visible {
+            display: inline-flex;
         }
 
         .sidebar-menu {
@@ -1119,7 +1146,9 @@ const template = `<!DOCTYPE html>
             gap: 8px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 16px;
+            padding-right: 52px;
             scroll-margin-top: 90px;
+            position: relative;
         }
 
         .chap-badge {
@@ -1145,6 +1174,11 @@ const template = `<!DOCTYPE html>
             scroll-margin-top: 90px;
         }
 
+        .section-title, .lesson-title, .lesson-subtitle {
+            position: relative;
+            padding-right: 52px;
+        }
+
         .lesson-title, .lesson-subtitle {
             font-family: var(--font-heading);
             font-size: 18px;
@@ -1153,6 +1187,56 @@ const template = `<!DOCTYPE html>
             margin-bottom: 12px;
             color: var(--text-primary);
             scroll-margin-top: 90px;
+        }
+
+        .heading-action-btn {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed), transform var(--transition-speed);
+            opacity: 0.88;
+        }
+
+        .heading-action-btn:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            transform: translateY(-50%) scale(1.04);
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-premium);
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 1400;
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: opacity var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .toast-notification.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .lesson-header {
@@ -1846,6 +1930,9 @@ const template = `<!DOCTYPE html>
                 <div class="search-container">
                     <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     <input type="text" class="search-input" id="searchInput" placeholder="Search lessons, syntax... (Ctrl+K or /)">
+                    <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Clear search" title="Clear search">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
                 </div>
             </div>
             
@@ -1910,6 +1997,8 @@ const template = `<!DOCTYPE html>
     <button class="btn-top" id="btnTop" onclick="scrollToTop()" title="Back to Top">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
     </button>
+
+    <div class="toast-notification" id="toastNotification"></div>
 
     <!-- Floating Font Size Control -->
     <div class="font-size-widget" id="fontSizeWidget">
@@ -2201,9 +2290,67 @@ const template = `<!DOCTYPE html>
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        function slugifyHeading(text) {
+            return (text || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.add('visible');
+            clearTimeout(showToast.timeoutId);
+            showToast.timeoutId = setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 1800);
+        }
+
+        function copyLinkToClipboard(url) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(url).then(() => true).catch(() => false);
+            }
+
+            const textarea = document.createElement('textarea');
+            textarea.value = url;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            const copied = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            return Promise.resolve(copied);
+        }
+
+        function attachHeadingActions() {
+            document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title, h4.lesson-subtitle').forEach(heading => {
+                if (heading.querySelector('.heading-action-btn')) return;
+                if (!heading.id) {
+                    heading.id = slugifyHeading(heading.textContent);
+                }
+
+                const actionBtn = document.createElement('button');
+                actionBtn.type = 'button';
+                actionBtn.className = 'heading-action-btn';
+                actionBtn.title = 'Copy link to this section';
+                actionBtn.setAttribute('aria-label', 'Copy link to this section');
+                actionBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>';
+                actionBtn.addEventListener('click', async (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const url = window.location.href.split('#')[0] + '#' + heading.id;
+                    const copied = await copyLinkToClipboard(url);
+                    showToast(copied ? 'Link copied to clipboard' : 'Unable to copy link');
+                });
+
+                heading.appendChild(actionBtn);
+            });
+        }
         
         // Search functionality
         const searchInput = document.getElementById('searchInput');
+        const searchClearBtn = document.getElementById('searchClearBtn');
         const overlay = document.getElementById('searchResultsOverlay');
         const resultsList = document.getElementById('resultsList');
         const resultsSummary = document.getElementById('resultsSummary');
@@ -2240,8 +2387,32 @@ const template = `<!DOCTYPE html>
             });
         }
         
+        function updateSearchClearButton() {
+            if (!searchClearBtn) return;
+            searchClearBtn.classList.toggle('visible', searchInput.value.trim().length > 0);
+        }
+
+        function clearSearch() {
+            searchInput.value = '';
+            updateSearchClearButton();
+            resetSidebarSearchState();
+            overlay.style.display = 'none';
+            resultsSummary.innerText = 'Search Results';
+            resultsList.innerHTML = '';
+            searchInput.focus();
+        }
+
+        if (searchClearBtn) {
+            searchClearBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                clearSearch();
+            });
+        }
+
         searchInput.addEventListener('input', (e) => {
             const query = normalizeSearchText(e.target.value);
+            updateSearchClearButton();
 
             if (query.length === 0) {
                 resetSidebarSearchState();
@@ -2361,10 +2532,7 @@ const template = `<!DOCTYPE html>
                 
                 itemDiv.addEventListener('click', () => {
                     overlay.style.display = 'none';
-                    searchInput.value = '';
-                    
-                    resetSidebarSearchState();
-                    
+                    clearSearch();
                     window.location.hash = hit.id;
                 });
                 
@@ -2679,6 +2847,8 @@ const template = `<!DOCTYPE html>
             renderLessonNavigation();
             updateBookmarksUI();
             injectReadingTimes();
+            attachHeadingActions();
+            updateSearchClearButton();
             window.dispatchEvent(new Event('scroll'));
         }, 100);
     </script>
