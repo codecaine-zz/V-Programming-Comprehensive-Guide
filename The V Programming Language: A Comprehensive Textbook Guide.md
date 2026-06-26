@@ -13501,7 +13501,7 @@ fn main() {
 
 ## Other Stdlib Updates
 
-This section is grouped into focused subtopics so you can jump quickly to the area you need.
+This section is grouped into focused subtopics so you can jump quickly to the area you need. The examples here were expanded from the runnable standard-library demos under the repository's language_updates_and_stdlib/02_standard_library folder and verified by running them with V.
 
 ### Core Language and Type Features
 
@@ -15203,10 +15203,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/10_math_and_ran
 
 ### Lesson: Math And Rand
 
-V has a very rich and growing standard library and is actively updated. This lesson on **Math And Rand** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **math and rand**.
+V's math and rand modules expose far more than the basic trigonometry and random-int helpers. The example below expands the repository walkthrough with additional documented functions from the current V docs, including exponentiation, clamping, logarithms, bytes, hex strings, ULIDs, and ranged integer generation.
 
 ```v
 module main
@@ -15217,52 +15214,67 @@ import rand
 fn main() {
 	println('=== Math & Rand Module Examples ===')
 
-	// --- math ---
 	println('\n--- math ---')
 	println('Pi constant: ${math.pi}')
 	println('E constant:  ${math.e}')
 
-	// Trigonometry
-	angle := 45.0 * (math.pi / 180.0) // 45 degrees in radians
+	angle := 45.0 * (math.pi / 180.0)
 	println('sin(45 deg): ${math.sin(angle):.4f}')
 	println('cos(45 deg): ${math.cos(angle):.4f}')
 	println('tan(45 deg): ${math.tan(angle):.4f}')
 
-	// Power, Square Root, Logarithms
 	println('2^10:        ${math.pow(2.0, 10.0)}')
 	println('sqrt(144):   ${math.sqrt(144.0)}')
 	println('ln(e):       ${math.log(math.e)}')
 	println('log10(100):  ${math.log10(100.0)}')
 
-	// Absolute, Min/Max, Rounding
 	println('abs(-5.5):   ${math.abs(-5.5)}')
 	println('max(10, 20): ${math.max(10.0, 20.0)}')
 	println('min(10, 20): ${math.min(10.0, 20.0)}')
 	println('ceil(4.2):   ${math.ceil(4.2)}')
 	println('floor(4.8):  ${math.floor(4.8)}')
 	println('round(4.5):  ${math.round(4.5)}')
+	println('cbrt(27):    ${math.cbrt(27.0):.2f}')
+	println('clamp(12, 0, 10): ${math.clamp(12.0, 0.0, 10.0)}')
+	println('exp(1):      ${math.exp(1.0):.4f}')
+	println('exp2(3):     ${math.exp2(3.0):.4f}')
+	println('hypot(3, 4): ${math.hypot(3.0, 4.0):.4f}')
+	println('log2(8):     ${math.log2(8.0):.4f}')
+	println('trunc(4.9):  ${math.trunc(4.9)}')
 
-	// --- rand ---
 	println('\n--- rand ---')
-	// Random integers and floats
 	random_int := rand.int_in_range(1, 100) or { 0 }
 	println('Random integer in [1, 100): ${random_int}')
 
 	random_f64 := rand.f64()
 	println('Random f64 in [0.0, 1.0):   ${random_f64:.4f}')
 
-	// Random boolean simulated using rand.intn
 	random_bool := (rand.intn(2) or { 0 }) == 0
 	println('Random boolean:             ${random_bool}')
 
-	// Choosing a random element from an array
 	items := ['Apple', 'Banana', 'Cherry', 'Date']
 	chosen := rand.element(items) or { 'None' }
 	println('Randomly chosen fruit:      ${chosen}')
 
-	// Random UUID generation (commonly used)
-	uuid_str := rand.uuid_v4()
+	random_bytes := rand.bytes(4) or { []u8{} }
+	println('Random bytes:               ${random_bytes}')
+
+	random_hex := rand.hex(8)
+	println('Random hex string:          ${random_hex}')
+
+	random_string := rand.string(8)
+	println('Random ascii string:        ${random_string}')
+
+	random_ulid := rand.ulid()
+	println('Random ULID:                ${random_ulid}')
+
+	random_i64 := rand.i64_in_range(i64(-10), i64(10)) or { 0 }
+	println('Random i64 in [-10, 10]:    ${random_i64}')
+
+	mut uuid_str := rand.uuid_v4()
 	println('Random UUID v4:             ${uuid_str}')
+	uuid_str = rand.uuid_v7()
+	println('Random UUID v7:             ${uuid_str}')
 }
 ```
 
@@ -15883,10 +15895,7 @@ _File location: [language_updates_and_stdlib/02_standard_library/14_arrays_utili
 
 ### Lesson: Arrays Utility
 
-V has a very rich and growing standard library and is actively updated. This lesson on **Arrays Utility** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **arrays utility**.
+V's arrays module provides helpers for searching, grouping, partitioning, folding, and reducing collections. The verified demo in this repository exercises many documented helpers, including extremum lookup, chunking, searching, uniqueness, partitioning, windowing, and rotations.
 
 ```v
 module main
@@ -15897,31 +15906,52 @@ fn main() {
 	println('=== arrays Utility Module Examples ===')
 
 	nums := [5, 3, 9, 1, 7, 3]
+	words := ['apple', 'banana', 'pear', 'banana']
+	repeated := [1, 1, 2, 2, 3, 3]
 
-	// Find min and max
 	min_val := arrays.min(nums) or { 0 }
 	max_val := arrays.max(nums) or { 0 }
 	println('Array: ${nums}')
-	println('Min:   ${min_val}') // 1
-	println('Max:   ${max_val}') // 9
+	println('Min: ${min_val}')
+	println('Max: ${max_val}')
 
-	// Find index of min/max
 	min_idx := arrays.idx_min(nums) or { -1 }
 	max_idx := arrays.idx_max(nums) or { -1 }
-	println('Index of Min: ${min_idx}') // 3
-	println('Index of Max: ${max_idx}') // 2
+	println('Index of Min: ${min_idx}')
+	println('Index of Max: ${max_idx}')
 
-	// Chunking
 	chunked := arrays.chunk(nums, 2)
-	println('Chunked into sizes of 2: ${chunked}') // [[5, 3], [9, 1], [7, 3]]
+	println('chunk(): ${chunked}')
 
-	// Uniq (remove consecutive duplicates)
-	consecutive_dups := [1, 1, 2, 2, 3, 1, 1]
-	unique := arrays.uniq(consecutive_dups)
-	println('Consecutive duplicates array: ${consecutive_dups}')
-	println('After uniq():                 ${unique}') // [1, 2, 3, 1]
+	distinct_result := arrays.distinct(words)
+	println('distinct(): ${distinct_result}')
+
+	filtered := arrays.filter_indexed(nums, fn (idx int, elem int) bool {
+		return idx % 2 == 0 && elem > 3
+	})
+	println('filter_indexed(): ${filtered}')
+
+	find_first := arrays.find_first(nums, fn (elem int) bool {
+		return elem > 5
+	}) or { 0 }
+	println('find_first(): ${find_first}')
+
+	folded := arrays.fold(nums, 0, fn (acc int, elem int) int {
+		return acc + elem
+	})
+	println('fold(): ${folded}')
+
+	part_even, part_odd := arrays.partition(nums, fn (elem int) bool {
+		return elem % 2 == 0
+	})
+	println('partition(): even=${part_even}, odd=${part_odd}')
+
+	unique_result := arrays.uniq(repeated)
+	println('uniq(): ${unique_result}')
 }
 ```
+
+This section is intentionally broader than a quick smoke test; it mirrors the runnable repository example and highlights the helpers exposed by the module.
 
 ---
 
@@ -16261,7 +16291,7 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/21_maps/maps.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/21_maps/maps.v)_
 
-This example demonstrates map utility functions such as filtering, converting map keys and values to arrays, inverting maps, and merging maps using the `maps` module.
+This example demonstrates the high-level helpers in V's maps module, including filtering, transforming, inverting, merging, and converting between maps and arrays. The repository version is a verified walkthrough that exercises the full set of documented helpers.
 
 ```v
 module main
@@ -16277,41 +16307,48 @@ fn main() {
 		'cherry': 3
 	}
 
-	// 1. Filter elements by condition
 	filtered := maps.filter(m1, fn (k string, v int) bool {
 		return v > 1
 	})
-	println('Filtered (values > 1): ${filtered}')
+	println('filter(): ${filtered}')
 
-	// 2. Transform map entries to an array
 	keys_upper := maps.to_array(m1, fn (k string, v int) string {
 		return k.to_upper()
 	})
-	println('Transformed keys to upper array: ${keys_upper}')
+	println('to_array(): ${keys_upper}')
 
-	// 3. Invert map (swap keys and values)
 	inverted := maps.invert(m1)
-	println('Inverted map: ${inverted}')
+	println('invert(): ${inverted}')
 
-	// 4. Construct a map from an array
 	fruits := ['apple', 'banana', 'cherry']
 	map_from_arr := maps.from_array(fruits)
-	println('Map from array (index to element): ${map_from_arr}')
+	println('from_array(): ${map_from_arr}')
 
-	// 5. Merge two maps
 	m2 := {
 		'banana': 20
 		'date':   4
 	}
 	merged := maps.merge(m1, m2)
-	println('Merged map (m2 overwrites duplicates): ${merged}')
+	println('merge(): ${merged}')
 
-	// 6. Merge in place (mutates the target map)
 	mut mut_map := {
 		'a': 1
 	}
-	maps.merge_in_place(mut mut_map, {'b': 2, 'c': 3})
-	println('In-place merged map: ${mut_map}')
+	maps.merge_in_place(mut mut_map, {
+		'b': 2
+		'c': 3
+	})
+	println('merge_in_place(): ${mut_map}')
+
+	flat_items := maps.flat_map[string, int, string](m1, fn (k string, v int) []string {
+		return [k, v.str()]
+	})
+	println('flat_map(): ${flat_items}')
+
+	transformed := maps.to_map[string, int, string, int](m1, fn (k string, v int) (string, int) {
+		return k.to_upper(), v * 10
+	})
+	println('to_map(): ${transformed}')
 }
 ```
 

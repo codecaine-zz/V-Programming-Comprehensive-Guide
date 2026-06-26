@@ -11,39 +11,46 @@ fn main() {
 		'cherry': 3
 	}
 
-	// 1. Filter elements by condition
 	filtered := maps.filter(m1, fn (k string, v int) bool {
 		return v > 1
 	})
-	println('Filtered (values > 1): ${filtered}')
+	println('filter(): ${filtered}')
 
-	// 2. Transform map entries to an array
 	keys_upper := maps.to_array(m1, fn (k string, v int) string {
 		return k.to_upper()
 	})
-	println('Transformed keys to upper array: ${keys_upper}')
+	println('to_array(): ${keys_upper}')
 
-	// 3. Invert map (swap keys and values)
 	inverted := maps.invert(m1)
-	println('Inverted map: ${inverted}')
+	println('invert(): ${inverted}')
 
-	// 4. Construct a map from an array
 	fruits := ['apple', 'banana', 'cherry']
 	map_from_arr := maps.from_array(fruits)
-	println('Map from array (index to element): ${map_from_arr}')
+	println('from_array(): ${map_from_arr}')
 
-	// 5. Merge two maps
 	m2 := {
 		'banana': 20
 		'date':   4
 	}
 	merged := maps.merge(m1, m2)
-	println('Merged map (m2 overwrites duplicates): ${merged}')
+	println('merge(): ${merged}')
 
-	// 6. Merge in place (mutates the target map)
 	mut mut_map := {
 		'a': 1
 	}
-	maps.merge_in_place(mut mut_map, {'b': 2, 'c': 3})
-	println('In-place merged map: ${mut_map}')
+	maps.merge_in_place(mut mut_map, {
+		'b': 2
+		'c': 3
+	})
+	println('merge_in_place(): ${mut_map}')
+
+	flat_items := maps.flat_map[string, int, string](m1, fn (k string, v int) []string {
+		return [k, v.str()]
+	})
+	println('flat_map(): ${flat_items}')
+
+	transformed := maps.to_map[string, int, string, int](m1, fn (k string, v int) (string, int) {
+		return k.to_upper(), v * 10
+	})
+	println('to_map(): ${transformed}')
 }
