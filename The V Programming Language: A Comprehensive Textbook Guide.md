@@ -14339,63 +14339,162 @@ fn main() {
 
 ---
 
-### Compile-Time Directives
+### Compile-Time Directives & Compile-Time Code
 
 _File location: [language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v)_
 
-### Lesson: Compile-Time Directives
+### Lesson: Compile-Time Directives & Compile-Time Code
 
-V provides compile-time directives (starting with `$`) that are processed by the compiler before compilation. These directives allow you to perform conditional compilation based on OS or flags, retrieve environment variables, embed files directly into the compiled binary, and compile templates at compile time.
+V provides a powerful set of compile-time (or 'comptime') directives and code features, prefixed with `$`. These instructions are evaluated and processed by the compiler during compilation, allowing you to optimize code execution, prune unused branches, dynamically query compilation environment properties, and embed assets directly into the final binary.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **compile-time directives**.
+#### 1. Conditional Compilation (`$if` Condition)
+If you want an `if` expression to be evaluated at compile time, prefix it with `$`. Inactive branches are excluded from compilation entirely, meaning their type checks still occur but no code is generated for them in the final executable.
+
+- **Multiple Conditions:** You can combine multiple platforms or build modes in one branch using logic operators (`||`, `&&`).
+- **Expression Usage:** A compile-time `$if` can be used as an expression to conditionally assign values.
+- **`$else-$if` Chains:** You can chain compile-time conditions using `$else $if` to check against various compilers, platforms, or custom defines.
+
+##### Builtin `$if` Compilation Target Options
+Below is the full list of builtin options supported inside compile-time `$if` conditions:
+
+| OS target | Compilers | Platforms | Other |
+| :--- | :--- | :--- | :--- |
+| `windows`, `linux`, `macos` | `gcc`, `tinyc` | `amd64`, `arm64`, `aarch64` | `debug`, `prod`, `test` |
+| `darwin`, `ios`, `bsd` | `clang`, `mingw` | `i386`, `arm32` | `js`, `glibc`, `prealloc` |
+| `freebsd`, `openbsd`, `netbsd` | `msvc` | `rv64`, `rv32`, `s390x` | `no_bounds_checking`, `freestanding` |
+| `android`, `mach`, `dragonfly` | `cplusplus` | `ppc64le` | `no_segfault_handler`, `no_backtrace` |
+| `gnu`, `hpux`, `haiku`, `qnx` | | `x64`, `x32` | `no_main`, `fast_math`, `apk`, `threads` |
+| `solaris`, `termux` | | `little_endian`, `big_endian` | `js_node`, `js_browser`, `js_freestanding` |
+| `serenity`, `vinix`, `plan9` | | | `interpreter`, `es5`, `profile`, `wasm32` |
+| | | | `wasm32_emscripten`, `wasm32_wasi`, `native`, `autofree` |
+
+#### 2. Compile-Time Flag Defines (`$d`)
+V allows retrieving custom flag values defined via the command line with `-d flag=value` or `-d flag` (which defaults to `-d flag=true`).
+- To fetch the flag inside your code, use: `$d('flag_name', default_value)`.
+- The `default_value` acts as a fallback when the flag is not provided on the command line. It **must** be a pure literal: booleans (`true`/`false`), integers (`0`), floats (`0.0`), strings (`'string'`), or runes (`\`v\``).
+- You can also use `$d('flag_name', false)` inside `$if` conditions (e.g. `$if $d('my_flag', false) { ... }`) to selectively enable or disable blocks of code.
+- `$d` can also be used in top-level statements like `#flag` and `#include` (e.g., `#flag linux -I $d('my_include', '/usr')/include`).
+
+#### 3. Compile-Time Warnings & Errors
+You can generate custom compile-time messages to warn the developer or abort the build:
+- `$compile_warn('message')` prints a warning during compilation but allows the build to continue.
+- `$compile_error('message')` immediately halts compilation and prints a custom error.
+These are particularly powerful when combined with platform target checks to enforce compatibility (e.g., aborting compilation on unsupported architectures).
+
+#### 4. Environment Variables (`$env`)
+`$env('VAR_NAME')` retrieves the value of an environment variable at compilation time and embeds it as a string literal. It can also be used inside top-level `#flag` and `#include` statements.
+
+#### 5. File Asset Embedding (`$embed_file`)
+V can embed the raw content of any external file directly inside the compiled binary using `$embed_file('path')`.
+- Returns an `EmbedFileData` structure. Use `.to_string()` or `.to_bytes()` to retrieve contents.
+- In production builds (`-prod`), `$embed_file` supports optional on-the-fly compression via `.zlib` (e.g. `$embed_file('x.css', .zlib)`).
+- For local development ease, compile with `-d embed_only_metadata`. The file won't be embedded, and V will load the file from disk the first time `data()` is called, permitting external live edits without recompiling.
+
+#### 6. Compile-Time Templates (`$tmpl`)
+`$tmpl('path/to/template.html')` compiles and parses a simple template file, interpolating any variables (prefixed with `@` in the template) that exist in the calling scope.
+
+---
+
+Here is a comprehensive code example highlighting all compile-time directives and code features in action:
 
 ```v
 module main
 
 fn main() {
-	println('=== V Compile-Time Directives Demo ===')
+	println('=== V Compile-Time Directives & Code Demo ===')
 
-	// 1. $if Directive (Conditional Compilation)
-	println('\n--- 1. Conditional Compilation (compile-time if) ---')
+	// 1. Conditional Compilation ($if) and multiple conditions
+	println('\n--- 1. Conditional Compilation (compile-time \$if) ---')
 	$if macos {
-		println('Compiled specifically for macOS.')
+		println('OS target: macOS')
 	}
 	$if windows {
-		println('Compiled specifically for Windows.')
+		println('OS target: Windows')
 	}
 	$if linux {
-		println('Compiled specifically for Linux.')
+		println('OS target: Linux')
 	}
 
-	$if debug {
-		println('Debug mode is active.')
+	// Multiple conditions in one branch
+	$if ios || android {
+		println('Target platform is a mobile device (iOS/Android).')
+	} $else $if macos || linux || windows {
+		println('Target platform is a desktop OS.')
+	}
+
+	$if linux && x64 {
+		println('Running specifically on 64-bit Linux.')
+	}
+
+	// 2. $if as an expression
+	println('\n--- 2. \$if Used as an Expression ---')
+	os_family := $if windows { 'Windows' } $else { 'Unix-like' }
+	println('OS Family expression: ${os_family}')
+
+	// 3. $else-$if compiler branches
+	println('\n--- 3. Compiler Type Detection (\$else-\$if) ---')
+	$if tinyc {
+		println('Compiled with: TinyC')
+	} $else $if clang {
+		println('Compiled with: Clang')
+	} $else $if gcc {
+		println('Compiled with: GCC')
+	} $else $if msvc {
+		println('Compiled with: MSVC')
 	} $else {
-		println('Running in standard release/dev mode.')
+		println('Compiled with a different/unspecified compiler')
 	}
 
-	// 2. $env Directive (Compile-time Environment Variables)
-	println('\n--- 2. Compile-Time Environment (compile-time env) ---')
-	// Retrieves the value of the environment variable at compilation time
+	// 4. Custom Compile-time Flag defines ($d) with defaults
+	println('\n--- 4. Compile-Time Flags (\$d) with Default Values ---')
+	// $d brings values defined via compiler flags (-d flag=val or -d flag)
+	// Default value must be a pure literal (boolean, int, float, string, or rune)
+	custom_str := $d('custom_str', 'Default Text')
+	custom_bool := $d('custom_bool', false)
+	custom_int := $d('custom_int', 42)
+	custom_float := $d('custom_float', 3.14159)
+	custom_char := $d('custom_char', `v`)
+
+	println('custom_str: ${custom_str}')
+	println('custom_bool: ${custom_bool}')
+	println('custom_int: ${custom_int}')
+	println('custom_float: ${custom_float}')
+	println('custom_char: ${rune(custom_char)}')
+
+	// We can also use $d('ident', false) inside $if condition to conditionally enable/disable code:
+	$if $d('enable_feature', false) {
+		println('Special feature is ENABLED at compile-time!')
+	} $else {
+		println('Special feature is DISABLED (default). Compile with `v -d enable_feature run directives.v` to enable.')
+	}
+
+	// 5. Compile-time custom errors and warnings
+	println('\n--- 5. Compile-Time Errors and Warnings (\$compile_error, \$compile_warn) ---')
+	// These only trigger if the enclosing $if branch is active/evaluated at compile time.
+	$if $d('trigger_error', false) {
+		$compile_error('Explicit compile-time error triggered')
+	}
+	$if $d('trigger_warn', false) {
+		$compile_warn('Explicit compile-time warning triggered')
+	}
+	println('No compile-time errors/warnings triggered during this compilation run.')
+
+	// 6. $env reads environment values while the program is being compiled.
+	println('\n--- 6. Compile-Time Environment (compile-time env) ---')
 	compile_path := $env('PATH')
 	println('PATH length at compile-time: ${compile_path.len} bytes')
 
-	// 3. $embed_file Directive (Compile-time Asset Embedding)
-	println('\n--- 3. Asset Embedding (compile-time embed) ---')
-	// Embeds the file content directly into the binary at compile time.
-	// Returns an embed_file.EmbedFileData struct which we convert to string.
+	// 7. $embed_file stores a file's contents inside the compiled binary.
+	println('\n--- 7. Asset Embedding (compile-time embed) ---')
 	embedded_file := $embed_file('temp_embed.txt')
 	content := embedded_file.to_string()
 	println('Embedded File Content:')
 	println(content)
 
-	// 4. $tmpl Directive (Compile-time Template Interpolation)
-	println('\n--- 4. Template Interpolation (compile-time template) ---')
-	// Interpolates local variables inside the template file at compile time.
+	// 8. $tmpl renders a template file and injects the current variables.
+	println('\n--- 8. Template Interpolation (compile-time template) ---')
 	name := 'Developer'
 	status := 'active'
-
-	// Renders the template with the variables in the current scope
 	rendered_template := $tmpl('template.html')
 	println('Rendered Template Output:')
 	println(rendered_template)
