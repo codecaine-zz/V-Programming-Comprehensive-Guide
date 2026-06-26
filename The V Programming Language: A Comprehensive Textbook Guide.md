@@ -3661,17 +3661,38 @@ _File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/02_access
 
 ### Lesson: Access Array Elements Using Slices
 
-An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
+An **array** is a collection of elements of the same type. In V, you can retrieve a subset of elements by slicing the array. Slicing uses the `[start..end]` syntax, which creates a new array containing elements from the `start` index up to (but not including) the `end` index.
 
-These examples show how to initialize, append, clone, copy, and manipulate arrays.
+#### Positive Slicing
+Positive indices represent offsets from the beginning of the array (starting at `0`). For example, `sports[1..3]` returns a slice from index `1` to `2`.
+
+#### Negative Slicing
+V does not support negative indices natively in slices (e.g., `sports[-2..]` will cause a compiler error). To achieve the effect of negative slicing (indexing from the end of the array), you calculate the start and/or end index using the array's `.len` property:
+- **Excluding the last element**: `sports[..sports.len - 1]` (equivalent to Python's `sports[..-1]`)
+- **Range from the end**: `sports[sports.len - 3 .. sports.len - 1]` (equivalent to Python's `sports[-3..-1]`)
+- **Last N elements**: `sports[sports.len - 2 ..]` (equivalent to Python's `sports[-2..]`)
 
 **Additional Context from Repository docs:**
-This example demonstrates the concepts of **access array elements using slices**.
+This example demonstrates the concepts of **access array elements using slices**, including both positive and `.len`-based negative slicing.
 
 ```v
 fn main() {
-	mut sports := ['cricket', 'hockey', 'football']
-	println(sports[1..3])
+	mut sports := ['cricket', 'hockey', 'football', 'basketball', 'tennis']
+	
+	// Positive slicing: from index 1 to 3 (excluding index 3)
+	println(sports[1..3]) // ['hockey', 'football']
+	
+	// V does not support negative indices natively in slices (e.g., sports[-2..] will not compile).
+	// To achieve "negative slicing" (indexing from the end of the array), use the `.len` property:
+	
+	// Slice up to the last element (excluding it): Python's sports[..-1]
+	println(sports[..sports.len - 1]) // ['cricket', 'hockey', 'football', 'basketball']
+	
+	// Slice from 3rd to last up to 1st to last (excluding it): Python's sports[-3..-1]
+	println(sports[sports.len - 3..sports.len - 1]) // ['football', 'basketball']
+	
+	// Slice the last two elements: Python's sports[-2..]
+	println(sports[sports.len - 2..]) // ['basketball', 'tennis']
 }
 ```
 
