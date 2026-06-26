@@ -4750,6 +4750,76 @@ fn main() {
 }
 ```
 
+### Import Maps Helpers
+
+_File location: [arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/02_import_maps_helpers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/02_import_maps_helpers.v)_
+
+### Lesson: Import Maps Helpers
+
+The `maps` module provides higher-level helpers for filtering, transforming, inverting, merging, and converting between maps and arrays. These helpers are useful when you want to work with map data in a functional style without manually writing the loops yourself.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **import maps helpers**.
+
+```v
+module main
+
+import maps
+
+fn main() {
+	println('--- Import Maps Module Helpers ---')
+
+	m1 := {
+		'apple':  1
+		'banana': 2
+		'cherry': 3
+	}
+
+	filtered := maps.filter(m1, fn (k string, v int) bool {
+		return v > 1
+	})
+	println('filter(): ${filtered}')
+
+	keys_upper := maps.to_array(m1, fn (k string, v int) string {
+		return k.to_upper()
+	})
+	println('to_array(): ${keys_upper}')
+
+	inverted := maps.invert(m1)
+	println('invert(): ${inverted}')
+
+	fruits := ['apple', 'banana', 'cherry']
+	map_from_arr := maps.from_array(fruits)
+	println('from_array(): ${map_from_arr}')
+
+	m2 := {
+		'banana': 20
+		'date':   4
+	}
+	merged := maps.merge(m1, m2)
+	println('merge(): ${merged}')
+
+	mut mut_map := {
+		'a': 1
+	}
+	maps.merge_in_place(mut mut_map, {
+		'b': 2
+		'c': 3
+	})
+	println('merge_in_place(): ${mut_map}')
+
+	flat_items := maps.flat_map[string, int, string](m1, fn (k string, v int) []string {
+		return [k, v.str()]
+	})
+	println('flat_map(): ${flat_items}')
+
+	transformed := maps.to_map[string, int, string, int](m1, fn (k string, v int) (string, int) {
+		return k.to_upper(), v * 10
+	})
+	println('to_map(): ${transformed}')
+}
+```
+
 ---
 
 # Chapter 6: Functions
@@ -13932,7 +14002,7 @@ fn main() {
 	println('=== V Compile-Time Directives Demo ===')
 
 	// 1. $if Directive (Conditional Compilation)
-	println('\n--- 1. Conditional Compilation (\$if) ---')
+	println('\n--- 1. Conditional Compilation (compile-time if) ---')
 	$if macos {
 		println('Compiled specifically for macOS.')
 	}
@@ -13950,13 +14020,13 @@ fn main() {
 	}
 
 	// 2. $env Directive (Compile-time Environment Variables)
-	println('\n--- 2. Compile-Time Environment (\$env) ---')
+	println('\n--- 2. Compile-Time Environment (compile-time env) ---')
 	// Retrieves the value of the environment variable at compilation time
 	compile_path := $env('PATH')
 	println('PATH length at compile-time: ${compile_path.len} bytes')
 
 	// 3. $embed_file Directive (Compile-time Asset Embedding)
-	println('\n--- 3. Asset Embedding (\$embed_file) ---')
+	println('\n--- 3. Asset Embedding (compile-time embed) ---')
 	// Embeds the file content directly into the binary at compile time.
 	// Returns an embed_file.EmbedFileData struct which we convert to string.
 	embedded_file := $embed_file('temp_embed.txt')
@@ -13965,7 +14035,7 @@ fn main() {
 	println(content)
 
 	// 4. $tmpl Directive (Compile-time Template Interpolation)
-	println('\n--- 4. Template Interpolation (\$tmpl) ---')
+	println('\n--- 4. Template Interpolation (compile-time template) ---')
 	// Interpolates local variables inside the template file at compile time.
 	name := 'Developer'
 	status := 'active'
@@ -14702,35 +14772,57 @@ module main
 
 import regex
 
+fn replace_callback(re regex.RE, in_txt string, start int, end int) string {
+	return '[${start}-${end}]'
+}
+
 fn main() {
-	// 1. Compile a regex pattern
-	// r'...' specifies a raw string literal, avoiding excessive escaping
+	text := 'We have 15 apples, 32 bananas, and 120 oranges.'
+
 	mut re := regex.regex_opt(r'\d+') or {
 		println('Failed to compile regex: ${err}')
 		return
 	}
+	mut re_from_new := regex.new()
+	re_from_new.compile_opt(r'\w+') or {
+		println('compile_opt() failed: ${err}')
+		return
+	}
+	base_re, base_code, base_err := regex.regex_base(r'\d+')
+	println('regex_base(): ${base_code}, ${base_err}')
+	println('regex_base query: ${base_re.get_query()}')
 
-	text := 'We have 15 apples, 32 bananas, and 120 oranges.'
+	println('=== regex module demo ===')
+	println('query: ${re.get_query()}')
 
-	// 2. Find the first match in the text
-	// `find()` searches anywhere in the string and returns (start_index, end_index)
 	start, end := re.find(text)
 	if start >= 0 {
 		matched := text[start..end]
-		println('First match found: "${matched}" at range (${start}, ${end})')
+		println('find(): "${matched}" at (${start}, ${end})')
 	} else {
-		println('No match found.')
+		println('find(): no match')
 	}
 
-	// 3. Find all matches in the text
-	// `find_all_str()` returns an array of all matching substrings
-	all_matches := re.find_all_str(text)
-	println('All matches: ${all_matches}')
-
-	// 4. Replace matches in the text
-	// `replace()` replaces all occurrences matching the regex pattern
-	replaced := re.replace(text, 'NUM')
-	println('Replaced text: "${replaced}"')
+	println('find_from(): ${re.find_from(text, 10)}')
+	println('find_all(): ${re.find_all(text)}')
+	println('find_all_str(): ${re.find_all_str(text)}')
+	println('match_string(): ${re.match_string(text)}')
+	println('matches_string(): ${re.matches_string(text)}')
+	println('replace(): ${re.replace(text, "NUM")}')
+	println('replace_n(): ${re.replace_n(text, "NUM", 2)}')
+	println('replace_simple(): ${re.replace_simple(text, "NUM")}')
+	println('replace_by_fn(): ${re.replace_by_fn(text, replace_callback)}')
+	println('split(): ${re.split(text)}')
+	println('get_group_list(): ${re.get_group_list()}')
+	println('get_code(): ${re.get_code()}')
+	println('get_group_by_id(): ${re.get_group_by_id(text, 0)}')
+	println('get_group_by_name(): ${re.get_group_by_name(text, "")}')
+	println('get_group_bounds_by_id(): ${re.get_group_bounds_by_id(0)}')
+	println('get_group_bounds_by_name(): ${re.get_group_bounds_by_name("")}')
+	println('match_base(): ${unsafe { re.match_base(text.str, text.len) }}')
+	re.reset()
+	println('reset() query: ${re.get_query()}')
+	println('new() compile_opt query: ${re_from_new.get_query()}')
 }
 ```
 
@@ -14810,66 +14902,189 @@ module main
 
 import datatypes
 
-fn main() {
-	// 1. Stack (LIFO - Last In First Out)
-	println('=== Stack Demo ===')
-	mut stack := datatypes.Stack[string]{}
-	stack.push('first')
-	stack.push('second')
-	stack.push('third')
-	println('Stack size: ${stack.len()}')
-	println('Stack contents: ${stack.array()}')
-
-	// peek() and pop() return Result (!T), so we handle with "or" block
-	top := stack.peek() or { 'empty' }
-	println('Peek top element: ${top}')
-
-	for !stack.is_empty() {
-		val := stack.pop() or { 'error' }
-		println('Popped: ${val}')
+fn hash_string(value string) u32 {
+	mut hash := u32(2166136261)
+	for ch in value {
+		hash ^= u32(ch)
+		hash *= 16777619
 	}
+	return hash
+}
 
-	// 2. Queue (FIFO - First In First Out)
-	println('\n=== Queue Demo ===')
+fn main() {
+	println('=== datatypes collection demo ===')
+
+	println('\n--- BloomFilter ---')
+	mut bloom := datatypes.new_bloom_filter[string](hash_string, 64, 3) or { panic(err) }
+	bloom.add('apple')
+	bloom.add('banana')
+	println('bloom exists apple: ${bloom.exists('apple')}')
+	println('bloom exists cherry: ${bloom.exists('cherry')}')
+
+	mut bloom_fast := datatypes.new_bloom_filter[string](hash_string, 64, 3) or { panic(err) }
+	bloom_fast.add('date')
+	println('fast bloom exists date: ${bloom_fast.exists('date')}')
+
+	union_bloom := bloom.@union(bloom_fast) or { panic(err) }
+	println('union bloom exists banana: ${union_bloom.exists('banana')}')
+	intersection_bloom := bloom.intersection(bloom_fast) or { panic(err) }
+	println('intersection bloom exists apple: ${intersection_bloom.exists('apple')}')
+
+	println('\n--- BSTree ---')
+	mut bst := datatypes.BSTree[int]{}
+	println('empty before inserts: ${bst.is_empty()}')
+	bst.insert(10)
+	bst.insert(5)
+	bst.insert(15)
+	bst.insert(12)
+	println('contains 12: ${bst.contains(12)}')
+	println('in_order: ${bst.in_order_traversal()}')
+	println('pre_order: ${bst.pre_order_traversal()}')
+	println('post_order: ${bst.post_order_traversal()}')
+	println('left of 10: ${bst.to_left(10) or { -1 }}')
+	println('right of 10: ${bst.to_right(10) or { -1 }}')
+	println('min: ${bst.min() or { -1 }}')
+	println('max: ${bst.max() or { -1 }}')
+	bst.remove(5)
+	println('contains 5 after remove: ${bst.contains(5)}')
+
+	println('\n--- DoublyLinkedList ---')
+	mut dll := datatypes.DoublyLinkedList[string]{}
+	dll.push_back('one')
+	dll.push_front('zero')
+	dll.push_many(['two', 'three'], datatypes.Direction.back)
+	println('dll array: ${dll.array()}')
+	println('dll first: ${dll.first() or { 'none' }}')
+	println('dll last: ${dll.last() or { 'none' }}')
+	println('dll index of two: ${dll.index('two') or { -1 }}')
+	dll.insert(2, 'inserted')
+	println('dll after insert: ${dll.array()}')
+	dll.delete(1)
+	println('dll after delete: ${dll.array()}')
+	println('dll str: ${dll.str()}')
+	println('dll next: ${dll.next() or { 'none' }}')
+	mut dll_iter := dll.iterator()
+	for {
+		if value := dll_iter.next() {
+			println('dll iter: ${value}')
+		} else {
+			break
+		}
+	}
+	mut dll_back_iter := dll.back_iterator()
+	for {
+		if value := dll_back_iter.next() {
+			println('dll back iter: ${value}')
+		} else {
+			break
+		}
+	}
+	println('dll pop_front: ${dll.pop_front() or { 'none' }}')
+	println('dll pop_back: ${dll.pop_back() or { 'none' }}')
+	println('dll final: ${dll.array()}')
+
+	println('\n--- LinkedList ---')
+	mut linked_list := datatypes.LinkedList[int]{}
+	println('linked list empty: ${linked_list.is_empty()}')
+	linked_list.push(1)
+	linked_list.push(2)
+	linked_list.push_many([3, 4])
+	linked_list.prepend(0)
+	linked_list.insert(2, 5)
+	println('linked list array: ${linked_list.array()}')
+	println('linked list first: ${linked_list.first() or { -1 }}')
+	println('linked list last: ${linked_list.last() or { -1 }}')
+	println('linked list index 3: ${linked_list.index(3) or { -1 }}')
+	println('linked list str: ${linked_list.str()}')
+	println('linked list pop: ${linked_list.pop() or { -1 }}')
+	println('linked list shift: ${linked_list.shift() or { -1 }}')
+	println('linked list next: ${linked_list.next() or { -1 }}')
+	mut list_iter := linked_list.iterator()
+	for {
+		if value := list_iter.next() {
+			println('linked list iter: ${value}')
+		} else {
+			break
+		}
+	}
+	println('linked list len: ${linked_list.len()}')
+
+	println('\n--- MinHeap ---')
+	mut heap := datatypes.MinHeap[int]{}
+	heap.insert(8)
+	heap.insert(3)
+	heap.insert_many([5, 1, 7])
+	println('heap len: ${heap.len()}')
+	println('heap peek: ${heap.peek() or { -1 }}')
+	println('heap pop: ${heap.pop() or { -1 }}')
+	println('heap pop: ${heap.pop() or { -1 }}')
+
+	println('\n--- Queue ---')
 	mut queue := datatypes.Queue[int]{}
+	println('queue empty: ${queue.is_empty()}')
 	queue.push(100)
 	queue.push(200)
 	queue.push(300)
-	println('Queue size: ${queue.len()}')
-	println('Queue contents: ${queue.array()}')
+	println('queue len: ${queue.len()}')
+	println('queue array: ${queue.array()}')
+	println('queue peek: ${queue.peek() or { -1 }}')
+	println('queue last: ${queue.last() or { -1 }}')
+	println('queue index 2: ${queue.index(2) or { -1 }}')
+	println('queue str: ${queue.str()}')
+	println('queue pop: ${queue.pop() or { -1 }}')
+	println('queue pop: ${queue.pop() or { -1 }}')
 
-	// peek() and pop() return Result (!T)
-	front := queue.peek() or { -1 }
-	println('Peek front element: ${front}')
+	println('\n--- RingBuffer ---')
+	mut rb := datatypes.new_ringbuffer[string](3)
+	println('rb empty: ${rb.is_empty()}')
+	rb.push('first') or { panic(err) }
+	rb.push('second') or { panic(err) }
+	rb.push_many(['third', 'fourth']) or { panic(err) }
+	println('rb occupied: ${rb.occupied()}')
+	println('rb remaining: ${rb.remaining()}')
+	println('rb pop: ${rb.pop() or { 'empty' }}')
+	println('rb pop_many: ${rb.pop_many(2) or { []string{} }}')
+	println('rb full: ${rb.is_full()}')
+	rb.clear()
+	println('rb after clear: ${rb.is_empty()}')
 
-	for !queue.is_empty() {
-		val := queue.pop() or { -1 }
-		println('Dequeued: ${val}')
-	}
-
-	// 3. Set (Unique Elements)
-	println('\n=== Set Demo ===')
+	println('\n--- Set ---')
 	mut set_a := datatypes.Set[string]{}
-	set_a.add_all(['apple', 'banana', 'cherry', 'apple']) // 'apple' is duplicate and ignored
-	println('Set A elements: ${set_a.array()}')
-	println('Set A size: ${set_a.size()}')
-	println('Contains "banana": ${set_a.exists('banana')}')
+	set_a.add_all(['apple', 'banana', 'cherry', 'apple'])
+	println('set_a: ${set_a.array()}')
+	println('set_a size: ${set_a.size()}')
+	println('contains banana: ${set_a.exists('banana')}')
+	set_a.remove('banana')
+	println('after remove: ${set_a.array()}')
+	println('pick: ${set_a.pick() or { 'empty' }}')
+	println('rest: ${set_a.rest() or { []string{} }}')
+	println('pop: ${set_a.pop() or { 'empty' }}')
+	println('is_empty: ${set_a.is_empty()}')
+	set_a.clear()
+	println('cleared: ${set_a.is_empty()}')
 
 	mut set_b := datatypes.Set[string]{}
-	set_b.add_all(['cherry', 'date', 'elderberry'])
-	println('Set B elements: ${set_b.array()}')
+	set_b.add_all(['apple', 'cherry'])
+	mut set_c := datatypes.Set[string]{}
+	set_c.add_all(['cherry', 'date'])
+	println('union: ${set_b.@union(set_c).array()}')
+	println('intersection: ${set_b.intersection(set_c).array()}')
+	println('difference: ${(set_b - set_c).array()}')
+	println('subset: ${set_b.subset(set_c)}')
+	println('copy: ${set_b.copy().array()}')
 
-	// Union of Set A and Set B (note: 'union' is a V keyword, so we write '@union')
-	union_set := set_a.@union(set_b)
-	println('Union (A + B): ${union_set.array()}')
-
-	// Intersection of Set A and Set B
-	intersection_set := set_a.intersection(set_b)
-	println('Intersection (A and B): ${intersection_set.array()}')
-
-	// Difference of Set A and Set B (A - B)
-	diff_set := set_a - set_b
-	println('Difference (A - B): ${diff_set.array()}')
+	println('\n--- Stack ---')
+	mut stack := datatypes.Stack[string]{}
+	println('stack empty: ${stack.is_empty()}')
+	stack.push('first')
+	stack.push('second')
+	stack.push('third')
+	println('stack len: ${stack.len()}')
+	println('stack contents: ${stack.array()}')
+	println('stack peek: ${stack.peek() or { 'empty' }}')
+	println('stack str: ${stack.str()}')
+	println('stack pop: ${stack.pop() or { 'empty' }}')
+	println('stack pop: ${stack.pop() or { 'empty' }}')
 }
 ```
 

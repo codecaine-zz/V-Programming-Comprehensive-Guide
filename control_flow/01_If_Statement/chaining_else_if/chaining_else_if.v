@@ -1,5 +1,6 @@
 module main
 
+// This helper chooses a meal plan based on the weekday.
 fn breakfast_menu(day string) {
 	if day == 'Monday' {
 		println('Bread, Jam, Half boiled Egg')
@@ -21,5 +22,6 @@ fn breakfast_menu(day string) {
 }
 
 fn main() {
+	// Call the helper with a sample weekday.
 	breakfast_menu('Saturday')
 }
