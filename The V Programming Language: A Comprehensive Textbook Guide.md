@@ -18477,6 +18477,112 @@ fn main() {
 
 ---
 
+### Compile-Time Pseudo Variables
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/15_compile_time_pseudo_variables/compile_time_pseudo_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/15_compile_time_pseudo_variables/compile_time_pseudo_variables.v)_
+
+### Lesson: Compile-Time Pseudo Variables
+
+V provides a set of pseudo-variables starting with `@` that are evaluated and substituted at compile time:
+
+* **Scope Identifiers**:
+  * `@FN` -> Replaced with the name of the current V function (as a string).
+  * `@METHOD` -> Replaced with the `ReceiverType.MethodName` of the current method (as a string).
+  * `@MOD` -> Replaced with the name of the current V module (as a string).
+  * `@STRUCT` -> Replaced with the name of the current V struct (as a string).
+
+* **Source File & Location Identifiers**:
+  * `@FILE` -> Replaced with the absolute path of the V source file (as a string).
+  * `@DIR` -> Replaced with the absolute path of the folder containing the V source file (as a string).
+  * `@LINE` -> Replaced with the V line number where it appears (as a string).
+  * `@FILE_LINE` -> Like `@FILE:@LINE`, but the file part is a relative path (as a string).
+  * `@LOCATION` -> Combines file, line, and type/method name; suitable for logging.
+  * `@COLUMN` -> Replaced with the 1-based column offset where it appears (as a string).
+
+* **V Compiler & Git Identifiers**:
+  * `@VEXE` -> Replaced with the path to the V compiler executable (as a string).
+  * `@VEXEROOT` -> Replaced with the folder containing the V compiler executable (as a string).
+  * `@VHASH` -> Replaced with the shortened commit hash of the V compiler (as a string).
+  * `@VCURRENTHASH` -> Similar to `@VHASH`, but updates when the compiler is recompiled after local modifications or git bisect.
+
+* **Project Mod Info (requires `v.mod` in project root)**:
+  * `@VMOD_FILE` -> Replaced with the contents of the nearest `v.mod` file (as a string).
+  * `@VMODHASH` -> Replaced with the shortened commit hash derived from the `.git` directory next to the nearest `v.mod` file (as a string).
+  * `@VMODROOT` -> Replaced with the path to the directory containing the nearest `v.mod` file (as a string).
+
+* **Build Time Identifiers (UTC timezone)**:
+  * `@BUILD_DATE` -> Replaced with the build date (e.g. `'2026-06-26'`).
+  * `@BUILD_TIME` -> Replaced with the UTC build time (e.g. `'17:50:24'`).
+  * `@BUILD_TIMESTAMP` -> Replaced with the Unix timestamp of the build (e.g. `'1782496224'`).
+  * *Note: Build variables can be overridden by setting the `SOURCE_DATE_EPOCH` environment variable, enabling reproducible builds (e.g., setting it to the latest git commit timestamp).*
+
+* **Target Platform / Toolchain Identifiers**:
+  * `@OS` -> Replaced with the OS type (e.g. `'macos'`, `'linux'`, `'windows'`).
+  * `@CCOMPILER` -> Replaced with the C compiler used (e.g. `'gcc'`, `'clang'`).
+  * `@BACKEND` -> Replaced with the current language backend (e.g. `'c'`, `'js'`).
+  * `@PLATFORM` -> Replaced with the CPU architecture type (e.g. `'arm64'`, `'amd64'`).
+
+**Additional Context from Repository docs:**
+This example demonstrates the usage and output of all the available compile-time pseudo variables in V.
+
+```v
+module main
+
+struct User {
+	name string
+}
+
+fn (u User) register() {
+	println('Executing method: ' + @METHOD) // User.register
+	println('Defined in struct: ' + @STRUCT) // User
+}
+
+fn log_event() {
+	println('Logging from function: ' + @FN) // log_event
+}
+
+fn main() {
+	println('=== V Compile-Time Pseudo Variables ===')
+	
+	// Module & File Info
+	println('Current Module: ' + @MOD)
+	println('Source File Path: ' + @FILE)
+	println('Source Directory: ' + @DIR)
+	println('Line Number: ' + @LINE.str())
+	println('Relative File/Line: ' + @FILE_LINE)
+	println('Log Location: ' + @LOCATION)
+	println('Column Number: ' + @COLUMN.str())
+	
+	// Compiler Info
+	println('V Compiler Executable: ' + @VEXE)
+	println('V compiler Root Directory: ' + @VEXEROOT)
+	println('V Compiler Commit Hash: ' + @VHASH)
+	println('V Compiler Current Hash: ' + @VCURRENTHASH)
+	
+	// project Info (from v.mod)
+	println('v.mod File Contents: ' + @VMOD_FILE)
+	println('v.mod Git Commit Hash: ' + @VMODHASH)
+	println('v.mod Root Directory: ' + @VMODROOT)
+	
+	// Build Info (UTC timezone)
+	println('Build Date: ' + @BUILD_DATE)
+	println('Build Time: ' + @BUILD_TIME)
+	println('Build Timestamp: ' + @BUILD_TIMESTAMP)
+	
+	// Platform / Backend Info
+	println('Target OS: ' + @OS)
+	println('C Compiler: ' + @CCOMPILER)
+	println('V Backend: ' + @BACKEND)
+	println('CPU Platform: ' + @PLATFORM)
+	
+	u := User{name: 'Alice'}
+	u.register()
+	log_event()
+}
+```
+
+---
+
 ### Environment-Specific Files & Compile-Time Types
 
 ### Lesson: Environment-Specific Files & Compile-Time Types
