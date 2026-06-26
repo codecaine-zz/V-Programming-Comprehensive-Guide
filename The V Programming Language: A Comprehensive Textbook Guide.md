@@ -18704,6 +18704,127 @@ When writing generic code, V provides specialized compile-time type matching ide
 
 ---
 
+### References & Pointers
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/16_references/references.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/16_references/references.v)_
+
+### Lesson: References & Pointers
+
+In V, references are similar to pointers in Go/C and references in C++. They allow you to point to a memory location of another variable without making a copy of its contents.
+
+#### 1. Passing by Value vs. Passing by Reference
+When passing immutable arguments (like structs) to functions or methods, V decides under the hood whether to pass them by value or by reference depending on performance characteristics. As a developer, you do not need to worry about this optimization detail.
+
+However, you can explicitly force an argument or method receiver to be passed by reference by prefixing the type with `&` (e.g., `&Foo`).
+
+#### 2. Mutability of References
+References in V are immutable by default:
+* Even if a function or method receives a reference (`&Foo`), it cannot modify the fields of that struct unless the parameter is marked as mutable.
+* To allow modification, the argument must be declared as `mut foo Foo` (which V automatically passes by reference under the hood) and called with `mut` (e.g. `modify_foo(mut my_foo)`). Note that modifiable fields must also be defined under the `mut:` access block in the struct declaration.
+
+#### 3. Dereferencing
+To access the underlying value of a reference directly, or to create a copy of the pointed-to object, use the dereferencing operator `*` (e.g., `copied_foo := *ref_to_foo`), similar to Go and C.
+
+#### 4. Recursive Structures
+Recursive data structures (such as linked lists or trees) require fields that reference their own type. Because V needs to calculate the memory size of structs at compile time, recursive fields must be declared as references (e.g., `left &Node[T]`) because references have a fixed pointer size.
+* Standard V references cannot be null. To terminate a recursive structure (like a leaf node), we either use `unsafe { nil }` inside an unsafe block or initialize them using dummy node pointers.
+
+---
+
+Here is the complete demonstration program showcasing V references and recursive struct designs:
+
+```v
+module main
+
+struct Foo {
+mut:
+	abc int
+}
+
+// 1. A method receiving a reference. The receiver type is &Foo.
+// Even though it is a reference, `foo` is immutable and cannot be changed here.
+fn (foo &Foo) print_abc() {
+	println('print_abc: foo.abc = ${foo.abc}')
+}
+
+// 2. A regular function receiving a reference to Foo.
+fn show_foo(foo &Foo) {
+	println('show_foo: foo.abc = ${foo.abc}')
+}
+
+// 3. To modify a reference, we must pass it as mutable.
+// Note that mutable parameters are passed by reference under the hood.
+fn modify_foo(mut foo Foo, new_val int) {
+	foo.abc = new_val
+}
+
+// 4. References are crucial for recursive types (like trees or linked lists).
+// Since the size of Node must be known at compile time, recursive fields must be references.
+struct Node[T] {
+	val   T
+	left  &Node[T]
+	right &Node[T]
+}
+
+fn main() {
+	println('=== V References & Pointers Demo ===')
+
+	// Creating a struct instance
+	mut my_foo := Foo{
+		abc: 100
+	}
+
+	// Calling method on reference. V automatically takes the address of my_foo.
+	my_foo.print_abc()
+
+	// Calling a function expecting a reference using & operator.
+	show_foo(&my_foo)
+
+	// Modifying the struct via a mutable receiver/argument.
+	modify_foo(mut my_foo, 200)
+	println('After modify_foo: my_foo.abc = ${my_foo.abc}')
+
+	// 5. Dereferencing a reference using the `*` operator.
+	ref_to_foo := &my_foo
+	// To copy the value of the struct pointed to by ref_to_foo:
+	copied_foo := *ref_to_foo
+	println('Copied foo abc: ${copied_foo.abc}')
+
+	// 6. Generic Tree structure using references
+	// Create a dummy node as leaf terminations (since references cannot be null in standard V without unsafe)
+	dummy := Node[int]{
+		val: 0
+		left: unsafe { nil }
+		right: unsafe { nil }
+	}
+
+	left_leaf := Node[int]{
+		val: 5
+		left: &dummy
+		right: &dummy
+	}
+
+	right_leaf := Node[int]{
+		val: 15
+		left: &dummy
+		right: &dummy
+	}
+
+	// Create root node pointing to leaf references
+	root := Node[int]{
+		val: 10
+		left: &left_leaf
+		right: &right_leaf
+	}
+
+	println('Root val: ${root.val}')
+	println('Left leaf val: ${root.left.val}')
+	println('Right leaf val: ${root.right.val}')
+}
+```
+
+---
+
 # End of Tutorial
 
 Congratulations! You have completed the comprehensive V Programming tutorial.
