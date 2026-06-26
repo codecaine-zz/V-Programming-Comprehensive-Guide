@@ -407,6 +407,39 @@
             gap: 12px;
         }
 
+        .sidebar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .sidebar-action-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-action-btn:active {
+            transform: translateY(0);
+        }
+
         .logo-area {
             display: flex;
             align-items: center;
@@ -2267,6 +2300,17 @@
                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
                 <div class="sidebar-resizer" id="sidebarResizer" title="Resize sidebar"></div>
+                <div class="sidebar-actions" role="toolbar" aria-label="Sidebar navigation actions">
+                    <button class="sidebar-action-btn" id="collapseAllSectionsBtn" type="button" title="Collapse all sections" aria-label="Collapse all sections">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12l7-7 7 7"></path></svg>
+                    </button>
+                    <button class="sidebar-action-btn" id="expandAllSectionsBtn" type="button" title="Expand all sections" aria-label="Expand all sections">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="M5 12l7 7 7-7"></path></svg>
+                    </button>
+                    <button class="sidebar-action-btn" id="focusCurrentPathBtn" type="button" title="Focus current path" aria-label="Focus current path">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l2 2"></path></svg>
+                    </button>
+                </div>
                 <div class="logo-area">
                     <div class="logo-v">V</div>
                     <span class="logo-title">V Language Guide</span>
@@ -29738,6 +29782,80 @@ fn main() {
         
         // Populate Sidebar menu
         const menuEl = document.getElementById('sidebarMenu');
+        const collapseAllSectionsBtn = document.getElementById('collapseAllSectionsBtn');
+        const expandAllSectionsBtn = document.getElementById('expandAllSectionsBtn');
+        const focusCurrentPathBtn = document.getElementById('focusCurrentPathBtn');
+
+        function collapseSidebarSections() {
+            document.querySelectorAll('.chapter-heading').forEach(heading => heading.classList.add('collapsed'));
+            document.querySelectorAll('.chapter-items').forEach(items => items.classList.add('collapsed'));
+            document.querySelectorAll('.section-lessons').forEach(lessons => lessons.classList.add('collapsed'));
+        }
+
+        function expandSidebarSections() {
+            document.querySelectorAll('.chapter-heading').forEach(heading => heading.classList.remove('collapsed'));
+            document.querySelectorAll('.chapter-items').forEach(items => items.classList.remove('collapsed'));
+            document.querySelectorAll('.section-lessons').forEach(lessons => lessons.classList.remove('collapsed'));
+        }
+
+        function focusCurrentSidebarPath() {
+            const activeLesson = document.querySelector('.menu-lesson-link.active');
+            const activeSection = document.querySelector('.menu-link.active');
+            const activeLink = activeLesson || activeSection;
+
+            collapseSidebarSections();
+
+            if (!activeLink) {
+                expandSidebarSections();
+                return;
+            }
+
+            const wrapper = activeLink.closest('.menu-section-wrapper');
+            const lessonsDiv = wrapper?.querySelector('.section-lessons');
+            const chapterItems = wrapper?.closest('.menu-chapter')?.querySelector('.chapter-items');
+            const chapterHeading = chapterItems?.previousElementSibling;
+
+            if (chapterItems) {
+                chapterItems.classList.remove('collapsed');
+            }
+            if (chapterHeading) {
+                chapterHeading.classList.remove('collapsed');
+            }
+            if (lessonsDiv) {
+                lessonsDiv.classList.remove('collapsed');
+            }
+            if (wrapper) {
+                const sectionLink = wrapper.querySelector('.menu-link');
+                if (sectionLink) {
+                    sectionLink.classList.add('active');
+                }
+            }
+            if (activeLink) {
+                activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        if (collapseAllSectionsBtn) {
+            collapseAllSectionsBtn.addEventListener('click', () => {
+                collapseSidebarSections();
+                showToast('Sidebar collapsed');
+            });
+        }
+
+        if (expandAllSectionsBtn) {
+            expandAllSectionsBtn.addEventListener('click', () => {
+                expandSidebarSections();
+                showToast('Sidebar expanded');
+            });
+        }
+
+        if (focusCurrentPathBtn) {
+            focusCurrentPathBtn.addEventListener('click', () => {
+                focusCurrentSidebarPath();
+                showToast('Focused current path');
+            });
+        }
+
         bookStructure.forEach(chap => {
             const chapDiv = document.createElement('div');
             chapDiv.className = 'menu-chapter';
