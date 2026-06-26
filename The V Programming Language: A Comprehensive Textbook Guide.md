@@ -7656,13 +7656,15 @@ fn main() {
 
 ---
 
-### Module Init Function - Helper (file1.v)
+### Module Init & Cleanup Functions - Helper (file1.v)
 
 _File location: [modules/08_init_function_for_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/08_init_function_for_module/modulebasics/mod1/file1.v)_
 
-### Lesson: Module Init Function Helper
+### Lesson: Module Init & Cleanup Functions Helper
 
-The special `init()` function runs automatically when the module is loaded, which is useful for one-time setup work.
+V modules support lifecycle hooks for setting up and tearing down resources:
+* **`init()`**: A special private function (`fn init()`) that runs automatically when a module is first imported. It is ideal for one-time initialization, such as preparing C libraries or setting up state.
+* **`cleanup()`**: A special private function (`fn cleanup()`) that executes automatically when the program terminates. It runs in the reverse order of the `init()` calls, making it perfect for releasing C library resources or flushing files.
 
 ```v
 module mod1
@@ -7674,20 +7676,40 @@ pub fn hello() {
 fn init() {
 	println('Initializing mod1')
 }
+
+fn cleanup() {
+	println('Cleaning up mod1')
+}
 ```
 
 ---
 
-### Module Init Function - Main (modulebasics.v)
+### Module Init & Cleanup Functions - Main (modulebasics.v)
 
 _File location: [modules/08_init_function_for_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/08_init_function_for_module/modulebasics/modulebasics.v)_
 
-### Lesson: Module Init Function
+### Lesson: Module Init & Cleanup Functions
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
+V is designed to be highly modular. Here is a summary of the core rules governing V modules:
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+#### 1. Module Basics & Organization
+* **Scope:** Every file in a directory belongs to the same module. If no module name is specified at the top of the file, it defaults to `main`.
+* **Visibility:** All elements (structs, functions, constants, etc.) inside a module are visible across all files of that same module, regardless of whether they are marked with `pub`.
+* **Names:** Module names must be short (ideally under 10 characters) and written in `snake_case`.
+* **Circular Imports:** Circular imports are strictly forbidden.
+
+#### 2. Module Lookup & `v.mod`
+* V uses `v.mod` files as lookup anchors.
+* The directory containing the nearest `v.mod` file is prepended to V's module search path. This enables projects to easily import submodules (e.g. `import myapp.common`) using relative structure anchors.
+
+#### 3. Special Prototyping Rules for Project Roots
+* For the top-level project folder (compiled with `v .`), you can have multiple `.v` files belonging to different modules (like `module main` and `module abc`) in the same directory.
+* This is a special rule designed to ease prototyping, allowing you to split files easily before moving them to separate directory submodules. In any other non-root directory, all `.v` files must declare the exact same module name matching the folder name.
+
+#### 4. Lifecycle Hooks (`init` & `cleanup`)
+* Neither `init()` nor `cleanup()` can be made public (`pub`).
+* V calls `init()` exactly once when the module is imported, regardless of how many other modules transitively import it.
+* V calls `cleanup()` automatically once at the end of program execution, in the exact reverse order of their `init()` invocations.
 
 ```v
 module main

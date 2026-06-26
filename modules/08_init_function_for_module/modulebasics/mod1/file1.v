@@ -7,3 +7,7 @@ pub fn hello() {
 fn init() {
 	println('Initializing mod1')
 }
+
+fn cleanup() {
+	println('Cleaning up mod1')
+}
