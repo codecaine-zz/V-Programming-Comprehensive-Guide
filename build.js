@@ -4473,6 +4473,7 @@ const template = `<!DOCTYPE html>
         function updateBookmarksUI() {
             const bookmarksSec = document.getElementById('bookmarksSection');
             const bookmarksItems = document.getElementById('bookmarksItems');
+            const bookmarksHeading = bookmarksSec ? bookmarksSec.querySelector('.chapter-heading') : null;
             
             // Highlight active state on all page buttons
             document.querySelectorAll('.btn-bookmark').forEach(btn => {
@@ -4492,6 +4493,19 @@ const template = `<!DOCTYPE html>
 
             bookmarksSec.style.display = 'block';
             bookmarksItems.innerHTML = '';
+
+            if (bookmarksHeading && !bookmarksHeading.dataset.bookmarksBound) {
+                bookmarksHeading.addEventListener('click', () => {
+                    const isCollapsed = bookmarksItems.classList.toggle('collapsed');
+                    bookmarksHeading.classList.toggle('collapsed', isCollapsed);
+                });
+                bookmarksHeading.dataset.bookmarksBound = 'true';
+            }
+
+            if (bookmarksHeading) {
+                bookmarksHeading.classList.remove('collapsed');
+                bookmarksItems.classList.remove('collapsed');
+            }
 
             bookmarks.forEach(b => {
                 const secWrapper = document.createElement('div');
