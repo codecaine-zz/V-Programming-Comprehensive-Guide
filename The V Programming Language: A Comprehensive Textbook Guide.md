@@ -3672,8 +3672,15 @@ V does not support negative indices natively in slices (e.g., `sports[-2..]` wil
 - **Range from the end**: `sports[sports.len - 3 .. sports.len - 1]` (equivalent to Python's `sports[-3..-1]`)
 - **Last N elements**: `sports[sports.len - 2 ..]` (equivalent to Python's `sports[-2..]`)
 
+#### Slices are References
+> [!IMPORTANT]
+> In V, **slices are reference views** of the original array, not copies. 
+> - Modifying any element inside a slice **will modify the original array**.
+> - Assigning a slice to a variable is considered unsafe/restricted unless you wrap it in an `unsafe` block (`mut sl := unsafe { arr[1..4] }`) or clone it explicitly.
+> - To get a separate array slice by value (so modifications do not affect the original array), append `.clone()` to the end of the slice expression (`mut sl_copy := arr[1..4].clone()`).
+
 **Additional Context from Repository docs:**
-This example demonstrates the concepts of **access array elements using slices**, including both positive and `.len`-based negative slicing.
+This example demonstrates the concepts of **access array elements using slices**, including positive slicing, `.len`-based negative slicing, reference mutation via `unsafe` blocks, and copying by value with `.clone()`.
 
 ```v
 fn main() {
@@ -3693,6 +3700,24 @@ fn main() {
 	
 	// Slice the last two elements: Python's sports[-2..]
 	println(sports[sports.len - 2..]) // ['basketball', 'tennis']
+
+	// --- REFERENCE VS VALUE BEHAVIOR ---
+	// In V, slices are reference views of the original array.
+	// If you modify an element of a slice, it affects the original array.
+	// Note: To prevent unsafe behavior, assigning a slice to a variable requires an `unsafe` block
+	// if you want it by-reference, or an explicit `.clone()` to get a copy by-value.
+	
+	// 1. Modifying by reference (using unsafe)
+	mut original := [10, 20, 30, 40, 50]
+	mut ref_slice := unsafe { original[1..4] }
+	ref_slice[0] = 99
+	println(original) // [10, 99, 30, 40, 50] (Original is modified!)
+	
+	// 2. Modifying by value (using .clone())
+	mut original_two := [10, 20, 30, 40, 50]
+	mut val_slice := original_two[1..4].clone()
+	val_slice[0] = 99
+	println(original_two) // [10, 20, 30, 40, 50] (Original remains unchanged!)
 }
 ```
 
