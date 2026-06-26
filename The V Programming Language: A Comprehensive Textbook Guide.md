@@ -4859,6 +4859,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Anonymous Functions](#anonymous-functions)
 - [Functions As Input Arguments](#functions-as-input-arguments)
 - [Functions That Return Other Functions](#functions-that-return-other-functions)
+- [Lambda Expressions](#lambda-expressions)
+- [Closures](#closures)
 
 ---
 
@@ -5710,6 +5712,101 @@ fn main() {
 
 ---
 
+### Lambda Expressions
+
+_File location: [functions/01_function_types/04_lambda_expressions/lambda_expressions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/04_lambda_expressions/lambda_expressions.v)_
+
+### Lesson: Lambda Expressions
+
+V supports **Lambda Expressions**, which are lightweight, inline anonymous functions defined using the `|variables| expression` syntax. 
+
+Key architectural characteristics:
+1. **Scope Restriction**: Lambda expressions are not general-purpose functions; this syntax is **only** valid when passed directly as arguments to higher-order functions like `.sort()`, `.map()`, and `.filter()`.
+2. **Implicit Returns**: The result of the single expression on the right-hand side is automatically returned. No `return` keyword is needed.
+
+#### Step-by-Step Code Walkthrough:
+* **Sorting (`nums.sort(|a, b| b < a)`)**: 
+  The `.sort()` method accepts a comparator callback. The lambda expression defines parameters `a` and `b`, returning the comparison `b < a` to sort the array in descending order.
+* **Mapping (`nums.map(|x| x * 10)`)**:
+  The `.map()` method transforms each array element. The lambda `|x| x * 10` accepts the element `x`, multiplies it by `10`, and produces the new mapped array.
+* **Filtering (`doubled.filter(|x| x > 20)`)**:
+  The `.filter()` method checks a predicate. The lambda `|x| x > 20` checks each element and retains only those returning `true`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **lambda expressions**.
+
+```v
+module main
+
+fn main() {
+	mut nums := [1, 3, 2, 5, 4]
+	
+	// Sort descending using a lambda expression
+	nums.sort(|a, b| b < a)
+	println('Sorted: ${nums}') // [5, 4, 3, 2, 1]
+
+	// Map using lambda to multiply by 10
+	doubled := nums.map(|x| x * 10)
+	println('Doubled: ${doubled}') // [50, 40, 30, 20, 10]
+
+	// Filter using lambda to keep only elements > 20
+	filtered := doubled.filter(|x| x > 20)
+	println('Filtered (>20): ${filtered}') // [50, 40, 30]
+}
+```
+
+---
+
+### Closures
+
+_File location: [functions/01_function_types/05_closures/closures.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/05_closures/closures.v)_
+
+### Lesson: Closures
+
+V supports **Closures**, which are anonymous functions that "remember" and access variables from the parent scope in which they were created. 
+
+Unlike languages where variable capture is automatic and hidden, V implements **explicit capture lists** for safety and predictability:
+1. **Explicit Capture Syntax**: Captured variables must be declared inside square brackets `fn [captured_var] (args)`.
+2. **Pass-by-Value Capture (`[captured_var]`)**: The variable's value is copied when the closure is created. It is read-only inside the closure body.
+3. **Pass-by-Reference Capture (`[mut captured_var]`)**: Prepending the capture with `mut` passes the variable by reference. Any changes made to the variable inside the closure modify the original variable in the parent scope, and vice-versa.
+
+#### Step-by-Step Code Walkthrough:
+* **`new_counter` Function**: Returns a closure `fn () int`.
+* **State Preservation (`[mut count]`)**: The closure captures the local variable `count` from `new_counter` as `mut`. This allows `count` to survive after `new_counter` returns and update its state across multiple invocation calls (e.g. `counter()`).
+* **Value Capture (`[factor]`)**: The closure `multiplier` captures the `factor` variable as read-only. Calling `multiplier(5)` evaluates to `5 * 10` (50).
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **closures**.
+
+```v
+module main
+
+fn new_counter() fn () int {
+	mut count := 0
+	// The closure inherits `count` by reference (read-write) using explicit list `[mut count]`
+	return fn [mut count] () int {
+		count++
+		return count
+	}
+}
+
+fn main() {
+	counter := new_counter()
+	println(counter()) // 1
+	println(counter()) // 2
+	println(counter()) // 3
+
+	// An immutable capture closure
+	factor := 10
+	multiplier := fn [factor] (x int) int {
+		return x * factor
+	}
+	println(multiplier(5)) // 50
+}
+```
+
+---
+
 # Chapter 7: Structs (Custom Types)
 
 ## Quick Access
@@ -5737,6 +5834,10 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Adding Struct As Struct Field](#adding-struct-as-struct-field)
 - [Updating Fields Of Type Struct](#updating-fields-of-type-struct)
 - [Struct As Trailing Literal Arguments To Function](#struct-as-trailing-literal-arguments-to-function)
+- [Anonymous Structs](#anonymous-structs)
+- [Static Type Methods](#static-type-methods)
+- [noinit Structs](#noinit-structs)
+- [Unions](#unions)
 
 ---
 
@@ -6493,6 +6594,204 @@ fn main() {
 	n := extend_due_by_a_day(g)
 	println('After extending due date by a day')
 	println('${n.message} is due by ${n.due}')
+}
+```
+
+---
+
+### Anonymous Structs
+
+_File location: [structs/07_anonymous_structs/anonymous_structs.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/07_anonymous_structs/anonymous_structs.v)_
+
+### Lesson: Anonymous Structs
+
+V supports **Anonymous Structs** which are inline struct declarations without separate struct names. They are useful for one-off structures like local nested objects.
+
+#### Step-by-Step Code Walkthrough:
+* **Inline Sub-Struct Declaration**: 
+  In the `Book` struct definition, the `author` field is declared as an anonymous struct type with fields `name string` and `age int`. No named struct like `Author` is required.
+* **Inline Struct Initialization**:
+  Inside `main()`, we instantiate `Book`. The nested `author` field is initialized directly using `struct { name: 'Samantha Black', age: 24 }`, matching the field structure.
+* **Field Access**:
+  Nested fields are accessed sequentially using dot notation: `book.author.name` and `book.author.age`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **anonymous structs**.
+
+```v
+module main
+
+struct Book {
+	author struct {
+		name string
+		age  int
+	}
+	title string
+}
+
+fn main() {
+	book := Book{
+		title: 'The V Programming Language'
+		author: struct {
+			name: 'Samantha Black'
+			age:  24
+		}
+	}
+	println('Book: ${book.title} by ${book.author.name} (${book.author.age})')
+}
+```
+
+---
+
+### Static Type Methods
+
+_File location: [structs/08_static_type_methods/static_type_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/08_static_type_methods/static_type_methods.v)_
+
+### Lesson: Static Type Methods
+
+V supports **Static Type Methods** (e.g. `User.new()`). These are defined on a struct via `fn [StructName].[methodName]` and allow organizing all constructor/factory functions related to a struct. V does not have traditional class constructors; static type methods are standard functions namespace-associated with the struct.
+
+#### Step-by-Step Code Walkthrough:
+* **Static Method Definition**:
+  `fn User.new(name string, age int) User` declares a static method named `new` associated with the `User` struct namespace. It returns a new `User` instance.
+* **Factory Organization**:
+  The static method `User.default_user()` calls `User.new('Guest', 18)` to construct a user with default values, acting as a clean factory builder.
+* **Invocation Syntax**:
+  Inside `main()`, static methods are invoked using the struct name prefix: `User.new(...)` and `User.default_user()`. This prevents global namespace pollution and groups constructor-like logic cleanly.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **static type methods**.
+
+```v
+module main
+
+struct User {
+	name string
+	age  int
+}
+
+// Defining a static type method on User
+fn User.new(name string, age int) User {
+	return User{
+		name: name
+		age:  age
+	}
+}
+
+// Another static method
+fn User.default_user() User {
+	return User.new('Guest', 18)
+}
+
+fn main() {
+	// Call static type methods using StructName.method_name()
+	user1 := User.new('Bob', 25)
+	user2 := User.default_user()
+
+	println('User 1: ${user1.name}, Age: ${user1.age}')
+	println('User 2: ${user2.name}, Age: ${user2.age}')
+}
+```
+
+---
+
+### noinit Structs
+
+_File location: [structs/09_noinit_structs/noinit_structs.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/09_noinit_structs/noinit_structs.v)_
+
+### Lesson: noinit Structs
+
+V supports `[noinit]` structs which are structs that cannot be initialized directly outside of their declaring module. This forces client code to use factory constructor functions to instantiate the struct, enabling strict initialization checks and API boundaries.
+
+#### Step-by-Step Code Walkthrough:
+* **Declaring [noinit]**:
+  In the `noinit_config` module (`noinit_config.v`), the `Config` struct is marked with the `@[noinit]` attribute. This blocks external modules from directly initializing it using literals like `noinit_config.Config{ ... }`.
+* **Exposing a Constructor**:
+  We provide a public factory function `pub fn new_config(port int, host string) Config` inside the `noinit_config` module, which is authorized to initialize and return the struct.
+* **Compiler Enforcement**:
+  In the main module (`noinit_structs.v`), creating `noinit_config.new_config(...)` compiles and runs successfully. Attempting to directly write `noinit_config.Config{port: 8080}` would cause a compilation error.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **noinit structs**.
+
+```v
+// file: noinit_config/noinit_config.v
+module noinit_config
+
+@[noinit]
+pub struct Config {
+pub:
+	port int
+	host string
+}
+
+// Public constructor function to allow initialization from outside
+pub fn new_config(port int, host string) Config {
+	return Config{
+		port: port
+		host: host
+	}
+}
+```
+
+```v
+// file: noinit_structs.v
+import noinit_config
+
+fn main() {
+	// This works because it uses the constructor function
+	cfg := noinit_config.new_config(8080, 'localhost')
+	println('Config port: ${cfg.port}, host: ${cfg.host}')
+
+	// This would fail compilation because noinit_config.Config is marked [noinit]:
+	// cfg2 := noinit_config.Config{ port: 8080, host: 'localhost' }
+}
+```
+
+---
+
+### Unions
+
+_File location: [structs/10_unions/unions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/10_unions/unions.v)_
+
+### Lesson: Unions
+
+A **Union** is a special type of struct that allows storing different data types in the same memory location. The largest member defines the size of the union. All members share the same memory location, meaning modifying one member automatically modifies the shared representation of the others. Union field access is considered memory-unsafe and must always be performed inside `unsafe {}` blocks.
+
+#### Step-by-Step Code Walkthrough:
+* **Union Declaration & Mutability**:
+  `union Data` declares two fields: `f f64` (8 bytes) and `i int` (4 bytes). Because they are in a union, they share the same starting memory address, and the total size of `Data` is 8 bytes. By default in V, union fields are immutable; we must place them under a `mut:` block inside the union declaration to allow their values to be reassigned.
+* **Memory Corruption Demonstration**:
+  We initialize the union with an integer `i: 10`. 
+  Inside `unsafe { ... }`, when we assign `d.f = 5.5`, the float value overwrites the shared memory. Reading `d.i` subsequently returns a garbled integer representing the binary layout of the float `5.5`, demonstrating the shared storage layout.
+* **Safety Restriction**:
+  Accessing any field of a union (`d.i` or `d.f`) is blocked by the compiler unless wrapped in an `unsafe` block, protecting developers from accidental memory misinterpretation.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **unions**.
+
+```v
+module main
+
+// Define a union sharing the same memory location, marked mutable
+union Data {
+mut:
+	f f64
+	i int
+}
+
+fn main() {
+	mut d := Data{i: 10}
+	
+	// Accessing union members must be performed in an unsafe block
+	unsafe {
+		println('Union int value: ${d.i}')
+		
+		// Modifying one member automatically modifies the other since they share memory
+		d.f = 5.5
+		println('Union float value: ${d.f}')
+		println('Union int value after float update: ${d.i} (shared memory representation)')
+	}
 }
 ```
 
@@ -11139,6 +11438,16 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 - [Compiling V Source to WebAssembly](#compiling-v-source-to-webassembly)
 - [Programmatic WASM Generation](#programmatic-wasm-generation)
+
+**Language Updates & Low-Level Features**
+
+- [sizeof and __offsetof](#sizeof-and-__offsetof)
+- [Limited Operator Overloading](#limited-operator-overloading)
+- [Atomics](#atomics)
+- [Static Variables](#static-variables)
+- [Hot Code Reloading](#hot-code-reloading)
+- [Compile-Time Reflection](#compile-time-reflection)
+- [Environment-Specific Files & Compile-Time Types](#environment-specific-files--compile-time-types)
 
 ---
 
@@ -17805,6 +18114,342 @@ fn main() {
 	println('Saved Wasm binary to: ${output_path}')
 }
 ```
+
+---
+
+### sizeof and __offsetof
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v)_
+
+### Lesson: sizeof and __offsetof
+
+V provides two built-in operators for determining sizes and memory offsets:
+* `sizeof(Type)`: Returns the memory size of the given Type in bytes.
+* `__offsetof(Struct, field_name)`: Returns the offset in bytes of a field relative to the start of the struct.
+
+#### Step-by-Step Code Walkthrough:
+* **Size of `Point`**:
+  `sizeof(Point)` yields `8` bytes because it has two `int` fields (4 bytes each).
+* **Size of `Foo` & Alignment Padding**:
+  `sizeof(Foo)` yields `12` bytes, even though it contains `a int` (4 bytes), `b u8` (1 byte), and `c int` (4 bytes). This happens because of C ABI alignment: V aligns struct members on word boundaries (in this case, 4 bytes), adding 3 bytes of invisible padding after `b u8`.
+* **Offsets of fields in `Foo`**:
+  * `__offsetof(Foo, a)` yields `0` because it starts at byte 0.
+  * `__offsetof(Foo, b)` yields `4` because it starts right after `a` (4 bytes).
+  * `__offsetof(Foo, c)` yields `8` because it aligns on the next 4-byte boundary due to padding after `b`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **sizeof and __offsetof**.
+
+```v
+module main
+
+struct Point {
+	x int
+	y int
+}
+
+struct Foo {
+	a int
+	b u8
+	c int
+}
+
+fn main() {
+	// sizeof gives the size of a type in bytes
+	println('sizeof(Point) = ${sizeof(Point)} bytes') // 8
+	println('sizeof(Foo) = ${sizeof(Foo)} bytes')     // 12 (due to alignment/padding in C backend)
+
+	// __offsetof gives the offset in bytes of a struct field
+	println('__offsetof(Point, x) = ${__offsetof(Point, x)}') // 0
+	println('__offsetof(Point, y) = ${__offsetof(Point, y)}') // 4
+	println('__offsetof(Foo, a) = ${__offsetof(Foo, a)}')     // 0
+	println('__offsetof(Foo, b) = ${__offsetof(Foo, b)}')     // 4
+	println('__offsetof(Foo, c) = ${__offsetof(Foo, c)}')     // 8
+}
+```
+
+---
+
+### Limited Operator Overloading
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/10_operator_overloading/operator_overloading.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/10_operator_overloading/operator_overloading.v)_
+
+### Lesson: Limited Operator Overloading
+
+Operator overloading is supported for a limited set of binary operators (`+, -, *, **, /, %, <, ==`) to improve readability in scientific, mathematical, and graphics applications. V does not support indexing (`[]`) or assignment (`=`) overloading. Overloading the `+` operator automatically synthesizes the matching assignment operator (e.g., `+=`).
+
+#### Step-by-Step Code Walkthrough:
+* **Binary Operator Overloading**:
+  We define the `+` and `-` operators for struct `Vec` using the syntax `fn (a Vec) + (b Vec) Vec`. V invokes these methods directly when performing arithmetic expressions like `a + b` or `a - b`.
+* **Equality Operator Overloading**:
+  We define `==` to verify element-by-element equality: `a.x == b.x && a.y == b.y`.
+* **Automatic Assignment Generation**:
+  When we overload `+`, V autogenerates the compound assignment operator `+=`. Executing `c += a` resolves to `c = c + a`, compiling and modifying `c` automatically.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **limited operator overloading**.
+
+```v
+module main
+
+struct Vec {
+	x int
+	y int
+}
+
+fn (a Vec) str() string {
+	return '{${a.x}, ${a.y}}'
+}
+
+// Overload addition operator (+)
+fn (a Vec) + (b Vec) Vec {
+	return Vec{a.x + b.x, a.y + b.y}
+}
+
+// Overload subtraction operator (-)
+fn (a Vec) - (b Vec) Vec {
+	return Vec{a.x - b.x, a.y - b.y}
+}
+
+// Overload equality operator (==)
+fn (a Vec) == (b Vec) bool {
+	return a.x == b.x && a.y == b.y
+}
+
+fn main() {
+	a := Vec{2, 3}
+	b := Vec{4, 5}
+	mut c := Vec{1, 2}
+
+	println('a + b = ${a + b}') // {6, 8}
+	println('a - b = ${a - b}') // {-2, -2}
+	
+	// c += a is autogenerated from the + overload!
+	c += a
+	println('c after += a: ${c}') // {3, 5}
+	
+	println('a == b: ${a == b}') // false
+	println('a == Vec{2, 3}: ${a == Vec{2, 3}}') // true
+}
+```
+
+---
+
+### Atomics
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/11_atomics/atomics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/11_atomics/atomics.v)_
+
+### Lesson: Atomics
+
+V does not have direct keyword support for atomic operations but integrates standard C11 atomic capabilities through platform-specific wrapper headers (found under `stdatomic/`). Variables can be treated atomically by executing type-specific functions prefixed by `C.atomic_` and passing references to the target variables.
+
+#### Step-by-Step Code Walkthrough:
+* **C Header Inclusion**:
+  Depending on the compilation target, V includes either the Unix or Windows wrapper headers `atomic.h` containing atomic operations.
+* **C declarations**:
+  `fn C.atomic_store_u32(&u32, u32)` and other methods are declared. Since V does not automatically parse C headers, we manually declare the C functions we want to invoke.
+* **Local Storage**:
+  We declare a local variable `atom := u32(0)` inside `main()`. Any variable can be treated atomically by passing its memory reference (pointer) to the C functions. This avoids needing global variables or compiling with `-enable-globals` flag.
+* **CAS (Compare-And-Swap)**:
+  Inside `unsafe { ... }`, we call `C.atomic_compare_exchange_strong_u32(&atom, &expected, 23)`. If the value at `&atom` matches `expected` (17), it replaces it with `23` and returns `true`. If not, it loads the actual current value into `expected` and returns `false`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **atomics**.
+
+```v
+module main
+
+$if windows {
+	#include "@VEXEROOT/thirdparty/stdatomic/win/atomic.h"
+} $else {
+	#include "@VEXEROOT/thirdparty/stdatomic/nix/atomic.h"
+}
+
+// declare the C functions we want to use
+fn C.atomic_store_u32(&u32, u32)
+fn C.atomic_load_u32(&u32) u32
+fn C.atomic_compare_exchange_strong_u32(&u32, &u32, u32) bool
+
+fn main() {
+	// Ordinary local variable, treated as atomic by passing its reference
+	mut atom := u32(0)
+
+	// Initialize atomic variable
+	unsafe {
+		C.atomic_store_u32(&atom, 17)
+		
+		mut expected := u32(17)
+		// Atomic CAS: if atom == expected, set atom to 23 and return true
+		if C.atomic_compare_exchange_strong_u32(&atom, &expected, 23) {
+			println('Exchange successful, atom is now 23')
+		} else {
+			println('Exchange failed, atom is ${C.atomic_load_u32(&atom)}')
+		}
+		
+		println('Final value: ${C.atomic_load_u32(&atom)}')
+	}
+}
+```
+
+---
+
+### Static Variables
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/12_static_variables/static_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/12_static_variables/static_variables.v)_
+
+### Lesson: Static Variables
+
+V supports **Static Variables** within functions. They behave like namespaced global variables, preserving state across function calls, but are restricted to the local scope of a single function. Functions containing static variables must be marked with `@[unsafe]` and calls must occur in `unsafe` blocks. They are primarily intended for facilitating low-level C code translations.
+
+#### Step-by-Step Code Walkthrough:
+* **Static Variable Definition**:
+  Inside the function `counter()`, we define `mut static x := 42`. The compiler generates this variable in the global data space but restricts access to it exclusively within `counter()`.
+* **One-Time Initialization**:
+  The initialization expression `= 42` is executed exactly once when the program starts. It is skipped on subsequent calls to `counter()`.
+* **Access Rules**:
+  Because static variables represent shared mutable state, `counter()` is marked with `@[unsafe]` and called within `unsafe` blocks in `main()`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **static variables**.
+
+```v
+module main
+
+// V supports function-scoped static variables inside unsafe functions
+@[unsafe]
+fn counter() int {
+	// static variables are initialized only once
+	mut static x := 42
+	x++
+	return x
+}
+
+fn main() {
+	println(unsafe { counter() }) // 43
+	println(unsafe { counter() }) // 44
+	println(unsafe { counter() }) // 45
+}
+```
+
+---
+
+### Hot Code Reloading
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/13_hot_code_reloading/hot_code_reloading.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/13_hot_code_reloading/hot_code_reloading.v)_
+
+### Lesson: Hot Code Reloading
+
+V supports **Hot Code Reloading** using the `@[live]` attribute. By compiling a program with the `-live` flag (e.g. `v -live run file.v`), V monitors the source files, automatically recompiles live-annotated functions to a shared library, and reloads them dynamically at runtime without restarting the application.
+
+#### Step-by-Step Code Walkthrough:
+* **Live Annotation**:
+  The function `print_message()` is marked with the `@[live]` attribute. This instructs the compiler to generate it as a hot-reloadable hook loading from a shared library.
+* **Main loop execution**:
+  The loop in `main()` runs continuously. If you modify the message in the string print inside `print_message()` and save the file, V's monitoring thread detects the change, rebuilds the code, and subsequent calls in the loop print the updated message instantly.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **hot code reloading**.
+
+```v
+module main
+
+import time
+
+// Functions that should be reloaded must have `@[live]` attribute
+@[live]
+fn print_message() {
+	println('Hello! Modify this message while the program is running under -live mode.')
+}
+
+fn main() {
+	// A simple loop printing the message
+	for i in 0 .. 3 {
+		print_message()
+		time.sleep(100 * time.millisecond)
+	}
+}
+```
+
+---
+
+### Compile-Time Reflection
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/14_compile_time_reflection/compile_time_reflection.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/14_compile_time_reflection/compile_time_reflection.v)_
+
+### Lesson: Compile-Time Reflection
+
+V supports **Compile-Time Reflection** using the `$` prefix to perform type operations, evaluations, and code generation during compilation. V iterates over struct fields, attributes, variants, and methods at compile-time using `$for` loops, providing static safety without any runtime metadata overhead.
+
+* Struct fields can be examined via `Struct.fields`.
+* Struct attributes can be examined via `Struct.attributes`.
+* Struct methods can be examined via `Struct.methods`, and executed dynamically using `$method()`.
+
+#### Step-by-Step Code Walkthrough:
+* **Field Iteration (`$for field in User.fields`)**:
+  Iterates over all fields of `User`. Evaluates their names (`field.name`) and type IDs (`field.typ`) at compile-time.
+* **Attribute Iteration (`$for attr in User.attributes`)**:
+  Inspects attributes attached to the struct, such as `@[COLOR]` (prints `COLOR`).
+* **Comptime Method Invocation (`user.$method()`)**:
+  Inside `$for m in User.methods`, we check if the method returns a `string`. If so, we execute the method dynamically using the `$method()` comptime syntax, calling `greet()` on the `user` instance and printing `Hello Alice`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **compile-time reflection**.
+
+```v
+module main
+
+@[COLOR]
+struct User {
+	name string
+	age  int
+}
+
+fn (u User) greet() string {
+	return 'Hello ${u.name}'
+}
+
+fn main() {
+	println('--- Struct Fields Reflection ---')
+	$for field in User.fields {
+		println('Field: ${field.name} | Typ: ${field.typ}')
+	}
+
+	println('\n--- Struct Attributes Reflection ---')
+	$for attr in User.attributes {
+		println('Attribute name: ${attr.name}')
+	}
+
+	println('\n--- Struct Methods Reflection ---')
+	user := User{name: 'Alice', age: 30}
+	$for m in User.methods {
+		$if m.return_type is string {
+			println(user.$method())
+		}
+	}
+}
+```
+
+---
+
+### Environment-Specific Files & Compile-Time Types
+
+### Lesson: Environment-Specific Files & Compile-Time Types
+
+#### Environment-Specific Files
+V supports compile-time filtering of entire files using file suffix conventions instead of conditional directives:
+* `.js.v` -> compiled only when targeting the Javascript backend.
+* `.c.v` -> compiled only when targeting the C backend.
+* `_nix.c.v` -> compiled only on Unix-like platforms.
+* `_windows.c.v` -> compiled only on Windows.
+* `_d_customflag.v` -> compiled only if `-d customflag` is passed to the compiler.
+
+#### Compile-Time Types
+When writing generic code, V provides specialized compile-time type matching identifiers to selectively check generic constraints:
+* `$alias` -> matches type aliases.
+* `$array` -> matches arrays and fixed-size arrays.
+* `$enum` -> matches enum types.
+* `$float` / `$int` / `$string` -> matches floating numbers, integers, or string values.
+* `$struct` -> matches struct types.
 
 ---
 
