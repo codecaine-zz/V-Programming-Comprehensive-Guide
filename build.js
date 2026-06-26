@@ -3205,6 +3205,9 @@ const template = `<!DOCTYPE html>
         const savedTheme = localStorage.getItem('theme') || 'dark';
         setTheme(savedTheme);
 
+        let isClickScrolling = false;
+        let clickScrollTimeout = null;
+
         function getChapterContext(element) {
             if (!element) return '';
             const directChapterId = element.getAttribute('data-chapter-id');
@@ -3361,6 +3364,11 @@ const template = `<!DOCTYPE html>
             heading.addEventListener('click', () => {
                 const isCollapsed = itemsDiv.classList.toggle('collapsed');
                 heading.classList.toggle('collapsed', isCollapsed);
+                if (!isCollapsed) {
+                    setTimeout(() => {
+                        heading.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    }, 50);
+                }
             });
             
             chap.sections.forEach(sec => {
@@ -3379,6 +3387,40 @@ const template = `<!DOCTYPE html>
                     if (window.innerWidth <= 1024) {
                         document.getElementById('sidebar').classList.remove('open');
                     }
+
+                    isClickScrolling = true;
+                    clearTimeout(clickScrollTimeout);
+                    clickScrollTimeout = setTimeout(() => {
+                        isClickScrolling = false;
+                        updateActiveState();
+                    }, 800);
+
+                    // Expand parent chapter if collapsed
+                    if (itemsDiv.classList.contains('collapsed')) {
+                        itemsDiv.classList.remove('collapsed');
+                        heading.classList.remove('collapsed');
+                    }
+
+                    // Expand this section's lessons, collapse others in this chapter
+                    const lessonsDiv = secWrapper.querySelector('.section-lessons');
+                    if (lessonsDiv && lessonsDiv.classList.contains('collapsed')) {
+                        lessonsDiv.classList.remove('collapsed');
+                    }
+                    chapDiv.querySelectorAll('.section-lessons').forEach(div => {
+                        if (div !== lessonsDiv) {
+                            div.classList.add('collapsed');
+                        }
+                    });
+
+                    // Set active state immediately
+                    document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+                    document.querySelectorAll('.menu-lesson-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    // Scroll this item to the top of the sidebar menu
+                    setTimeout(() => {
+                        link.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    }, 50);
                 });
                 
                 secWrapper.appendChild(link);
@@ -3408,6 +3450,34 @@ const template = `<!DOCTYPE html>
                             if (window.innerWidth <= 1024) {
                                 document.getElementById('sidebar').classList.remove('open');
                             }
+
+                            isClickScrolling = true;
+                            clearTimeout(clickScrollTimeout);
+                            clickScrollTimeout = setTimeout(() => {
+                                isClickScrolling = false;
+                                updateActiveState();
+                            }, 800);
+
+                            // Expand parent chapter if collapsed
+                            if (itemsDiv.classList.contains('collapsed')) {
+                                itemsDiv.classList.remove('collapsed');
+                                heading.classList.remove('collapsed');
+                            }
+
+                            // Expand parent section lessons if collapsed
+                            if (lessonsDiv && lessonsDiv.classList.contains('collapsed')) {
+                                lessonsDiv.classList.remove('collapsed');
+                            }
+
+                            // Set active state immediately
+                            document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+                            document.querySelectorAll('.menu-lesson-link').forEach(l => l.classList.remove('active'));
+                            lesLink.classList.add('active');
+
+                            // Scroll this item into view (nearest/center)
+                            setTimeout(() => {
+                                lesLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                            }, 50);
                         });
                         lessonsDiv.appendChild(lesLink);
                     });
@@ -3788,22 +3858,8 @@ const template = `<!DOCTYPE html>
             });
         }
         
-        window.addEventListener('scroll', () => {
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-            if (totalHeight > 0) {
-                const scrolled = (window.scrollY / totalHeight) * 100;
-                progress.style.width = scrolled + '%';
-                const pctEl = document.getElementById('readingPct');
-                if (pctEl) pctEl.textContent = Math.round(scrolled) + '%';
-            }
-
-            
-            if (window.scrollY > 300) {
-                btnTop.classList.add('visible');
-            } else {
-                btnTop.classList.remove('visible');
-            }
-                       // Highlight active navigation section or lesson
+        function updateActiveState() {
+            // Highlight active navigation section or lesson
             const headings = document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title');
             let activeId = '';
             let currentTitle = 'Welcome';
@@ -3812,7 +3868,7 @@ const template = `<!DOCTYPE html>
                 const rect = head.getBoundingClientRect();
                 if (rect.top < 120) {
                     activeId = head.id;
-                    currentTitle = head.innerText.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
+                    currentTitle = head.innerText.replace(/Chapter \\d+:/i, '').replace(/^Lesson:\\s*/i, '').trim();
                 }
             });
             
@@ -3875,7 +3931,9 @@ const template = `<!DOCTYPE html>
                     }
                 });
 
-                currentSectionTitleEl.innerText = currentTitle;
+                if (currentSectionTitleEl) {
+                    currentSectionTitleEl.innerText = currentTitle;
+                }
             } else {
                 // keep the current view without inline lesson navigation
             }
@@ -3886,6 +3944,26 @@ const template = `<!DOCTYPE html>
 
             renderBreadcrumbs();
             scheduleSaveReadingState();
+        }
+        
+        window.addEventListener('scroll', () => {
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (totalHeight > 0) {
+                const scrolled = (window.scrollY / totalHeight) * 100;
+                progress.style.width = scrolled + '%';
+                const pctEl = document.getElementById('readingPct');
+                if (pctEl) pctEl.textContent = Math.round(scrolled) + '%';
+            }
+
+            if (window.scrollY > 300) {
+                btnTop.classList.add('visible');
+            } else {
+                btnTop.classList.remove('visible');
+            }
+
+            if (!isClickScrolling) {
+                updateActiveState();
+            }
         });
         
         function scrollToTop() {
