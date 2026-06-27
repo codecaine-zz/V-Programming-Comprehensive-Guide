@@ -646,6 +646,11 @@ To get the most from this book:
   - [Other Stdlib Updates](#other-stdlib-updates)
   - [Strings.Lorem Helper](#stringslorem-helper)
   - [WebAssembly Compilation](#webassembly-compilation)
+- [Chapter 14: Useful Boilerplates and Application Templates](#chapter-14-useful-boilerplates-and-application-templates)
+  - [CLI Command-Line Application Boilerplate](#cli-command-line-application-boilerplate)
+  - [REST API Server Boilerplate](#rest-api-server-boilerplate)
+  - [Worker Pool Concurrency Boilerplate](#worker-pool-concurrency-boilerplate)
+  - [OS and File Utilities Boilerplate](#os-and-file-utilities-boilerplate)
 
 ---
 
@@ -18839,6 +18844,431 @@ fn main() {
 	if right := root.right {
 		println('Right leaf val: ${right.val}')
 	}
+}
+```
+
+---
+
+# Chapter 14: Useful Boilerplates and Application Templates
+
+## Quick Access
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Boilerplate Templates**
+
+- [CLI Command-Line Application Boilerplate](#cli-command-line-application-boilerplate)
+- [REST API Server Boilerplate](#rest-api-server-boilerplate)
+- [Worker Pool Concurrency Boilerplate](#worker-pool-concurrency-boilerplate)
+- [OS and File Utilities Boilerplate](#os-and-file-utilities-boilerplate)
+
+---
+
+This chapter provides a collection of production-ready, fully commented boilerplate templates designed to jumpstart your development with V. These examples showcase common application patterns, standard library usage, and best practices.
+
+## Boilerplate Templates
+
+### CLI Command-Line Application Boilerplate
+
+_File location: [boilerplate_templates/01_cli_app/cli_app.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/01_cli_app/cli_app.v)_
+
+### Lesson: CLI Command-Line Application Boilerplate
+
+When building command-line utilities, V provides a highly featured standard `flag` module. Rather than manually parsing arguments from `os.args`, the `flag` module simplifies declaring options, validation, and auto-generates helpful usage/help text.
+
+Key concepts illustrated:
+- **Initializing flag parser**: Creating a new parser with `flag.new_flag_parser(os.args)`.
+- **Defining Flags**: Specifying flag names, short character abbreviations, default values, and description text.
+- **Config Struct Pattern**: Cleanly separating parsed options from application logic using a custom config struct.
+- **Error Handling & Finalization**: Handling invalid command usage gracefully using `fp.finalize()`.
+
+```v
+module main
+
+import flag
+import os
+
+// Config holds the validated configuration settings for the application.
+struct Config {
+	input_file  string
+	output_file string
+	verbose     bool
+	retries     int
+	mode        string
+}
+
+fn main() {
+	// 1. Initialize the flag parser with command-line arguments (os.args)
+	mut fp := flag.new_flag_parser(os.args)
+	fp.application('v-cli-boilerplate')
+	fp.version('1.0.0')
+	fp.description('A professional CLI boilerplate showing flag parsing, validation, and structured configurations in V.')
+
+	// 2. Skip the executable path during parsing
+	fp.skip_executable()
+
+	// 3. Define flags with short abbreviations, default values, and descriptions
+	input_file := fp.string('input', `i`, '', 'Path to the input file (required)')
+	output_file := fp.string('output', `o`, 'output.txt', 'Path to the output file')
+	verbose := fp.bool('verbose', `v`, false, 'Enable verbose logging')
+	retries := fp.int('retries', `r`, 3, 'Number of retries for operation')
+	mode := fp.string('mode', `m`, 'default', 'Operation mode (default, fast, safe)')
+
+	// 4. Finalize parsing. This returns remaining non-flag arguments or an error.
+	additional_args := fp.finalize() or {
+		eprintln('Error: ${err}')
+		println(fp.usage())
+		exit(1)
+	}
+
+	// 5. Validate required flags and values
+	if input_file == '' {
+		eprintln('Error: --input (-i) flag is required.')
+		println(fp.usage())
+		exit(1)
+	}
+
+	// Validate allowed values for a string enum
+	if mode !in ['default', 'fast', 'safe'] {
+		eprintln('Error: Invalid mode "${mode}". Must be one of: default, fast, safe.')
+		println(fp.usage())
+		exit(1)
+	}
+
+	// 6. Map parsed arguments to the Config struct for clean division of concerns
+	config := Config{
+		input_file: input_file
+		output_file: output_file
+		verbose: verbose
+		retries: retries
+		mode: mode
+	}
+
+	// 7. Run the application logic
+	run_app(config, additional_args)
+}
+
+fn run_app(cfg Config, args []string) {
+	if cfg.verbose {
+		println('[DEBUG] Starting application execution...')
+		println('[DEBUG] Config: ${cfg}')
+		if args.len > 0 {
+			println('[DEBUG] Positional Arguments: ${args}')
+		}
+	}
+
+	println('Processing input file: ${cfg.input_file}')
+	println('Operation mode: ${cfg.mode}')
+	println('Retries configured: ${cfg.retries}')
+
+	// Perform work here...
+	println('Writing results to output file: ${cfg.output_file}')
+
+	println('Success: Application executed successfully!')
+}
+```
+
+---
+
+### REST API Server Boilerplate
+
+_File location: [boilerplate_templates/02_rest_api/rest_api.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/02_rest_api/rest_api.v)_
+
+### Lesson: REST API Server Boilerplate
+
+V's standard web framework, `veb`, is optimized for building fast, high-conformance web apps and APIs. This template serves as a quick-start scaffolding for a JSON REST service, illustrating CRUD routing and request decoding.
+
+Key concepts illustrated:
+- **Routing Attributes**: Tagging methods with route paths and HTTP verbs (e.g. `@['/api/items'; get]`).
+- **Path Parameters**: Defining routes with dynamic segments like `@['/api/items/:id'; get]` which map directly to method arguments.
+- **JSON Serialization/Deserialization**: Using `json.encode` and `json.decode` to work with HTTP requests and responses.
+- **State Management**: Using fields in the global `App` struct to share resources or databases across request handlers.
+
+```v
+module main
+
+import json
+import os
+import veb
+
+// Item represents a data model in our API.
+struct Item {
+	id   int    @[json: 'id']
+	name string @[json: 'name']
+	done bool   @[json: 'done']
+}
+
+// App holds the global state of the application.
+struct App {
+mut:
+	items []Item
+}
+
+// Context wraps veb's request/response lifecycle.
+struct Context {
+	veb.Context
+}
+
+// 1. GET / - Simple text response index endpoint
+fn (mut app App) index(mut ctx Context) veb.Result {
+	return ctx.text('Welcome to the V REST API Boilerplate! Use /api/items to interact with the service.')
+}
+
+// 2. GET /api/items - Returns list of all items as JSON
+@['/api/items'; get]
+fn (mut app App) get_items(mut ctx Context) veb.Result {
+	return ctx.json(json.encode(app.items))
+}
+
+// 3. GET /api/items/:id - Returns a single item by id, or 404
+@['/api/items/:id'; get]
+fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
+	for item in app.items {
+		if item.id == id {
+			return ctx.json(json.encode(item))
+		}
+	}
+	ctx.res.set_status(.not_found)
+	return ctx.json('{"error": "Item not found"}')
+}
+
+// 4. POST /api/items - Decodes JSON request body and adds a new item
+@['/api/items'; post]
+fn (mut app App) create_item(mut ctx Context) veb.Result {
+	new_item := json.decode(Item, ctx.req.data) or {
+		ctx.res.set_status(.bad_request)
+		return ctx.json('{"error": "Invalid JSON format"}')
+	}
+
+	// Auto-increment ID based on length
+	item_to_add := Item{
+		id: app.items.len + 1
+		name: new_item.name
+		done: new_item.done
+	}
+
+	app.items << item_to_add
+	ctx.res.set_status(.created)
+	return ctx.json(json.encode(item_to_add))
+}
+
+fn main() {
+	// Initialize App with mock seed data
+	mut app := &App{
+		items: [
+			Item{id: 1, name: 'Learn V syntax', done: true},
+			Item{id: 2, name: 'Build a REST API in V', done: false},
+		]
+	}
+
+	// Read port from environment variable or default to 8082 to avoid common conflicts on 8080
+	port_env := os.getenv('PORT')
+	port := if port_env != '' { port_env.int() } else { 8082 }
+
+	println('Starting REST API server on http://localhost:${port}...')
+	
+	// Start veb web server
+	veb.run[App, Context](mut app, port)
+}
+```
+
+---
+
+### Worker Pool Concurrency Boilerplate
+
+_File location: [boilerplate_templates/03_worker_pool/worker_pool.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/03_worker_pool/worker_pool.v)_
+
+### Lesson: Worker Pool Concurrency Boilerplate
+
+V offers lightweight concurrency out of the box. By combining `spawn` (thread creation) with typed channels (`chan`), you can build thread-safe worker pools that process computationally intensive or high-latency tasks in parallel without lock overhead.
+
+Key concepts illustrated:
+- **Channel Communication**: Sending and receiving tasks and results over thread-safe queues.
+- **Spawned Threads**: Running worker functions concurrently using the `spawn` keyword.
+- **Graceful Shutdown**: Closing the tasks channel (`tasks_chan.close()`) to signal worker threads to cleanly exit.
+- **Result Aggregation**: Blocking and gathering all responses from the output channel before concluding execution.
+
+```v
+module main
+
+import time
+
+// Task represents the unit of work to be processed.
+struct Task {
+	id   int
+	data string
+}
+
+// Result represents the outcome of processing a Task.
+struct Result {
+	task_id   int
+	worker_id int
+	output    string
+	duration  time.Duration
+}
+
+// worker runs in a separate thread, consuming from tasks_chan and producing to results_chan.
+fn worker(id int, tasks_chan chan Task, results_chan chan Result) {
+	for {
+		// Receive a task from the channel.
+		// If the channel is closed and empty, it returns `none`.
+		t := <-tasks_chan or {
+			break
+		}
+
+		start_time := time.now()
+
+		// Simulate intensive processing/I/O task
+		time.sleep(50 * time.millisecond)
+
+		elapsed := time.since(start_time)
+
+		// Send the result to the output channel
+		results_chan <- Result{
+			task_id: t.id
+			worker_id: id
+			output: 'Processed: ' + t.data.to_upper()
+			duration: elapsed
+		}
+	}
+}
+
+fn main() {
+	println('=== V Worker Pool Concurrency Boilerplate ===')
+
+	// 1. Create channels for tasks and results with capacities
+	tasks_chan := chan Task{cap: 10}
+	results_chan := chan Result{cap: 10}
+
+	num_workers := 3
+	num_tasks := 5
+
+	// 2. Spawn concurrent worker threads
+	println('Spawning ${num_workers} workers...')
+	for i in 0 .. num_workers {
+		spawn worker(i + 1, tasks_chan, results_chan)
+	}
+
+	// 3. Dispatch tasks to the queue
+	println('Dispatching ${num_tasks} tasks to worker pool...')
+	for i in 0 .. num_tasks {
+		tasks_chan <- Task{
+			id: i + 1
+			data: 'task-payload-${i + 1}'
+		}
+	}
+
+	// 4. Close tasks channel to signal workers that no more work is coming
+	tasks_chan.close()
+	println('Tasks dispatched, queue closed. Collecting results...')
+
+	// 5. Collect results from results channel
+	mut results := []Result{}
+	for _ in 0 .. num_tasks {
+		res := <-results_chan or {
+			eprintln('Error: Results channel closed prematurely')
+			break
+		}
+		results << res
+		println('Received: Task #${res.task_id} from Worker #${res.worker_id} (took ${res.duration.milliseconds()}ms)')
+	}
+
+	results_chan.close()
+
+	// 6. Print summary
+	println('\n=== Processing Summary ===')
+	for res in results {
+		println('- Task #${res.task_id} -> ${res.output} (Worker #${res.worker_id})')
+	}
+}
+```
+
+---
+
+### OS and File Utilities Boilerplate
+
+_File location: [boilerplate_templates/04_file_utilities/file_utilities.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/04_file_utilities/file_utilities.v)_
+
+### Lesson: OS and File Utilities Boilerplate
+
+V's standard `os` module contains comprehensive and platform-agnostic tools for interacting with the file system and host operating system.
+
+Key concepts illustrated:
+- **Path Manipulation**: Using `os.join_path` to build paths correctly across Linux, macOS, and Windows.
+- **File I/O**: Performing quick reads and writes using `os.read_file` and `os.write_file`.
+- **Directory Operations**: Checking folder existence, recursively creating folders via `os.mkdir_all`, and listing files via `os.ls`.
+- **Metadata Inspection**: Interrogating file properties like sizes and types (`os.is_file`/`os.is_dir`).
+- **Resource Cleanup**: Ensuring system hygiene by safely removing files (`os.rm`) and folders (`os.rmdir`).
+
+```v
+module main
+
+import os
+
+fn main() {
+	println('=== V OS & File Utilities Boilerplate ===')
+
+	// 1. Join paths safely across different operating systems using os.join_path
+	cwd := os.getwd()
+	temp_dir := os.join_path(cwd, 'temp_file_demo')
+	println('Target directory: ${temp_dir}')
+
+	// 2. Check if a directory exists, and create it recursively if not
+	if !os.exists(temp_dir) {
+		println('Directory does not exist. Creating...')
+		os.mkdir_all(temp_dir) or {
+			eprintln('Failed to create directory: ${err}')
+			exit(1)
+		}
+	}
+
+	target_file := os.join_path(temp_dir, 'sample.txt')
+	println('Target file path: ${target_file}')
+
+	// 3. Write data to a file (overwrites if it already exists)
+	content_to_write := 'Hello V Developers!\nThis is a sample file created by the OS and File utilities boilerplate.'
+	os.write_file(target_file, content_to_write) or {
+		eprintln('Failed to write to file: ${err}')
+		exit(1)
+	}
+	println('File written successfully.')
+
+	// 4. Read data from a file back into memory
+	read_content := os.read_file(target_file) or {
+		eprintln('Failed to read file: ${err}')
+		exit(1)
+	}
+	println('\n--- Read Content ---')
+	println(read_content)
+	println('--------------------\n')
+
+	// 5. Query file metadata
+	size := os.file_size(target_file)
+	is_file := os.is_file(target_file)
+	is_dir := os.is_dir(temp_dir)
+	println('File properties:')
+	println('- Size: ${size} bytes')
+	println('- Is File: ${is_file}')
+	println('- Is Directory: ${is_dir}')
+
+	// 6. List all files and folders inside a directory
+	println('\nListing contents of directory: ${temp_dir}')
+	files := os.ls(temp_dir) or { []string{} }
+	for file in files {
+		full_path := os.join_path(temp_dir, file)
+		file_type := if os.is_dir(full_path) { '[DIR]' } else { '[FILE]' }
+		println('  ${file_type} ${file}')
+	}
+
+	// 7. Clean up by deleting the file and directory
+	println('\nCleaning up temporary files and directories...')
+	os.rm(target_file) or {
+		eprintln('Failed to delete file: ${err}')
+	}
+	os.rmdir(temp_dir) or {
+		eprintln('Failed to delete directory: ${err}')
+	}
+	println('Cleanup completed successfully.')
 }
 ```
 
