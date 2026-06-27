@@ -46,6 +46,17 @@ fn main() {
 	input_path := 'people.csv'
 	output_path := 'people_out.csv'
 
+	// Ensure temporary CSV files are cleaned up on exit
+	defer {
+		if os.exists(input_path) {
+			os.rm(input_path) or {}
+		}
+		if os.exists(output_path) {
+			os.rm(output_path) or {}
+		}
+		println('Cleaned up temporary CSV files.')
+	}
+
 	os.write_file(input_path, 'name,age,city\nAlice,30,New York\nBob,25,San Francisco') or {
 		eprintln('Could not create sample CSV: ${err}')
 		return

@@ -69,10 +69,13 @@ fn calculate_stats(numbers []f64) ?Stats {
 	}
 }
 
-// factorial calculates the factorial of a number iteratively.
-fn factorial(n int) u64 {
+// factorial calculates the factorial of a number iteratively, with overflow checks.
+fn factorial(n int) !u64 {
 	if n < 0 {
-		return 0
+		return error('Factorial is not defined for negative numbers')
+	}
+	if n > 20 {
+		return error('Factorial of ${n} overflows 64-bit unsigned integer limit (max n is 20)')
 	}
 	mut result := u64(1)
 	for i in 2 .. n + 1 {
@@ -81,9 +84,15 @@ fn factorial(n int) u64 {
 	return result
 }
 
-// fibonacci generates the first n Fibonacci numbers.
-fn fibonacci(n int) []u64 {
-	if n <= 0 {
+// fibonacci generates the first n Fibonacci numbers, with overflow checks.
+fn fibonacci(n int) ![]u64 {
+	if n < 0 {
+		return error('Count must be non-negative')
+	}
+	if n > 93 {
+		return error('Fibonacci sequence beyond 93 elements overflows 64-bit unsigned integer limit')
+	}
+	if n == 0 {
 		return []u64{}
 	}
 	if n == 1 {
@@ -164,8 +173,18 @@ fn main() {
 	// 2. Custom Math Functions Demo
 	n := 10
 	println('\nCustom Number Functions:')
-	println('- Factorial of ${n}:    ${factorial(n)}')
-	println('- Fibonacci first ${n}: ${fibonacci(n)}')
+	
+	fact := factorial(n) or {
+		eprintln('Error: ${err}')
+		u64(0)
+	}
+	println('- Factorial of ${n}:    ${fact}')
+	
+	fib := fibonacci(n) or {
+		eprintln('Error: ${err}')
+		[]u64{}
+	}
+	println('- Fibonacci first ${n}: ${fib}')
 	
 	test_primes := [7, 12, 19, 25, 97]
 	for p in test_primes {

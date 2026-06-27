@@ -2,6 +2,7 @@ module main
 
 import json
 import os
+import sync
 import veb
 
 // Item represents a data model in our API.
@@ -14,6 +15,7 @@ struct Item {
 // App holds the global state of the application.
 struct App {
 mut:
+	lock  sync.RwMutex
 	items []Item
 }
 
@@ -30,12 +32,16 @@ fn (mut app App) index(mut ctx Context) veb.Result {
 // 2. GET /api/items - Returns list of all items as JSON
 @['/api/items'; get]
 fn (mut app App) get_items(mut ctx Context) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
 	return ctx.json(json.encode(app.items))
 }
 
 // 3. GET /api/items/:id - Returns a single item by id, or 404
 @['/api/items/:id'; get]
 fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
 	for item in app.items {
 		if item.id == id {
 			return ctx.json(json.encode(item))
@@ -52,6 +58,9 @@ fn (mut app App) create_item(mut ctx Context) veb.Result {
 		ctx.res.set_status(.bad_request)
 		return ctx.json('{"error": "Invalid JSON format"}')
 	}
+
+	app.lock.@lock()
+	defer { app.lock.unlock() }
 
 	// Auto-increment ID based on length
 	item_to_add := Item{

@@ -19100,13 +19100,14 @@ Key concepts illustrated:
 - **Routing Attributes**: Tagging methods with route paths and HTTP verbs (e.g. `@['/api/items'; get]`).
 - **Path Parameters**: Defining routes with dynamic segments like `@['/api/items/:id'; get]` which map directly to method arguments.
 - **JSON Serialization/Deserialization**: Using `json.encode` and `json.decode` to work with HTTP requests and responses.
-- **State Management**: Using fields in the global `App` struct to share resources or databases across request handlers.
+- **State Management & Thread Safety**: Using fields in the global `App` struct to share resources, protected by a `sync.RwMutex` to ensure thread-safe concurrent access.
 
 ```v
 module main
 
 import json
 import os
+import sync
 import veb
 
 // Item represents a data model in our API.
@@ -19119,6 +19120,7 @@ struct Item {
 // App holds the global state of the application.
 struct App {
 mut:
+	lock  sync.RwMutex
 	items []Item
 }
 
@@ -19135,12 +19137,16 @@ fn (mut app App) index(mut ctx Context) veb.Result {
 // 2. GET /api/items - Returns list of all items as JSON
 @['/api/items'; get]
 fn (mut app App) get_items(mut ctx Context) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
 	return ctx.json(json.encode(app.items))
 }
 
 // 3. GET /api/items/:id - Returns a single item by id, or 404
 @['/api/items/:id'; get]
 fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
 	for item in app.items {
 		if item.id == id {
 			return ctx.json(json.encode(item))
@@ -19157,6 +19163,9 @@ fn (mut app App) create_item(mut ctx Context) veb.Result {
 		ctx.res.set_status(.bad_request)
 		return ctx.json('{"error": "Invalid JSON format"}')
 	}
+
+	app.lock.@lock()
+	defer { app.lock.unlock() }
 
 	// Auto-increment ID based on length
 	item_to_add := Item{
@@ -19204,13 +19213,15 @@ Key concepts illustrated:
 
 - **Channel Communication**: Sending and receiving tasks and results over thread-safe queues.
 - **Spawned Threads**: Running worker functions concurrently using the `spawn` keyword.
+- **Synchronization with WaitGroups**: Using `sync.WaitGroup` to track and coordinate concurrent worker completion.
+- **Monitor Thread Pattern**: Spawning a monitor thread to wait for workers to finish and close the results channel, avoiding channel deadlocks.
 - **Graceful Shutdown**: Closing the tasks channel (`tasks_chan.close()`) to signal worker threads to cleanly exit.
-- **Result Aggregation**: Blocking and gathering all responses from the output channel before concluding execution.
 
 ```v
 module main
 
 import time
+import sync
 
 // Task represents the unit of work to be processed.
 struct Task {
@@ -19227,10 +19238,13 @@ struct Result {
 }
 
 // worker runs in a separate thread, consuming from tasks_chan and producing to results_chan.
-fn worker(id int, tasks_chan chan Task, results_chan chan Result) {
+fn worker(id int, tasks_chan chan Task, results_chan chan Result, mut wg sync.WaitGroup) {
+	defer {
+		wg.done()
+	}
 	for {
 		// Receive a task from the channel.
-		// If the channel is closed and empty, it returns `none`.
+		// If the channel is closed and empty, it returns `none`
 		t := <-tasks_chan or {
 			break
 		}
@@ -19252,6 +19266,12 @@ fn worker(id int, tasks_chan chan Task, results_chan chan Result) {
 	}
 }
 
+// wait_and_close waits for all workers to finish and then closes the results channel.
+fn wait_and_close(mut wg sync.WaitGroup, results_chan chan Result) {
+	wg.wait()
+	results_chan.close()
+}
+
 fn main() {
 	println('=== V Worker Pool Concurrency Boilerplate ===')
 
@@ -19262,11 +19282,17 @@ fn main() {
 	num_workers := 3
 	num_tasks := 5
 
+	mut wg := sync.new_waitgroup()
+
 	// 2. Spawn concurrent worker threads
 	println('Spawning ${num_workers} workers...')
 	for i in 0 .. num_workers {
-		spawn worker(i + 1, tasks_chan, results_chan)
+		wg.add(1)
+		spawn worker(i + 1, tasks_chan, results_chan, mut wg)
 	}
+
+	// Spawn the monitor thread to close results_chan when all workers are done
+	spawn wait_and_close(mut wg, results_chan)
 
 	// 3. Dispatch tasks to the queue
 	println('Dispatching ${num_tasks} tasks to worker pool...')
@@ -19281,18 +19307,13 @@ fn main() {
 	tasks_chan.close()
 	println('Tasks dispatched, queue closed. Collecting results...')
 
-	// 5. Collect results from results channel
+	// 5. Collect results from results channel by iterating until it is closed
 	mut results := []Result{}
-	for _ in 0 .. num_tasks {
-		res := <-results_chan or {
-			eprintln('Error: Results channel closed prematurely')
-			break
-		}
+	for {
+		res := <-results_chan or { break }
 		results << res
 		println('Received: Task #${res.task_id} from Worker #${res.worker_id} (took ${res.duration.milliseconds()}ms)')
 	}
-
-	results_chan.close()
 
 	// 6. Print summary
 	println('\n=== Processing Summary ===')
@@ -19536,8 +19557,8 @@ Key concepts illustrated:
 - **Descriptive Statistics**: Iterating over elements to calculate min, max, sum, and average (mean) on float slices.
 - **Array Sorting & Cloning**: Using `.clone()` to copy data and sorting arrays in-place using `.sort()`.
 - **Median, Variance & Deviation**: Custom implementations to calculate distribution variance and standard deviation using V's `math.sqrt()`.
-- **Factorial Calculation**: An iterative, overflow-aware custom factorial function returning `u64`.
-- **Fibonacci Sequence Generator**: A custom dynamic programming function generating the first $N$ numbers of the Fibonacci sequence.
+- **Factorial Calculation**: An iterative, overflow-aware custom factorial function using V's `!` result type to report overflow on inputs greater than 20.
+- **Fibonacci Sequence Generator**: A custom dynamic programming function generating the first $N$ numbers of the Fibonacci sequence, using `!` to report overflow on inputs greater than 93.
 - **Prime Number Checker**: A highly optimized primality test (`is_prime`) using trial division of form $6k \pm 1$.
 - **GCD and LCM**: Custom implementations for finding the Greatest Common Divisor (Euclidean algorithm) and Least Common Multiple of two numbers.
 
@@ -19613,10 +19634,13 @@ fn calculate_stats(numbers []f64) ?Stats {
 	}
 }
 
-// factorial calculates the factorial of a number iteratively.
-fn factorial(n int) u64 {
+// factorial calculates the factorial of a number iteratively, with overflow checks.
+fn factorial(n int) !u64 {
 	if n < 0 {
-		return 0
+		return error('Factorial is not defined for negative numbers')
+	}
+	if n > 20 {
+		return error('Factorial of ${n} overflows 64-bit unsigned integer limit (max n is 20)')
 	}
 	mut result := u64(1)
 	for i in 2 .. n + 1 {
@@ -19625,9 +19649,15 @@ fn factorial(n int) u64 {
 	return result
 }
 
-// fibonacci generates the first n Fibonacci numbers.
-fn fibonacci(n int) []u64 {
-	if n <= 0 {
+// fibonacci generates the first n Fibonacci numbers, with overflow checks.
+fn fibonacci(n int) ![]u64 {
+	if n < 0 {
+		return error('Count must be non-negative')
+	}
+	if n > 93 {
+		return error('Fibonacci sequence beyond 93 elements overflows 64-bit unsigned integer limit')
+	}
+	if n == 0 {
 		return []u64{}
 	}
 	if n == 1 {
@@ -19708,8 +19738,18 @@ fn main() {
 	// 2. Custom Math Functions Demo
 	n := 10
 	println('\nCustom Number Functions:')
-	println('- Factorial of ${n}:    ${factorial(n)}')
-	println('- Fibonacci first ${n}: ${fibonacci(n)}')
+	
+	fact := factorial(n) or {
+		eprintln('Error: ${err}')
+		u64(0)
+	}
+	println('- Factorial of ${n}:    ${fact}')
+
+	fib := fibonacci(n) or {
+		eprintln('Error: ${err}')
+		[]u64{}
+	}
+	println('- Fibonacci first ${n}: ${fib}')
 
 	test_primes := [7, 12, 19, 25, 97]
 	for p in test_primes {
@@ -19898,14 +19938,42 @@ fn default_config() AppConfig {
 
 fn load_config(path string) AppConfig {
 	mut cfg := default_config()
-	if path == '' {
-		env_host := os.getenv('APP_HOST')
-		if env_host != '' {
-			cfg.host = env_host
+
+	// 1. If path is provided and exists, load config from the JSON file first
+	if path != '' && os.exists(path) {
+		raw := os.read_file(path) or {
+			eprintln('Warning: could not read config file: ${err}')
+			''
 		}
-		return cfg
+		if raw != '' {
+			cfg = json.decode(AppConfig, raw) or {
+				eprintln('Warning: could not decode config file: ${err}')
+				cfg
+			}
+		}
+	} else if path != '' {
+		println('Config file not found. Using defaults with environment overrides.')
 	}
-	// ...rest of the example is in the source file above
+
+	// 2. Overlay / override with environment variables (crucial for production container envs)
+	env_host := os.getenv('APP_HOST')
+	if env_host != '' {
+		cfg.host = env_host
+	}
+	env_port := os.getenv('APP_PORT')
+	if env_port != '' {
+		cfg.port = env_port.int()
+	}
+	env_debug := os.getenv('APP_DEBUG')
+	if env_debug != '' {
+		cfg.debug = env_debug == 'true'
+	}
+	env_retries := os.getenv('APP_RETRIES')
+	if env_retries != '' {
+		cfg.retries = env_retries.int()
+	}
+
+	return cfg
 }
 ```
 
@@ -19956,24 +20024,51 @@ Transient failures are common in distributed systems, network clients, and file 
 
 Key concepts illustrated:
 
-- **Retry Loops**: Repeating work when an operation temporarily fails.
-- **Backoff Delays**: Waiting briefly between attempts to reduce pressure on downstream services.
-- **Optional Return Values**: Using `?` to propagate failure cleanly.
-- **Practical Error Messages**: Giving the caller enough information to debug the problem.
+- **Resilient Operations**: Using a generic function structure to wrap any callback in a robust retry cycle.
+- **Exponential Backoff**: Multiplying delays by a backoff factor after each failed attempt to reduce load on resources.
+- **Random Jitter**: Adding a small, random time variation (jitter) to sleep intervals to prevent synchronized retries (thundering herd problem).
+- **Result & Error Propagation**: Leveraging V's `!` result type to return either the successful generic value `T` or propagate the final failure.
 
 ```v
-fn read_with_retry(path string, attempts int, delay time.Duration) !string {
-	for attempt in 1 .. attempts + 1 {
-		content := os.read_file(path) or {
-			eprintln('Attempt ${attempt}/${attempts} failed: ${err}')
-			if attempt < attempts {
-				time.sleep(delay)
+// RetryConfig configures the retry and backoff behavior.
+struct RetryConfig {
+	attempts      int           = 3
+	initial_delay time.Duration = 100 * time.millisecond
+	factor        f64           = 2.0
+	max_delay     time.Duration = 3 * time.second
+	jitter        bool          = true
+}
+
+// retry executes the operation `op` up to `cfg.attempts` times.
+// It uses exponential backoff with optional random jitter.
+fn retry[T](cfg RetryConfig, op fn () !T) !T {
+	mut delay := cfg.initial_delay
+	for attempt in 1 .. cfg.attempts + 1 {
+		res := op() or {
+			if attempt == cfg.attempts {
+				return error('Operation failed after ${cfg.attempts} attempts. Last error: ${err}')
+			}
+			
+			eprintln('Attempt ${attempt}/${cfg.attempts} failed: ${err}. Retrying in ${delay.milliseconds()}ms...')
+			
+			// Sleep with optional jitter to prevent thundering herd problems
+			mut sleep_dur := delay
+			if cfg.jitter {
+				jitter_ms := rand.intn(100) or { 0 }
+				sleep_dur += jitter_ms * time.millisecond
+			}
+			time.sleep(sleep_dur)
+
+			// Increase the delay for the next attempt, up to max_delay
+			delay = time.Duration(i64(f64(delay) * cfg.factor))
+			if delay > cfg.max_delay {
+				delay = cfg.max_delay
 			}
 			continue
 		}
-		return content
+		return res
 	}
-	return error('Unable to read ${path} after ${attempts} attempts')
+	return error('Unreachable')
 }
 ```
 
@@ -19990,6 +20085,7 @@ Many real-world tools need to call web services. This template shows a simple ye
 Key concepts illustrated:
 
 - **HTTP Requests**: Using `net.http` for GET and POST requests.
+- **JSON POST Headers**: Using `http.Request` directly to configure headers explicitly, including `Content-Type: application/json` for strict APIs.
 - **JSON Payloads**: Encoding and decoding structured data with `json`.
 - **Error Handling**: Returning and surfacing client errors cleanly.
 - **Reusable Helpers**: Keeping request logic in dedicated functions for later reuse.
@@ -20063,8 +20159,27 @@ fn (logger Logger) log(level LogLevel, message string) {
 	if int(level) < int(logger.level) {
 		return
 	}
-	line := '${time.now().str()} ${prefix} ${message}'
+
+	timestamp := time.now().str()
+	prefix := match level {
+		.debug { '[DEBUG]' }
+		.info { '[INFO]' }
+		.warn { '[WARN]' }
+		.error { '[ERROR]' }
+	}
+
+	line := '${timestamp} ${prefix} ${message}'
 	println(line)
+	if logger.log_file != '' {
+		mut f := os.open_file(logger.log_file, 'a') or {
+			eprintln('Failed to open log file: ${err}')
+			return
+		}
+		f.write((line + '\n').bytes()) or {
+			eprintln('Failed to append log: ${err}')
+		}
+		f.close()
+	}
 }
 ```
 

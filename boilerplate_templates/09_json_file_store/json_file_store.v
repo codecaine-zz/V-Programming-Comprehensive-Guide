@@ -69,6 +69,15 @@ fn main() {
 	println('=== V JSON File Store Boilerplate ===')
 
 	store_path := 'todos.json'
+	
+	// Ensure we cleanup the generated file on exit
+	defer {
+		if os.exists(store_path) {
+			os.rm(store_path) or {}
+			println('Cleaned up temporary store file: ${store_path}')
+		}
+	}
+
 	mut store := load_store(store_path)
 
 	add_item(mut store, 'Write a V tutorial')

@@ -1,6 +1,7 @@
 module main
 
 import time
+import sync
 
 // Task represents the unit of work to be processed.
 struct Task {
@@ -17,10 +18,13 @@ struct Result {
 }
 
 // worker runs in a separate thread, consuming from tasks_chan and producing to results_chan.
-fn worker(id int, tasks_chan chan Task, results_chan chan Result) {
+fn worker(id int, tasks_chan chan Task, results_chan chan Result, mut wg sync.WaitGroup) {
+	defer {
+		wg.done()
+	}
 	for {
 		// Receive a task from the channel.
-		// If the channel is closed and empty, it returns `none` (the channel option propagates as an error or closes).
+		// If the channel is closed and empty, it returns `none`
 		t := <-tasks_chan or {
 			break
 		}
@@ -42,6 +46,12 @@ fn worker(id int, tasks_chan chan Task, results_chan chan Result) {
 	}
 }
 
+// wait_and_close waits for all workers to finish and then closes the results channel.
+fn wait_and_close(mut wg sync.WaitGroup, results_chan chan Result) {
+	wg.wait()
+	results_chan.close()
+}
+
 fn main() {
 	println('=== V Worker Pool Concurrency Boilerplate ===')
 
@@ -52,11 +62,17 @@ fn main() {
 	num_workers := 3
 	num_tasks := 5
 
+	mut wg := sync.new_waitgroup()
+
 	// 2. Spawn concurrent worker threads
 	println('Spawning ${num_workers} workers...')
 	for i in 0 .. num_workers {
-		spawn worker(i + 1, tasks_chan, results_chan)
+		wg.add(1)
+		spawn worker(i + 1, tasks_chan, results_chan, mut wg)
 	}
+
+	// Spawn the monitor thread to close results_chan when all workers are done
+	spawn wait_and_close(mut wg, results_chan)
 
 	// 3. Dispatch tasks to the queue
 	println('Dispatching ${num_tasks} tasks to worker pool...')
@@ -71,18 +87,13 @@ fn main() {
 	tasks_chan.close()
 	println('Tasks dispatched, queue closed. Collecting results...')
 
-	// 5. Collect results from results channel
+	// 5. Collect results from results channel by iterating until it is closed
 	mut results := []Result{}
-	for _ in 0 .. num_tasks {
-		res := <-results_chan or {
-			eprintln('Error: Results channel closed prematurely')
-			break
-		}
+	for {
+		res := <-results_chan or { break }
 		results << res
 		println('Received: Task #${res.task_id} from Worker #${res.worker_id} (took ${res.duration.milliseconds()}ms)')
 	}
-
-	results_chan.close()
 
 	// 6. Print summary
 	println('\n=== Processing Summary ===')

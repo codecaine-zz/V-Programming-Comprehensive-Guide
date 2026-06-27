@@ -31454,13 +31454,13 @@ fn run_app(cfg Config, args []string) {
 <li><strong>Routing Attributes</strong>: Tagging methods with route paths and HTTP verbs (e.g. <code>@[&#039;/api/items&#039;; get]</code>).</li>
 <li><strong>Path Parameters</strong>: Defining routes with dynamic segments like <code>@[&#039;/api/items/:id&#039;; get]</code> which map directly to method arguments.</li>
 <li><strong>JSON Serialization/Deserialization</strong>: Using <code>json.encode</code> and <code>json.decode</code> to work with HTTP requests and responses.</li>
-<li><strong>State Management</strong>: Using fields in the global <code>App</code> struct to share resources or databases across request handlers.</li>
+<li><strong>State Management &amp; Thread Safety</strong>: Using fields in the global <code>App</code> struct to share resources, protected by a <code>sync.RwMutex</code> to ensure thread-safe concurrent access.</li>
 </ul>
 <div class="code-wrapper">
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCBqc29uCmltcG9ydCBvcwppbXBvcnQgdmViCgovLyBJdGVtIHJlcHJlc2VudHMgYSBkYXRhIG1vZGVsIGluIG91ciBBUEkuCnN0cnVjdCBJdGVtIHsKCWlkICAgaW50ICAgIEBbanNvbjogJ2lkJ10KCW5hbWUgc3RyaW5nIEBbanNvbjogJ25hbWUnXQoJZG9uZSBib29sICAgQFtqc29uOiAnZG9uZSddCn0KCi8vIEFwcCBob2xkcyB0aGUgZ2xvYmFsIHN0YXRlIG9mIHRoZSBhcHBsaWNhdGlvbi4Kc3RydWN0IEFwcCB7Cm11dDoKCWl0ZW1zIFtdSXRlbQp9CgovLyBDb250ZXh0IHdyYXBzIHZlYidzIHJlcXVlc3QvcmVzcG9uc2UgbGlmZWN5Y2xlLgpzdHJ1Y3QgQ29udGV4dCB7Cgl2ZWIuQ29udGV4dAp9CgovLyAxLiBHRVQgLyAtIFNpbXBsZSB0ZXh0IHJlc3BvbnNlIGluZGV4IGVuZHBvaW50CmZuIChtdXQgYXBwIEFwcCkgaW5kZXgobXV0IGN0eCBDb250ZXh0KSB2ZWIuUmVzdWx0IHsKCXJldHVybiBjdHgudGV4dCgnV2VsY29tZSB0byB0aGUgViBSRVNUIEFQSSBCb2lsZXJwbGF0ZSEgVXNlIC9hcGkvaXRlbXMgdG8gaW50ZXJhY3Qgd2l0aCB0aGUgc2VydmljZS4nKQp9CgovLyAyLiBHRVQgL2FwaS9pdGVtcyAtIFJldHVybnMgbGlzdCBvZiBhbGwgaXRlbXMgYXMgSlNPTgpAWycvYXBpL2l0ZW1zJzsgZ2V0XQpmbiAobXV0IGFwcCBBcHApIGdldF9pdGVtcyhtdXQgY3R4IENvbnRleHQpIHZlYi5SZXN1bHQgewoJcmV0dXJuIGN0eC5qc29uKGpzb24uZW5jb2RlKGFwcC5pdGVtcykpCn0KCi8vIDMuIEdFVCAvYXBpL2l0ZW1zLzppZCAtIFJldHVybnMgYSBzaW5nbGUgaXRlbSBieSBpZCwgb3IgNDA0CkBbJy9hcGkvaXRlbXMvOmlkJzsgZ2V0XQpmbiAobXV0IGFwcCBBcHApIGdldF9pdGVtKG11dCBjdHggQ29udGV4dCwgaWQgaW50KSB2ZWIuUmVzdWx0IHsKCWZvciBpdGVtIGluIGFwcC5pdGVtcyB7CgkJaWYgaXRlbS5pZCA9PSBpZCB7CgkJCXJldHVybiBjdHguanNvbihqc29uLmVuY29kZShpdGVtKSkKCQl9Cgl9CgljdHgucmVzLnNldF9zdGF0dXMoLm5vdF9mb3VuZCkKCXJldHVybiBjdHguanNvbigneyJlcnJvciI6ICJJdGVtIG5vdCBmb3VuZCJ9JykKfQoKLy8gNC4gUE9TVCAvYXBpL2l0ZW1zIC0gRGVjb2RlcyBKU09OIHJlcXVlc3QgYm9keSBhbmQgYWRkcyBhIG5ldyBpdGVtCkBbJy9hcGkvaXRlbXMnOyBwb3N0XQpmbiAobXV0IGFwcCBBcHApIGNyZWF0ZV9pdGVtKG11dCBjdHggQ29udGV4dCkgdmViLlJlc3VsdCB7CgluZXdfaXRlbSA6PSBqc29uLmRlY29kZShJdGVtLCBjdHgucmVxLmRhdGEpIG9yIHsKCQljdHgucmVzLnNldF9zdGF0dXMoLmJhZF9yZXF1ZXN0KQoJCXJldHVybiBjdHguanNvbigneyJlcnJvciI6ICJJbnZhbGlkIEpTT04gZm9ybWF0In0nKQoJfQoKCS8vIEF1dG8taW5jcmVtZW50IElEIGJhc2VkIG9uIGxlbmd0aAoJaXRlbV90b19hZGQgOj0gSXRlbXsKCQlpZDogYXBwLml0ZW1zLmxlbiArIDEKCQluYW1lOiBuZXdfaXRlbS5uYW1lCgkJZG9uZTogbmV3X2l0ZW0uZG9uZQoJfQoKCWFwcC5pdGVtcyA8PCBpdGVtX3RvX2FkZAoJY3R4LnJlcy5zZXRfc3RhdHVzKC5jcmVhdGVkKQoJcmV0dXJuIGN0eC5qc29uKGpzb24uZW5jb2RlKGl0ZW1fdG9fYWRkKSkKfQoKZm4gbWFpbigpIHsKCS8vIEluaXRpYWxpemUgQXBwIHdpdGggbW9jayBzZWVkIGRhdGEKCW11dCBhcHAgOj0gJkFwcHsKCQlpdGVtczogWwoJCQlJdGVte2lkOiAxLCBuYW1lOiAnTGVhcm4gViBzeW50YXgnLCBkb25lOiB0cnVlfSwKCQkJSXRlbXtpZDogMiwgbmFtZTogJ0J1aWxkIGEgUkVTVCBBUEkgaW4gVicsIGRvbmU6IGZhbHNlfSwKCQldCgl9CgoJLy8gUmVhZCBwb3J0IGZyb20gZW52aXJvbm1lbnQgdmFyaWFibGUgb3IgZGVmYXVsdCB0byA4MDgyIHRvIGF2b2lkIGNvbW1vbiBjb25mbGljdHMgb24gODA4MAoJcG9ydF9lbnYgOj0gb3MuZ2V0ZW52KCdQT1JUJykKCXBvcnQgOj0gaWYgcG9ydF9lbnYgIT0gJycgeyBwb3J0X2Vudi5pbnQoKSB9IGVsc2UgeyA4MDgyIH0KCglwcmludGxuKCdTdGFydGluZyBSRVNUIEFQSSBzZXJ2ZXIgb24gaHR0cDovL2xvY2FsaG9zdDoke3BvcnR9Li4uJykKCgkvLyBTdGFydCB2ZWIgd2ViIHNlcnZlcgoJdmViLnJ1bltBcHAsIENvbnRleHRdKG11dCBhcHAsIHBvcnQpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCBqc29uCmltcG9ydCBvcwppbXBvcnQgc3luYwppbXBvcnQgdmViCgovLyBJdGVtIHJlcHJlc2VudHMgYSBkYXRhIG1vZGVsIGluIG91ciBBUEkuCnN0cnVjdCBJdGVtIHsKCWlkICAgaW50ICAgIEBbanNvbjogJ2lkJ10KCW5hbWUgc3RyaW5nIEBbanNvbjogJ25hbWUnXQoJZG9uZSBib29sICAgQFtqc29uOiAnZG9uZSddCn0KCi8vIEFwcCBob2xkcyB0aGUgZ2xvYmFsIHN0YXRlIG9mIHRoZSBhcHBsaWNhdGlvbi4Kc3RydWN0IEFwcCB7Cm11dDoKCWxvY2sgIHN5bmMuUndNdXRleAoJaXRlbXMgW11JdGVtCn0KCi8vIENvbnRleHQgd3JhcHMgdmViJ3MgcmVxdWVzdC9yZXNwb25zZSBsaWZlY3ljbGUuCnN0cnVjdCBDb250ZXh0IHsKCXZlYi5Db250ZXh0Cn0KCi8vIDEuIEdFVCAvIC0gU2ltcGxlIHRleHQgcmVzcG9uc2UgaW5kZXggZW5kcG9pbnQKZm4gKG11dCBhcHAgQXBwKSBpbmRleChtdXQgY3R4IENvbnRleHQpIHZlYi5SZXN1bHQgewoJcmV0dXJuIGN0eC50ZXh0KCdXZWxjb21lIHRvIHRoZSBWIFJFU1QgQVBJIEJvaWxlcnBsYXRlISBVc2UgL2FwaS9pdGVtcyB0byBpbnRlcmFjdCB3aXRoIHRoZSBzZXJ2aWNlLicpCn0KCi8vIDIuIEdFVCAvYXBpL2l0ZW1zIC0gUmV0dXJucyBsaXN0IG9mIGFsbCBpdGVtcyBhcyBKU09OCkBbJy9hcGkvaXRlbXMnOyBnZXRdCmZuIChtdXQgYXBwIEFwcCkgZ2V0X2l0ZW1zKG11dCBjdHggQ29udGV4dCkgdmViLlJlc3VsdCB7CglhcHAubG9jay5AcmxvY2soKQoJZGVmZXIgeyBhcHAubG9jay5ydW5sb2NrKCkgfQoJcmV0dXJuIGN0eC5qc29uKGpzb24uZW5jb2RlKGFwcC5pdGVtcykpCn0KCi8vIDMuIEdFVCAvYXBpL2l0ZW1zLzppZCAtIFJldHVybnMgYSBzaW5nbGUgaXRlbSBieSBpZCwgb3IgNDA0CkBbJy9hcGkvaXRlbXMvOmlkJzsgZ2V0XQpmbiAobXV0IGFwcCBBcHApIGdldF9pdGVtKG11dCBjdHggQ29udGV4dCwgaWQgaW50KSB2ZWIuUmVzdWx0IHsKCWFwcC5sb2NrLkBybG9jaygpCglkZWZlciB7IGFwcC5sb2NrLnJ1bmxvY2soKSB9Cglmb3IgaXRlbSBpbiBhcHAuaXRlbXMgewoJCWlmIGl0ZW0uaWQgPT0gaWQgewoJCQlyZXR1cm4gY3R4Lmpzb24oanNvbi5lbmNvZGUoaXRlbSkpCgkJfQoJfQoJY3R4LnJlcy5zZXRfc3RhdHVzKC5ub3RfZm91bmQpCglyZXR1cm4gY3R4Lmpzb24oJ3siZXJyb3IiOiAiSXRlbSBub3QgZm91bmQifScpCn0KCi8vIDQuIFBPU1QgL2FwaS9pdGVtcyAtIERlY29kZXMgSlNPTiByZXF1ZXN0IGJvZHkgYW5kIGFkZHMgYSBuZXcgaXRlbQpAWycvYXBpL2l0ZW1zJzsgcG9zdF0KZm4gKG11dCBhcHAgQXBwKSBjcmVhdGVfaXRlbShtdXQgY3R4IENvbnRleHQpIHZlYi5SZXN1bHQgewoJbmV3X2l0ZW0gOj0ganNvbi5kZWNvZGUoSXRlbSwgY3R4LnJlcS5kYXRhKSBvciB7CgkJY3R4LnJlcy5zZXRfc3RhdHVzKC5iYWRfcmVxdWVzdCkKCQlyZXR1cm4gY3R4Lmpzb24oJ3siZXJyb3IiOiAiSW52YWxpZCBKU09OIGZvcm1hdCJ9JykKCX0KCglhcHAubG9jay5AbG9jaygpCglkZWZlciB7IGFwcC5sb2NrLnVubG9jaygpIH0KCgkvLyBBdXRvLWluY3JlbWVudCBJRCBiYXNlZCBvbiBsZW5ndGgKCWl0ZW1fdG9fYWRkIDo9IEl0ZW17CgkJaWQ6IGFwcC5pdGVtcy5sZW4gKyAxCgkJbmFtZTogbmV3X2l0ZW0ubmFtZQoJCWRvbmU6IG5ld19pdGVtLmRvbmUKCX0KCglhcHAuaXRlbXMgPDwgaXRlbV90b19hZGQKCWN0eC5yZXMuc2V0X3N0YXR1cyguY3JlYXRlZCkKCXJldHVybiBjdHguanNvbihqc29uLmVuY29kZShpdGVtX3RvX2FkZCkpCn0KCmZuIG1haW4oKSB7CgkvLyBJbml0aWFsaXplIEFwcCB3aXRoIG1vY2sgc2VlZCBkYXRhCgltdXQgYXBwIDo9ICZBcHB7CgkJaXRlbXM6IFsKCQkJSXRlbXtpZDogMSwgbmFtZTogJ0xlYXJuIFYgc3ludGF4JywgZG9uZTogdHJ1ZX0sCgkJCUl0ZW17aWQ6IDIsIG5hbWU6ICdCdWlsZCBhIFJFU1QgQVBJIGluIFYnLCBkb25lOiBmYWxzZX0sCgkJXQoJfQoKCS8vIFJlYWQgcG9ydCBmcm9tIGVudmlyb25tZW50IHZhcmlhYmxlIG9yIGRlZmF1bHQgdG8gODA4MiB0byBhdm9pZCBjb21tb24gY29uZmxpY3RzIG9uIDgwODAKCXBvcnRfZW52IDo9IG9zLmdldGVudignUE9SVCcpCglwb3J0IDo9IGlmIHBvcnRfZW52ICE9ICcnIHsgcG9ydF9lbnYuaW50KCkgfSBlbHNlIHsgODA4MiB9CgoJcHJpbnRsbignU3RhcnRpbmcgUkVTVCBBUEkgc2VydmVyIG9uIGh0dHA6Ly9sb2NhbGhvc3Q6JHtwb3J0fS4uLicpCgoJLy8gU3RhcnQgdmViIHdlYiBzZXJ2ZXIKCXZlYi5ydW5bQXBwLCBDb250ZXh0XShtdXQgYXBwLCBwb3J0KQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -31482,6 +31482,7 @@ fn run_app(cfg Config, args []string) {
 
 import json
 import os
+import sync
 import veb
 
 // Item represents a data model in our API.
@@ -31494,6 +31495,7 @@ struct Item {
 // App holds the global state of the application.
 struct App {
 mut:
+	lock  sync.RwMutex
 	items []Item
 }
 
@@ -31510,12 +31512,16 @@ fn (mut app App) index(mut ctx Context) veb.Result {
 // 2. GET /api/items - Returns list of all items as JSON
 @[&#039;/api/items&#039;; get]
 fn (mut app App) get_items(mut ctx Context) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
 	return ctx.json(json.encode(app.items))
 }
 
 // 3. GET /api/items/:id - Returns a single item by id, or 404
 @[&#039;/api/items/:id&#039;; get]
 fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
 	for item in app.items {
 		if item.id == id {
 			return ctx.json(json.encode(item))
@@ -31532,6 +31538,9 @@ fn (mut app App) create_item(mut ctx Context) veb.Result {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(&#039;{&quot;error&quot;: &quot;Invalid JSON format&quot;}&#039;)
 	}
+
+	app.lock.@lock()
+	defer { app.lock.unlock() }
 
 	// Auto-increment ID based on length
 	item_to_add := Item{
@@ -31586,14 +31595,15 @@ fn main() {
 <ul>
 <li><strong>Channel Communication</strong>: Sending and receiving tasks and results over thread-safe queues.</li>
 <li><strong>Spawned Threads</strong>: Running worker functions concurrently using the <code>spawn</code> keyword.</li>
+<li><strong>Synchronization with WaitGroups</strong>: Using <code>sync.WaitGroup</code> to track and coordinate concurrent worker completion.</li>
+<li><strong>Monitor Thread Pattern</strong>: Spawning a monitor thread to wait for workers to finish and close the results channel, avoiding channel deadlocks.</li>
 <li><strong>Graceful Shutdown</strong>: Closing the tasks channel (<code>tasks_chan.close()</code>) to signal worker threads to cleanly exit.</li>
-<li><strong>Result Aggregation</strong>: Blocking and gathering all responses from the output channel before concluding execution.</li>
 </ul>
 <div class="code-wrapper">
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCB0aW1lCgovLyBUYXNrIHJlcHJlc2VudHMgdGhlIHVuaXQgb2Ygd29yayB0byBiZSBwcm9jZXNzZWQuCnN0cnVjdCBUYXNrIHsKCWlkICAgaW50CglkYXRhIHN0cmluZwp9CgovLyBSZXN1bHQgcmVwcmVzZW50cyB0aGUgb3V0Y29tZSBvZiBwcm9jZXNzaW5nIGEgVGFzay4Kc3RydWN0IFJlc3VsdCB7Cgl0YXNrX2lkICAgaW50Cgl3b3JrZXJfaWQgaW50CglvdXRwdXQgICAgc3RyaW5nCglkdXJhdGlvbiAgdGltZS5EdXJhdGlvbgp9CgovLyB3b3JrZXIgcnVucyBpbiBhIHNlcGFyYXRlIHRocmVhZCwgY29uc3VtaW5nIGZyb20gdGFza3NfY2hhbiBhbmQgcHJvZHVjaW5nIHRvIHJlc3VsdHNfY2hhbi4KZm4gd29ya2VyKGlkIGludCwgdGFza3NfY2hhbiBjaGFuIFRhc2ssIHJlc3VsdHNfY2hhbiBjaGFuIFJlc3VsdCkgewoJZm9yIHsKCQkvLyBSZWNlaXZlIGEgdGFzayBmcm9tIHRoZSBjaGFubmVsLgoJCS8vIElmIHRoZSBjaGFubmVsIGlzIGNsb3NlZCBhbmQgZW1wdHksIGl0IHJldHVybnMgYG5vbmVgLgoJCXQgOj0gPC10YXNrc19jaGFuIG9yIHsKCQkJYnJlYWsKCQl9CgoJCXN0YXJ0X3RpbWUgOj0gdGltZS5ub3coKQoKCQkvLyBTaW11bGF0ZSBpbnRlbnNpdmUgcHJvY2Vzc2luZy9JL08gdGFzawoJCXRpbWUuc2xlZXAoNTAgKiB0aW1lLm1pbGxpc2Vjb25kKQoKCQllbGFwc2VkIDo9IHRpbWUuc2luY2Uoc3RhcnRfdGltZSkKCgkJLy8gU2VuZCB0aGUgcmVzdWx0IHRvIHRoZSBvdXRwdXQgY2hhbm5lbAoJCXJlc3VsdHNfY2hhbiA8LSBSZXN1bHR7CgkJCXRhc2tfaWQ6IHQuaWQKCQkJd29ya2VyX2lkOiBpZAoJCQlvdXRwdXQ6ICdQcm9jZXNzZWQ6ICcgKyB0LmRhdGEudG9fdXBwZXIoKQoJCQlkdXJhdGlvbjogZWxhcHNlZAoJCX0KCX0KfQoKZm4gbWFpbigpIHsKCXByaW50bG4oJz09PSBWIFdvcmtlciBQb29sIENvbmN1cnJlbmN5IEJvaWxlcnBsYXRlID09PScpCgoJLy8gMS4gQ3JlYXRlIGNoYW5uZWxzIGZvciB0YXNrcyBhbmQgcmVzdWx0cyB3aXRoIGNhcGFjaXRpZXMKCXRhc2tzX2NoYW4gOj0gY2hhbiBUYXNre2NhcDogMTB9CglyZXN1bHRzX2NoYW4gOj0gY2hhbiBSZXN1bHR7Y2FwOiAxMH0KCgludW1fd29ya2VycyA6PSAzCgludW1fdGFza3MgOj0gNQoKCS8vIDIuIFNwYXduIGNvbmN1cnJlbnQgd29ya2VyIHRocmVhZHMKCXByaW50bG4oJ1NwYXduaW5nICR7bnVtX3dvcmtlcnN9IHdvcmtlcnMuLi4nKQoJZm9yIGkgaW4gMCAuLiBudW1fd29ya2VycyB7CgkJc3Bhd24gd29ya2VyKGkgKyAxLCB0YXNrc19jaGFuLCByZXN1bHRzX2NoYW4pCgl9CgoJLy8gMy4gRGlzcGF0Y2ggdGFza3MgdG8gdGhlIHF1ZXVlCglwcmludGxuKCdEaXNwYXRjaGluZyAke251bV90YXNrc30gdGFza3MgdG8gd29ya2VyIHBvb2wuLi4nKQoJZm9yIGkgaW4gMCAuLiBudW1fdGFza3MgewoJCXRhc2tzX2NoYW4gPC0gVGFza3sKCQkJaWQ6IGkgKyAxCgkJCWRhdGE6ICd0YXNrLXBheWxvYWQtJHtpICsgMX0nCgkJfQoJfQoKCS8vIDQuIENsb3NlIHRhc2tzIGNoYW5uZWwgdG8gc2lnbmFsIHdvcmtlcnMgdGhhdCBubyBtb3JlIHdvcmsgaXMgY29taW5nCgl0YXNrc19jaGFuLmNsb3NlKCkKCXByaW50bG4oJ1Rhc2tzIGRpc3BhdGNoZWQsIHF1ZXVlIGNsb3NlZC4gQ29sbGVjdGluZyByZXN1bHRzLi4uJykKCgkvLyA1LiBDb2xsZWN0IHJlc3VsdHMgZnJvbSByZXN1bHRzIGNoYW5uZWwKCW11dCByZXN1bHRzIDo9IFtdUmVzdWx0e30KCWZvciBfIGluIDAgLi4gbnVtX3Rhc2tzIHsKCQlyZXMgOj0gPC1yZXN1bHRzX2NoYW4gb3IgewoJCQllcHJpbnRsbignRXJyb3I6IFJlc3VsdHMgY2hhbm5lbCBjbG9zZWQgcHJlbWF0dXJlbHknKQoJCQlicmVhawoJCX0KCQlyZXN1bHRzIDw8IHJlcwoJCXByaW50bG4oJ1JlY2VpdmVkOiBUYXNrICMke3Jlcy50YXNrX2lkfSBmcm9tIFdvcmtlciAjJHtyZXMud29ya2VyX2lkfSAodG9vayAke3Jlcy5kdXJhdGlvbi5taWxsaXNlY29uZHMoKX1tcyknKQoJfQoKCXJlc3VsdHNfY2hhbi5jbG9zZSgpCgoJLy8gNi4gUHJpbnQgc3VtbWFyeQoJcHJpbnRsbignXG49PT0gUHJvY2Vzc2luZyBTdW1tYXJ5ID09PScpCglmb3IgcmVzIGluIHJlc3VsdHMgewoJCXByaW50bG4oJy0gVGFzayAjJHtyZXMudGFza19pZH0gLT4gJHtyZXMub3V0cHV0fSAoV29ya2VyICMke3Jlcy53b3JrZXJfaWR9KScpCgl9Cn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCB0aW1lCmltcG9ydCBzeW5jCgovLyBUYXNrIHJlcHJlc2VudHMgdGhlIHVuaXQgb2Ygd29yayB0byBiZSBwcm9jZXNzZWQuCnN0cnVjdCBUYXNrIHsKCWlkICAgaW50CglkYXRhIHN0cmluZwp9CgovLyBSZXN1bHQgcmVwcmVzZW50cyB0aGUgb3V0Y29tZSBvZiBwcm9jZXNzaW5nIGEgVGFzay4Kc3RydWN0IFJlc3VsdCB7Cgl0YXNrX2lkICAgaW50Cgl3b3JrZXJfaWQgaW50CglvdXRwdXQgICAgc3RyaW5nCglkdXJhdGlvbiAgdGltZS5EdXJhdGlvbgp9CgovLyB3b3JrZXIgcnVucyBpbiBhIHNlcGFyYXRlIHRocmVhZCwgY29uc3VtaW5nIGZyb20gdGFza3NfY2hhbiBhbmQgcHJvZHVjaW5nIHRvIHJlc3VsdHNfY2hhbi4KZm4gd29ya2VyKGlkIGludCwgdGFza3NfY2hhbiBjaGFuIFRhc2ssIHJlc3VsdHNfY2hhbiBjaGFuIFJlc3VsdCwgbXV0IHdnIHN5bmMuV2FpdEdyb3VwKSB7CglkZWZlciB7CgkJd2cuZG9uZSgpCgl9Cglmb3IgewoJCS8vIFJlY2VpdmUgYSB0YXNrIGZyb20gdGhlIGNoYW5uZWwuCgkJLy8gSWYgdGhlIGNoYW5uZWwgaXMgY2xvc2VkIGFuZCBlbXB0eSwgaXQgcmV0dXJucyBgbm9uZWAKCQl0IDo9IDwtdGFza3NfY2hhbiBvciB7CgkJCWJyZWFrCgkJfQoKCQlzdGFydF90aW1lIDo9IHRpbWUubm93KCkKCgkJLy8gU2ltdWxhdGUgaW50ZW5zaXZlIHByb2Nlc3NpbmcvSS9PIHRhc2sKCQl0aW1lLnNsZWVwKDUwICogdGltZS5taWxsaXNlY29uZCkKCgkJZWxhcHNlZCA6PSB0aW1lLnNpbmNlKHN0YXJ0X3RpbWUpCgoJCS8vIFNlbmQgdGhlIHJlc3VsdCB0byB0aGUgb3V0cHV0IGNoYW5uZWwKCQlyZXN1bHRzX2NoYW4gPC0gUmVzdWx0ewoJCQl0YXNrX2lkOiB0LmlkCgkJCXdvcmtlcl9pZDogaWQKCQkJb3V0cHV0OiAnUHJvY2Vzc2VkOiAnICsgdC5kYXRhLnRvX3VwcGVyKCkKCQkJZHVyYXRpb246IGVsYXBzZWQKCQl9Cgl9Cn0KCi8vIHdhaXRfYW5kX2Nsb3NlIHdhaXRzIGZvciBhbGwgd29ya2VycyB0byBmaW5pc2ggYW5kIHRoZW4gY2xvc2VzIHRoZSByZXN1bHRzIGNoYW5uZWwuCmZuIHdhaXRfYW5kX2Nsb3NlKG11dCB3ZyBzeW5jLldhaXRHcm91cCwgcmVzdWx0c19jaGFuIGNoYW4gUmVzdWx0KSB7Cgl3Zy53YWl0KCkKCXJlc3VsdHNfY2hhbi5jbG9zZSgpCn0KCmZuIG1haW4oKSB7CglwcmludGxuKCc9PT0gViBXb3JrZXIgUG9vbCBDb25jdXJyZW5jeSBCb2lsZXJwbGF0ZSA9PT0nKQoKCS8vIDEuIENyZWF0ZSBjaGFubmVscyBmb3IgdGFza3MgYW5kIHJlc3VsdHMgd2l0aCBjYXBhY2l0aWVzCgl0YXNrc19jaGFuIDo9IGNoYW4gVGFza3tjYXA6IDEwfQoJcmVzdWx0c19jaGFuIDo9IGNoYW4gUmVzdWx0e2NhcDogMTB9CgoJbnVtX3dvcmtlcnMgOj0gMwoJbnVtX3Rhc2tzIDo9IDUKCgltdXQgd2cgOj0gc3luYy5uZXdfd2FpdGdyb3VwKCkKCgkvLyAyLiBTcGF3biBjb25jdXJyZW50IHdvcmtlciB0aHJlYWRzCglwcmludGxuKCdTcGF3bmluZyAke251bV93b3JrZXJzfSB3b3JrZXJzLi4uJykKCWZvciBpIGluIDAgLi4gbnVtX3dvcmtlcnMgewoJCXdnLmFkZCgxKQoJCXNwYXduIHdvcmtlcihpICsgMSwgdGFza3NfY2hhbiwgcmVzdWx0c19jaGFuLCBtdXQgd2cpCgl9CgoJLy8gU3Bhd24gdGhlIG1vbml0b3IgdGhyZWFkIHRvIGNsb3NlIHJlc3VsdHNfY2hhbiB3aGVuIGFsbCB3b3JrZXJzIGFyZSBkb25lCglzcGF3biB3YWl0X2FuZF9jbG9zZShtdXQgd2csIHJlc3VsdHNfY2hhbikKCgkvLyAzLiBEaXNwYXRjaCB0YXNrcyB0byB0aGUgcXVldWUKCXByaW50bG4oJ0Rpc3BhdGNoaW5nICR7bnVtX3Rhc2tzfSB0YXNrcyB0byB3b3JrZXIgcG9vbC4uLicpCglmb3IgaSBpbiAwIC4uIG51bV90YXNrcyB7CgkJdGFza3NfY2hhbiA8LSBUYXNrewoJCQlpZDogaSArIDEKCQkJZGF0YTogJ3Rhc2stcGF5bG9hZC0ke2kgKyAxfScKCQl9Cgl9CgoJLy8gNC4gQ2xvc2UgdGFza3MgY2hhbm5lbCB0byBzaWduYWwgd29ya2VycyB0aGF0IG5vIG1vcmUgd29yayBpcyBjb21pbmcKCXRhc2tzX2NoYW4uY2xvc2UoKQoJcHJpbnRsbignVGFza3MgZGlzcGF0Y2hlZCwgcXVldWUgY2xvc2VkLiBDb2xsZWN0aW5nIHJlc3VsdHMuLi4nKQoKCS8vIDUuIENvbGxlY3QgcmVzdWx0cyBmcm9tIHJlc3VsdHMgY2hhbm5lbCBieSBpdGVyYXRpbmcgdW50aWwgaXQgaXMgY2xvc2VkCgltdXQgcmVzdWx0cyA6PSBbXVJlc3VsdHt9Cglmb3IgewoJCXJlcyA6PSA8LXJlc3VsdHNfY2hhbiBvciB7IGJyZWFrIH0KCQlyZXN1bHRzIDw8IHJlcwoJCXByaW50bG4oJ1JlY2VpdmVkOiBUYXNrICMke3Jlcy50YXNrX2lkfSBmcm9tIFdvcmtlciAjJHtyZXMud29ya2VyX2lkfSAodG9vayAke3Jlcy5kdXJhdGlvbi5taWxsaXNlY29uZHMoKX1tcyknKQoJfQoKCS8vIDYuIFByaW50IHN1bW1hcnkKCXByaW50bG4oJ1xuPT09IFByb2Nlc3NpbmcgU3VtbWFyeSA9PT0nKQoJZm9yIHJlcyBpbiByZXN1bHRzIHsKCQlwcmludGxuKCctIFRhc2sgIyR7cmVzLnRhc2tfaWR9IC0%2BICR7cmVzLm91dHB1dH0gKFdvcmtlciAjJHtyZXMud29ya2VyX2lkfSknKQoJfQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -31614,6 +31624,7 @@ fn main() {
                     <pre><code class="language-v">module main
 
 import time
+import sync
 
 // Task represents the unit of work to be processed.
 struct Task {
@@ -31630,10 +31641,13 @@ struct Result {
 }
 
 // worker runs in a separate thread, consuming from tasks_chan and producing to results_chan.
-fn worker(id int, tasks_chan chan Task, results_chan chan Result) {
+fn worker(id int, tasks_chan chan Task, results_chan chan Result, mut wg sync.WaitGroup) {
+	defer {
+		wg.done()
+	}
 	for {
 		// Receive a task from the channel.
-		// If the channel is closed and empty, it returns `none`.
+		// If the channel is closed and empty, it returns `none`
 		t := &lt;-tasks_chan or {
 			break
 		}
@@ -31655,6 +31669,12 @@ fn worker(id int, tasks_chan chan Task, results_chan chan Result) {
 	}
 }
 
+// wait_and_close waits for all workers to finish and then closes the results channel.
+fn wait_and_close(mut wg sync.WaitGroup, results_chan chan Result) {
+	wg.wait()
+	results_chan.close()
+}
+
 fn main() {
 	println(&#039;=== V Worker Pool Concurrency Boilerplate ===&#039;)
 
@@ -31665,11 +31685,17 @@ fn main() {
 	num_workers := 3
 	num_tasks := 5
 
+	mut wg := sync.new_waitgroup()
+
 	// 2. Spawn concurrent worker threads
 	println(&#039;Spawning ${num_workers} workers...&#039;)
 	for i in 0 .. num_workers {
-		spawn worker(i + 1, tasks_chan, results_chan)
+		wg.add(1)
+		spawn worker(i + 1, tasks_chan, results_chan, mut wg)
 	}
+
+	// Spawn the monitor thread to close results_chan when all workers are done
+	spawn wait_and_close(mut wg, results_chan)
 
 	// 3. Dispatch tasks to the queue
 	println(&#039;Dispatching ${num_tasks} tasks to worker pool...&#039;)
@@ -31684,18 +31710,13 @@ fn main() {
 	tasks_chan.close()
 	println(&#039;Tasks dispatched, queue closed. Collecting results...&#039;)
 
-	// 5. Collect results from results channel
+	// 5. Collect results from results channel by iterating until it is closed
 	mut results := []Result{}
-	for _ in 0 .. num_tasks {
-		res := &lt;-results_chan or {
-			eprintln(&#039;Error: Results channel closed prematurely&#039;)
-			break
-		}
+	for {
+		res := &lt;-results_chan or { break }
 		results &lt;&lt; res
 		println(&#039;Received: Task #${res.task_id} from Worker #${res.worker_id} (took ${res.duration.milliseconds()}ms)&#039;)
 	}
-
-	results_chan.close()
 
 	// 6. Print summary
 	println(&#039;\n=== Processing Summary ===&#039;)
@@ -32002,8 +32023,8 @@ fn main() {
 <li><strong>Descriptive Statistics</strong>: Iterating over elements to calculate min, max, sum, and average (mean) on float slices.</li>
 <li><strong>Array Sorting &amp; Cloning</strong>: Using <code>.clone()</code> to copy data and sorting arrays in-place using <code>.sort()</code>.</li>
 <li><strong>Median, Variance &amp; Deviation</strong>: Custom implementations to calculate distribution variance and standard deviation using V&#039;s <code>math.sqrt()</code>.</li>
-<li><strong>Factorial Calculation</strong>: An iterative, overflow-aware custom factorial function returning <code>u64</code>.</li>
-<li><strong>Fibonacci Sequence Generator</strong>: A custom dynamic programming function generating the first $N$ numbers of the Fibonacci sequence.</li>
+<li><strong>Factorial Calculation</strong>: An iterative, overflow-aware custom factorial function using V&#039;s <code>!</code> result type to report overflow on inputs greater than 20.</li>
+<li><strong>Fibonacci Sequence Generator</strong>: A custom dynamic programming function generating the first $N$ numbers of the Fibonacci sequence, using <code>!</code> to report overflow on inputs greater than 93.</li>
 <li><strong>Prime Number Checker</strong>: A highly optimized primality test (<code>is_prime</code>) using trial division of form $6k \pm 1$.</li>
 <li><strong>GCD and LCM</strong>: Custom implementations for finding the Greatest Common Divisor (Euclidean algorithm) and Least Common Multiple of two numbers.</li>
 </ul>
@@ -32011,7 +32032,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCBtYXRoCgovLyBTdGF0cyBob2xkcyB0aGUgY29tcHV0ZWQgc3RhdGlzdGljYWwgcHJvcGVydGllcyBvZiBhIGRhdGFzZXQuCnN0cnVjdCBTdGF0cyB7Cgljb3VudCAgICBpbnQKCW1pbiAgICAgIGY2NAoJbWF4ICAgICAgZjY0CglzdW0gICAgICBmNjQKCW1lYW4gICAgIGY2NAoJbWVkaWFuICAgZjY0Cgl2YXJpYW5jZSBmNjQKCXN0ZF9kZXYgIGY2NAp9CgovLyBjYWxjdWxhdGVfc3RhdHMgY2FsY3VsYXRlcyBzdGFuZGFyZCBkZXNjcmlwdGl2ZSBzdGF0aXN0aWNzIG9uIGEgZmxvYXQgZGF0YXNldCAobm90IGJ1aWx0IGludG8gViBhcnJheXMpLgpmbiBjYWxjdWxhdGVfc3RhdHMobnVtYmVycyBbXWY2NCkgP1N0YXRzIHsKCWlmIG51bWJlcnMubGVuID09IDAgewoJCXJldHVybiBub25lCgl9CgoJbXV0IHN1bSA6PSAwLjAKCW11dCBtaW4gOj0gbnVtYmVyc1swXQoJbXV0IG1heCA6PSBudW1iZXJzWzBdCgoJZm9yIHZhbCBpbiBudW1iZXJzIHsKCQlzdW0gKz0gdmFsCgkJaWYgdmFsIDwgbWluIHsKCQkJbWluID0gdmFsCgkJfQoJCWlmIHZhbCA%2BIG1heCB7CgkJCW1heCA9IHZhbAoJCX0KCX0KCgltZWFuIDo9IHN1bSAvIG51bWJlcnMubGVuCgoJLy8gQ2FsY3VsYXRlIG1lZGlhbiAocmVxdWlyZXMgYSBzb3J0ZWQgY29weSBvZiB0aGUgbnVtYmVycykKCW11dCBzb3J0ZWQgOj0gbnVtYmVycy5jbG9uZSgpCglzb3J0ZWQuc29ydCgpCgoJbXV0IG1lZGlhbiA6PSAwLjAKCW1pZCA6PSBzb3J0ZWQubGVuIC8gMgoJaWYgc29ydGVkLmxlbiAlIDIgPT0gMCB7CgkJbWVkaWFuID0gKHNvcnRlZFttaWQgLSAxXSArIHNvcnRlZFttaWRdKSAvIDIuMAoJfSBlbHNlIHsKCQltZWRpYW4gPSBzb3J0ZWRbbWlkXQoJfQoKCS8vIENhbGN1bGF0ZSB2YXJpYW5jZSBhbmQgc3RhbmRhcmQgZGV2aWF0aW9uCgltdXQgdmFyaWFuY2Vfc3VtIDo9IDAuMAoJZm9yIHZhbCBpbiBudW1iZXJzIHsKCQlkaWZmIDo9IHZhbCAtIG1lYW4KCQl2YXJpYW5jZV9zdW0gKz0gZGlmZiAqIGRpZmYKCX0KCXZhcmlhbmNlIDo9IHZhcmlhbmNlX3N1bSAvIG51bWJlcnMubGVuCglzdGRfZGV2IDo9IG1hdGguc3FydCh2YXJpYW5jZSkKCglyZXR1cm4gU3RhdHN7CgkJY291bnQ6IG51bWJlcnMubGVuCgkJbWluOiBtaW4KCQltYXg6IG1heAoJCXN1bTogc3VtCgkJbWVhbjogbWVhbgoJCW1lZGlhbjogbWVkaWFuCgkJdmFyaWFuY2U6IHZhcmlhbmNlCgkJc3RkX2Rldjogc3RkX2RldgoJfQp9CgovLyBmYWN0b3JpYWwgY2FsY3VsYXRlcyB0aGUgZmFjdG9yaWFsIG9mIGEgbnVtYmVyIGl0ZXJhdGl2ZWx5LgpmbiBmYWN0b3JpYWwobiBpbnQpIHU2NCB7CglpZiBuIDwgMCB7CgkJcmV0dXJuIDAKCX0KCW11dCByZXN1bHQgOj0gdTY0KDEpCglmb3IgaSBpbiAyIC4uIG4gKyAxIHsKCQlyZXN1bHQgKj0gdTY0KGkpCgl9CglyZXR1cm4gcmVzdWx0Cn0KCi8vIGZpYm9uYWNjaSBnZW5lcmF0ZXMgdGhlIGZpcnN0IG4gRmlib25hY2NpIG51bWJlcnMuCmZuIGZpYm9uYWNjaShuIGludCkgW111NjQgewoJaWYgbiA8PSAwIHsKCQlyZXR1cm4gW111NjR7fQoJfQoJaWYgbiA9PSAxIHsKCQlyZXR1cm4gW3U2NCgwKV0KCX0KCW11dCBzZXF1ZW5jZSA6PSBbXXU2NHtjYXA6IG59CglzZXF1ZW5jZSA8PCB1NjQoMCkKCXNlcXVlbmNlIDw8IHU2NCgxKQoJZm9yIGkgaW4gMiAuLiBuIHsKCQlzZXF1ZW5jZSA8PCBzZXF1ZW5jZVtpIC0gMV0gKyBzZXF1ZW5jZVtpIC0gMl0KCX0KCXJldHVybiBzZXF1ZW5jZQp9CgovLyBpc19wcmltZSBjaGVja3MgaWYgYSBudW1iZXIgaXMgcHJpbWUuCmZuIGlzX3ByaW1lKG4gaW50KSBib29sIHsKCWlmIG4gPD0gMSB7CgkJcmV0dXJuIGZhbHNlCgl9CglpZiBuIDw9IDMgewoJCXJldHVybiB0cnVlCgl9CglpZiBuICUgMiA9PSAwIHx8IG4gJSAzID09IDAgewoJCXJldHVybiBmYWxzZQoJfQoJbXV0IGkgOj0gNQoJZm9yIGkgKiBpIDw9IG4gewoJCWlmIG4gJSBpID09IDAgfHwgbiAlIChpICsgMikgPT0gMCB7CgkJCXJldHVybiBmYWxzZQoJCX0KCQlpICs9IDYKCX0KCXJldHVybiB0cnVlCn0KCi8vIGdjZCBjb21wdXRlcyB0aGUgR3JlYXRlc3QgQ29tbW9uIERpdmlzb3Igb2YgdHdvIGludGVnZXJzLgpmbiBnY2QoYSBpbnQsIGIgaW50KSBpbnQgewoJbXV0IHggOj0gbWF0aC5hYnMoYSkKCW11dCB5IDo9IG1hdGguYWJzKGIpCglmb3IgeSAhPSAwIHsKCQl0ZW1wIDo9IHkKCQl5ID0geCAlIHkKCQl4ID0gdGVtcAoJfQoJcmV0dXJuIHgKfQoKLy8gbGNtIGNvbXB1dGVzIHRoZSBMZWFzdCBDb21tb24gTXVsdGlwbGUgb2YgdHdvIGludGVnZXJzLgpmbiBsY20oYSBpbnQsIGIgaW50KSBpbnQgewoJaWYgYSA9PSAwIHx8IGIgPT0gMCB7CgkJcmV0dXJuIDAKCX0KCXJldHVybiAobWF0aC5hYnMoYSkgKiBtYXRoLmFicyhiKSkgLyBnY2QoYSwgYikKfQoKZm4gbWFpbigpIHsKCXByaW50bG4oJz09PSBWIEN1c3RvbSBNYXRoICYgU3RhdGlzdGljcyBCb2lsZXJwbGF0ZSA9PT0nKQoKCS8vIDEuIERlc2NyaXB0aXZlIFN0YXRpc3RpY3MgRGVtbwoJZGF0YSA6PSBbNzIuNSwgODEuMCwgNjguNSwgOTAuMCwgNzUuNSwgNzguMCwgODUuNV0KCXByaW50bG4oJ0RhdGFzZXQ6ICR7ZGF0YX0nKQoKCXN0YXRzIDo9IGNhbGN1bGF0ZV9zdGF0cyhkYXRhKSBvciB7CgkJcHJpbnRsbignRXJyb3I6IEVtcHR5IGRhdGFzZXQnKQoJCXJldHVybgoJfQoKCXByaW50bG4oJ1xuU3RhdGlzdGljYWwgUmVzdWx0czonKQoJcHJpbnRsbignLSBDb3VudDogICAgICAgICAgICAgICR7c3RhdHMuY291bnR9JykKCXByaW50bG4oJy0gTWluaW11bTogICAgICAgICAgICAke3N0YXRzLm1pbjouMmZ9JykKCXByaW50bG4oJy0gTWF4aW11bTogICAgICAgICAgICAke3N0YXRzLm1heDouMmZ9JykKCXByaW50bG4oJy0gU3VtOiAgICAgICAgICAgICAgICAke3N0YXRzLnN1bTouMmZ9JykKCXByaW50bG4oJy0gTWVhbiAoQXZlcmFnZSk6ICAgICAke3N0YXRzLm1lYW46LjJmfScpCglwcmludGxuKCctIE1lZGlhbjogICAgICAgICAgICAgJHtzdGF0cy5tZWRpYW46LjJmfScpCglwcmludGxuKCctIFZhcmlhbmNlOiAgICAgICAgICAgJHtzdGF0cy52YXJpYW5jZTouMmZ9JykKCXByaW50bG4oJy0gU3RhbmRhcmQgRGV2aWF0aW9uOiAke3N0YXRzLnN0ZF9kZXY6LjJmfScpCgoJLy8gMi4gQ3VzdG9tIE1hdGggRnVuY3Rpb25zIERlbW8KCW4gOj0gMTAKCXByaW50bG4oJ1xuQ3VzdG9tIE51bWJlciBGdW5jdGlvbnM6JykKCXByaW50bG4oJy0gRmFjdG9yaWFsIG9mICR7bn06ICAgICR7ZmFjdG9yaWFsKG4pfScpCglwcmludGxuKCctIEZpYm9uYWNjaSBmaXJzdCAke259OiAke2ZpYm9uYWNjaShuKX0nKQoKCXRlc3RfcHJpbWVzIDo9IFs3LCAxMiwgMTksIDI1LCA5N10KCWZvciBwIGluIHRlc3RfcHJpbWVzIHsKCQlwcmludGxuKCcgIElzICR7cH0gcHJpbWU%2FICAgICAgICR7aXNfcHJpbWUocCl9JykKCX0KCglhLCBiIDo9IDI0LCAzNgoJcHJpbnRsbignXG5Db21tb24gTnVtYmVyIFJlbGF0aW9uczonKQoJcHJpbnRsbignLSBHQ0Qgb2YgJHthfSBhbmQgJHtifTogICAgJHtnY2QoYSwgYil9JykKCXByaW50bG4oJy0gTENNIG9mICR7YX0gYW5kICR7Yn06ICAgICR7bGNtKGEsIGIpfScpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCBtYXRoCgovLyBTdGF0cyBob2xkcyB0aGUgY29tcHV0ZWQgc3RhdGlzdGljYWwgcHJvcGVydGllcyBvZiBhIGRhdGFzZXQuCnN0cnVjdCBTdGF0cyB7Cgljb3VudCAgICBpbnQKCW1pbiAgICAgIGY2NAoJbWF4ICAgICAgZjY0CglzdW0gICAgICBmNjQKCW1lYW4gICAgIGY2NAoJbWVkaWFuICAgZjY0Cgl2YXJpYW5jZSBmNjQKCXN0ZF9kZXYgIGY2NAp9CgovLyBjYWxjdWxhdGVfc3RhdHMgY2FsY3VsYXRlcyBzdGFuZGFyZCBkZXNjcmlwdGl2ZSBzdGF0aXN0aWNzIG9uIGEgZmxvYXQgZGF0YXNldCAobm90IGJ1aWx0IGludG8gViBhcnJheXMpLgpmbiBjYWxjdWxhdGVfc3RhdHMobnVtYmVycyBbXWY2NCkgP1N0YXRzIHsKCWlmIG51bWJlcnMubGVuID09IDAgewoJCXJldHVybiBub25lCgl9CgoJbXV0IHN1bSA6PSAwLjAKCW11dCBtaW4gOj0gbnVtYmVyc1swXQoJbXV0IG1heCA6PSBudW1iZXJzWzBdCgoJZm9yIHZhbCBpbiBudW1iZXJzIHsKCQlzdW0gKz0gdmFsCgkJaWYgdmFsIDwgbWluIHsKCQkJbWluID0gdmFsCgkJfQoJCWlmIHZhbCA%2BIG1heCB7CgkJCW1heCA9IHZhbAoJCX0KCX0KCgltZWFuIDo9IHN1bSAvIG51bWJlcnMubGVuCgoJLy8gQ2FsY3VsYXRlIG1lZGlhbiAocmVxdWlyZXMgYSBzb3J0ZWQgY29weSBvZiB0aGUgbnVtYmVycykKCW11dCBzb3J0ZWQgOj0gbnVtYmVycy5jbG9uZSgpCglzb3J0ZWQuc29ydCgpCgoJbXV0IG1lZGlhbiA6PSAwLjAKCW1pZCA6PSBzb3J0ZWQubGVuIC8gMgoJaWYgc29ydGVkLmxlbiAlIDIgPT0gMCB7CgkJbWVkaWFuID0gKHNvcnRlZFttaWQgLSAxXSArIHNvcnRlZFttaWRdKSAvIDIuMAoJfSBlbHNlIHsKCQltZWRpYW4gPSBzb3J0ZWRbbWlkXQoJfQoKCS8vIENhbGN1bGF0ZSB2YXJpYW5jZSBhbmQgc3RhbmRhcmQgZGV2aWF0aW9uCgltdXQgdmFyaWFuY2Vfc3VtIDo9IDAuMAoJZm9yIHZhbCBpbiBudW1iZXJzIHsKCQlkaWZmIDo9IHZhbCAtIG1lYW4KCQl2YXJpYW5jZV9zdW0gKz0gZGlmZiAqIGRpZmYKCX0KCXZhcmlhbmNlIDo9IHZhcmlhbmNlX3N1bSAvIG51bWJlcnMubGVuCglzdGRfZGV2IDo9IG1hdGguc3FydCh2YXJpYW5jZSkKCglyZXR1cm4gU3RhdHN7CgkJY291bnQ6IG51bWJlcnMubGVuCgkJbWluOiBtaW4KCQltYXg6IG1heAoJCXN1bTogc3VtCgkJbWVhbjogbWVhbgoJCW1lZGlhbjogbWVkaWFuCgkJdmFyaWFuY2U6IHZhcmlhbmNlCgkJc3RkX2Rldjogc3RkX2RldgoJfQp9CgovLyBmYWN0b3JpYWwgY2FsY3VsYXRlcyB0aGUgZmFjdG9yaWFsIG9mIGEgbnVtYmVyIGl0ZXJhdGl2ZWx5LCB3aXRoIG92ZXJmbG93IGNoZWNrcy4KZm4gZmFjdG9yaWFsKG4gaW50KSAhdTY0IHsKCWlmIG4gPCAwIHsKCQlyZXR1cm4gZXJyb3IoJ0ZhY3RvcmlhbCBpcyBub3QgZGVmaW5lZCBmb3IgbmVnYXRpdmUgbnVtYmVycycpCgl9CglpZiBuID4gMjAgewoJCXJldHVybiBlcnJvcignRmFjdG9yaWFsIG9mICR7bn0gb3ZlcmZsb3dzIDY0LWJpdCB1bnNpZ25lZCBpbnRlZ2VyIGxpbWl0IChtYXggbiBpcyAyMCknKQoJfQoJbXV0IHJlc3VsdCA6PSB1NjQoMSkKCWZvciBpIGluIDIgLi4gbiArIDEgewoJCXJlc3VsdCAqPSB1NjQoaSkKCX0KCXJldHVybiByZXN1bHQKfQoKLy8gZmlib25hY2NpIGdlbmVyYXRlcyB0aGUgZmlyc3QgbiBGaWJvbmFjY2kgbnVtYmVycywgd2l0aCBvdmVyZmxvdyBjaGVja3MuCmZuIGZpYm9uYWNjaShuIGludCkgIVtddTY0IHsKCWlmIG4gPCAwIHsKCQlyZXR1cm4gZXJyb3IoJ0NvdW50IG11c3QgYmUgbm9uLW5lZ2F0aXZlJykKCX0KCWlmIG4gPiA5MyB7CgkJcmV0dXJuIGVycm9yKCdGaWJvbmFjY2kgc2VxdWVuY2UgYmV5b25kIDkzIGVsZW1lbnRzIG92ZXJmbG93cyA2NC1iaXQgdW5zaWduZWQgaW50ZWdlciBsaW1pdCcpCgl9CglpZiBuID09IDAgewoJCXJldHVybiBbXXU2NHt9Cgl9CglpZiBuID09IDEgewoJCXJldHVybiBbdTY0KDApXQoJfQoJbXV0IHNlcXVlbmNlIDo9IFtddTY0e2NhcDogbn0KCXNlcXVlbmNlIDw8IHU2NCgwKQoJc2VxdWVuY2UgPDwgdTY0KDEpCglmb3IgaSBpbiAyIC4uIG4gewoJCXNlcXVlbmNlIDw8IHNlcXVlbmNlW2kgLSAxXSArIHNlcXVlbmNlW2kgLSAyXQoJfQoJcmV0dXJuIHNlcXVlbmNlCn0KCi8vIGlzX3ByaW1lIGNoZWNrcyBpZiBhIG51bWJlciBpcyBwcmltZS4KZm4gaXNfcHJpbWUobiBpbnQpIGJvb2wgewoJaWYgbiA8PSAxIHsKCQlyZXR1cm4gZmFsc2UKCX0KCWlmIG4gPD0gMyB7CgkJcmV0dXJuIHRydWUKCX0KCWlmIG4gJSAyID09IDAgfHwgbiAlIDMgPT0gMCB7CgkJcmV0dXJuIGZhbHNlCgl9CgltdXQgaSA6PSA1Cglmb3IgaSAqIGkgPD0gbiB7CgkJaWYgbiAlIGkgPT0gMCB8fCBuICUgKGkgKyAyKSA9PSAwIHsKCQkJcmV0dXJuIGZhbHNlCgkJfQoJCWkgKz0gNgoJfQoJcmV0dXJuIHRydWUKfQoKLy8gZ2NkIGNvbXB1dGVzIHRoZSBHcmVhdGVzdCBDb21tb24gRGl2aXNvciBvZiB0d28gaW50ZWdlcnMuCmZuIGdjZChhIGludCwgYiBpbnQpIGludCB7CgltdXQgeCA6PSBtYXRoLmFicyhhKQoJbXV0IHkgOj0gbWF0aC5hYnMoYikKCWZvciB5ICE9IDAgewoJCXRlbXAgOj0geQoJCXkgPSB4ICUgeQoJCXggPSB0ZW1wCgl9CglyZXR1cm4geAp9CgovLyBsY20gY29tcHV0ZXMgdGhlIExlYXN0IENvbW1vbiBNdWx0aXBsZSBvZiB0d28gaW50ZWdlcnMuCmZuIGxjbShhIGludCwgYiBpbnQpIGludCB7CglpZiBhID09IDAgfHwgYiA9PSAwIHsKCQlyZXR1cm4gMAoJfQoJcmV0dXJuIChtYXRoLmFicyhhKSAqIG1hdGguYWJzKGIpKSAvIGdjZChhLCBiKQp9CgpmbiBtYWluKCkgewoJcHJpbnRsbignPT09IFYgQ3VzdG9tIE1hdGggJiBTdGF0aXN0aWNzIEJvaWxlcnBsYXRlID09PScpCgoJLy8gMS4gRGVzY3JpcHRpdmUgU3RhdGlzdGljcyBEZW1vCglkYXRhIDo9IFs3Mi41LCA4MS4wLCA2OC41LCA5MC4wLCA3NS41LCA3OC4wLCA4NS41XQoJcHJpbnRsbignRGF0YXNldDogJHtkYXRhfScpCgoJc3RhdHMgOj0gY2FsY3VsYXRlX3N0YXRzKGRhdGEpIG9yIHsKCQlwcmludGxuKCdFcnJvcjogRW1wdHkgZGF0YXNldCcpCgkJcmV0dXJuCgl9CgoJcHJpbnRsbignXG5TdGF0aXN0aWNhbCBSZXN1bHRzOicpCglwcmludGxuKCctIENvdW50OiAgICAgICAgICAgICAgJHtzdGF0cy5jb3VudH0nKQoJcHJpbnRsbignLSBNaW5pbXVtOiAgICAgICAgICAgICR7c3RhdHMubWluOi4yZn0nKQoJcHJpbnRsbignLSBNYXhpbXVtOiAgICAgICAgICAgICR7c3RhdHMubWF4Oi4yZn0nKQoJcHJpbnRsbignLSBTdW06ICAgICAgICAgICAgICAgICR7c3RhdHMuc3VtOi4yZn0nKQoJcHJpbnRsbignLSBNZWFuIChBdmVyYWdlKTogICAgICR7c3RhdHMubWVhbjouMmZ9JykKCXByaW50bG4oJy0gTWVkaWFuOiAgICAgICAgICAgICAke3N0YXRzLm1lZGlhbjouMmZ9JykKCXByaW50bG4oJy0gVmFyaWFuY2U6ICAgICAgICAgICAke3N0YXRzLnZhcmlhbmNlOi4yZn0nKQoJcHJpbnRsbignLSBTdGFuZGFyZCBEZXZpYXRpb246ICR7c3RhdHMuc3RkX2RldjouMmZ9JykKCgkvLyAyLiBDdXN0b20gTWF0aCBGdW5jdGlvbnMgRGVtbwoJbiA6PSAxMAoJcHJpbnRsbignXG5DdXN0b20gTnVtYmVyIEZ1bmN0aW9uczonKQoJCglmYWN0IDo9IGZhY3RvcmlhbChuKSBvciB7CgkJZXByaW50bG4oJ0Vycm9yOiAke2Vycn0nKQoJCXU2NCgwKQoJfQoJcHJpbnRsbignLSBGYWN0b3JpYWwgb2YgJHtufTogICAgJHtmYWN0fScpCgoJZmliIDo9IGZpYm9uYWNjaShuKSBvciB7CgkJZXByaW50bG4oJ0Vycm9yOiAke2Vycn0nKQoJCVtddTY0e30KCX0KCXByaW50bG4oJy0gRmlib25hY2NpIGZpcnN0ICR7bn06ICR7ZmlifScpCgoJdGVzdF9wcmltZXMgOj0gWzcsIDEyLCAxOSwgMjUsIDk3XQoJZm9yIHAgaW4gdGVzdF9wcmltZXMgewoJCXByaW50bG4oJyAgSXMgJHtwfSBwcmltZT8gICAgICAgJHtpc19wcmltZShwKX0nKQoJfQoKCWEsIGIgOj0gMjQsIDM2CglwcmludGxuKCdcbkNvbW1vbiBOdW1iZXIgUmVsYXRpb25zOicpCglwcmludGxuKCctIEdDRCBvZiAke2F9IGFuZCAke2J9OiAgICAke2djZChhLCBiKX0nKQoJcHJpbnRsbignLSBMQ00gb2YgJHthfSBhbmQgJHtifTogICAgJHtsY20oYSwgYil9JykKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -32100,10 +32121,13 @@ fn calculate_stats(numbers []f64) ?Stats {
 	}
 }
 
-// factorial calculates the factorial of a number iteratively.
-fn factorial(n int) u64 {
+// factorial calculates the factorial of a number iteratively, with overflow checks.
+fn factorial(n int) !u64 {
 	if n &lt; 0 {
-		return 0
+		return error(&#039;Factorial is not defined for negative numbers&#039;)
+	}
+	if n &gt; 20 {
+		return error(&#039;Factorial of ${n} overflows 64-bit unsigned integer limit (max n is 20)&#039;)
 	}
 	mut result := u64(1)
 	for i in 2 .. n + 1 {
@@ -32112,9 +32136,15 @@ fn factorial(n int) u64 {
 	return result
 }
 
-// fibonacci generates the first n Fibonacci numbers.
-fn fibonacci(n int) []u64 {
-	if n &lt;= 0 {
+// fibonacci generates the first n Fibonacci numbers, with overflow checks.
+fn fibonacci(n int) ![]u64 {
+	if n &lt; 0 {
+		return error(&#039;Count must be non-negative&#039;)
+	}
+	if n &gt; 93 {
+		return error(&#039;Fibonacci sequence beyond 93 elements overflows 64-bit unsigned integer limit&#039;)
+	}
+	if n == 0 {
 		return []u64{}
 	}
 	if n == 1 {
@@ -32195,8 +32225,18 @@ fn main() {
 	// 2. Custom Math Functions Demo
 	n := 10
 	println(&#039;\nCustom Number Functions:&#039;)
-	println(&#039;- Factorial of ${n}:    ${factorial(n)}&#039;)
-	println(&#039;- Fibonacci first ${n}: ${fibonacci(n)}&#039;)
+	
+	fact := factorial(n) or {
+		eprintln(&#039;Error: ${err}&#039;)
+		u64(0)
+	}
+	println(&#039;- Factorial of ${n}:    ${fact}&#039;)
+
+	fib := fibonacci(n) or {
+		eprintln(&#039;Error: ${err}&#039;)
+		[]u64{}
+	}
+	println(&#039;- Fibonacci first ${n}: ${fib}&#039;)
 
 	test_primes := [7, 12, 19, 25, 97]
 	for p in test_primes {
@@ -32400,7 +32440,7 @@ fn main() {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCBqc29uCmltcG9ydCBvcwoKc3RydWN0IEFwcENvbmZpZyB7Cglob3N0ICAgIHN0cmluZwoJcG9ydCAgICBpbnQKCWRlYnVnICAgYm9vbAoJcmV0cmllcyBpbnQKfQoKZm4gZGVmYXVsdF9jb25maWcoKSBBcHBDb25maWcgewoJcmV0dXJuIEFwcENvbmZpZ3sKCQlob3N0OiAnMTI3LjAuMC4xJwoJCXBvcnQ6IDgwODAKCQlkZWJ1ZzogZmFsc2UKCQlyZXRyaWVzOiAzCgl9Cn0KCmZuIGxvYWRfY29uZmlnKHBhdGggc3RyaW5nKSBBcHBDb25maWcgewoJbXV0IGNmZyA6PSBkZWZhdWx0X2NvbmZpZygpCglpZiBwYXRoID09ICcnIHsKCQllbnZfaG9zdCA6PSBvcy5nZXRlbnYoJ0FQUF9IT1NUJykKCQlpZiBlbnZfaG9zdCAhPSAnJyB7CgkJCWNmZy5ob3N0ID0gZW52X2hvc3QKCQl9CgkJcmV0dXJuIGNmZwoJfQoJLy8gLi4ucmVzdCBvZiB0aGUgZXhhbXBsZSBpcyBpbiB0aGUgc291cmNlIGZpbGUgYWJvdmUKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCBqc29uCmltcG9ydCBvcwoKc3RydWN0IEFwcENvbmZpZyB7Cglob3N0ICAgIHN0cmluZwoJcG9ydCAgICBpbnQKCWRlYnVnICAgYm9vbAoJcmV0cmllcyBpbnQKfQoKZm4gZGVmYXVsdF9jb25maWcoKSBBcHBDb25maWcgewoJcmV0dXJuIEFwcENvbmZpZ3sKCQlob3N0OiAnMTI3LjAuMC4xJwoJCXBvcnQ6IDgwODAKCQlkZWJ1ZzogZmFsc2UKCQlyZXRyaWVzOiAzCgl9Cn0KCmZuIGxvYWRfY29uZmlnKHBhdGggc3RyaW5nKSBBcHBDb25maWcgewoJbXV0IGNmZyA6PSBkZWZhdWx0X2NvbmZpZygpCgoJLy8gMS4gSWYgcGF0aCBpcyBwcm92aWRlZCBhbmQgZXhpc3RzLCBsb2FkIGNvbmZpZyBmcm9tIHRoZSBKU09OIGZpbGUgZmlyc3QKCWlmIHBhdGggIT0gJycgJiYgb3MuZXhpc3RzKHBhdGgpIHsKCQlyYXcgOj0gb3MucmVhZF9maWxlKHBhdGgpIG9yIHsKCQkJZXByaW50bG4oJ1dhcm5pbmc6IGNvdWxkIG5vdCByZWFkIGNvbmZpZyBmaWxlOiAke2Vycn0nKQoJCQknJwoJCX0KCQlpZiByYXcgIT0gJycgewoJCQljZmcgPSBqc29uLmRlY29kZShBcHBDb25maWcsIHJhdykgb3IgewoJCQkJZXByaW50bG4oJ1dhcm5pbmc6IGNvdWxkIG5vdCBkZWNvZGUgY29uZmlnIGZpbGU6ICR7ZXJyfScpCgkJCQljZmcKCQkJfQoJCX0KCX0gZWxzZSBpZiBwYXRoICE9ICcnIHsKCQlwcmludGxuKCdDb25maWcgZmlsZSBub3QgZm91bmQuIFVzaW5nIGRlZmF1bHRzIHdpdGggZW52aXJvbm1lbnQgb3ZlcnJpZGVzLicpCgl9CgoJLy8gMi4gT3ZlcmxheSAvIG92ZXJyaWRlIHdpdGggZW52aXJvbm1lbnQgdmFyaWFibGVzIChjcnVjaWFsIGZvciBwcm9kdWN0aW9uIGNvbnRhaW5lciBlbnZzKQoJZW52X2hvc3QgOj0gb3MuZ2V0ZW52KCdBUFBfSE9TVCcpCglpZiBlbnZfaG9zdCAhPSAnJyB7CgkJY2ZnLmhvc3QgPSBlbnZfaG9zdAoJfQoJZW52X3BvcnQgOj0gb3MuZ2V0ZW52KCdBUFBfUE9SVCcpCglpZiBlbnZfcG9ydCAhPSAnJyB7CgkJY2ZnLnBvcnQgPSBlbnZfcG9ydC5pbnQoKQoJfQoJZW52X2RlYnVnIDo9IG9zLmdldGVudignQVBQX0RFQlVHJykKCWlmIGVudl9kZWJ1ZyAhPSAnJyB7CgkJY2ZnLmRlYnVnID0gZW52X2RlYnVnID09ICd0cnVlJwoJfQoJZW52X3JldHJpZXMgOj0gb3MuZ2V0ZW52KCdBUFBfUkVUUklFUycpCglpZiBlbnZfcmV0cmllcyAhPSAnJyB7CgkJY2ZnLnJldHJpZXMgPSBlbnZfcmV0cmllcy5pbnQoKQoJfQoKCXJldHVybiBjZmcKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -32441,14 +32481,42 @@ fn default_config() AppConfig {
 
 fn load_config(path string) AppConfig {
 	mut cfg := default_config()
-	if path == &#039;&#039; {
-		env_host := os.getenv(&#039;APP_HOST&#039;)
-		if env_host != &#039;&#039; {
-			cfg.host = env_host
+
+	// 1. If path is provided and exists, load config from the JSON file first
+	if path != &#039;&#039; &amp;&amp; os.exists(path) {
+		raw := os.read_file(path) or {
+			eprintln(&#039;Warning: could not read config file: ${err}&#039;)
+			&#039;&#039;
 		}
-		return cfg
+		if raw != &#039;&#039; {
+			cfg = json.decode(AppConfig, raw) or {
+				eprintln(&#039;Warning: could not decode config file: ${err}&#039;)
+				cfg
+			}
+		}
+	} else if path != &#039;&#039; {
+		println(&#039;Config file not found. Using defaults with environment overrides.&#039;)
 	}
-	// ...rest of the example is in the source file above
+
+	// 2. Overlay / override with environment variables (crucial for production container envs)
+	env_host := os.getenv(&#039;APP_HOST&#039;)
+	if env_host != &#039;&#039; {
+		cfg.host = env_host
+	}
+	env_port := os.getenv(&#039;APP_PORT&#039;)
+	if env_port != &#039;&#039; {
+		cfg.port = env_port.int()
+	}
+	env_debug := os.getenv(&#039;APP_DEBUG&#039;)
+	if env_debug != &#039;&#039; {
+		cfg.debug = env_debug == &#039;true&#039;
+	}
+	env_retries := os.getenv(&#039;APP_RETRIES&#039;)
+	if env_retries != &#039;&#039; {
+		cfg.retries = env_retries.int()
+	}
+
+	return cfg
 }</code></pre>
                 </div>
 <hr />
@@ -32534,16 +32602,16 @@ fn add_item(mut store TodoStore, title string) TodoItem {
 <p>Transient failures are common in distributed systems, network clients, and file operations. This template demonstrates a practical retry loop that delays between attempts and surfaces a final failure only after the allowed number of tries is exhausted.</p>
 <p>Key concepts illustrated:</p>
 <ul>
-<li><strong>Retry Loops</strong>: Repeating work when an operation temporarily fails.</li>
-<li><strong>Backoff Delays</strong>: Waiting briefly between attempts to reduce pressure on downstream services.</li>
-<li><strong>Optional Return Values</strong>: Using <code>?</code> to propagate failure cleanly.</li>
-<li><strong>Practical Error Messages</strong>: Giving the caller enough information to debug the problem.</li>
+<li><strong>Resilient Operations</strong>: Using a generic function structure to wrap any callback in a robust retry cycle.</li>
+<li><strong>Exponential Backoff</strong>: Multiplying delays by a backoff factor after each failed attempt to reduce load on resources.</li>
+<li><strong>Random Jitter</strong>: Adding a small, random time variation (jitter) to sleep intervals to prevent synchronized retries (thundering herd problem).</li>
+<li><strong>Result &amp; Error Propagation</strong>: Leveraging V&#039;s <code>!</code> result type to return either the successful generic value <code>T</code> or propagate the final failure.</li>
 </ul>
 <div class="code-wrapper">
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gcmVhZF93aXRoX3JldHJ5KHBhdGggc3RyaW5nLCBhdHRlbXB0cyBpbnQsIGRlbGF5IHRpbWUuRHVyYXRpb24pICFzdHJpbmcgewoJZm9yIGF0dGVtcHQgaW4gMSAuLiBhdHRlbXB0cyArIDEgewoJCWNvbnRlbnQgOj0gb3MucmVhZF9maWxlKHBhdGgpIG9yIHsKCQkJZXByaW50bG4oJ0F0dGVtcHQgJHthdHRlbXB0fS8ke2F0dGVtcHRzfSBmYWlsZWQ6ICR7ZXJyfScpCgkJCWlmIGF0dGVtcHQgPCBhdHRlbXB0cyB7CgkJCQl0aW1lLnNsZWVwKGRlbGF5KQoJCQl9CgkJCWNvbnRpbnVlCgkJfQoJCXJldHVybiBjb250ZW50Cgl9CglyZXR1cm4gZXJyb3IoJ1VuYWJsZSB0byByZWFkICR7cGF0aH0gYWZ0ZXIgJHthdHRlbXB0c30gYXR0ZW1wdHMnKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Ly8gUmV0cnlDb25maWcgY29uZmlndXJlcyB0aGUgcmV0cnkgYW5kIGJhY2tvZmYgYmVoYXZpb3IuCnN0cnVjdCBSZXRyeUNvbmZpZyB7CglhdHRlbXB0cyAgICAgIGludCAgICAgICAgICAgPSAzCglpbml0aWFsX2RlbGF5IHRpbWUuRHVyYXRpb24gPSAxMDAgKiB0aW1lLm1pbGxpc2Vjb25kCglmYWN0b3IgICAgICAgIGY2NCAgICAgICAgICAgPSAyLjAKCW1heF9kZWxheSAgICAgdGltZS5EdXJhdGlvbiA9IDMgKiB0aW1lLnNlY29uZAoJaml0dGVyICAgICAgICBib29sICAgICAgICAgID0gdHJ1ZQp9CgovLyByZXRyeSBleGVjdXRlcyB0aGUgb3BlcmF0aW9uIGBvcGAgdXAgdG8gYGNmZy5hdHRlbXB0c2AgdGltZXMuCi8vIEl0IHVzZXMgZXhwb25lbnRpYWwgYmFja29mZiB3aXRoIG9wdGlvbmFsIHJhbmRvbSBqaXR0ZXIuCmZuIHJldHJ5W1RdKGNmZyBSZXRyeUNvbmZpZywgb3AgZm4gKCkgIVQpICFUIHsKCW11dCBkZWxheSA6PSBjZmcuaW5pdGlhbF9kZWxheQoJZm9yIGF0dGVtcHQgaW4gMSAuLiBjZmcuYXR0ZW1wdHMgKyAxIHsKCQlyZXMgOj0gb3AoKSBvciB7CgkJCWlmIGF0dGVtcHQgPT0gY2ZnLmF0dGVtcHRzIHsKCQkJCXJldHVybiBlcnJvcignT3BlcmF0aW9uIGZhaWxlZCBhZnRlciAke2NmZy5hdHRlbXB0c30gYXR0ZW1wdHMuIExhc3QgZXJyb3I6ICR7ZXJyfScpCgkJCX0KCQkJCgkJCWVwcmludGxuKCdBdHRlbXB0ICR7YXR0ZW1wdH0vJHtjZmcuYXR0ZW1wdHN9IGZhaWxlZDogJHtlcnJ9LiBSZXRyeWluZyBpbiAke2RlbGF5Lm1pbGxpc2Vjb25kcygpfW1zLi4uJykKCQkJCgkJCS8vIFNsZWVwIHdpdGggb3B0aW9uYWwgaml0dGVyIHRvIHByZXZlbnQgdGh1bmRlcmluZyBoZXJkIHByb2JsZW1zCgkJCW11dCBzbGVlcF9kdXIgOj0gZGVsYXkKCQkJaWYgY2ZnLmppdHRlciB7CgkJCQlqaXR0ZXJfbXMgOj0gcmFuZC5pbnRuKDEwMCkgb3IgeyAwIH0KCQkJCXNsZWVwX2R1ciArPSBqaXR0ZXJfbXMgKiB0aW1lLm1pbGxpc2Vjb25kCgkJCX0KCQkJdGltZS5zbGVlcChzbGVlcF9kdXIpCgoJCQkvLyBJbmNyZWFzZSB0aGUgZGVsYXkgZm9yIHRoZSBuZXh0IGF0dGVtcHQsIHVwIHRvIG1heF9kZWxheQoJCQlkZWxheSA9IHRpbWUuRHVyYXRpb24oaTY0KGY2NChkZWxheSkgKiBjZmcuZmFjdG9yKSkKCQkJaWYgZGVsYXkgPiBjZmcubWF4X2RlbGF5IHsKCQkJCWRlbGF5ID0gY2ZnLm1heF9kZWxheQoJCQl9CgkJCWNvbnRpbnVlCgkJfQoJCXJldHVybiByZXMKCX0KCXJldHVybiBlcnJvcignVW5yZWFjaGFibGUnKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -32561,18 +32629,45 @@ fn add_item(mut store TodoStore, title string) TodoItem {
                             </button>
                         </div>
                     </div>
-                    <pre><code class="language-v">fn read_with_retry(path string, attempts int, delay time.Duration) !string {
-	for attempt in 1 .. attempts + 1 {
-		content := os.read_file(path) or {
-			eprintln(&#039;Attempt ${attempt}/${attempts} failed: ${err}&#039;)
-			if attempt &lt; attempts {
-				time.sleep(delay)
+                    <pre><code class="language-v">// RetryConfig configures the retry and backoff behavior.
+struct RetryConfig {
+	attempts      int           = 3
+	initial_delay time.Duration = 100 * time.millisecond
+	factor        f64           = 2.0
+	max_delay     time.Duration = 3 * time.second
+	jitter        bool          = true
+}
+
+// retry executes the operation `op` up to `cfg.attempts` times.
+// It uses exponential backoff with optional random jitter.
+fn retry[T](cfg RetryConfig, op fn () !T) !T {
+	mut delay := cfg.initial_delay
+	for attempt in 1 .. cfg.attempts + 1 {
+		res := op() or {
+			if attempt == cfg.attempts {
+				return error(&#039;Operation failed after ${cfg.attempts} attempts. Last error: ${err}&#039;)
+			}
+			
+			eprintln(&#039;Attempt ${attempt}/${cfg.attempts} failed: ${err}. Retrying in ${delay.milliseconds()}ms...&#039;)
+			
+			// Sleep with optional jitter to prevent thundering herd problems
+			mut sleep_dur := delay
+			if cfg.jitter {
+				jitter_ms := rand.intn(100) or { 0 }
+				sleep_dur += jitter_ms * time.millisecond
+			}
+			time.sleep(sleep_dur)
+
+			// Increase the delay for the next attempt, up to max_delay
+			delay = time.Duration(i64(f64(delay) * cfg.factor))
+			if delay &gt; cfg.max_delay {
+				delay = cfg.max_delay
 			}
 			continue
 		}
-		return content
+		return res
 	}
-	return error(&#039;Unable to read ${path} after ${attempts} attempts&#039;)
+	return error(&#039;Unreachable&#039;)
 }</code></pre>
                 </div>
 <hr />
@@ -32596,6 +32691,7 @@ fn add_item(mut store TodoStore, title string) TodoItem {
 <p>Key concepts illustrated:</p>
 <ul>
 <li><strong>HTTP Requests</strong>: Using <code>net.http</code> for GET and POST requests.</li>
+<li><strong>JSON POST Headers</strong>: Using <code>http.Request</code> directly to configure headers explicitly, including <code>Content-Type: application/json</code> for strict APIs.</li>
 <li><strong>JSON Payloads</strong>: Encoding and decoding structured data with <code>json</code>.</li>
 <li><strong>Error Handling</strong>: Returning and surfacing client errors cleanly.</li>
 <li><strong>Reusable Helpers</strong>: Keeping request logic in dedicated functions for later reuse.</li>
@@ -32724,7 +32820,7 @@ fn add_item(mut store TodoStore, title string) TodoItem {
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=Zm4gKGxvZ2dlciBMb2dnZXIpIGxvZyhsZXZlbCBMb2dMZXZlbCwgbWVzc2FnZSBzdHJpbmcpIHsKCWlmIGludChsZXZlbCkgPCBpbnQobG9nZ2VyLmxldmVsKSB7CgkJcmV0dXJuCgl9CglsaW5lIDo9ICcke3RpbWUubm93KCkuc3RyKCl9ICR7cHJlZml4fSAke21lc3NhZ2V9JwoJcHJpbnRsbihsaW5lKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=Zm4gKGxvZ2dlciBMb2dnZXIpIGxvZyhsZXZlbCBMb2dMZXZlbCwgbWVzc2FnZSBzdHJpbmcpIHsKCWlmIGludChsZXZlbCkgPCBpbnQobG9nZ2VyLmxldmVsKSB7CgkJcmV0dXJuCgl9CgoJdGltZXN0YW1wIDo9IHRpbWUubm93KCkuc3RyKCkKCXByZWZpeCA6PSBtYXRjaCBsZXZlbCB7CgkJLmRlYnVnIHsgJ1tERUJVR10nIH0KCQkuaW5mbyB7ICdbSU5GT10nIH0KCQkud2FybiB7ICdbV0FSTl0nIH0KCQkuZXJyb3IgeyAnW0VSUk9SXScgfQoJfQoKCWxpbmUgOj0gJyR7dGltZXN0YW1wfSAke3ByZWZpeH0gJHttZXNzYWdlfScKCXByaW50bG4obGluZSkKCWlmIGxvZ2dlci5sb2dfZmlsZSAhPSAnJyB7CgkJbXV0IGYgOj0gb3Mub3Blbl9maWxlKGxvZ2dlci5sb2dfZmlsZSwgJ2EnKSBvciB7CgkJCWVwcmludGxuKCdGYWlsZWQgdG8gb3BlbiBsb2cgZmlsZTogJHtlcnJ9JykKCQkJcmV0dXJuCgkJfQoJCWYud3JpdGUoKGxpbmUgKyAnXG4nKS5ieXRlcygpKSBvciB7CgkJCWVwcmludGxuKCdGYWlsZWQgdG8gYXBwZW5kIGxvZzogJHtlcnJ9JykKCQl9CgkJZi5jbG9zZSgpCgl9Cn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -32746,8 +32842,27 @@ fn add_item(mut store TodoStore, title string) TodoItem {
 	if int(level) &lt; int(logger.level) {
 		return
 	}
-	line := &#039;${time.now().str()} ${prefix} ${message}&#039;
+
+	timestamp := time.now().str()
+	prefix := match level {
+		.debug { &#039;[DEBUG]&#039; }
+		.info { &#039;[INFO]&#039; }
+		.warn { &#039;[WARN]&#039; }
+		.error { &#039;[ERROR]&#039; }
+	}
+
+	line := &#039;${timestamp} ${prefix} ${message}&#039;
 	println(line)
+	if logger.log_file != &#039;&#039; {
+		mut f := os.open_file(logger.log_file, &#039;a&#039;) or {
+			eprintln(&#039;Failed to open log file: ${err}&#039;)
+			return
+		}
+		f.write((line + &#039;\n&#039;).bytes()) or {
+			eprintln(&#039;Failed to append log: ${err}&#039;)
+		}
+		f.close()
+	}
 }</code></pre>
                 </div>
 <hr />

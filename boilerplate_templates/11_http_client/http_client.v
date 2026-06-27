@@ -3,16 +3,17 @@ module main
 import net.http
 import json
 
-struct UserPayload {
-	name string @[json: 'name']
-	job  string @[json: 'job']
+struct PostPayload {
+	title   string @[json: 'title']
+	body    string @[json: 'body']
+	user_id int    @[json: 'userId']
 }
 
-struct UserResponse {
-	name string @[json: 'name']
-	job  string @[json: 'job']
-	id   string @[json: 'id']
-	created_at string @[json: 'created_at']
+struct PostResponse {
+	id      int    @[json: 'id']
+	title   string @[json: 'title']
+	body    string @[json: 'body']
+	user_id int    @[json: 'userId']
 }
 
 fn fetch_json(url string) !string {
@@ -23,13 +24,22 @@ fn fetch_json(url string) !string {
 	return resp.body
 }
 
-fn post_json(url string, payload UserPayload) !UserResponse {
+fn post_json(url string, payload PostPayload) !PostResponse {
 	body := json.encode(payload)
-	resp := http.post(url, body) or { return error('POST request failed: ${err}') }
+	
+	// Set Content-Type explicitly for compliance with strict JSON APIs
+	mut req := http.Request{
+		method: .post
+		url: url
+		data: body
+	}
+	req.header.set(.content_type, 'application/json')
+
+	resp := req.do() or { return error('POST request failed: ${err}') }
 	if resp.status_code >= 400 {
 		return error('Request failed with status ${resp.status_code}')
 	}
-	return json.decode(UserResponse, resp.body) or { return error('Invalid JSON response') }
+	return json.decode(PostResponse, resp.body) or { return error('Invalid JSON response') }
 }
 
 fn main() {
@@ -42,16 +52,18 @@ fn main() {
 	println('GET response body:')
 	println(body)
 
-	response := post_json('https://httpbin.org/post', UserPayload{
-		name: 'Ada'
-		job: 'Developer'
+	response := post_json('https://jsonplaceholder.typicode.com/posts', PostPayload{
+		title: 'Ada'
+		body: 'Developer'
+		user_id: 1
 	}) or {
 		eprintln('${err}')
 		return
 	}
 
 	println('\nPOST response:')
-	println('name: ${response.name}')
-	println('job: ${response.job}')
-	println('id: ${response.id}')
+	println('id:      ${response.id}')
+	println('title:   ${response.title}')
+	println('body:    ${response.body}')
+	println('user_id: ${response.user_id}')
 }
