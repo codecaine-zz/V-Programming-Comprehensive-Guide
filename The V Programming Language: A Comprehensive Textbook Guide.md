@@ -18976,7 +18976,6 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Retry and Backoff Boilerplate](#retry-and-backoff-boilerplate)
 - [HTTP Client Boilerplate](#http-client-boilerplate)
 - [CSV Processor Boilerplate](#csv-processor-boilerplate)
-- [SQLite CRUD Boilerplate](#sqlite-crud-boilerplate)
 - [Logging Boilerplate](#logging-boilerplate)
 
 ---
@@ -20039,32 +20038,6 @@ fn read_people(path string) ![]Person {
 		}
 	}
 	return people
-}
-```
-
----
-
-### SQLite CRUD Boilerplate
-
-_File location: [boilerplate_templates/13_sqlite_crud/sqlite_crud.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/13_sqlite_crud/sqlite_crud.v)_
-
-### Lesson: SQLite CRUD Boilerplate
-
-SQLite is a great fit for small desktop apps, local tools, and prototypes. This template shows a minimal CRUD workflow for creating a table, inserting data, fetching records, and closing the connection cleanly.
-
-Key concepts illustrated:
-
-- **Database Connection**: Opening and closing a SQLite database with `sqlite.connect`.
-- **Schema Setup**: Creating tables with `CREATE TABLE IF NOT EXISTS`.
-- **CRUD Operations**: Insert and read operations using parameterized SQL.
-- **Structured Results**: Mapping database rows into typed structs.
-
-```v
-fn insert_user(mut db sqlite.DB, name string, email string, age int) !int {
-	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [name, email, age.str()]) or {
-		return error('Insert failed: ${err}')
-	}
-	return db.last_id()
 }
 ```
 
