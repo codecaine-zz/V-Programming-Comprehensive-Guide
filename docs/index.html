@@ -32420,12 +32420,13 @@ fn main() {
 <li><strong>Set Operations (<code>intersection</code>, <code>difference</code>)</strong>: Calculating overlapping elements and unique elements between two arrays.</li>
 <li><strong>Flattening (<code>flatten</code>)</strong>: Condensing nested 2D slices (<code>[][]T</code>) into flat 1D slices (<code>[]T</code>).</li>
 <li><strong>In-place Shuffling (<code>shuffle</code>)</strong>: Implementing the Fisher-Yates shuffle algorithm using V&#039;s standard <code>rand</code> package.</li>
+<li><strong>Weighted Selection (<code>weighted_choice</code>)</strong>: Selecting elements from an array based on proportional bias (weights) to simulate probability distributions.</li>
 </ul>
 <div class="code-wrapper">
                     <div class="code-header">
                         <span class="code-lang">v</span>
                         <div class="code-actions">
-                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCByYW5kCgovLyB1bmlxdWUgcmV0dXJucyBhIG5ldyBhcnJheSB3aXRoIGR1cGxpY2F0ZSBlbGVtZW50cyByZW1vdmVkLgpmbiB1bmlxdWVbVF0oYXJyIFtdVCkgW11UIHsKCW11dCByZXN1bHQgOj0gW11Ue2NhcDogYXJyLmxlbn0KCWZvciBpdGVtIGluIGFyciB7CgkJaWYgaXRlbSAhaW4gcmVzdWx0IHsKCQkJcmVzdWx0IDw8IGl0ZW0KCQl9Cgl9CglyZXR1cm4gcmVzdWx0Cn0KCi8vIGNodW5rIHNwbGl0cyBhbiBhcnJheSBpbnRvIHN1Yi1hcnJheXMgb2YgdGhlIHNwZWNpZmllZCBzaXplLgpmbiBjaHVua1tUXShhcnIgW11ULCBzaXplIGludCkgW11bXVQgewoJaWYgc2l6ZSA8PSAwIHx8IGFyci5sZW4gPT0gMCB7CgkJcmV0dXJuIFtdW11Ue30KCX0KCW11dCByZXN1bHQgOj0gW11bXVR7fQoJbXV0IGN1cnJlbnRfY2h1bmsgOj0gW11Ue30KCglmb3IgaXRlbSBpbiBhcnIgewoJCWN1cnJlbnRfY2h1bmsgPDwgaXRlbQoJCWlmIGN1cnJlbnRfY2h1bmsubGVuID09IHNpemUgewoJCQlyZXN1bHQgPDwgY3VycmVudF9jaHVuawoJCQljdXJyZW50X2NodW5rID0gW11Ue30KCQl9Cgl9CglpZiBjdXJyZW50X2NodW5rLmxlbiA%2BIDAgewoJCXJlc3VsdCA8PCBjdXJyZW50X2NodW5rCgl9CglyZXR1cm4gcmVzdWx0Cn0KCi8vIGludGVyc2VjdGlvbiByZXR1cm5zIGEgbmV3IGFycmF5IGNvbnRhaW5pbmcgZWxlbWVudHMgcHJlc2VudCBpbiBib3RoIGFycmF5cy4KZm4gaW50ZXJzZWN0aW9uW1RdKGEgW11ULCBiIFtdVCkgW11UIHsKCW11dCByZXN1bHQgOj0gW11Ue30KCWZvciBpdGVtIGluIGEgewoJCWlmIGl0ZW0gaW4gYiAmJiBpdGVtICFpbiByZXN1bHQgewoJCQlyZXN1bHQgPDwgaXRlbQoJCX0KCX0KCXJldHVybiByZXN1bHQKfQoKLy8gZGlmZmVyZW5jZSByZXR1cm5zIGEgbmV3IGFycmF5IGNvbnRhaW5pbmcgZWxlbWVudHMgcHJlc2VudCBpbiBhIGJ1dCBub3QgaW4gYi4KZm4gZGlmZmVyZW5jZVtUXShhIFtdVCwgYiBbXVQpIFtdVCB7CgltdXQgcmVzdWx0IDo9IFtdVHt9Cglmb3IgaXRlbSBpbiBhIHsKCQlpZiBpdGVtICFpbiBiICYmIGl0ZW0gIWluIHJlc3VsdCB7CgkJCXJlc3VsdCA8PCBpdGVtCgkJfQoJfQoJcmV0dXJuIHJlc3VsdAp9CgovLyBmbGF0dGVuIGZsYXR0ZW5zIGEgMkQgYXJyYXkgaW50byBhIDFEIGFycmF5LgpmbiBmbGF0dGVuW1RdKGFyciBbXVtdVCkgW11UIHsKCW11dCByZXN1bHQgOj0gW11Ue30KCWZvciBzdWJfYXJyIGluIGFyciB7CgkJZm9yIGl0ZW0gaW4gc3ViX2FyciB7CgkJCXJlc3VsdCA8PCBpdGVtCgkJfQoJfQoJcmV0dXJuIHJlc3VsdAp9CgovLyBzaHVmZmxlIHJhbmRvbWl6ZXMgdGhlIG9yZGVyIG9mIGVsZW1lbnRzIGluLXBsYWNlIHVzaW5nIHRoZSBGaXNoZXItWWF0ZXMgYWxnb3JpdGhtLgpmbiBzaHVmZmxlW1RdKG11dCBhcnIgW11UKSB7Cglmb3IgaSA6PSBhcnIubGVuIC0gMTsgaSA%2BIDA7IGktLSB7CgkJaiA6PSByYW5kLmludG4oaSArIDEpIG9yIHsgMCB9CgkJdGVtcCA6PSBhcnJbaV0KCQlhcnJbaV0gPSBhcnJbal0KCQlhcnJbal0gPSB0ZW1wCgl9Cn0KCmZuIG1haW4oKSB7CglwcmludGxuKCc9PT0gViBDdXN0b20gQXJyYXkgVXRpbGl0aWVzIEJvaWxlcnBsYXRlID09PScpCgoJLy8gMS4gVW5pcXVlIC8gRGVkdXBsaWNhdGlvbiBEZW1vCglkdXBsaWNhdGVzIDo9IFsxLCAyLCAyLCAzLCAxLCA0LCAzLCA1LCAyXQoJcHJpbnRsbignT3JpZ2luYWw6ICAgICR7ZHVwbGljYXRlc30nKQoJcHJpbnRsbignRGVkdXBsaWNhdGVkOiAke3VuaXF1ZShkdXBsaWNhdGVzKX0nKQoKCS8vIDIuIENodW5raW5nIERlbW8KCXRvX2NodW5rIDo9IFsnYScsICdiJywgJ2MnLCAnZCcsICdlJywgJ2YnLCAnZyddCgljaHVua19zaXplIDo9IDMKCXByaW50bG4oJ1xuT3JpZ2luYWw6ICAgICR7dG9fY2h1bmt9JykKCXByaW50bG4oJ0NodW5rZWQgKCR7Y2h1bmtfc2l6ZX0pOiAke2NodW5rW3N0cmluZ10odG9fY2h1bmssIGNodW5rX3NpemUpfScpCgoJLy8gMy4gSW50ZXJzZWN0aW9uICYgRGlmZmVyZW5jZSBEZW1vCglhcnJfYSA6PSBbMSwgMiwgMywgNCwgNV0KCWFycl9iIDo9IFs0LCA1LCA2LCA3LCA4XQoJcHJpbnRsbignXG5BcnJheSBBOiAgICAgJHthcnJfYX0nKQoJcHJpbnRsbignQXJyYXkgQjogICAgICR7YXJyX2J9JykKCXByaW50bG4oJ0ludGVyc2VjdGlvbjogJHtpbnRlcnNlY3Rpb24oYXJyX2EsIGFycl9iKX0nKQoJcHJpbnRsbignRGlmZmVyZW5jZTogICR7ZGlmZmVyZW5jZShhcnJfYSwgYXJyX2IpfScpCgoJLy8gNC4gRmxhdHRlbmluZyBEZW1vCgluZXN0ZWQgOj0gW1sxLCAyXSwgWzMsIDQsIDVdLCBbNl1dCglwcmludGxuKCdcbk5lc3RlZDogICAgICAke25lc3RlZH0nKQoJcHJpbnRsbignRmxhdHRlbmVkOiAgICR7ZmxhdHRlbihuZXN0ZWQpfScpCgoJLy8gNS4gSW4tcGxhY2UgU2h1ZmZsaW5nIERlbW8KCW11dCB0b19zaHVmZmxlIDo9IFsxMCwgMjAsIDMwLCA0MCwgNTAsIDYwLCA3MF0KCXByaW50bG4oJ1xuQmVmb3JlIFNodWZmbGU6ICR7dG9fc2h1ZmZsZX0nKQoJc2h1ZmZsZShtdXQgdG9fc2h1ZmZsZSkKCXByaW50bG4oJ0FmdGVyIFNodWZmbGU6ICAke3RvX3NodWZmbGV9JykKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                            <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCByYW5kCgovLyB1bmlxdWUgcmV0dXJucyBhIG5ldyBhcnJheSB3aXRoIGR1cGxpY2F0ZSBlbGVtZW50cyByZW1vdmVkLgpmbiB1bmlxdWVbVF0oYXJyIFtdVCkgW11UIHsKCW11dCByZXN1bHQgOj0gW11Ue2NhcDogYXJyLmxlbn0KCWZvciBpdGVtIGluIGFyciB7CgkJaWYgaXRlbSAhaW4gcmVzdWx0IHsKCQkJcmVzdWx0IDw8IGl0ZW0KCQl9Cgl9CglyZXR1cm4gcmVzdWx0Cn0KCi8vIGNodW5rIHNwbGl0cyBhbiBhcnJheSBpbnRvIHN1Yi1hcnJheXMgb2YgdGhlIHNwZWNpZmllZCBzaXplLgpmbiBjaHVua1tUXShhcnIgW11ULCBzaXplIGludCkgW11bXVQgewoJaWYgc2l6ZSA8PSAwIHx8IGFyci5sZW4gPT0gMCB7CgkJcmV0dXJuIFtdW11Ue30KCX0KCW11dCByZXN1bHQgOj0gW11bXVR7fQoJbXV0IGN1cnJlbnRfY2h1bmsgOj0gW11Ue30KCQoJZm9yIGl0ZW0gaW4gYXJyIHsKCQljdXJyZW50X2NodW5rIDw8IGl0ZW0KCQlpZiBjdXJyZW50X2NodW5rLmxlbiA9PSBzaXplIHsKCQkJcmVzdWx0IDw8IGN1cnJlbnRfY2h1bmsKCQkJY3VycmVudF9jaHVuayA9IFtdVHt9CgkJfQoJfQoJaWYgY3VycmVudF9jaHVuay5sZW4gPiAwIHsKCQlyZXN1bHQgPDwgY3VycmVudF9jaHVuawoJfQoJcmV0dXJuIHJlc3VsdAp9CgovLyBpbnRlcnNlY3Rpb24gcmV0dXJucyBhIG5ldyBhcnJheSBjb250YWluaW5nIGVsZW1lbnRzIHByZXNlbnQgaW4gYm90aCBhcnJheXMuCmZuIGludGVyc2VjdGlvbltUXShhIFtdVCwgYiBbXVQpIFtdVCB7CgltdXQgcmVzdWx0IDo9IFtdVHt9Cglmb3IgaXRlbSBpbiBhIHsKCQlpZiBpdGVtIGluIGIgJiYgaXRlbSAhaW4gcmVzdWx0IHsKCQkJcmVzdWx0IDw8IGl0ZW0KCQl9Cgl9CglyZXR1cm4gcmVzdWx0Cn0KCi8vIGRpZmZlcmVuY2UgcmV0dXJucyBhIG5ldyBhcnJheSBjb250YWluaW5nIGVsZW1lbnRzIHByZXNlbnQgaW4gYSBidXQgbm90IGluIGIuCmZuIGRpZmZlcmVuY2VbVF0oYSBbXVQsIGIgW11UKSBbXVQgewoJbXV0IHJlc3VsdCA6PSBbXVR7fQoJZm9yIGl0ZW0gaW4gYSB7CgkJaWYgaXRlbSAhaW4gYiAmJiBpdGVtICFpbiByZXN1bHQgewoJCQlyZXN1bHQgPDwgaXRlbQoJCX0KCX0KCXJldHVybiByZXN1bHQKfQoKLy8gZmxhdHRlbiBmbGF0dGVucyBhIDJEIGFycmF5IGludG8gYSAxRCBhcnJheS4KZm4gZmxhdHRlbltUXShhcnIgW11bXVQpIFtdVCB7CgltdXQgcmVzdWx0IDo9IFtdVHt9Cglmb3Igc3ViX2FyciBpbiBhcnIgewoJCWZvciBpdGVtIGluIHN1Yl9hcnIgewoJCQlyZXN1bHQgPDwgaXRlbQoJCX0KCX0KCXJldHVybiByZXN1bHQKfQoKLy8gc2h1ZmZsZSByYW5kb21pemVzIHRoZSBvcmRlciBvZiBlbGVtZW50cyBpbi1wbGFjZSB1c2luZyB0aGUgRmlzaGVyLVlhdGVzIGFsZ29yaXRobS4KZm4gc2h1ZmZsZVtUXShtdXQgYXJyIFtdVCkgewoJZm9yIGkgOj0gYXJyLmxlbiAtIDE7IGkgPiAwOyBpLS0gewoJCWogOj0gcmFuZC5pbnRuKGkgKyAxKSBvciB7IDAgfQoJCXRlbXAgOj0gYXJyW2ldCgkJYXJyW2ldID0gYXJyW2pdCgkJYXJyW2pdID0gdGVtcAoJfQp9CgovLyB3ZWlnaHRlZF9jaG9pY2UgcmV0dXJucyBhbiBlbGVtZW50IGZyb20gYHZhbHVlc2AgYmFzZWQgb24gdGhlaXIgY29ycmVzcG9uZGluZyBgd2VpZ2h0c2AuCi8vIFRoZSBsZW5ndGhzIG9mIGB2YWx1ZXNgIGFuZCBgd2VpZ2h0c2AgbXVzdCBiZSBlcXVhbCBhbmQgbm9uLXplcm8uCi8vIEFsbCB3ZWlnaHRzIG11c3QgYmUgbm9uLW5lZ2F0aXZlLgpmbiB3ZWlnaHRlZF9jaG9pY2VbVF0odmFsdWVzIFtdVCwgd2VpZ2h0cyBbXWludCkgIVQgewoJaWYgdmFsdWVzLmxlbiAhPSB3ZWlnaHRzLmxlbiB7CgkJcmV0dXJuIGVycm9yKCd2YWx1ZXMgYW5kIHdlaWdodHMgbXVzdCBoYXZlIHRoZSBzYW1lIGxlbmd0aCcpCgl9CglpZiB2YWx1ZXMubGVuID09IDAgewoJCXJldHVybiBlcnJvcignY2Fubm90IHBpY2sgZnJvbSBlbXB0eSBhcnJheXMnKQoJfQoKCW11dCB0b3RhbF93ZWlnaHQgOj0gMAoJZm9yIHcgaW4gd2VpZ2h0cyB7CgkJaWYgdyA8IDAgewoJCQlyZXR1cm4gZXJyb3IoJ3dlaWdodHMgbXVzdCBiZSBub24tbmVnYXRpdmUnKQoJCX0KCQl0b3RhbF93ZWlnaHQgKz0gdwoJfQoKCWlmIHRvdGFsX3dlaWdodCA8PSAwIHsKCQlyZXR1cm4gZXJyb3IoJ3N1bSBvZiB3ZWlnaHRzIG11c3QgYmUgZ3JlYXRlciB0aGFuIHplcm8nKQoJfQoKCS8vIFBpY2sgYSByYW5kb20gbnVtYmVyIGluIFswLCB0b3RhbF93ZWlnaHQpCglyIDo9IHJhbmQuaW50bih0b3RhbF93ZWlnaHQpIG9yIHsgcmV0dXJuIGVycm9yKCdmYWlsZWQgdG8gZ2VuZXJhdGUgcmFuZG9tIG51bWJlcjogJHtlcnJ9JykgfQoKCW11dCBydW5uaW5nX3N1bSA6PSAwCglmb3IgaSwgdyBpbiB3ZWlnaHRzIHsKCQlydW5uaW5nX3N1bSArPSB3CgkJaWYgciA8IHJ1bm5pbmdfc3VtIHsKCQkJcmV0dXJuIHZhbHVlc1tpXQoJCX0KCX0KCglyZXR1cm4gdmFsdWVzW3ZhbHVlcy5sZW4gLSAxXQp9CgpmbiBtYWluKCkgewoJcHJpbnRsbignPT09IFYgQ3VzdG9tIEFycmF5IFV0aWxpdGllcyBCb2lsZXJwbGF0ZSA9PT0nKQoKCS8vIDEuIFVuaXF1ZSAvIERlZHVwbGljYXRpb24gRGVtbwoJZHVwbGljYXRlcyA6PSBbMSwgMiwgMiwgMywgMSwgNCwgMywgNSwgMl0KCXByaW50bG4oJ09yaWdpbmFsOiAgICAke2R1cGxpY2F0ZXN9JykKCXByaW50bG4oJ0RlZHVwbGljYXRlZDogJHt1bmlxdWUoZHVwbGljYXRlcyl9JykKCgkvLyAyLiBDaHVua2luZyBEZW1vCgl0b19jaHVuayA6PSBbJ2EnLCAnYicsICdjJywgJ2QnLCAnZScsICdmJywgJ2cnXQoJY2h1bmtfc2l6ZSA6PSAzCglwcmludGxuKCdcbk9yaWdpbmFsOiAgICAke3RvX2NodW5rfScpCglwcmludGxuKCdDaHVua2VkICgke2NodW5rX3NpemV9KTogJHtjaHVua1tzdHJpbmddKHRvX2NodW5rLCBjaHVua19zaXplKX0nKQoKCS8vIDMuIEludGVyc2VjdGlvbiAmIERpZmZlcmVuY2UgRGVtbwoJYXJyX2EgOj0gWzEsIDIsIDMsIDQsIDVdCglhcnJfYiA6PSBbNCwgNSwgNiwgNywgOF0KCXByaW50bG4oJ1xuQXJyYXkgQTogICAgICR7YXJyX2F9JykKCXByaW50bG4oJ0FycmF5IEI6ICAgICAke2Fycl9ifScpCglwcmludGxuKCdJbnRlcnNlY3Rpb246ICR7aW50ZXJzZWN0aW9uKGFycl9hLCBhcnJfYil9JykKCXByaW50bG4oJ0RpZmZlcmVuY2U6ICAke2RpZmZlcmVuY2UoYXJyX2EsIGFycl9iKX0nKQoKCS8vIDQuIEZsYXR0ZW5pbmcgRGVtbwoJbmVzdGVkIDo9IFtbMSwgMl0sIFszLCA0LCA1XSwgWzZdXQoJcHJpbnRsbignXG5OZXN0ZWQ6ICAgICAgJHtuZXN0ZWR9JykKCXByaW50bG4oJ0ZsYXR0ZW5lZDogICAke2ZsYXR0ZW4obmVzdGVkKX0nKQoKCS8vIDUuIEluLXBsYWNlIFNodWZmbGluZyBEZW1vCgltdXQgdG9fc2h1ZmZsZSA6PSBbMTAsIDIwLCAzMCwgNDAsIDUwLCA2MCwgNzBdCglwcmludGxuKCdcbkJlZm9yZSBTaHVmZmxlOiAke3RvX3NodWZmbGV9JykKCXNodWZmbGUobXV0IHRvX3NodWZmbGUpCglwcmludGxuKCdBZnRlciBTaHVmZmxlOiAgJHt0b19zaHVmZmxlfScpCgoJLy8gNi4gV2VpZ2h0ZWQgUmFuZG9tIENob2ljZSBEZW1vIChwaWNraW5nIHdpdGggYmlhcykKCWl0ZW1zIDo9IFsnQ29tbW9uJywgJ1VuY29tbW9uJywgJ1JhcmUnLCAnTGVnZW5kYXJ5J10KCXdlaWdodHMgOj0gWzcwLCAyMCwgOSwgMV0gLy8gU3VtIGlzIDEwMAoJcHJpbnRsbignXG5XZWlnaHRlZCBDaG9pY2UgRGVtbyAocGlja2luZyB3aXRoIGJpYXMpOicpCglwcmludGxuKCdJdGVtczogICAke2l0ZW1zfScpCglwcmludGxuKCdXZWlnaHRzOiAke3dlaWdodHN9JykKCgkvLyBTaW11bGF0ZSAxMCwwMDAgcGlja3MgdG8gZGVtb25zdHJhdGUgdGhhdCB0aGUgZGlzdHJpYnV0aW9uIG1hdGNoZXMgdGhlIHdlaWdodHMKCW11dCBzdGF0cyA6PSBtYXBbc3RyaW5nXWludHt9Cglmb3IgXyBpbiAwIC4uIDEwMDAwIHsKCQlwaWNrZWQgOj0gd2VpZ2h0ZWRfY2hvaWNlW3N0cmluZ10oaXRlbXMsIHdlaWdodHMpIG9yIHsKCQkJZXByaW50bG4oJ0Vycm9yOiAke2Vycn0nKQoJCQljb250aW51ZQoJCX0KCQlzdGF0c1twaWNrZWRdKysKCX0KCglwcmludGxuKCdTaW11bGF0aW9uIHJlc3VsdHMgKG91dCBvZiAxMCwwMDAgcGlja3MpOicpCglmb3IgaXRlbSBpbiBpdGVtcyB7CgkJcHJpbnRsbignLSAke2l0ZW19OiAke3N0YXRzW2l0ZW1dfSBwaWNrcyAofiR7KGY2NChzdGF0c1tpdGVtXSkgLyAxMDAuMCk6LjFmfSUpJykKCX0KfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Run
                     </a>
@@ -32465,7 +32466,7 @@ fn chunk[T](arr []T, size int) [][]T {
 	}
 	mut result := [][]T{}
 	mut current_chunk := []T{}
-
+	
 	for item in arr {
 		current_chunk &lt;&lt; item
 		if current_chunk.len == size {
@@ -32522,6 +32523,43 @@ fn shuffle[T](mut arr []T) {
 	}
 }
 
+// weighted_choice returns an element from `values` based on their corresponding `weights`.
+// The lengths of `values` and `weights` must be equal and non-zero.
+// All weights must be non-negative.
+fn weighted_choice[T](values []T, weights []int) !T {
+	if values.len != weights.len {
+		return error(&#039;values and weights must have the same length&#039;)
+	}
+	if values.len == 0 {
+		return error(&#039;cannot pick from empty arrays&#039;)
+	}
+
+	mut total_weight := 0
+	for w in weights {
+		if w &lt; 0 {
+			return error(&#039;weights must be non-negative&#039;)
+		}
+		total_weight += w
+	}
+
+	if total_weight &lt;= 0 {
+		return error(&#039;sum of weights must be greater than zero&#039;)
+	}
+
+	// Pick a random number in [0, total_weight)
+	r := rand.intn(total_weight) or { return error(&#039;failed to generate random number: ${err}&#039;) }
+
+	mut running_sum := 0
+	for i, w in weights {
+		running_sum += w
+		if r &lt; running_sum {
+			return values[i]
+		}
+	}
+
+	return values[values.len - 1]
+}
+
 fn main() {
 	println(&#039;=== V Custom Array Utilities Boilerplate ===&#039;)
 
@@ -32554,6 +32592,28 @@ fn main() {
 	println(&#039;\nBefore Shuffle: ${to_shuffle}&#039;)
 	shuffle(mut to_shuffle)
 	println(&#039;After Shuffle:  ${to_shuffle}&#039;)
+
+	// 6. Weighted Random Choice Demo (picking with bias)
+	items := [&#039;Common&#039;, &#039;Uncommon&#039;, &#039;Rare&#039;, &#039;Legendary&#039;]
+	weights := [70, 20, 9, 1] // Sum is 100
+	println(&#039;\nWeighted Choice Demo (picking with bias):&#039;)
+	println(&#039;Items:   ${items}&#039;)
+	println(&#039;Weights: ${weights}&#039;)
+
+	// Simulate 10,000 picks to demonstrate that the distribution matches the weights
+	mut stats := map[string]int{}
+	for _ in 0 .. 10000 {
+		picked := weighted_choice[string](items, weights) or {
+			eprintln(&#039;Error: ${err}&#039;)
+			continue
+		}
+		stats[picked]++
+	}
+
+	println(&#039;Simulation results (out of 10,000 picks):&#039;)
+	for item in items {
+		println(&#039;- ${item}: ${stats[item]} picks (~${(f64(stats[item]) / 100.0):.1f}%)&#039;)
+	}
 }</code></pre>
                 </div>
 <hr />

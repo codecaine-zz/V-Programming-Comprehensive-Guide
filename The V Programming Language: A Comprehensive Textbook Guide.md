@@ -19897,6 +19897,7 @@ Key concepts illustrated:
 - **Set Operations (`intersection`, `difference`)**: Calculating overlapping elements and unique elements between two arrays.
 - **Flattening (`flatten`)**: Condensing nested 2D slices (`[][]T`) into flat 1D slices (`[]T`).
 - **In-place Shuffling (`shuffle`)**: Implementing the Fisher-Yates shuffle algorithm using V's standard `rand` package.
+- **Weighted Selection (`weighted_choice`)**: Selecting elements from an array based on proportional bias (weights) to simulate probability distributions.
 
 ```v
 module main
@@ -19921,7 +19922,7 @@ fn chunk[T](arr []T, size int) [][]T {
 	}
 	mut result := [][]T{}
 	mut current_chunk := []T{}
-
+	
 	for item in arr {
 		current_chunk << item
 		if current_chunk.len == size {
@@ -19978,6 +19979,43 @@ fn shuffle[T](mut arr []T) {
 	}
 }
 
+// weighted_choice returns an element from `values` based on their corresponding `weights`.
+// The lengths of `values` and `weights` must be equal and non-zero.
+// All weights must be non-negative.
+fn weighted_choice[T](values []T, weights []int) !T {
+	if values.len != weights.len {
+		return error('values and weights must have the same length')
+	}
+	if values.len == 0 {
+		return error('cannot pick from empty arrays')
+	}
+
+	mut total_weight := 0
+	for w in weights {
+		if w < 0 {
+			return error('weights must be non-negative')
+		}
+		total_weight += w
+	}
+
+	if total_weight <= 0 {
+		return error('sum of weights must be greater than zero')
+	}
+
+	// Pick a random number in [0, total_weight)
+	r := rand.intn(total_weight) or { return error('failed to generate random number: ${err}') }
+
+	mut running_sum := 0
+	for i, w in weights {
+		running_sum += w
+		if r < running_sum {
+			return values[i]
+		}
+	}
+
+	return values[values.len - 1]
+}
+
 fn main() {
 	println('=== V Custom Array Utilities Boilerplate ===')
 
@@ -20010,6 +20048,28 @@ fn main() {
 	println('\nBefore Shuffle: ${to_shuffle}')
 	shuffle(mut to_shuffle)
 	println('After Shuffle:  ${to_shuffle}')
+
+	// 6. Weighted Random Choice Demo (picking with bias)
+	items := ['Common', 'Uncommon', 'Rare', 'Legendary']
+	weights := [70, 20, 9, 1] // Sum is 100
+	println('\nWeighted Choice Demo (picking with bias):')
+	println('Items:   ${items}')
+	println('Weights: ${weights}')
+
+	// Simulate 10,000 picks to demonstrate that the distribution matches the weights
+	mut stats := map[string]int{}
+	for _ in 0 .. 10000 {
+		picked := weighted_choice[string](items, weights) or {
+			eprintln('Error: ${err}')
+			continue
+		}
+		stats[picked]++
+	}
+
+	println('Simulation results (out of 10,000 picks):')
+	for item in items {
+		println('- ${item}: ${stats[item]} picks (~${(f64(stats[item]) / 100.0):.1f}%)')
+	}
 }
 ```
 
