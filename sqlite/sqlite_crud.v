@@ -1,6 +1,7 @@
 module main
 
 import db.sqlite
+import os
 
 struct User {
 	id    int
@@ -53,12 +54,20 @@ fn fetch_users(mut db sqlite.DB) ![]User {
 fn main() {
 	println('=== V SQLite CRUD Boilerplate ===')
 
-	mut db := connect_db('demo.db') or {
+	db_path := 'demo.db'
+	defer {
+		if os.exists(db_path) {
+			os.rm(db_path) or {}
+			println('Cleaned up temporary database: ${db_path}')
+		}
+	}
+
+	mut db := connect_db(db_path) or {
 		eprintln('${err}')
 		return
 	}
 	defer {
-		db.close() or { eprintln('Failed to close database: ${err}') }
+		db.close() or { eprint('Failed to close database: ${err}') }
 	}
 
 	init_schema(mut db) or {

@@ -639,6 +639,7 @@ To get the most from this book:
   - [Case Study: Notes API](#case-study-notes-api)
   - [JSON & ORM](#json--orm)
   - [SQLite Integration](#sqlite-integration)
+  - [SQLite CRUD Helper](#sqlite-crud-helper)
   - [Sqlite Raw Crud](#sqlite-raw-crud)
 - [Chapter 13: Standard Library & Advanced Features](#chapter-13-standard-library--advanced-features)
   - [Inline Assembly & C Interop](#inline-assembly--c-interop)
@@ -11382,6 +11383,121 @@ pub fn delete_note(mut db DB, id int) ! {
 > [!TIP]
 > **Safe database access:** always pass user input as parameters using `exec_param_many` or `exec` with placeholders like `?`. This prevents SQL injection and keeps your queries readable.
 
+### SQLite CRUD Helper
+
+_File location: [sqlite/sqlite_crud.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/sqlite/sqlite_crud.v)_
+
+### Lesson: SQLite CRUD Helper
+
+This template demonstrates a complete SQLite database workflow using raw SQL queries. It includes creating tables, clearing data, inserting records with parameterized inputs to prevent SQL injection, and fetching records into structured types.
+
+Key concepts illustrated:
+
+- **Database Connection**: Opening and closing a SQLite database using `sqlite.connect`.
+- **Schema Management**: Creating tables dynamically using `db.exec`.
+- **Parameterized Queries**: Preventing SQL injection by passing variables inside string arrays using `db.exec_param_many`.
+- **Result Mapping**: Manually parsing returned rows into structured V structs.
+- **Resource Cleanup**: Appending log files or temporary databases, and deleting them cleanly via `defer` blocks to prevent stray files on disk.
+
+```v
+module main
+
+import db.sqlite
+import os
+
+struct User {
+	id    int
+	name  string
+	email string
+	age   int
+}
+
+fn connect_db(path string) !sqlite.DB {
+	return sqlite.connect(path)
+}
+
+fn init_schema(mut db sqlite.DB) ! {
+	db.exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT UNIQUE, age INTEGER);') or {
+		return error('Could not create table: ${err}')
+	}
+}
+
+fn reset_users(mut db sqlite.DB) ! {
+	db.exec('DELETE FROM users;') or { return error('Could not clear users: ${err}') }
+}
+
+fn insert_user(mut db sqlite.DB, name string, email string, age int) !int {
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		name,
+		email,
+		age.str(),
+	]) or { return error('Insert failed: ${err}') }
+	return db.last_id()
+}
+
+fn fetch_users(mut db sqlite.DB) ![]User {
+	rows := db.exec('SELECT id, name, email, age FROM users ORDER BY id;') or {
+		return error('Select failed: ${err}')
+	}
+	mut users := []User{}
+	for row in rows {
+		users << User{
+			id:    row.vals[0].int()
+			name:  row.vals[1]
+			email: row.vals[2]
+			age:   row.vals[3].int()
+		}
+	}
+	return users
+}
+
+// Reusable CRUD helpers for the SQLite boilerplate example.
+
+fn main() {
+	println('=== V SQLite CRUD Boilerplate ===')
+
+	db_path := 'demo.db'
+	defer {
+		if os.exists(db_path) {
+			os.rm(db_path) or {}
+			println('Cleaned up temporary database: ${db_path}')
+		}
+	}
+
+	mut db := connect_db(db_path) or {
+		eprintln('${err}')
+		return
+	}
+	defer {
+		db.close() or { eprint('Failed to close database: ${err}') }
+	}
+
+	init_schema(mut db) or {
+		eprintln('${err}')
+		return
+	}
+
+	reset_users(mut db) or {
+		eprintln('${err}')
+		return
+	}
+
+	user_id := insert_user(mut db, 'Ada', 'ada@example.com', 36) or {
+		eprintln('${err}')
+		return
+	}
+	println('Inserted user id: ${user_id}')
+
+	users := fetch_users(mut db) or {
+		eprintln('${err}')
+		return
+	}
+	for user in users {
+		println('User: ${user.id} ${user.name} (${user.email}, age ${user.age})')
+	}
+}
+```
+
 ---
 
 ## Sqlite Raw Crud
@@ -19921,6 +20037,7 @@ import json
 import os
 
 struct AppConfig {
+mut:
 	host    string
 	port    int
 	debug   bool
@@ -19929,9 +20046,9 @@ struct AppConfig {
 
 fn default_config() AppConfig {
 	return AppConfig{
-		host: '127.0.0.1'
-		port: 8080
-		debug: false
+		host:    '127.0.0.1'
+		port:    8080
+		debug:   false
 		retries: 3
 	}
 }
@@ -19975,6 +20092,38 @@ fn load_config(path string) AppConfig {
 
 	return cfg
 }
+
+fn save_config(path string, cfg AppConfig) {
+	data := json.encode(cfg)
+	os.write_file(path, data) or { eprint('Failed to save config file: ${err}') }
+}
+
+fn main() {
+	println('=== V Configuration Management Boilerplate ===')
+
+	config_path := 'app_config.json'
+	
+	// Ensure we cleanup the generated file on exit
+	defer {
+		if os.exists(config_path) {
+			os.rm(config_path) or {}
+			println('Cleaned up temporary config file: ${config_path}')
+		}
+	}
+
+	mut cfg := load_config(config_path)
+
+	println('Loaded configuration:')
+	println('- host: ${cfg.host}')
+	println('- port: ${cfg.port}')
+	println('- debug: ${cfg.debug}')
+	println('- retries: ${cfg.retries}')
+
+	cfg.debug = true
+	save_config(config_path, cfg)
+
+	println('Saved configuration to ${config_path}')
+}
 ```
 
 ---
@@ -19995,20 +20144,102 @@ Key concepts illustrated:
 - **Safe Serialization**: Using `json.encode` and `json.decode` for portability.
 
 ```v
+module main
+
+import json
+import os
+
 struct TodoItem {
 	id    int
 	title string
-	done  bool
+mut:
+	done bool
+}
+
+struct TodoStore {
+mut:
+	items []TodoItem
+}
+
+fn load_store(path string) TodoStore {
+	if !os.exists(path) {
+		return TodoStore{}
+	}
+
+	raw := os.read_file(path) or {
+		eprintln('Could not read store: ${err}')
+		return TodoStore{}
+	}
+
+	decoded := json.decode(TodoStore, raw) or {
+		eprintln('Could not decode store: ${err}')
+		return TodoStore{}
+	}
+
+	return decoded
+}
+
+fn save_store(path string, store TodoStore) {
+	data := json.encode(store)
+	os.write_file(path, data) or { eprintln('Could not save store: ${err}') }
 }
 
 fn add_item(mut store TodoStore, title string) TodoItem {
 	item := TodoItem{
-		id: store.items.len + 1
+		id:    store.items.len + 1
 		title: title
-		done: false
+		done:  false
 	}
 	store.items << item
 	return item
+}
+
+fn mark_done(mut store TodoStore, id int) bool {
+	for i, item in store.items {
+		if item.id == id {
+			store.items[i].done = true
+			return true
+		}
+	}
+	return false
+}
+
+fn list_items(store TodoStore) {
+	for item in store.items {
+		status := if item.done { '[x]' } else { '[ ]' }
+		println('${status} ${item.id}. ${item.title}')
+	}
+}
+
+fn main() {
+	println('=== V JSON File Store Boilerplate ===')
+
+	store_path := 'todos.json'
+	
+	// Ensure we cleanup the generated file on exit
+	defer {
+		if os.exists(store_path) {
+			os.rm(store_path) or {}
+			println('Cleaned up temporary store file: ${store_path}')
+		}
+	}
+
+	mut store := load_store(store_path)
+
+	add_item(mut store, 'Write a V tutorial')
+	add_item(mut store, 'Ship a new boilerplate example')
+
+	println('Current todos:')
+	list_items(store)
+
+	if mark_done(mut store, 1) {
+		println('Marked todo #1 as done.')
+	} else {
+		println('Todo #1 was not found.')
+	}
+
+	save_store(store_path, store)
+	println('Saved todos to ${store_path}')
 }
 ```
 
@@ -20030,6 +20261,12 @@ Key concepts illustrated:
 - **Result & Error Propagation**: Leveraging V's `!` result type to return either the successful generic value `T` or propagate the final failure.
 
 ```v
+module main
+
+import os
+import time
+import rand
+
 // RetryConfig configures the retry and backoff behavior.
 struct RetryConfig {
 	attempts      int           = 3
@@ -20070,6 +20307,51 @@ fn retry[T](cfg RetryConfig, op fn () !T) !T {
 	}
 	return error('Unreachable')
 }
+
+fn main() {
+	println('=== V Retry & Backoff Boilerplate ===')
+
+	// Create a dummy file to read successfully on the 3rd attempt
+	file_path := 'temp_retry_demo.txt'
+	defer {
+		if os.exists(file_path) {
+			os.rm(file_path) or {}
+		}
+	}
+
+	// Spawn a thread to create the file after a short delay
+	spawn fn [file_path] () {
+		time.sleep(300 * time.millisecond)
+		os.write_file(file_path, 'Success: Data retrieved from temporary file!') or {}
+		println('[System] File created on disk.')
+	}()
+
+	// Define our retry configuration
+	cfg := RetryConfig{
+		attempts: 4
+		initial_delay: 150 * time.millisecond
+		factor: 1.5
+		jitter: true
+	}
+
+	// Define the retriable operation closure
+	op := fn [file_path] () !string {
+		if !os.exists(file_path) {
+			return error('File does not exist yet')
+		}
+		return os.read_file(file_path)
+	}
+
+	// Run the retry loop
+	println('Starting resilient file read operation...')
+	content := retry[string](cfg, op) or {
+		eprintln('Final failure: ${err}')
+		return
+	}
+
+	println('\nOperation Succeeded!')
+	println('Read content: "${content}"')
+}
 ```
 
 ---
@@ -20091,12 +20373,74 @@ Key concepts illustrated:
 - **Reusable Helpers**: Keeping request logic in dedicated functions for later reuse.
 
 ```v
+module main
+
+import net.http
+import json
+
+struct PostPayload {
+	title   string @[json: 'title']
+	body    string @[json: 'body']
+	user_id int    @[json: 'userId']
+}
+
+struct PostResponse {
+	id      int    @[json: 'id']
+	title   string @[json: 'title']
+	body    string @[json: 'body']
+	user_id int    @[json: 'userId']
+}
+
 fn fetch_json(url string) !string {
 	resp := http.get(url) or { return error('GET request failed: ${err}') }
 	if resp.status_code >= 400 {
 		return error('Request failed with status ${resp.status_code}')
 	}
 	return resp.body
+}
+
+fn post_json(url string, payload PostPayload) !PostResponse {
+	body := json.encode(payload)
+	
+	// Set Content-Type explicitly for compliance with strict JSON APIs
+	mut req := http.Request{
+		method: .post
+		url: url
+		data: body
+	}
+	req.header.set(.content_type, 'application/json')
+
+	resp := req.do() or { return error('POST request failed: ${err}') }
+	if resp.status_code >= 400 {
+		return error('Request failed with status ${resp.status_code}')
+	}
+	return json.decode(PostResponse, resp.body) or { return error('Invalid JSON response') }
+}
+
+fn main() {
+	println('=== V HTTP Client Boilerplate ===')
+
+	body := fetch_json('https://httpbin.org/get') or {
+		eprintln('${err}')
+		return
+	}
+	println('GET response body:')
+	println(body)
+
+	response := post_json('https://jsonplaceholder.typicode.com/posts', PostPayload{
+		title: 'Ada'
+		body: 'Developer'
+		user_id: 1
+	}) or {
+		eprintln('${err}')
+		return
+	}
+
+	println('\nPOST response:')
+	println('id:      ${response.id}')
+	println('title:   ${response.title}')
+	println('body:    ${response.body}')
+	println('user_id: ${response.user_id}')
 }
 ```
 
@@ -20118,22 +20462,84 @@ Key concepts illustrated:
 - **Practical Data Pipelines**: Transforming input files into processed output files.
 
 ```v
+module main
+
+import os
+import encoding.csv
+
+struct Person {
+	name string
+	age  int
+	city string
+}
+
 fn read_people(path string) ![]Person {
 	content := os.read_file(path) or { return error('Could not read ${path}: ${err}') }
 	mut reader := csv.new_reader(content)
+
 	mut people := []Person{}
 	for {
 		row := reader.read() or { break }
 		if row.len == 0 {
 			continue
 		}
+		if row[0] == 'name' {
+			continue
+		}
 		people << Person{
 			name: row[0]
-			age: row[1].int()
+			age:  row[1].int()
 			city: row[2]
 		}
 	}
 	return people
+}
+
+fn write_people(path string, people []Person) ! {
+	mut output := []string{}
+	output << 'name,age,city'
+	for person in people {
+		output << '${person.name},${person.age},${person.city}'
+	}
+	os.write_file(path, output.join('\n')) or { return error('Could not write ${path}: ${err}') }
+}
+
+fn main() {
+	println('=== V CSV Processor Boilerplate ===')
+
+	input_path := 'people.csv'
+	output_path := 'people_out.csv'
+
+	// Ensure temporary CSV files are cleaned up on exit
+	defer {
+		if os.exists(input_path) {
+			os.rm(input_path) or {}
+		}
+		if os.exists(output_path) {
+			os.rm(output_path) or {}
+		}
+		println('Cleaned up temporary CSV files.')
+	}
+
+	os.write_file(input_path, 'name,age,city\nAlice,30,New York\nBob,25,San Francisco') or {
+		eprintln('Could not create sample CSV: ${err}')
+		return
+	}
+
+	people := read_people(input_path) or {
+		eprintln('${err}')
+		return
+	}
+
+	for person in people {
+		println('Loaded: ${person.name} (${person.age}) from ${person.city}')
+	}
+
+	write_people(output_path, people) or {
+		eprintln('${err}')
+		return
+	}
+	println('Wrote processed CSV to ${output_path}')
 }
 ```
 
@@ -20155,6 +20561,23 @@ Key concepts illustrated:
 - **Filtering**: Only emitting messages at or above the configured severity level.
 
 ```v
+module main
+
+import os
+import time
+
+enum LogLevel {
+	debug
+	info
+	warn
+	error
+}
+
+struct Logger {
+	log_file string
+	level    LogLevel
+}
+
 fn (logger Logger) log(level LogLevel, message string) {
 	if int(level) < int(logger.level) {
 		return
@@ -20180,6 +20603,28 @@ fn (logger Logger) log(level LogLevel, message string) {
 		}
 		f.close()
 	}
+}
+
+fn main() {
+	println('=== V Logging Boilerplate ===')
+
+	log_path := 'app.log'
+	defer {
+		if os.exists(log_path) {
+			os.rm(log_path) or {}
+			println('Cleaned up temporary log file: ${log_path}')
+		}
+	}
+
+	logger := Logger{
+		log_file: log_path
+		level:    .info
+	}
+
+	logger.log(.debug, 'This debug message is filtered out')
+	logger.log(.info, 'Application started')
+	logger.log(.warn, 'Configuration value is missing')
+	logger.log(.error, 'Something went wrong')
 }
 ```
 
