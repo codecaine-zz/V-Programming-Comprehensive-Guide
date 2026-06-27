@@ -651,6 +651,9 @@ To get the most from this book:
   - [REST API Server Boilerplate](#rest-api-server-boilerplate)
   - [Worker Pool Concurrency Boilerplate](#worker-pool-concurrency-boilerplate)
   - [OS and File Utilities Boilerplate](#os-and-file-utilities-boilerplate)
+  - [String Utilities Boilerplate](#string-utilities-boilerplate)
+  - [Math and Statistics Boilerplate](#math-and-statistics-boilerplate)
+  - [Array Utilities Boilerplate](#array-utilities-boilerplate)
 
 ---
 
@@ -18861,6 +18864,9 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [REST API Server Boilerplate](#rest-api-server-boilerplate)
 - [Worker Pool Concurrency Boilerplate](#worker-pool-concurrency-boilerplate)
 - [OS and File Utilities Boilerplate](#os-and-file-utilities-boilerplate)
+- [String Utilities Boilerplate](#string-utilities-boilerplate)
+- [Math and Statistics Boilerplate](#math-and-statistics-boilerplate)
+- [Array Utilities Boilerplate](#array-utilities-boilerplate)
 
 ---
 
@@ -19269,6 +19275,468 @@ fn main() {
 		eprintln('Failed to delete directory: ${err}')
 	}
 	println('Cleanup completed successfully.')
+}
+```
+
+---
+
+### String Utilities Boilerplate
+
+_File location: [boilerplate_templates/05_string_utilities/string_utilities.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/05_string_utilities/string_utilities.v)_
+
+### Lesson: String Utilities Boilerplate
+
+This boilerplate demonstrates how to implement highly useful custom string operations that are not natively built into V's core string type. It highlights UTF-8 rune handling, string tokenization, filtering, and text manipulation.
+
+Key concepts illustrated:
+- **UTF-8 Safe String Reversal**: Reversing strings correctly by iterating over `runes` rather than raw bytes, ensuring multi-byte Unicode characters (like emojis) are not corrupted.
+- **Title Casing**: Capitalizing the first letter of *each* word in a sentence (V's native `.capitalize()` only capitalizes the first letter of the entire string).
+- **Alphanumeric Palindrome Checking**: Checking if a string is a palindrome while ignoring non-alphanumeric symbols and character casing.
+- **Rune-based Truncation**: Cutting off a string at a specific character limit and adding an ellipsis, avoiding splitting UTF-8 byte sequences.
+- **Slugification**: Generating clean, URL-friendly slugs (e.g. low-cased, hyphen-separated, special characters stripped) from user-supplied titles.
+
+```v
+module main
+
+// reverse_string reverses a string, properly handling multi-byte UTF-8 characters (runes).
+fn reverse_string(s string) string {
+	runes := s.runes()
+	mut rev_runes := []rune{cap: runes.len}
+	for i := runes.len - 1; i >= 0; i-- {
+		rev_runes << runes[i]
+	}
+	return rev_runes.string()
+}
+
+// title_case capitalizes the first letter of each word in a string.
+fn title_case(s string) string {
+	words := s.split(' ')
+	mut titled_words := []string{cap: words.len}
+	for word in words {
+		if word.len == 0 {
+			titled_words << ''
+			continue
+		}
+		titled_words << word.capitalize()
+	}
+	return titled_words.join(' ')
+}
+
+// is_palindrome checks if a string reads the same forwards and backwards,
+// ignoring case and non-alphanumeric characters.
+fn is_palindrome(s string) bool {
+	// Filter to lowercase alphanumeric characters
+	mut clean_chars := []rune{}
+	for r in s.to_lower().runes() {
+		if (r >= `a` && r <= `z`) || (r >= `0` && r <= `9`) {
+			clean_chars << r
+		}
+	}
+	
+	for i in 0 .. clean_chars.len / 2 {
+		if clean_chars[i] != clean_chars[clean_chars.len - 1 - i] {
+			return false
+		}
+	}
+	return true
+}
+
+// truncate cuts off a string at a specified limit (by rune count) and appends an ellipsis.
+fn truncate(s string, limit int) string {
+	runes := s.runes()
+	if runes.len <= limit {
+		return s
+	}
+	return runes[0..limit].string() + '...'
+}
+
+// slugify converts a string into a clean, URL-friendly slug.
+fn slugify(s string) string {
+	mut res := []rune{}
+	mut last_was_dash := false
+	
+	for r in s.to_lower().runes() {
+		if (r >= `a` && r <= `z`) || (r >= `0` && r <= `9`) {
+			res << r
+			last_was_dash = false
+		} else if r == ` ` || r == `-` || r == `_` {
+			if !last_was_dash && res.len > 0 {
+				res << `-`
+				last_was_dash = true
+			}
+		}
+	}
+	
+	// Trim trailing dash if any
+	mut slug := res.string()
+	if slug.ends_with('-') {
+		slug = slug[0..slug.len - 1]
+	}
+	return slug
+}
+
+fn main() {
+	println('=== V Custom String Utilities Boilerplate ===')
+
+	// 1. Reverse String (UTF-8 safe)
+	phrase := 'Hello, 🚀 World!'
+	println('Original:  "${phrase}"')
+	println('Reversed:  "${reverse_string(phrase)}"')
+
+	// 2. Title Case (capitalizing every word)
+	title := 'v programming language complete textbook guide'
+	println('\nOriginal:  "${title}"')
+	println('Title Case: "${title_case(title)}"')
+
+	// 3. Palindrome Check
+	pal1 := 'A man, a plan, a canal: Panama!'
+	pal2 := 'Hello Vlang'
+	println('\nIs "${pal1}" a palindrome? ${is_palindrome(pal1)}')
+	println('Is "${pal2}" a palindrome? ${is_palindrome(pal2)}')
+
+	// 4. Truncation
+	long_text := 'V is a statically typed compiled programming language designed for building maintainable software.'
+	println('\nOriginal:  "${long_text}"')
+	println('Truncated: "${truncate(long_text, 35)}"')
+
+	// 5. Slugify
+	title_to_slug := '  Vlang: Concurrency, Channels, & Web APIs!  '
+	println('\nOriginal:  "${title_to_slug}"')
+	println('Slugified: "${slugify(title_to_slug)}"')
+}
+```
+
+---
+
+### Math and Statistics Boilerplate
+
+_File location: [boilerplate_templates/06_math_and_stats/math_and_stats.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/06_math_and_stats/math_and_stats.v)_
+
+### Lesson: Math and Statistics Boilerplate
+
+This template showcases how to perform numerical operations and custom statistical computations on numeric arrays. It implements several custom algorithmic functions that are not built directly into V's basic numeric types or standard math package.
+
+Key concepts illustrated:
+- **Descriptive Statistics**: Iterating over elements to calculate min, max, sum, and average (mean) on float slices.
+- **Array Sorting & Cloning**: Using `.clone()` to copy data and sorting arrays in-place using `.sort()`.
+- **Median, Variance & Deviation**: Custom implementations to calculate distribution variance and standard deviation using V's `math.sqrt()`.
+- **Factorial Calculation**: An iterative, overflow-aware custom factorial function returning `u64`.
+- **Fibonacci Sequence Generator**: A custom dynamic programming function generating the first $N$ numbers of the Fibonacci sequence.
+- **Prime Number Checker**: A highly optimized primality test (`is_prime`) using trial division of form $6k \pm 1$.
+- **GCD and LCM**: Custom implementations for finding the Greatest Common Divisor (Euclidean algorithm) and Least Common Multiple of two numbers.
+
+```v
+module main
+
+import math
+
+// Stats holds the computed statistical properties of a dataset.
+struct Stats {
+	count    int
+	min      f64
+	max      f64
+	sum      f64
+	mean     f64
+	median   f64
+	variance f64
+	std_dev  f64
+}
+
+// calculate_stats calculates standard descriptive statistics on a float dataset (not built into V arrays).
+fn calculate_stats(numbers []f64) ?Stats {
+	if numbers.len == 0 {
+		return none
+	}
+
+	mut sum := 0.0
+	mut min := numbers[0]
+	mut max := numbers[0]
+
+	for val in numbers {
+		sum += val
+		if val < min {
+			min = val
+		}
+		if val > max {
+			max = val
+		}
+	}
+
+	mean := sum / numbers.len
+
+	// Calculate median (requires a sorted copy of the numbers)
+	mut sorted := numbers.clone()
+	sorted.sort()
+
+	mut median := 0.0
+	mid := sorted.len / 2
+	if sorted.len % 2 == 0 {
+		median = (sorted[mid - 1] + sorted[mid]) / 2.0
+	} else {
+		median = sorted[mid]
+	}
+
+	// Calculate variance and standard deviation
+	mut variance_sum := 0.0
+	for val in numbers {
+		diff := val - mean
+		variance_sum += diff * diff
+	}
+	variance := variance_sum / numbers.len
+	std_dev := math.sqrt(variance)
+
+	return Stats{
+		count: numbers.len
+		min: min
+		max: max
+		sum: sum
+		mean: mean
+		median: median
+		variance: variance
+		std_dev: std_dev
+	}
+}
+
+// factorial calculates the factorial of a number iteratively.
+fn factorial(n int) u64 {
+	if n < 0 {
+		return 0
+	}
+	mut result := u64(1)
+	for i in 2 .. n + 1 {
+		result *= u64(i)
+	}
+	return result
+}
+
+// fibonacci generates the first n Fibonacci numbers.
+fn fibonacci(n int) []u64 {
+	if n <= 0 {
+		return []u64{}
+	}
+	if n == 1 {
+		return [u64(0)]
+	}
+	mut sequence := []u64{cap: n}
+	sequence << u64(0)
+	sequence << u64(1)
+	for i in 2 .. n {
+		sequence << sequence[i - 1] + sequence[i - 2]
+	}
+	return sequence
+}
+
+// is_prime checks if a number is prime.
+fn is_prime(n int) bool {
+	if n <= 1 {
+		return false
+	}
+	if n <= 3 {
+		return true
+	}
+	if n % 2 == 0 || n % 3 == 0 {
+		return false
+	}
+	mut i := 5
+	for i * i <= n {
+		if n % i == 0 || n % (i + 2) == 0 {
+			return false
+		}
+		i += 6
+	}
+	return true
+}
+
+// gcd computes the Greatest Common Divisor of two integers.
+fn gcd(a int, b int) int {
+	mut x := math.abs(a)
+	mut y := math.abs(b)
+	for y != 0 {
+		temp := y
+		y = x % y
+		x = temp
+	}
+	return x
+}
+
+// lcm computes the Least Common Multiple of two integers.
+fn lcm(a int, b int) int {
+	if a == 0 || b == 0 {
+		return 0
+	}
+	return (math.abs(a) * math.abs(b)) / gcd(a, b)
+}
+
+fn main() {
+	println('=== V Custom Math & Statistics Boilerplate ===')
+
+	// 1. Descriptive Statistics Demo
+	data := [72.5, 81.0, 68.5, 90.0, 75.5, 78.0, 85.5]
+	println('Dataset: ${data}')
+
+	stats := calculate_stats(data) or {
+		println('Error: Empty dataset')
+		return
+	}
+
+	println('\nStatistical Results:')
+	println('- Count:              ${stats.count}')
+	println('- Minimum:            ${stats.min:.2f}')
+	println('- Maximum:            ${stats.max:.2f}')
+	println('- Sum:                ${stats.sum:.2f}')
+	println('- Mean (Average):     ${stats.mean:.2f}')
+	println('- Median:             ${stats.median:.2f}')
+	println('- Variance:           ${stats.variance:.2f}')
+	println('- Standard Deviation: ${stats.std_dev:.2f}')
+
+	// 2. Custom Math Functions Demo
+	n := 10
+	println('\nCustom Number Functions:')
+	println('- Factorial of ${n}:    ${factorial(n)}')
+	println('- Fibonacci first ${n}: ${fibonacci(n)}')
+	
+	test_primes := [7, 12, 19, 25, 97]
+	for p in test_primes {
+		println('  Is ${p} prime?       ${is_prime(p)}')
+	}
+
+	a, b := 24, 36
+	println('\nCommon Number Relations:')
+	println('- GCD of ${a} and ${b}:    ${gcd(a, b)}')
+	println('- LCM of ${a} and ${b}:    ${lcm(a, b)}')
+}
+```
+
+---
+
+### Array Utilities Boilerplate
+
+_File location: [boilerplate_templates/07_array_utilities/array_utilities.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/07_array_utilities/array_utilities.v)_
+
+### Lesson: Array Utilities Boilerplate
+
+V's standard array implementation is powerful but focused. This template showcases how to implement useful custom generic utilities for manipulating, comparing, and organizing arrays.
+
+Key concepts illustrated:
+- **Generics in V**: Writing reusable algorithms using type parameters `[T]`.
+- **Deduplication (`unique`)**: Removing duplicates from an array using containment checks (`!in`).
+- **Chunking (`chunk`)**: Partitioning an array into smaller sub-slices of a fixed maximum length.
+- **Set Operations (`intersection`, `difference`)**: Calculating overlapping elements and unique elements between two arrays.
+- **Flattening (`flatten`)**: Condensing nested 2D slices (`[][]T`) into flat 1D slices (`[]T`).
+- **In-place Shuffling (`shuffle`)**: Implementing the Fisher-Yates shuffle algorithm using V's standard `rand` package.
+
+```v
+module main
+
+import rand
+
+// unique returns a new array with duplicate elements removed.
+fn unique[T](arr []T) []T {
+	mut result := []T{cap: arr.len}
+	for item in arr {
+		if item !in result {
+			result << item
+		}
+	}
+	return result
+}
+
+// chunk splits an array into sub-arrays of the specified size.
+fn chunk[T](arr []T, size int) [][]T {
+	if size <= 0 || arr.len == 0 {
+		return [][]T{}
+	}
+	mut result := [][]T{}
+	mut current_chunk := []T{}
+	
+	for item in arr {
+		current_chunk << item
+		if current_chunk.len == size {
+			result << current_chunk
+			current_chunk = []T{}
+		}
+	}
+	if current_chunk.len > 0 {
+		result << current_chunk
+	}
+	return result
+}
+
+// intersection returns a new array containing elements present in both arrays.
+fn intersection[T](a []T, b []T) []T {
+	mut result := []T{}
+	for item in a {
+		if item in b && item !in result {
+			result << item
+		}
+	}
+	return result
+}
+
+// difference returns a new array containing elements present in a but not in b.
+fn difference[T](a []T, b []T) []T {
+	mut result := []T{}
+	for item in a {
+		if item !in b && item !in result {
+			result << item
+		}
+	}
+	return result
+}
+
+// flatten flattens a 2D array into a 1D array.
+fn flatten[T](arr [][]T) []T {
+	mut result := []T{}
+	for sub_arr in arr {
+		for item in sub_arr {
+			result << item
+		}
+	}
+	return result
+}
+
+// shuffle randomizes the order of elements in-place using the Fisher-Yates algorithm.
+fn shuffle[T](mut arr []T) {
+	for i := arr.len - 1; i > 0; i-- {
+		j := rand.intn(i + 1) or { 0 }
+		temp := arr[i]
+		arr[i] = arr[j]
+		arr[j] = temp
+	}
+}
+
+fn main() {
+	println('=== V Custom Array Utilities Boilerplate ===')
+
+	// 1. Unique / Deduplication Demo
+	duplicates := [1, 2, 2, 3, 1, 4, 3, 5, 2]
+	println('Original:    ${duplicates}')
+	println('Deduplicated: ${unique(duplicates)}')
+
+	// 2. Chunking Demo
+	to_chunk := ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+	chunk_size := 3
+	println('\nOriginal:    ${to_chunk}')
+	println('Chunked (${chunk_size}): ${chunk[string](to_chunk, chunk_size)}')
+
+	// 3. Intersection & Difference Demo
+	arr_a := [1, 2, 3, 4, 5]
+	arr_b := [4, 5, 6, 7, 8]
+	println('\nArray A:     ${arr_a}')
+	println('Array B:     ${arr_b}')
+	println('Intersection: ${intersection(arr_a, arr_b)}')
+	println('Difference:  ${difference(arr_a, arr_b)}')
+
+	// 4. Flattening Demo
+	nested := [[1, 2], [3, 4, 5], [6]]
+	println('\nNested:      ${nested}')
+	println('Flattened:   ${flatten(nested)}')
+
+	// 5. In-place Shuffling Demo
+	mut to_shuffle := [10, 20, 30, 40, 50, 60, 70]
+	println('\nBefore Shuffle: ${to_shuffle}')
+	shuffle(mut to_shuffle)
+	println('After Shuffle:  ${to_shuffle}')
 }
 ```
 
