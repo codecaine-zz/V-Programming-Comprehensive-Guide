@@ -3672,17 +3672,22 @@ _File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/02_access
 An **array** is a collection of elements of the same type. In V, you can retrieve a subset of elements by slicing the array. Slicing uses the `[start..end]` syntax, which creates a new array containing elements from the `start` index up to (but not including) the `end` index.
 
 #### Positive Slicing
+
 Positive indices represent offsets from the beginning of the array (starting at `0`). For example, `sports[1..3]` returns a slice from index `1` to `2`.
 
 #### Negative Slicing
+
 V does not support negative indices natively in slices (e.g., `sports[-2..]` will cause a compiler error). To achieve the effect of negative slicing (indexing from the end of the array), you calculate the start and/or end index using the array's `.len` property:
+
 - **Excluding the last element**: `sports[..sports.len - 1]` (equivalent to Python's `sports[..-1]`)
 - **Range from the end**: `sports[sports.len - 3 .. sports.len - 1]` (equivalent to Python's `sports[-3..-1]`)
 - **Last N elements**: `sports[sports.len - 2 ..]` (equivalent to Python's `sports[-2..]`)
 
 #### Slices are References
+
 > [!IMPORTANT]
-> In V, **slices are reference views** of the original array, not copies. 
+> In V, **slices are reference views** of the original array, not copies.
+>
 > - Modifying any element inside a slice **will modify the original array**.
 > - Assigning a slice to a variable is considered unsafe/restricted unless you wrap it in an `unsafe` block (`mut sl := unsafe { arr[1..4] }`) or clone it explicitly.
 > - To get a separate array slice by value (so modifications do not affect the original array), append `.clone()` to the end of the slice expression (`mut sl_copy := arr[1..4].clone()`).
@@ -3693,19 +3698,19 @@ This example demonstrates the concepts of **access array elements using slices**
 ```v
 fn main() {
 	mut sports := ['cricket', 'hockey', 'football', 'basketball', 'tennis']
-	
+
 	// Positive slicing: from index 1 to 3 (excluding index 3)
 	println(sports[1..3]) // ['hockey', 'football']
-	
+
 	// V does not support negative indices natively in slices (e.g., sports[-2..] will not compile).
 	// To achieve "negative slicing" (indexing from the end of the array), use the `.len` property:
-	
+
 	// Slice up to the last element (excluding it): Python's sports[..-1]
 	println(sports[..sports.len - 1]) // ['cricket', 'hockey', 'football', 'basketball']
-	
+
 	// Slice from 3rd to last up to 1st to last (excluding it): Python's sports[-3..-1]
 	println(sports[sports.len - 3..sports.len - 1]) // ['football', 'basketball']
-	
+
 	// Slice the last two elements: Python's sports[-2..]
 	println(sports[sports.len - 2..]) // ['basketball', 'tennis']
 
@@ -3714,13 +3719,13 @@ fn main() {
 	// If you modify an element of a slice, it affects the original array.
 	// Note: To prevent unsafe behavior, assigning a slice to a variable requires an `unsafe` block
 	// if you want it by-reference, or an explicit `.clone()` to get a copy by-value.
-	
+
 	// 1. Modifying by reference (using unsafe)
 	mut original := [10, 20, 30, 40, 50]
 	mut ref_slice := unsafe { original[1..4] }
 	ref_slice[0] = 99
 	println(original) // [10, 99, 30, 40, 50] (Original is modified!)
-	
+
 	// 2. Modifying by value (using .clone())
 	mut original_two := [10, 20, 30, 40, 50]
 	mut val_slice := original_two[1..4].clone()
@@ -5772,18 +5777,20 @@ _File location: [functions/01_function_types/04_lambda_expressions/lambda_expres
 
 ### Lesson: Lambda Expressions
 
-V supports **Lambda Expressions**, which are lightweight, inline anonymous functions defined using the `|variables| expression` syntax. 
+V supports **Lambda Expressions**, which are lightweight, inline anonymous functions defined using the `|variables| expression` syntax.
 
 Key architectural characteristics:
+
 1. **Scope Restriction**: Lambda expressions are not general-purpose functions; this syntax is **only** valid when passed directly as arguments to higher-order functions like `.sort()`, `.map()`, and `.filter()`.
 2. **Implicit Returns**: The result of the single expression on the right-hand side is automatically returned. No `return` keyword is needed.
 
 #### Step-by-Step Code Walkthrough:
-* **Sorting (`nums.sort(|a, b| b < a)`)**: 
+
+- **Sorting (`nums.sort(|a, b| b < a)`)**:
   The `.sort()` method accepts a comparator callback. The lambda expression defines parameters `a` and `b`, returning the comparison `b < a` to sort the array in descending order.
-* **Mapping (`nums.map(|x| x * 10)`)**:
+- **Mapping (`nums.map(|x| x * 10)`)**:
   The `.map()` method transforms each array element. The lambda `|x| x * 10` accepts the element `x`, multiplies it by `10`, and produces the new mapped array.
-* **Filtering (`doubled.filter(|x| x > 20)`)**:
+- **Filtering (`doubled.filter(|x| x > 20)`)**:
   The `.filter()` method checks a predicate. The lambda `|x| x > 20` checks each element and retains only those returning `true`.
 
 **Additional Context from Repository docs:**
@@ -5794,7 +5801,7 @@ module main
 
 fn main() {
 	mut nums := [1, 3, 2, 5, 4]
-	
+
 	// Sort descending using a lambda expression
 	nums.sort(|a, b| b < a)
 	println('Sorted: ${nums}') // [5, 4, 3, 2, 1]
@@ -5817,17 +5824,19 @@ _File location: [functions/01_function_types/05_closures/closures.v](file:///Use
 
 ### Lesson: Closures
 
-V supports **Closures**, which are anonymous functions that "remember" and access variables from the parent scope in which they were created. 
+V supports **Closures**, which are anonymous functions that "remember" and access variables from the parent scope in which they were created.
 
 Unlike languages where variable capture is automatic and hidden, V implements **explicit capture lists** for safety and predictability:
+
 1. **Explicit Capture Syntax**: Captured variables must be declared inside square brackets `fn [captured_var] (args)`.
 2. **Pass-by-Value Capture (`[captured_var]`)**: The variable's value is copied when the closure is created. It is read-only inside the closure body.
 3. **Pass-by-Reference Capture (`[mut captured_var]`)**: Prepending the capture with `mut` passes the variable by reference. Any changes made to the variable inside the closure modify the original variable in the parent scope, and vice-versa.
 
 #### Step-by-Step Code Walkthrough:
-* **`new_counter` Function**: Returns a closure `fn () int`.
-* **State Preservation (`[mut count]`)**: The closure captures the local variable `count` from `new_counter` as `mut`. This allows `count` to survive after `new_counter` returns and update its state across multiple invocation calls (e.g. `counter()`).
-* **Value Capture (`[factor]`)**: The closure `multiplier` captures the `factor` variable as read-only. Calling `multiplier(5)` evaluates to `5 * 10` (50).
+
+- **`new_counter` Function**: Returns a closure `fn () int`.
+- **State Preservation (`[mut count]`)**: The closure captures the local variable `count` from `new_counter` as `mut`. This allows `count` to survive after `new_counter` returns and update its state across multiple invocation calls (e.g. `counter()`).
+- **Value Capture (`[factor]`)**: The closure `multiplier` captures the `factor` variable as read-only. Calling `multiplier(5)` evaluates to `5 * 10` (50).
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **closures**.
@@ -6662,11 +6671,12 @@ _File location: [structs/07_anonymous_structs/anonymous_structs.v](file:///Users
 V supports **Anonymous Structs** which are inline struct declarations without separate struct names. They are useful for one-off structures like local nested objects.
 
 #### Step-by-Step Code Walkthrough:
-* **Inline Sub-Struct Declaration**: 
+
+- **Inline Sub-Struct Declaration**:
   In the `Book` struct definition, the `author` field is declared as an anonymous struct type with fields `name string` and `age int`. No named struct like `Author` is required.
-* **Inline Struct Initialization**:
+- **Inline Struct Initialization**:
   Inside `main()`, we instantiate `Book`. The nested `author` field is initialized directly using `struct { name: 'Samantha Black', age: 24 }`, matching the field structure.
-* **Field Access**:
+- **Field Access**:
   Nested fields are accessed sequentially using dot notation: `book.author.name` and `book.author.age`.
 
 **Additional Context from Repository docs:**
@@ -6706,11 +6716,12 @@ _File location: [structs/08_static_type_methods/static_type_methods.v](file:///U
 V supports **Static Type Methods** (e.g. `User.new()`). These are defined on a struct via `fn [StructName].[methodName]` and allow organizing all constructor/factory functions related to a struct. V does not have traditional class constructors; static type methods are standard functions namespace-associated with the struct.
 
 #### Step-by-Step Code Walkthrough:
-* **Static Method Definition**:
+
+- **Static Method Definition**:
   `fn User.new(name string, age int) User` declares a static method named `new` associated with the `User` struct namespace. It returns a new `User` instance.
-* **Factory Organization**:
+- **Factory Organization**:
   The static method `User.default_user()` calls `User.new('Guest', 18)` to construct a user with default values, acting as a clean factory builder.
-* **Invocation Syntax**:
+- **Invocation Syntax**:
   Inside `main()`, static methods are invoked using the struct name prefix: `User.new(...)` and `User.default_user()`. This prevents global namespace pollution and groups constructor-like logic cleanly.
 
 **Additional Context from Repository docs:**
@@ -6758,11 +6769,12 @@ _File location: [structs/09_noinit_structs/noinit_structs.v](file:///Users/codec
 V supports `[noinit]` structs which are structs that cannot be initialized directly outside of their declaring module. This forces client code to use factory constructor functions to instantiate the struct, enabling strict initialization checks and API boundaries.
 
 #### Step-by-Step Code Walkthrough:
-* **Declaring [noinit]**:
+
+- **Declaring [noinit]**:
   In the `noinit_config` module (`noinit_config.v`), the `Config` struct is marked with the `@[noinit]` attribute. This blocks external modules from directly initializing it using literals like `noinit_config.Config{ ... }`.
-* **Exposing a Constructor**:
+- **Exposing a Constructor**:
   We provide a public factory function `pub fn new_config(port int, host string) Config` inside the `noinit_config` module, which is authorized to initialize and return the struct.
-* **Compiler Enforcement**:
+- **Compiler Enforcement**:
   In the main module (`noinit_structs.v`), creating `noinit_config.new_config(...)` compiles and runs successfully. Attempting to directly write `noinit_config.Config{port: 8080}` would cause a compilation error.
 
 **Additional Context from Repository docs:**
@@ -6813,12 +6825,13 @@ _File location: [structs/10_unions/unions.v](file:///Users/codecaine/V-Programmi
 A **Union** is a special type of struct that allows storing different data types in the same memory location. The largest member defines the size of the union. All members share the same memory location, meaning modifying one member automatically modifies the shared representation of the others. Union field access is considered memory-unsafe and must always be performed inside `unsafe {}` blocks.
 
 #### Step-by-Step Code Walkthrough:
-* **Union Declaration & Mutability**:
+
+- **Union Declaration & Mutability**:
   `union Data` declares two fields: `f f64` (8 bytes) and `i int` (4 bytes). Because they are in a union, they share the same starting memory address, and the total size of `Data` is 8 bytes. By default in V, union fields are immutable; we must place them under a `mut:` block inside the union declaration to allow their values to be reassigned.
-* **Memory Corruption Demonstration**:
-  We initialize the union with an integer `i: 10`. 
+- **Memory Corruption Demonstration**:
+  We initialize the union with an integer `i: 10`.
   Inside `unsafe { ... }`, when we assign `d.f = 5.5`, the float value overwrites the shared memory. Reading `d.i` subsequently returns a garbled integer representing the binary layout of the float `5.5`, demonstrating the shared storage layout.
-* **Safety Restriction**:
+- **Safety Restriction**:
   Accessing any field of a union (`d.i` or `d.f`) is blocked by the compiler unless wrapped in an `unsafe` block, protecting developers from accidental memory misinterpretation.
 
 **Additional Context from Repository docs:**
@@ -6836,11 +6849,11 @@ mut:
 
 fn main() {
 	mut d := Data{i: 10}
-	
+
 	// Accessing union members must be performed in an unsafe block
 	unsafe {
 		println('Union int value: ${d.i}')
-		
+
 		// Modifying one member automatically modifies the other since they share memory
 		d.f = 5.5
 		println('Union float value: ${d.f}')
@@ -7671,8 +7684,9 @@ _File location: [modules/08_init_function_for_module/modulebasics/mod1/file1.v](
 ### Lesson: Module Init & Cleanup Functions Helper
 
 V modules support lifecycle hooks for setting up and tearing down resources:
-* **`init()`**: A special private function (`fn init()`) that runs automatically when a module is first imported. It is ideal for one-time initialization, such as preparing C libraries or setting up state.
-* **`cleanup()`**: A special private function (`fn cleanup()`) that executes automatically when the program terminates. It runs in the reverse order of the `init()` calls, making it perfect for releasing C library resources or flushing files.
+
+- **`init()`**: A special private function (`fn init()`) that runs automatically when a module is first imported. It is ideal for one-time initialization, such as preparing C libraries or setting up state.
+- **`cleanup()`**: A special private function (`fn cleanup()`) that executes automatically when the program terminates. It runs in the reverse order of the `init()` calls, making it perfect for releasing C library resources or flushing files.
 
 ```v
 module mod1
@@ -7701,23 +7715,27 @@ _File location: [modules/08_init_function_for_module/modulebasics/modulebasics.v
 V is designed to be highly modular. Here is a summary of the core rules governing V modules:
 
 #### 1. Module Basics & Organization
-* **Scope:** Every file in a directory belongs to the same module. If no module name is specified at the top of the file, it defaults to `main`.
-* **Visibility:** All elements (structs, functions, constants, etc.) inside a module are visible across all files of that same module, regardless of whether they are marked with `pub`.
-* **Names:** Module names must be short (ideally under 10 characters) and written in `snake_case`.
-* **Circular Imports:** Circular imports are strictly forbidden.
+
+- **Scope:** Every file in a directory belongs to the same module. If no module name is specified at the top of the file, it defaults to `main`.
+- **Visibility:** All elements (structs, functions, constants, etc.) inside a module are visible across all files of that same module, regardless of whether they are marked with `pub`.
+- **Names:** Module names must be short (ideally under 10 characters) and written in `snake_case`.
+- **Circular Imports:** Circular imports are strictly forbidden.
 
 #### 2. Module Lookup & `v.mod`
-* V uses `v.mod` files as lookup anchors.
-* The directory containing the nearest `v.mod` file is prepended to V's module search path. This enables projects to easily import submodules (e.g. `import myapp.common`) using relative structure anchors.
+
+- V uses `v.mod` files as lookup anchors.
+- The directory containing the nearest `v.mod` file is prepended to V's module search path. This enables projects to easily import submodules (e.g. `import myapp.common`) using relative structure anchors.
 
 #### 3. Special Prototyping Rules for Project Roots
-* For the top-level project folder (compiled with `v .`), you can have multiple `.v` files belonging to different modules (like `module main` and `module abc`) in the same directory.
-* This is a special rule designed to ease prototyping, allowing you to split files easily before moving them to separate directory submodules. In any other non-root directory, all `.v` files must declare the exact same module name matching the folder name.
+
+- For the top-level project folder (compiled with `v .`), you can have multiple `.v` files belonging to different modules (like `module main` and `module abc`) in the same directory.
+- This is a special rule designed to ease prototyping, allowing you to split files easily before moving them to separate directory submodules. In any other non-root directory, all `.v` files must declare the exact same module name matching the folder name.
 
 #### 4. Lifecycle Hooks (`init` & `cleanup`)
-* Neither `init()` nor `cleanup()` can be made public (`pub`).
-* V calls `init()` exactly once when the module is imported, regardless of how many other modules transitively import it.
-* V calls `cleanup()` automatically once at the end of program execution, in the exact reverse order of their `init()` invocations.
+
+- Neither `init()` nor `cleanup()` can be made public (`pub`).
+- V calls `init()` exactly once when the module is imported, regardless of how many other modules transitively import it.
+- V calls `cleanup()` automatically once at the end of program execution, in the exact reverse order of their `init()` invocations.
 
 ```v
 module main
@@ -11517,7 +11535,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 **Language Updates & Low-Level Features**
 
-- [sizeof and __offsetof](#sizeof-and-__offsetof)
+- [sizeof and \_\_offsetof](#sizeof-and-__offsetof)
 - [Limited Operator Overloading](#limited-operator-overloading)
 - [Atomics](#atomics)
 - [Static Variables](#static-variables)
@@ -14378,6 +14396,7 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/07_direc
 V provides a powerful set of compile-time (or 'comptime') directives and code features, prefixed with `$`. These instructions are evaluated and processed by the compiler during compilation, allowing you to optimize code execution, prune unused branches, dynamically query compilation environment properties, and embed assets directly into the final binary.
 
 #### 1. Conditional Compilation (`$if` Condition)
+
 If you want an `if` expression to be evaluated at compile time, prefix it with `$`. Inactive branches are excluded from compilation entirely, meaning their type checks still occur but no code is generated for them in the final executable.
 
 - **Multiple Conditions:** You can combine multiple platforms or build modes in one branch using logic operators (`||`, `&&`).
@@ -14385,42 +14404,51 @@ If you want an `if` expression to be evaluated at compile time, prefix it with `
 - **`$else-$if` Chains:** You can chain compile-time conditions using `$else $if` to check against various compilers, platforms, or custom defines.
 
 ##### Builtin `$if` Compilation Target Options
+
 Below is the full list of builtin options supported inside compile-time `$if` conditions:
 
-| OS target | Compilers | Platforms | Other |
-| :--- | :--- | :--- | :--- |
-| `windows`, `linux`, `macos` | `gcc`, `tinyc` | `amd64`, `arm64`, `aarch64` | `debug`, `prod`, `test` |
-| `darwin`, `ios`, `bsd` | `clang`, `mingw` | `i386`, `arm32` | `js`, `glibc`, `prealloc` |
-| `freebsd`, `openbsd`, `netbsd` | `msvc` | `rv64`, `rv32`, `s390x` | `no_bounds_checking`, `freestanding` |
-| `android`, `mach`, `dragonfly` | `cplusplus` | `ppc64le` | `no_segfault_handler`, `no_backtrace` |
-| `gnu`, `hpux`, `haiku`, `qnx` | | `x64`, `x32` | `no_main`, `fast_math`, `apk`, `threads` |
-| `solaris`, `termux` | | `little_endian`, `big_endian` | `js_node`, `js_browser`, `js_freestanding` |
-| `serenity`, `vinix`, `plan9` | | | `interpreter`, `es5`, `profile`, `wasm32` |
-| | | | `wasm32_emscripten`, `wasm32_wasi`, `native`, `autofree` |
+| OS target                      | Compilers        | Platforms                     | Other                                                    |
+| :----------------------------- | :--------------- | :---------------------------- | :------------------------------------------------------- |
+| `windows`, `linux`, `macos`    | `gcc`, `tinyc`   | `amd64`, `arm64`, `aarch64`   | `debug`, `prod`, `test`                                  |
+| `darwin`, `ios`, `bsd`         | `clang`, `mingw` | `i386`, `arm32`               | `js`, `glibc`, `prealloc`                                |
+| `freebsd`, `openbsd`, `netbsd` | `msvc`           | `rv64`, `rv32`, `s390x`       | `no_bounds_checking`, `freestanding`                     |
+| `android`, `mach`, `dragonfly` | `cplusplus`      | `ppc64le`                     | `no_segfault_handler`, `no_backtrace`                    |
+| `gnu`, `hpux`, `haiku`, `qnx`  |                  | `x64`, `x32`                  | `no_main`, `fast_math`, `apk`, `threads`                 |
+| `solaris`, `termux`            |                  | `little_endian`, `big_endian` | `js_node`, `js_browser`, `js_freestanding`               |
+| `serenity`, `vinix`, `plan9`   |                  |                               | `interpreter`, `es5`, `profile`, `wasm32`                |
+|                                |                  |                               | `wasm32_emscripten`, `wasm32_wasi`, `native`, `autofree` |
 
 #### 2. Compile-Time Flag Defines (`$d`)
+
 V allows retrieving custom flag values defined via the command line with `-d flag=value` or `-d flag` (which defaults to `-d flag=true`).
+
 - To fetch the flag inside your code, use: `$d('flag_name', default_value)`.
 - The `default_value` acts as a fallback when the flag is not provided on the command line. It **must** be a pure literal: booleans (`true`/`false`), integers (`0`), floats (`0.0`), strings (`'string'`), or runes (`\`v\``).
 - You can also use `$d('flag_name', false)` inside `$if` conditions (e.g. `$if $d('my_flag', false) { ... }`) to selectively enable or disable blocks of code.
 - `$d` can also be used in top-level statements like `#flag` and `#include` (e.g., `#flag linux -I $d('my_include', '/usr')/include`).
 
 #### 3. Compile-Time Warnings & Errors
+
 You can generate custom compile-time messages to warn the developer or abort the build:
+
 - `$compile_warn('message')` prints a warning during compilation but allows the build to continue.
 - `$compile_error('message')` immediately halts compilation and prints a custom error.
-These are particularly powerful when combined with platform target checks to enforce compatibility (e.g., aborting compilation on unsupported architectures).
+  These are particularly powerful when combined with platform target checks to enforce compatibility (e.g., aborting compilation on unsupported architectures).
 
 #### 4. Environment Variables (`$env`)
+
 `$env('VAR_NAME')` retrieves the value of an environment variable at compilation time and embeds it as a string literal. It can also be used inside top-level `#flag` and `#include` statements.
 
 #### 5. File Asset Embedding (`$embed_file`)
+
 V can embed the raw content of any external file directly inside the compiled binary using `$embed_file('path')`.
+
 - Returns an `EmbedFileData` structure. Use `.to_string()` or `.to_bytes()` to retrieve contents.
 - In production builds (`-prod`), `$embed_file` supports optional on-the-fly compression via `.zlib` (e.g. `$embed_file('x.css', .zlib)`).
 - For local development ease, compile with `-d embed_only_metadata`. The file won't be embedded, and V will load the file from disk the first time `data()` is called, permitting external live edits without recompiling.
 
 #### 6. Compile-Time Templates (`$tmpl`)
+
 `$tmpl('path/to/template.html')` compiles and parses a simple template file, interpolating any variables (prefixed with `@` in the template) that exist in the calling scope.
 
 ---
@@ -18292,28 +18320,30 @@ fn main() {
 
 ---
 
-### sizeof and __offsetof
+### sizeof and \_\_offsetof
 
 _File location: [language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v)_
 
-### Lesson: sizeof and __offsetof
+### Lesson: sizeof and \_\_offsetof
 
 V provides two built-in operators for determining sizes and memory offsets:
-* `sizeof(Type)`: Returns the memory size of the given Type in bytes.
-* `__offsetof(Struct, field_name)`: Returns the offset in bytes of a field relative to the start of the struct.
+
+- `sizeof(Type)`: Returns the memory size of the given Type in bytes.
+- `__offsetof(Struct, field_name)`: Returns the offset in bytes of a field relative to the start of the struct.
 
 #### Step-by-Step Code Walkthrough:
-* **Size of `Point`**:
+
+- **Size of `Point`**:
   `sizeof(Point)` yields `8` bytes because it has two `int` fields (4 bytes each).
-* **Size of `Foo` & Alignment Padding**:
+- **Size of `Foo` & Alignment Padding**:
   `sizeof(Foo)` yields `12` bytes, even though it contains `a int` (4 bytes), `b u8` (1 byte), and `c int` (4 bytes). This happens because of C ABI alignment: V aligns struct members on word boundaries (in this case, 4 bytes), adding 3 bytes of invisible padding after `b u8`.
-* **Offsets of fields in `Foo`**:
-  * `__offsetof(Foo, a)` yields `0` because it starts at byte 0.
-  * `__offsetof(Foo, b)` yields `4` because it starts right after `a` (4 bytes).
-  * `__offsetof(Foo, c)` yields `8` because it aligns on the next 4-byte boundary due to padding after `b`.
+- **Offsets of fields in `Foo`**:
+  - `__offsetof(Foo, a)` yields `0` because it starts at byte 0.
+  - `__offsetof(Foo, b)` yields `4` because it starts right after `a` (4 bytes).
+  - `__offsetof(Foo, c)` yields `8` because it aligns on the next 4-byte boundary due to padding after `b`.
 
 **Additional Context from Repository docs:**
-This example demonstrates the concepts of **sizeof and __offsetof**.
+This example demonstrates the concepts of **sizeof and \_\_offsetof**.
 
 ```v
 module main
@@ -18354,11 +18384,12 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/10_opera
 Operator overloading is supported for a limited set of binary operators (`+, -, *, **, /, %, <, ==`) to improve readability in scientific, mathematical, and graphics applications. V does not support indexing (`[]`) or assignment (`=`) overloading. Overloading the `+` operator automatically synthesizes the matching assignment operator (e.g., `+=`).
 
 #### Step-by-Step Code Walkthrough:
-* **Binary Operator Overloading**:
+
+- **Binary Operator Overloading**:
   We define the `+` and `-` operators for struct `Vec` using the syntax `fn (a Vec) + (b Vec) Vec`. V invokes these methods directly when performing arithmetic expressions like `a + b` or `a - b`.
-* **Equality Operator Overloading**:
+- **Equality Operator Overloading**:
   We define `==` to verify element-by-element equality: `a.x == b.x && a.y == b.y`.
-* **Automatic Assignment Generation**:
+- **Automatic Assignment Generation**:
   When we overload `+`, V autogenerates the compound assignment operator `+=`. Executing `c += a` resolves to `c = c + a`, compiling and modifying `c` automatically.
 
 **Additional Context from Repository docs:**
@@ -18398,11 +18429,11 @@ fn main() {
 
 	println('a + b = ${a + b}') // {6, 8}
 	println('a - b = ${a - b}') // {-2, -2}
-	
+
 	// c += a is autogenerated from the + overload!
 	c += a
 	println('c after += a: ${c}') // {3, 5}
-	
+
 	println('a == b: ${a == b}') // false
 	println('a == Vec{2, 3}: ${a == Vec{2, 3}}') // true
 }
@@ -18419,13 +18450,14 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/11_atomi
 V does not have direct keyword support for atomic operations but integrates standard C11 atomic capabilities through platform-specific wrapper headers (found under `stdatomic/`). Variables can be treated atomically by executing type-specific functions prefixed by `C.atomic_` and passing references to the target variables.
 
 #### Step-by-Step Code Walkthrough:
-* **C Header Inclusion**:
+
+- **C Header Inclusion**:
   Depending on the compilation target, V includes either the Unix or Windows wrapper headers `atomic.h` containing atomic operations.
-* **C declarations**:
+- **C declarations**:
   `fn C.atomic_store_u32(&u32, u32)` and other methods are declared. Since V does not automatically parse C headers, we manually declare the C functions we want to invoke.
-* **Local Storage**:
+- **Local Storage**:
   We declare a local variable `atom := u32(0)` inside `main()`. Any variable can be treated atomically by passing its memory reference (pointer) to the C functions. This avoids needing global variables or compiling with `-enable-globals` flag.
-* **CAS (Compare-And-Swap)**:
+- **CAS (Compare-And-Swap)**:
   Inside `unsafe { ... }`, we call `C.atomic_compare_exchange_strong_u32(&atom, &expected, 23)`. If the value at `&atom` matches `expected` (17), it replaces it with `23` and returns `true`. If not, it loads the actual current value into `expected` and returns `false`.
 
 **Additional Context from Repository docs:**
@@ -18452,7 +18484,7 @@ fn main() {
 	// Initialize atomic variable
 	unsafe {
 		C.atomic_store_u32(&atom, 17)
-		
+
 		mut expected := u32(17)
 		// Atomic CAS: if atom == expected, set atom to 23 and return true
 		if C.atomic_compare_exchange_strong_u32(&atom, &expected, 23) {
@@ -18460,7 +18492,7 @@ fn main() {
 		} else {
 			println('Exchange failed, atom is ${C.atomic_load_u32(&atom)}')
 		}
-		
+
 		println('Final value: ${C.atomic_load_u32(&atom)}')
 	}
 }
@@ -18477,11 +18509,12 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/12_stati
 V supports **Static Variables** within functions. They behave like namespaced global variables, preserving state across function calls, but are restricted to the local scope of a single function. Functions containing static variables must be marked with `@[unsafe]` and calls must occur in `unsafe` blocks. They are primarily intended for facilitating low-level C code translations.
 
 #### Step-by-Step Code Walkthrough:
-* **Static Variable Definition**:
+
+- **Static Variable Definition**:
   Inside the function `counter()`, we define `mut static x := 42`. The compiler generates this variable in the global data space but restricts access to it exclusively within `counter()`.
-* **One-Time Initialization**:
+- **One-Time Initialization**:
   The initialization expression `= 42` is executed exactly once when the program starts. It is skipped on subsequent calls to `counter()`.
-* **Access Rules**:
+- **Access Rules**:
   Because static variables represent shared mutable state, `counter()` is marked with `@[unsafe]` and called within `unsafe` blocks in `main()`.
 
 **Additional Context from Repository docs:**
@@ -18517,9 +18550,10 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/13_hot_c
 V supports **Hot Code Reloading** using the `@[live]` attribute. By compiling a program with the `-live` flag (e.g. `v -live run file.v`), V monitors the source files, automatically recompiles live-annotated functions to a shared library, and reloads them dynamically at runtime without restarting the application.
 
 #### Step-by-Step Code Walkthrough:
-* **Live Annotation**:
+
+- **Live Annotation**:
   The function `print_message()` is marked with the `@[live]` attribute. This instructs the compiler to generate it as a hot-reloadable hook loading from a shared library.
-* **Main loop execution**:
+- **Main loop execution**:
   The loop in `main()` runs continuously. If you modify the message in the string print inside `print_message()` and save the file, V's monitoring thread detects the change, rebuilds the code, and subsequent calls in the loop print the updated message instantly.
 
 **Additional Context from Repository docs:**
@@ -18555,16 +18589,17 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/14_compi
 
 V supports **Compile-Time Reflection** using the `$` prefix to perform type operations, evaluations, and code generation during compilation. V iterates over struct fields, attributes, variants, and methods at compile-time using `$for` loops, providing static safety without any runtime metadata overhead.
 
-* Struct fields can be examined via `Struct.fields`.
-* Struct attributes can be examined via `Struct.attributes`.
-* Struct methods can be examined via `Struct.methods`, and executed dynamically using `$method()`.
+- Struct fields can be examined via `Struct.fields`.
+- Struct attributes can be examined via `Struct.attributes`.
+- Struct methods can be examined via `Struct.methods`, and executed dynamically using `$method()`.
 
 #### Step-by-Step Code Walkthrough:
-* **Field Iteration (`$for field in User.fields`)**:
+
+- **Field Iteration (`$for field in User.fields`)**:
   Iterates over all fields of `User`. Evaluates their names (`field.name`) and type IDs (`field.typ`) at compile-time.
-* **Attribute Iteration (`$for attr in User.attributes`)**:
+- **Attribute Iteration (`$for attr in User.attributes`)**:
   Inspects attributes attached to the struct, such as `@[COLOR]` (prints `COLOR`).
-* **Comptime Method Invocation (`user.$method()`)**:
+- **Comptime Method Invocation (`user.$method()`)**:
   Inside `$for m in User.methods`, we check if the method returns a `string`. If so, we execute the method dynamically using the `$method()` comptime syntax, calling `greet()` on the `user` instance and printing `Hello Alice`.
 
 **Additional Context from Repository docs:**
@@ -18614,42 +18649,42 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/15_compi
 
 V provides a set of pseudo-variables starting with `@` that are evaluated and substituted at compile time:
 
-* **Scope Identifiers**:
-  * `@FN` -> Replaced with the name of the current V function (as a string).
-  * `@METHOD` -> Replaced with the `ReceiverType.MethodName` of the current method (as a string).
-  * `@MOD` -> Replaced with the name of the current V module (as a string).
-  * `@STRUCT` -> Replaced with the name of the current V struct (as a string).
+- **Scope Identifiers**:
+  - `@FN` -> Replaced with the name of the current V function (as a string).
+  - `@METHOD` -> Replaced with the `ReceiverType.MethodName` of the current method (as a string).
+  - `@MOD` -> Replaced with the name of the current V module (as a string).
+  - `@STRUCT` -> Replaced with the name of the current V struct (as a string).
 
-* **Source File & Location Identifiers**:
-  * `@FILE` -> Replaced with the absolute path of the V source file (as a string).
-  * `@DIR` -> Replaced with the absolute path of the folder containing the V source file (as a string).
-  * `@LINE` -> Replaced with the V line number where it appears (as a string).
-  * `@FILE_LINE` -> Like `@FILE:@LINE`, but the file part is a relative path (as a string).
-  * `@LOCATION` -> Combines file, line, and type/method name; suitable for logging.
-  * `@COLUMN` -> Replaced with the 1-based column offset where it appears (as a string).
+- **Source File & Location Identifiers**:
+  - `@FILE` -> Replaced with the absolute path of the V source file (as a string).
+  - `@DIR` -> Replaced with the absolute path of the folder containing the V source file (as a string).
+  - `@LINE` -> Replaced with the V line number where it appears (as a string).
+  - `@FILE_LINE` -> Like `@FILE:@LINE`, but the file part is a relative path (as a string).
+  - `@LOCATION` -> Combines file, line, and type/method name; suitable for logging.
+  - `@COLUMN` -> Replaced with the 1-based column offset where it appears (as a string).
 
-* **V Compiler & Git Identifiers**:
-  * `@VEXE` -> Replaced with the path to the V compiler executable (as a string).
-  * `@VEXEROOT` -> Replaced with the folder containing the V compiler executable (as a string).
-  * `@VHASH` -> Replaced with the shortened commit hash of the V compiler (as a string).
-  * `@VCURRENTHASH` -> Similar to `@VHASH`, but updates when the compiler is recompiled after local modifications or git bisect.
+- **V Compiler & Git Identifiers**:
+  - `@VEXE` -> Replaced with the path to the V compiler executable (as a string).
+  - `@VEXEROOT` -> Replaced with the folder containing the V compiler executable (as a string).
+  - `@VHASH` -> Replaced with the shortened commit hash of the V compiler (as a string).
+  - `@VCURRENTHASH` -> Similar to `@VHASH`, but updates when the compiler is recompiled after local modifications or git bisect.
 
-* **Project Mod Info (requires `v.mod` in project root)**:
-  * `@VMOD_FILE` -> Replaced with the contents of the nearest `v.mod` file (as a string).
-  * `@VMODHASH` -> Replaced with the shortened commit hash derived from the `.git` directory next to the nearest `v.mod` file (as a string).
-  * `@VMODROOT` -> Replaced with the path to the directory containing the nearest `v.mod` file (as a string).
+- **Project Mod Info (requires `v.mod` in project root)**:
+  - `@VMOD_FILE` -> Replaced with the contents of the nearest `v.mod` file (as a string).
+  - `@VMODHASH` -> Replaced with the shortened commit hash derived from the `.git` directory next to the nearest `v.mod` file (as a string).
+  - `@VMODROOT` -> Replaced with the path to the directory containing the nearest `v.mod` file (as a string).
 
-* **Build Time Identifiers (UTC timezone)**:
-  * `@BUILD_DATE` -> Replaced with the build date (e.g. `'2026-06-26'`).
-  * `@BUILD_TIME` -> Replaced with the UTC build time (e.g. `'17:50:24'`).
-  * `@BUILD_TIMESTAMP` -> Replaced with the Unix timestamp of the build (e.g. `'1782496224'`).
-  * *Note: Build variables can be overridden by setting the `SOURCE_DATE_EPOCH` environment variable, enabling reproducible builds (e.g., setting it to the latest git commit timestamp).*
+- **Build Time Identifiers (UTC timezone)**:
+  - `@BUILD_DATE` -> Replaced with the build date (e.g. `'2026-06-26'`).
+  - `@BUILD_TIME` -> Replaced with the UTC build time (e.g. `'17:50:24'`).
+  - `@BUILD_TIMESTAMP` -> Replaced with the Unix timestamp of the build (e.g. `'1782496224'`).
+  - _Note: Build variables can be overridden by setting the `SOURCE_DATE_EPOCH` environment variable, enabling reproducible builds (e.g., setting it to the latest git commit timestamp)._
 
-* **Target Platform / Toolchain Identifiers**:
-  * `@OS` -> Replaced with the OS type (e.g. `'macos'`, `'linux'`, `'windows'`).
-  * `@CCOMPILER` -> Replaced with the C compiler used (e.g. `'gcc'`, `'clang'`).
-  * `@BACKEND` -> Replaced with the current language backend (e.g. `'c'`, `'js'`).
-  * `@PLATFORM` -> Replaced with the CPU architecture type (e.g. `'arm64'`, `'amd64'`).
+- **Target Platform / Toolchain Identifiers**:
+  - `@OS` -> Replaced with the OS type (e.g. `'macos'`, `'linux'`, `'windows'`).
+  - `@CCOMPILER` -> Replaced with the C compiler used (e.g. `'gcc'`, `'clang'`).
+  - `@BACKEND` -> Replaced with the current language backend (e.g. `'c'`, `'js'`).
+  - `@PLATFORM` -> Replaced with the CPU architecture type (e.g. `'arm64'`, `'amd64'`).
 
 **Additional Context from Repository docs:**
 This example demonstrates the usage and output of all the available compile-time pseudo variables in V.
@@ -18672,7 +18707,7 @@ fn log_event() {
 
 fn main() {
 	println('=== V Compile-Time Pseudo Variables ===')
-	
+
 	// Module & File Info
 	println('Current Module: ' + @MOD)
 	println('Source File Path: ' + @FILE)
@@ -18681,29 +18716,29 @@ fn main() {
 	println('Relative File/Line: ' + @FILE_LINE)
 	println('Log Location: ' + @LOCATION)
 	println('Column Number: ' + @COLUMN.str())
-	
+
 	// Compiler Info
 	println('V Compiler Executable: ' + @VEXE)
 	println('V compiler Root Directory: ' + @VEXEROOT)
 	println('V Compiler Commit Hash: ' + @VHASH)
 	println('V Compiler Current Hash: ' + @VCURRENTHASH)
-	
+
 	// project Info (from v.mod)
 	println('v.mod File Contents: ' + @VMOD_FILE)
 	println('v.mod Git Commit Hash: ' + @VMODHASH)
 	println('v.mod Root Directory: ' + @VMODROOT)
-	
+
 	// Build Info (UTC timezone)
 	println('Build Date: ' + @BUILD_DATE)
 	println('Build Time: ' + @BUILD_TIME)
 	println('Build Timestamp: ' + @BUILD_TIMESTAMP)
-	
+
 	// Platform / Backend Info
 	println('Target OS: ' + @OS)
 	println('C Compiler: ' + @CCOMPILER)
 	println('V Backend: ' + @BACKEND)
 	println('CPU Platform: ' + @PLATFORM)
-	
+
 	u := User{name: 'Alice'}
 	u.register()
 	log_event()
@@ -18717,20 +18752,24 @@ fn main() {
 ### Lesson: Environment-Specific Files & Compile-Time Types
 
 #### Environment-Specific Files
+
 V supports compile-time filtering of entire files using file suffix conventions instead of conditional directives:
-* `.js.v` -> compiled only when targeting the Javascript backend.
-* `.c.v` -> compiled only when targeting the C backend.
-* `_nix.c.v` -> compiled only on Unix-like platforms.
-* `_windows.c.v` -> compiled only on Windows.
-* `_d_customflag.v` -> compiled only if `-d customflag` is passed to the compiler.
+
+- `.js.v` -> compiled only when targeting the Javascript backend.
+- `.c.v` -> compiled only when targeting the C backend.
+- `_nix.c.v` -> compiled only on Unix-like platforms.
+- `_windows.c.v` -> compiled only on Windows.
+- `_d_customflag.v` -> compiled only if `-d customflag` is passed to the compiler.
 
 #### Compile-Time Types
+
 When writing generic code, V provides specialized compile-time type matching identifiers to selectively check generic constraints:
-* `$alias` -> matches type aliases.
-* `$array` -> matches arrays and fixed-size arrays.
-* `$enum` -> matches enum types.
-* `$float` / `$int` / `$string` -> matches floating numbers, integers, or string values.
-* `$struct` -> matches struct types.
+
+- `$alias` -> matches type aliases.
+- `$array` -> matches arrays and fixed-size arrays.
+- `$enum` -> matches enum types.
+- `$float` / `$int` / `$string` -> matches floating numbers, integers, or string values.
+- `$struct` -> matches struct types.
 
 ---
 
@@ -18743,21 +18782,27 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/16_refer
 In V, references are similar to pointers in Go/C and references in C++. They allow you to point to a memory location of another variable without making a copy of its contents.
 
 #### 1. Passing by Value vs. Passing by Reference
+
 When passing immutable arguments (like structs) to functions or methods, V decides under the hood whether to pass them by value or by reference depending on performance characteristics. As a developer, you do not need to worry about this optimization detail.
 
 However, you can explicitly force an argument or method receiver to be passed by reference by prefixing the type with `&` (e.g., `&Foo`).
 
 #### 2. Mutability of References
+
 References in V are immutable by default:
-* Even if a function or method receives a reference (`&Foo`), it cannot modify the fields of that struct unless the parameter is marked as mutable.
-* To allow modification, the argument must be declared as `mut foo Foo` (which V automatically passes by reference under the hood) and called with `mut` (e.g. `modify_foo(mut my_foo)`). Note that modifiable fields must also be defined under the `mut:` access block in the struct declaration.
+
+- Even if a function or method receives a reference (`&Foo`), it cannot modify the fields of that struct unless the parameter is marked as mutable.
+- To allow modification, the argument must be declared as `mut foo Foo` (which V automatically passes by reference under the hood) and called with `mut` (e.g. `modify_foo(mut my_foo)`). Note that modifiable fields must also be defined under the `mut:` access block in the struct declaration.
 
 #### 3. Dereferencing
+
 To access the underlying value of a reference directly, or to create a copy of the pointed-to object, use the dereferencing operator `*` (e.g., `copied_foo := *ref_to_foo`), similar to Go and C.
 
 #### 4. Recursive Structures
+
 Recursive data structures (such as linked lists or trees) require fields that reference their own type. Because V needs to calculate the memory size of structs at compile time, recursive fields must be declared as references (e.g., `left ?&Node[T]`) because references have a fixed pointer size.
-* To allow optional/empty references (like leaf node terminations in trees), V supports **optional references** (e.g. `?&Node[T]`). These are automatically initialized to `none` by default, avoiding the need for `unsafe { nil }` pointers or dummy nodes.
+
+- To allow optional/empty references (like leaf node terminations in trees), V supports **optional references** (e.g. `?&Node[T]`). These are automatically initialized to `none` by default, avoiding the need for `unsafe { nil }` pointers or dummy nodes.
 
 ---
 
@@ -18839,7 +18884,7 @@ fn main() {
 	}
 
 	println('Root val: ${root.val}')
-	
+
 	// Access the optional child nodes safely using if guards
 	if left := root.left {
 		println('Left leaf val: ${left.val}')
@@ -18867,6 +18912,12 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [String Utilities Boilerplate](#string-utilities-boilerplate)
 - [Math and Statistics Boilerplate](#math-and-statistics-boilerplate)
 - [Array Utilities Boilerplate](#array-utilities-boilerplate)
+- [Configuration Management Boilerplate](#configuration-management-boilerplate)
+- [JSON File Store Boilerplate](#json-file-store-boilerplate)
+- [Retry and Backoff Boilerplate](#retry-and-backoff-boilerplate)
+- [HTTP Client Boilerplate](#http-client-boilerplate)
+- [CSV Processor Boilerplate](#csv-processor-boilerplate)
+- [SQLite CRUD Boilerplate](#sqlite-crud-boilerplate)
 
 ---
 
@@ -18883,6 +18934,7 @@ _File location: [boilerplate_templates/01_cli_app/cli_app.v](file:///Users/codec
 When building command-line utilities, V provides a highly featured standard `flag` module. Rather than manually parsing arguments from `os.args`, the `flag` module simplifies declaring options, validation, and auto-generates helpful usage/help text.
 
 Key concepts illustrated:
+
 - **Initializing flag parser**: Creating a new parser with `flag.new_flag_parser(os.args)`.
 - **Defining Flags**: Specifying flag names, short character abbreviations, default values, and description text.
 - **Config Struct Pattern**: Cleanly separating parsed options from application logic using a custom config struct.
@@ -18985,6 +19037,7 @@ _File location: [boilerplate_templates/02_rest_api/rest_api.v](file:///Users/cod
 V's standard web framework, `veb`, is optimized for building fast, high-conformance web apps and APIs. This template serves as a quick-start scaffolding for a JSON REST service, illustrating CRUD routing and request decoding.
 
 Key concepts illustrated:
+
 - **Routing Attributes**: Tagging methods with route paths and HTTP verbs (e.g. `@['/api/items'; get]`).
 - **Path Parameters**: Defining routes with dynamic segments like `@['/api/items/:id'; get]` which map directly to method arguments.
 - **JSON Serialization/Deserialization**: Using `json.encode` and `json.decode` to work with HTTP requests and responses.
@@ -19072,7 +19125,7 @@ fn main() {
 	port := if port_env != '' { port_env.int() } else { 8082 }
 
 	println('Starting REST API server on http://localhost:${port}...')
-	
+
 	// Start veb web server
 	veb.run[App, Context](mut app, port)
 }
@@ -19089,6 +19142,7 @@ _File location: [boilerplate_templates/03_worker_pool/worker_pool.v](file:///Use
 V offers lightweight concurrency out of the box. By combining `spawn` (thread creation) with typed channels (`chan`), you can build thread-safe worker pools that process computationally intensive or high-latency tasks in parallel without lock overhead.
 
 Key concepts illustrated:
+
 - **Channel Communication**: Sending and receiving tasks and results over thread-safe queues.
 - **Spawned Threads**: Running worker functions concurrently using the `spawn` keyword.
 - **Graceful Shutdown**: Closing the tasks channel (`tasks_chan.close()`) to signal worker threads to cleanly exit.
@@ -19200,6 +19254,7 @@ _File location: [boilerplate_templates/04_file_utilities/file_utilities.v](file:
 V's standard `os` module contains comprehensive and platform-agnostic tools for interacting with the file system and host operating system.
 
 Key concepts illustrated:
+
 - **Path Manipulation**: Using `os.join_path` to build paths correctly across Linux, macOS, and Windows.
 - **File I/O**: Performing quick reads and writes using `os.read_file` and `os.write_file`.
 - **Directory Operations**: Checking folder existence, recursively creating folders via `os.mkdir_all`, and listing files via `os.ls`.
@@ -19289,8 +19344,9 @@ _File location: [boilerplate_templates/05_string_utilities/string_utilities.v](f
 This boilerplate demonstrates how to implement highly useful custom string operations that are not natively built into V's core string type. It highlights UTF-8 rune handling, string tokenization, filtering, and text manipulation.
 
 Key concepts illustrated:
+
 - **UTF-8 Safe String Reversal**: Reversing strings correctly by iterating over `runes` rather than raw bytes, ensuring multi-byte Unicode characters (like emojis) are not corrupted.
-- **Title Casing**: Capitalizing the first letter of *each* word in a sentence (V's native `.capitalize()` only capitalizes the first letter of the entire string).
+- **Title Casing**: Capitalizing the first letter of _each_ word in a sentence (V's native `.capitalize()` only capitalizes the first letter of the entire string).
 - **Alphanumeric Palindrome Checking**: Checking if a string is a palindrome while ignoring non-alphanumeric symbols and character casing.
 - **Rune-based Truncation**: Cutting off a string at a specific character limit and adding an ellipsis, avoiding splitting UTF-8 byte sequences.
 - **Slugification**: Generating clean, URL-friendly slugs (e.g. low-cased, hyphen-separated, special characters stripped) from user-supplied titles.
@@ -19332,7 +19388,7 @@ fn is_palindrome(s string) bool {
 			clean_chars << r
 		}
 	}
-	
+
 	for i in 0 .. clean_chars.len / 2 {
 		if clean_chars[i] != clean_chars[clean_chars.len - 1 - i] {
 			return false
@@ -19354,7 +19410,7 @@ fn truncate(s string, limit int) string {
 fn slugify(s string) string {
 	mut res := []rune{}
 	mut last_was_dash := false
-	
+
 	for r in s.to_lower().runes() {
 		if (r >= `a` && r <= `z`) || (r >= `0` && r <= `9`) {
 			res << r
@@ -19366,7 +19422,7 @@ fn slugify(s string) string {
 			}
 		}
 	}
-	
+
 	// Trim trailing dash if any
 	mut slug := res.string()
 	if slug.ends_with('-') {
@@ -19417,6 +19473,7 @@ _File location: [boilerplate_templates/06_math_and_stats/math_and_stats.v](file:
 This template showcases how to perform numerical operations and custom statistical computations on numeric arrays. It implements several custom algorithmic functions that are not built directly into V's basic numeric types or standard math package.
 
 Key concepts illustrated:
+
 - **Descriptive Statistics**: Iterating over elements to calculate min, max, sum, and average (mean) on float slices.
 - **Array Sorting & Cloning**: Using `.clone()` to copy data and sorting arrays in-place using `.sort()`.
 - **Median, Variance & Deviation**: Custom implementations to calculate distribution variance and standard deviation using V's `math.sqrt()`.
@@ -19594,7 +19651,7 @@ fn main() {
 	println('\nCustom Number Functions:')
 	println('- Factorial of ${n}:    ${factorial(n)}')
 	println('- Fibonacci first ${n}: ${fibonacci(n)}')
-	
+
 	test_primes := [7, 12, 19, 25, 97]
 	for p in test_primes {
 		println('  Is ${p} prime?       ${is_prime(p)}')
@@ -19618,6 +19675,7 @@ _File location: [boilerplate_templates/07_array_utilities/array_utilities.v](fil
 V's standard array implementation is powerful but focused. This template showcases how to implement useful custom generic utilities for manipulating, comparing, and organizing arrays.
 
 Key concepts illustrated:
+
 - **Generics in V**: Writing reusable algorithms using type parameters `[T]`.
 - **Deduplication (`unique`)**: Removing duplicates from an array using containment checks (`!in`).
 - **Chunking (`chunk`)**: Partitioning an array into smaller sub-slices of a fixed maximum length.
@@ -19648,7 +19706,7 @@ fn chunk[T](arr []T, size int) [][]T {
 	}
 	mut result := [][]T{}
 	mut current_chunk := []T{}
-	
+
 	for item in arr {
 		current_chunk << item
 		if current_chunk.len == size {
@@ -19742,6 +19800,220 @@ fn main() {
 
 ---
 
+### Configuration Management Boilerplate
+
+_File location: [boilerplate_templates/08_config_management/config_management.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/08_config_management/config_management.v)_
+
+### Lesson: Configuration Management Boilerplate
+
+Most practical applications need configuration values that can come from a file, environment variables, or defaults. This template shows a clean pattern for loading a JSON config, falling back to safe defaults, and saving updated settings.
+
+Key concepts illustrated:
+
+- **Default Configuration**: Establishing a safe baseline before reading external settings.
+- **Environment Variable Overrides**: Adapting the app without changing source files.
+- **JSON Persistence**: Reading and writing structured config files with `json.decode` and `json.encode`.
+- **Practical Separation of Concerns**: Keeping parsing and application logic in dedicated functions.
+
+```v
+module main
+
+import json
+import os
+
+struct AppConfig {
+	host    string
+	port    int
+	debug   bool
+	retries int
+}
+
+fn default_config() AppConfig {
+	return AppConfig{
+		host: '127.0.0.1'
+		port: 8080
+		debug: false
+		retries: 3
+	}
+}
+
+fn load_config(path string) AppConfig {
+	mut cfg := default_config()
+	if path == '' {
+		env_host := os.getenv('APP_HOST')
+		if env_host != '' {
+			cfg.host = env_host
+		}
+		return cfg
+	}
+	// ...rest of the example is in the source file above
+}
+```
+
+---
+
+### JSON File Store Boilerplate
+
+_File location: [boilerplate_templates/09_json_file_store/json_file_store.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/09_json_file_store/json_file_store.v)_
+
+### Lesson: JSON File Store Boilerplate
+
+A simple JSON file store is often enough for small tools, prototypes, or local productivity apps. This template shows how to load persisted data from disk, add new records, update them, and save the state again.
+
+Key concepts illustrated:
+
+- **Persistent Data**: Keeping application state across runs with a simple file-backed format.
+- **Structured Records**: Storing typed data in a `TodoItem` model.
+- **CRUD Style Helpers**: Adding, updating, and listing records without introducing a database dependency.
+- **Safe Serialization**: Using `json.encode` and `json.decode` for portability.
+
+```v
+struct TodoItem {
+	id    int
+	title string
+	done  bool
+}
+
+fn add_item(mut store TodoStore, title string) TodoItem {
+	item := TodoItem{
+		id: store.items.len + 1
+		title: title
+		done: false
+	}
+	store.items << item
+	return item
+}
+```
+
+---
+
+### Retry and Backoff Boilerplate
+
+_File location: [boilerplate_templates/10_retry_and_backoff/retry_and_backoff.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/10_retry_and_backoff/retry_and_backoff.v)_
+
+### Lesson: Retry and Backoff Boilerplate
+
+Transient failures are common in distributed systems, network clients, and file operations. This template demonstrates a practical retry loop that delays between attempts and surfaces a final failure only after the allowed number of tries is exhausted.
+
+Key concepts illustrated:
+
+- **Retry Loops**: Repeating work when an operation temporarily fails.
+- **Backoff Delays**: Waiting briefly between attempts to reduce pressure on downstream services.
+- **Optional Return Values**: Using `?` to propagate failure cleanly.
+- **Practical Error Messages**: Giving the caller enough information to debug the problem.
+
+```v
+fn read_with_retry(path string, attempts int, delay time.Duration) !string {
+	for attempt in 1 .. attempts + 1 {
+		content := os.read_file(path) or {
+			eprintln('Attempt ${attempt}/${attempts} failed: ${err}')
+			if attempt < attempts {
+				time.sleep(delay)
+			}
+			continue
+		}
+		return content
+	}
+	return error('Unable to read ${path} after ${attempts} attempts')
+}
+```
+
+---
+
+### HTTP Client Boilerplate
+
+_File location: [boilerplate_templates/11_http_client/http_client.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/11_http_client/http_client.v)_
+
+### Lesson: HTTP Client Boilerplate
+
+Many real-world tools need to call web services. This template shows a simple yet practical pattern for performing HTTP GET and POST requests, decoding JSON responses, and handling failures with clear errors.
+
+Key concepts illustrated:
+
+- **HTTP Requests**: Using `net.http` for GET and POST requests.
+- **JSON Payloads**: Encoding and decoding structured data with `json`.
+- **Error Handling**: Returning and surfacing client errors cleanly.
+- **Reusable Helpers**: Keeping request logic in dedicated functions for later reuse.
+
+```v
+fn fetch_json(url string) !string {
+	resp := http.get(url) or { return error('GET request failed: ${err}') }
+	if resp.status_code >= 400 {
+		return error('Request failed with status ${resp.status_code}')
+	}
+	return resp.body
+}
+```
+
+---
+
+### CSV Processor Boilerplate
+
+_File location: [boilerplate_templates/12_csv_processor/csv_processor.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/12_csv_processor/csv_processor.v)_
+
+### Lesson: CSV Processor Boilerplate
+
+CSV files are still common for importing and exporting tabular data. This template shows how to read records from CSV, transform them into typed structs, and write them back out in a clean format.
+
+Key concepts illustrated:
+
+- **CSV Parsing**: Reading rows with `encoding.csv`.
+- **Typed Data Models**: Mapping each row into a struct.
+- **File I/O**: Reading and writing files with `os` helpers.
+- **Practical Data Pipelines**: Transforming input files into processed output files.
+
+```v
+fn read_people(path string) ![]Person {
+	content := os.read_file(path) or { return error('Could not read ${path}: ${err}') }
+	mut reader := csv.new_reader(content)
+	mut people := []Person{}
+	for {
+		row := reader.read() or { break }
+		if row.len == 0 {
+			continue
+		}
+		people << Person{
+			name: row[0]
+			age: row[1].int()
+			city: row[2]
+		}
+	}
+	return people
+}
+```
+
+---
+
+### SQLite CRUD Boilerplate
+
+_File location: [boilerplate_templates/13_sqlite_crud/sqlite_crud.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/13_sqlite_crud/sqlite_crud.v)_
+
+### Lesson: SQLite CRUD Boilerplate
+
+SQLite is a great fit for small desktop apps, local tools, and prototypes. This template shows a minimal CRUD workflow for creating a table, inserting data, fetching records, and closing the connection cleanly.
+
+Key concepts illustrated:
+
+- **Database Connection**: Opening and closing a SQLite database with `sqlite.connect`.
+- **Schema Setup**: Creating tables with `CREATE TABLE IF NOT EXISTS`.
+- **CRUD Operations**: Insert and read operations using parameterized SQL.
+- **Structured Results**: Mapping database rows into typed structs.
+
+```v
+fn insert_user(mut db sqlite.DB, name string, email string, age int) !int {
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [name, email, age.str()]) or {
+		return error('Insert failed: ${err}')
+	}
+	return db.last_id()
+}
+```
+
+---
+
 # End of Tutorial
 
 Congratulations! You have completed the comprehensive V Programming tutorial.
+
+```
+
+```
