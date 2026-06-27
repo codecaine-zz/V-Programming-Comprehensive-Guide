@@ -17,13 +17,13 @@ mut:
 fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 	chunk_size := 1024
 	total_frags := (payload.len + chunk_size - 1) / chunk_size
-	
+
 	if total_frags == 0 {
 		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
 		socket.write(header) or { return err }
 		return
 	}
-	
+
 	for i in 0 .. total_frags {
 		start := i * chunk_size
 		mut end := (i + 1) * chunk_size
@@ -31,7 +31,7 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 			end = payload.len
 		}
 		frag_len := end - start
-		
+
 		mut packet := []u8{len: 8 + frag_len}
 		packet[0] = `U`
 		packet[1] = `D`
@@ -41,13 +41,13 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 		packet[5] = u8(total_frags)
 		packet[6] = u8((u32(frag_len) >> 8) & 0xff)
 		packet[7] = u8(u32(frag_len) & 0xff)
-		
+
 		if frag_len > 0 {
 			unsafe {
 				C.memcpy(&packet[8], payload.str + start, frag_len)
 			}
 		}
-		
+
 		socket.write(packet) or { return err }
 		// Sleep briefly to avoid packet loss during loopback transmission
 		time.sleep(2 * time.millisecond)
@@ -60,13 +60,13 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 	chunk_size := 1024
 	total_frags := (payload.len + chunk_size - 1) / chunk_size
-	
+
 	if total_frags == 0 {
 		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
 		socket.write_to(addr, header) or { return err }
 		return
 	}
-	
+
 	for i in 0 .. total_frags {
 		start := i * chunk_size
 		mut end := (i + 1) * chunk_size
@@ -74,7 +74,7 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 			end = payload.len
 		}
 		frag_len := end - start
-		
+
 		mut packet := []u8{len: 8 + frag_len}
 		packet[0] = `U`
 		packet[1] = `D`
@@ -84,13 +84,13 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 		packet[5] = u8(total_frags)
 		packet[6] = u8((u32(frag_len) >> 8) & 0xff)
 		packet[7] = u8(u32(frag_len) & 0xff)
-		
+
 		if frag_len > 0 {
 			unsafe {
 				C.memcpy(&packet[8], payload.str + start, frag_len)
 			}
 		}
-		
+
 		socket.write_to(addr, packet) or { return err }
 		time.sleep(2 * time.millisecond)
 	}
@@ -149,7 +149,7 @@ fn read_udp_msg(mut socket net.UdpConn, max_allowed_fragments int) !(string, net
 			}
 		}
 
-		fragments[frag_idx] = buf[8 .. 8 + frag_len].clone()
+		fragments[frag_idx] = buf[8..8 + frag_len].clone()
 
 		if fragments.len == total_frags {
 			mut full_payload := []u8{}
@@ -240,7 +240,7 @@ fn run_server(port int) ! {
 		addr_str := addr.str()
 		if addr_str !in reassemblers {
 			reassemblers[addr_str] = UdpReassembler{
-				total: total_frags
+				total:     total_frags
 				last_seen: now
 			}
 		}
@@ -250,13 +250,13 @@ fn run_server(port int) ! {
 		if r.total != total_frags {
 			println('Server: Resetting reassembler for ${addr} due to fragment total count change')
 			r = UdpReassembler{
-				total: total_frags
+				total:     total_frags
 				last_seen: now
 			}
 		}
-		
+
 		r.last_seen = now
-		r.fragments[frag_idx] = buf[8 .. 8 + frag_len].clone()
+		r.fragments[frag_idx] = buf[8..8 + frag_len].clone()
 
 		if r.fragments.len == r.total {
 			mut full_payload := []u8{}
@@ -350,18 +350,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)

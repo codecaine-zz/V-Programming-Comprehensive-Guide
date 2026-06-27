@@ -9,7 +9,7 @@ fn main() {
 	// Example 1: Using benchmark.start() and measure()
 	println('--- Simple Measurement ---')
 	mut b := benchmark.start()
-	
+
 	// Simulate work chunk 1
 	time.sleep(50 * time.millisecond)
 	b.measure('Simulated task 1 (50ms sleep)')
@@ -21,7 +21,7 @@ fn main() {
 	// Example 2: Using structured new_benchmark()
 	println('\n--- Structured Step-by-Step Benchmarking ---')
 	mut bmark := benchmark.new_benchmark()
-	
+
 	// Step 1: Ok step
 	bmark.step()
 	time.sleep(30 * time.millisecond)

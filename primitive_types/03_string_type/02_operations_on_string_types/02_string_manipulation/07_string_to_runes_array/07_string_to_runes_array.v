@@ -6,4 +6,3 @@ fn main() {
 	println(doge_moon_runes)
 	println(typeof(doge_moon_runes).name) // []rune
 }
-

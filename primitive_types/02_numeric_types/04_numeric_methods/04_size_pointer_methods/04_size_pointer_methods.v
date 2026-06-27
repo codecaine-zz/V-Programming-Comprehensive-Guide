@@ -6,7 +6,7 @@ fn main() {
 	usz := usize(200)
 
 	// str() returns string representation
-	println(sz.str())  // "100"
+	println(sz.str()) // "100"
 	println(usz.str()) // "200"
 
 	// voidptr methods

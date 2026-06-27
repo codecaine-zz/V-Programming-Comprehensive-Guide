@@ -5,4 +5,3 @@ fn main() {
 	j := 'man army'
 	println('${i} ${j}')
 }
-

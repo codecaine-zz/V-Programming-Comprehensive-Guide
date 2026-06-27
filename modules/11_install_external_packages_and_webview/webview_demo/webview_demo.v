@@ -94,29 +94,29 @@ const html = '
 
 // V binding function. Must take &webview.Event and can return a type (like string).
 fn greet_from_v(e &webview.Event) string {
-    // 1. Retrieve the argument passed from JavaScript (at index 0)
-    msg := e.get_arg[string](0) or { 'No arguments passed' }
-    println('V side: Received from JS: ${msg}')
+	// 1. Retrieve the argument passed from JavaScript (at index 0)
+	msg := e.get_arg[string](0) or { 'No arguments passed' }
+	println('V side: Received from JS: ${msg}')
 
-    // 2. We can run custom JavaScript on the webview page from V
-    e.eval('console.log("V successfully invoked eval in JS context!");')
+	// 2. We can run custom JavaScript on the webview page from V
+	e.eval('console.log("V successfully invoked eval in JS context!");')
 
-    // 3. Return string back to the JS Promise resolver
-    return 'V responds: "Message received: ${msg}"'
+	// 3. Return string back to the JS Promise resolver
+	return 'V responds: "Message received: ${msg}"'
 }
 
 fn main() {
-    // Initialize Webview
-    mut w := webview.create(debug: true)
-    w.set_title('V Webview Binding Demo')
-    w.set_size(600, 450, .@none)
+	// Initialize Webview
+	mut w := webview.create(debug: true)
+	w.set_title('V Webview Binding Demo')
+	w.set_size(600, 450, .@none)
 
-    // Bind V function "greet_from_v" to JS window.greet_from_v
-    w.bind('greet_from_v', greet_from_v)
+	// Bind V function "greet_from_v" to JS window.greet_from_v
+	w.bind('greet_from_v', greet_from_v)
 
-    // Load the HTML content
-    w.set_html(html)
+	// Load the HTML content
+	w.set_html(html)
 
-    // Run the main loop
-    w.run()
+	// Run the main loop
+	w.run()
 }

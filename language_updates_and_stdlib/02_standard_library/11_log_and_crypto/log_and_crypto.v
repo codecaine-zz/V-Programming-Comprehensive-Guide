@@ -12,7 +12,7 @@ fn main() {
 	// V's log module provides customizable levels (debug, info, warn, error, fatal)
 	mut logger := log.Log{}
 	logger.set_level(.info) // Set threshold (ignores debug level)
-	
+
 	logger.info('Logger initialized.')
 	logger.warn('This is a warning message.')
 	logger.error('This is an error message.')
@@ -20,7 +20,7 @@ fn main() {
 	// --- crypto ---
 	println('\n--- crypto ---')
 	input := 'V language standard library'
-	
+
 	// SHA256 Hash
 	sha_hash := sha256.hexhash(input)
 	println('SHA-256 of "${input}":')

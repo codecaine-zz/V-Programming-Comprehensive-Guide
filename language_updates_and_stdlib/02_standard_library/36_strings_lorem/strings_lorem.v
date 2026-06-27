@@ -14,9 +14,9 @@ fn main() {
 	// 2. Custom Layout Configuration (Paragraphs, Sentences, Words)
 	println('\n--- 2. Custom Layout Generation ---')
 	custom_layout := lorem.generate(lorem.LoremCfg{
-		paragraphs: 2
+		paragraphs:              2
 		sentences_per_paragraph: 3
-		words_per_sentence: 6
+		words_per_sentence:      6
 	})
 	println(custom_layout)
 
@@ -27,14 +27,14 @@ fn main() {
 	// - 'darwin' (Charles Darwin's Origin of Species)
 	// - 'bard' (William Shakespeare's works)
 	println('\n--- 3. Specific Corpora Examples ---')
-	
+
 	corpora := ['lorem', 'poe', 'darwin', 'bard']
 	for corpus in corpora {
 		text := lorem.generate(lorem.LoremCfg{
-			corpus_name: corpus
-			paragraphs: 1
+			corpus_name:             corpus
+			paragraphs:              1
 			sentences_per_paragraph: 2
-			words_per_sentence: 8
+			words_per_sentence:      8
 		})
 		println('Corpus [${corpus}]:')
 		println(text)
@@ -46,21 +46,21 @@ fn main() {
 	// and identical across multiple runs. Custom `seed_text` provides a starting phrase for the Markov chain.
 	println('\n--- 4. Deterministic Generation with Seed & Custom Starting Phrase ---')
 	deterministic_lorem_1 := lorem.generate(lorem.LoremCfg{
-		corpus_name: 'poe'
-		rng_seed: 42
-		seed_text: 'once upon a midnight'
-		paragraphs: 1
+		corpus_name:             'poe'
+		rng_seed:                42
+		seed_text:               'once upon a midnight'
+		paragraphs:              1
 		sentences_per_paragraph: 2
-		words_per_sentence: 8
+		words_per_sentence:      8
 	})
-	
+
 	deterministic_lorem_2 := lorem.generate(lorem.LoremCfg{
-		corpus_name: 'poe'
-		rng_seed: 42
-		seed_text: 'once upon a midnight'
-		paragraphs: 1
+		corpus_name:             'poe'
+		rng_seed:                42
+		seed_text:               'once upon a midnight'
+		paragraphs:              1
 		sentences_per_paragraph: 2
-		words_per_sentence: 8
+		words_per_sentence:      8
 	})
 
 	println('Run 1:')

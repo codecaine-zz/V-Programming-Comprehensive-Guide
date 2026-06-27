@@ -30,9 +30,7 @@ fn main() {
 	// Writing and reading lines
 	lines := ['Line 1: V has simple OS functions.', 'Line 2: Supporting multiple lines.']
 	lines_file := 'temp_lines_example.txt'
-	os.write_lines(lines_file, lines) or {
-		println('Failed to write lines: ${err}')
-	}
+	os.write_lines(lines_file, lines) or { println('Failed to write lines: ${err}') }
 	read_lines := os.read_lines(lines_file) or {
 		println('Failed to read lines: ${err}')
 		[]
@@ -76,13 +74,11 @@ fn main() {
 	// 2. Directory Tree Operations (Nix/CLI Focus)
 	// ==========================================
 	println('\n--- Directory Tree Operations ---')
-	
+
 	// Create nested directories (like `mkdir -p`)
 	nested_dir := os.join_path('temp_parent', 'temp_child')
 	println('Creating nested directory structure: ${nested_dir}...')
-	os.mkdir_all(nested_dir) or {
-		println('Failed to create directory structure: ${err}')
-	}
+	os.mkdir_all(nested_dir) or { println('Failed to create directory structure: ${err}') }
 
 	// ==========================================
 	// 3. Path Manipulation & Extraction
@@ -90,8 +86,8 @@ fn main() {
 	println('\n--- Path Manipulation & Extraction ---')
 	sample_path := '/usr/local/bin/v.exe'
 	println('Sample path: ${sample_path}')
-	println('Directory:   ${os.dir(sample_path)}')      // /usr/local/bin
-	println('Base name:   ${os.base(sample_path)}')     // v.exe
+	println('Directory:   ${os.dir(sample_path)}') // /usr/local/bin
+	println('Base name:   ${os.base(sample_path)}') // v.exe
 	println('Extension:   ${os.file_ext(sample_path)}') // .exe
 
 	// ==========================================
@@ -102,15 +98,11 @@ fn main() {
 	println('Original working directory: ${original_wd}')
 
 	println('Changing directory to: temp_parent...')
-	os.chdir('temp_parent') or {
-		println('Failed to change directory: ${err}')
-	}
+	os.chdir('temp_parent') or { println('Failed to change directory: ${err}') }
 	println('New working directory: ${os.getwd()}')
 
 	// Change back to original directory
-	os.chdir(original_wd) or {
-		println('Failed to restore directory: ${err}')
-	}
+	os.chdir(original_wd) or { println('Failed to restore directory: ${err}') }
 
 	// ==========================================
 	// 5. Advanced File Operations (Copying, Moving)
@@ -120,14 +112,10 @@ fn main() {
 	moved_file := 'temp_book_moved.txt'
 
 	println('Copying ${filename} to ${copied_file}...')
-	os.cp(filename, copied_file) or {
-		println('Failed to copy file: ${err}')
-	}
+	os.cp(filename, copied_file) or { println('Failed to copy file: ${err}') }
 
 	println('Moving ${copied_file} to ${moved_file}...')
-	os.mv(copied_file, moved_file) or {
-		println('Failed to move file: ${err}')
-	}
+	os.mv(copied_file, moved_file) or { println('Failed to move file: ${err}') }
 
 	// ==========================================
 	// 6. Symbolic Links & Nix-Specific Operations
@@ -137,9 +125,7 @@ fn main() {
 
 	// Create symlink
 	println('Creating symbolic link from ${moved_file} to ${symlink_name}...')
-	os.symlink(moved_file, symlink_name) or {
-		println('Failed to create symlink: ${err}')
-	}
+	os.symlink(moved_file, symlink_name) or { println('Failed to create symlink: ${err}') }
 
 	// Check if path is a link
 	if os.is_link(symlink_name) {
@@ -149,9 +135,7 @@ fn main() {
 	// Change file permissions (chmod)
 	// 0o644 = Owner: read/write, Group: read, Others: read
 	println('Setting file permissions to 0o644 (read/write for owner, read-only for others)...')
-	os.chmod(moved_file, 0o644) or {
-		println('Failed to change permissions: ${err}')
-	}
+	os.chmod(moved_file, 0o644) or { println('Failed to change permissions: ${err}') }
 
 	// Check permissions
 	println('Is readable?   ${os.is_readable(moved_file)}')
@@ -163,26 +147,24 @@ fn main() {
 	uid := os.getuid()
 	gid := os.getgid()
 	println('Setting ownership of ${moved_file} to UID: ${uid}, GID: ${gid}...')
-	os.chown(moved_file, uid, gid) or {
-		println('Failed to change ownership: ${err}')
-	}
+	os.chown(moved_file, uid, gid) or { println('Failed to change ownership: ${err}') }
 
 	// ==========================================
 	// 7. Cleanup
 	// ==========================================
 	println('\n--- Cleanup ---')
-	
+
 	// Remove original file
 	os.rm(filename) or { println('Failed to remove ${filename}: ${err}') }
-	
+
 	// Remove moved file
 	os.rm(moved_file) or { println('Failed to remove ${moved_file}: ${err}') }
-	
+
 	// Remove symlink
 	os.rm(symlink_name) or { println('Failed to remove symlink ${symlink_name}: ${err}') }
-	
+
 	// Remove nested directory structure recursively
 	os.rmdir_all('temp_parent') or { println('Failed to remove temp_parent directory: ${err}') }
-	
+
 	println('Cleanup completed successfully.')
 }

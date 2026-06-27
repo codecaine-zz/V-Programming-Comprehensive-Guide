@@ -2,7 +2,7 @@ module main
 
 fn main() {
 	mut nums := [1, 3, 2, 5, 4]
-	
+
 	// Sort descending using a lambda expression
 	nums.sort(|a, b| b < a)
 	println('Sorted: ${nums}') // [5, 4, 3, 2, 1]

@@ -10,5 +10,5 @@ fn main() {
 	for _, v in basket {
 		total += v
 	}
-	println('Total number of fruits: $total')
+	println('Total number of fruits: ${total}')
 }

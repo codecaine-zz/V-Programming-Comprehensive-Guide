@@ -7,7 +7,7 @@ fn main() {
 
 	mut app := cli.Command{
 		name:        'tool'
-		description: 'A sample CLI tool showing V\'s cli package.'
+		description: "A sample CLI tool showing V's cli package."
 		version:     '1.0.0'
 		posix_mode:  true
 		execute:     fn (cmd cli.Command) ! {
@@ -21,13 +21,13 @@ fn main() {
 				execute:     fn (cmd cli.Command) ! {
 					name := cmd.flags.get_string('name') or { 'Guest' }
 					verbose := cmd.flags.get_bool('verbose') or { false }
-					
+
 					if verbose {
 						println('Log: Initiating greeting process...')
 					}
 					println('Hello, ${name}!')
 				}
-				flags: [
+				flags:       [
 					cli.Flag{
 						flag:        .string
 						name:        'name'
@@ -46,7 +46,7 @@ fn main() {
 	}
 
 	app.setup()
-	
+
 	// Test by parsing args mock
 	println('\nParsing args: tool greet --name Antigravity -v')
 	app.parse(['tool', 'greet', '--name', 'Antigravity', '-v'])

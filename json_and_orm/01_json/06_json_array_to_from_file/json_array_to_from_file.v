@@ -55,7 +55,7 @@ fn main() {
 		return
 	}
 	println('Read string array: ${read_fruits}')
-	
+
 	// Clean up created files
 	os.rm(text_file_path) or {}
 }

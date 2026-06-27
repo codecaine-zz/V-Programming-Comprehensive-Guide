@@ -10,4 +10,3 @@ fn main() {
 
 	println(i == j) // true
 }
-

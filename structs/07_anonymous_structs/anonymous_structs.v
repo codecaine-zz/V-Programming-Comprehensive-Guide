@@ -5,12 +5,12 @@ struct Book {
 		name string
 		age  int
 	}
-	title string
+	title  string
 }
 
 fn main() {
 	book := Book{
-		title: 'The V Programming Language'
+		title:  'The V Programming Language'
 		author: struct {
 			name: 'Samantha Black'
 			age:  24

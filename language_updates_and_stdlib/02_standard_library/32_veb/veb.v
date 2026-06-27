@@ -38,7 +38,7 @@ fn main() {
 	// Make an HTTP GET request to verify the server is running and responding
 	url := 'http://localhost:${port}/'
 	println('Sending request to: ${url}')
-	
+
 	resp := http.get(url) or {
 		println('HTTP request failed: ${err}')
 		return

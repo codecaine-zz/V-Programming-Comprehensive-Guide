@@ -19,11 +19,11 @@ fn main() {
 
 	// 2. Context with Cancellation
 	mut ctx_cancel, cancel := context.with_cancel(mut ctx_val)
-	
+
 	// Check if canceled
 	println('Before cancel - Done channel is open')
 	cancel() // trigger cancellation
-	
+
 	// Select block to read from done channel
 	done_ch := ctx_cancel.done()
 	select {

@@ -22,7 +22,7 @@ fn main() {
 		println('Failed to create file: ${err}')
 		return
 	}
-	
+
 	// Write data using the io.Writer write() method
 	content_to_write := 'Hello! This is a file system demo.\nIt demonstrates how os.File integrates with the io module.\n'
 	written_bytes := src_file.write(content_to_write.bytes()) or {
@@ -41,12 +41,10 @@ fn main() {
 
 	// Wrap os.File in io.BufferedReader for convenient line-by-line reading
 	mut buf_reader := io.new_buffered_reader(reader: read_file)
-	
+
 	// Read lines until EOF
 	for {
-		line := buf_reader.read_line() or {
-			break
-		}
+		line := buf_reader.read_line() or { break }
 		println('Buffered Read Line: "${line}"')
 	}
 	read_file.close()

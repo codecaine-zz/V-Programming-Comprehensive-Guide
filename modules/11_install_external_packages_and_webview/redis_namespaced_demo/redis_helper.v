@@ -13,7 +13,7 @@ pub:
 // new_namespaced_redis creates a new NamespacedRedis helper wrapper.
 fn new_namespaced_redis(client &vredis.Redis, namespace string) NamespacedRedis {
 	return NamespacedRedis{
-		client: client
+		client:    client
 		namespace: namespace
 	}
 }

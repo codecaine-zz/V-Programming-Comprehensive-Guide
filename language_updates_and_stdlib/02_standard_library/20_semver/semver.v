@@ -39,7 +39,7 @@ fn main() {
 	// Range checking
 	println('  Is ${v2} in range ">=1.0.0 <2.0.0" ? -> ${v2.satisfies('>=1.0.0 <2.0.0')}')
 	println('  Is ${v3} in range ">=1.0.0 <2.0.0" ? -> ${v3.satisfies('>=1.0.0 <2.0.0')}')
-	
+
 	// Complex constraint checking using logical OR (||)
 	range_query := '^1.4.0 || >=2.0.0'
 	println('  Does ${v2} satisfy "${range_query}"? -> ${v2.satisfies(range_query)}')

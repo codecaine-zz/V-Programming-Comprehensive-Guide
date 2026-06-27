@@ -24,10 +24,11 @@ fn modify_foo(mut foo Foo, new_val int) {
 
 // 4. References are crucial for recursive types (like trees or linked lists).
 // Since the size of Node must be known at compile time, recursive fields must be references.
+// To allow optional/empty references (like leaf node terminations), V uses optional references (?&Node[T]).
 struct Node[T] {
 	val   T
-	left  &Node[T]
-	right &Node[T]
+	left  ?&Node[T]
+	right ?&Node[T]
 }
 
 fn main() {
@@ -54,34 +55,30 @@ fn main() {
 	copied_foo := *ref_to_foo
 	println('Copied foo abc: ${copied_foo.abc}')
 
-	// 6. Generic Tree structure using references
-	// Create a dummy node as leaf terminations (since references cannot be null in standard V without unsafe)
-	dummy := Node[int]{
-		val: 0
-		left: unsafe { nil }
-		right: unsafe { nil }
-	}
-
+	// 6. Generic Tree structure using optional references
+	// Optional references are auto-initialized to `none`, so we don't need dummy nodes or `unsafe` blocks.
 	left_leaf := Node[int]{
 		val: 5
-		left: &dummy
-		right: &dummy
 	}
 
 	right_leaf := Node[int]{
 		val: 15
-		left: &dummy
-		right: &dummy
 	}
 
 	// Create root node pointing to leaf references
 	root := Node[int]{
-		val: 10
-		left: &left_leaf
+		val:   10
+		left:  &left_leaf
 		right: &right_leaf
 	}
 
 	println('Root val: ${root.val}')
-	println('Left leaf val: ${root.left.val}')
-	println('Right leaf val: ${root.right.val}')
+
+	// Access the optional child nodes safely using if guards
+	if left := root.left {
+		println('Left leaf val: ${left.val}')
+	}
+	if right := root.right {
+		println('Right leaf val: ${right.val}')
+	}
 }

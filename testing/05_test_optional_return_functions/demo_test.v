@@ -1,6 +1,6 @@
 fn greet(name string) !string {
 	if name != '' {
-		return 'Hello $name!'
+		return 'Hello ${name}!'
 	}
 	return error('name not provided')
 }

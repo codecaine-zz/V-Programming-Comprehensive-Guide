@@ -49,7 +49,7 @@ fn main() {
 		println('Failed to create temp directory: ${err}')
 		return
 	}
-	
+
 	// Register cleanup on function exit
 	defer {
 		os.rmdir_all(temp_dir_path) or {}

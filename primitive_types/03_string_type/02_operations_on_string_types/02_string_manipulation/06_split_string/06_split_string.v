@@ -9,4 +9,3 @@ fn main() {
 	println(res)
 	// ['The', 'tiny', 'tiger', 'tied', 'the', 'tie', 'tighter', 'to', 'its', 'tail']
 }
-

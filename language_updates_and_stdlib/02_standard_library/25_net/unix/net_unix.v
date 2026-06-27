@@ -89,24 +89,20 @@ fn run_client(socket_path string) ! {
 
 fn main() {
 	println('=== net.unix Module Demo ===')
-	
+
 	// Create a unique temporary socket path
 	socket_path := os.join_path(os.temp_dir(), 'v_unix_socket_example')
 
 	// Spawn the server in a background thread
 	spawn fn (path string) {
-		run_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(socket_path) or {
-		println('Client failed: ${err}')
-	}
+	run_client(socket_path) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)

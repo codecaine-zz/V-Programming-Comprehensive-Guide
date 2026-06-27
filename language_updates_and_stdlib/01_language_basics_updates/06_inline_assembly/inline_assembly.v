@@ -1,7 +1,7 @@
 module main
 
 // add_five adds 5 to the given integer using inline assembly.
-// It uses compile-time conditional checks ($if) to select the correct 
+// It uses compile-time conditional checks ($if) to select the correct
 // assembly instructions depending on the target CPU architecture.
 fn add_five(val int) int {
 	mut res := val

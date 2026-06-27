@@ -39,7 +39,7 @@ fn main() {
 	println(s.is_pure_ascii()) // true
 
 	// split_into_lines() splits a string into an array of lines
-	multiline := "line 1\nline 2"
+	multiline := 'line 1\nline 2'
 	println(multiline.split_into_lines()) // ["line 1", "line 2"]
 
 	// split_by_space() splits a string by space as delimiter

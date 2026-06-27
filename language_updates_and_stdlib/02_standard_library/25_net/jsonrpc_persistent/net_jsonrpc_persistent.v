@@ -110,7 +110,7 @@ fn run_rpc_client(socket_path string) ! {
 		println('Client received response for ${resp.id}:')
 		println('  sum:        ${result.sum}')
 		println('  difference: ${result.difference}')
-		
+
 		time.sleep(50 * time.millisecond)
 	}
 }
@@ -121,18 +121,14 @@ fn main() {
 
 	// Spawn JSON-RPC server in background thread
 	spawn fn (path string) {
-		run_rpc_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_rpc_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Wait briefly for the server socket to bind
 	time.sleep(100 * time.millisecond)
 
 	// Run JSON-RPC client in main thread
-	run_rpc_client(socket_path) or {
-		println('Client thread failed: ${err}')
-	}
+	run_rpc_client(socket_path) or { println('Client thread failed: ${err}') }
 
 	// Wait briefly for server post-handling cleanups
 	time.sleep(50 * time.millisecond)

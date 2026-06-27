@@ -8,29 +8,29 @@ import math
 // to avoid global variables (which V does not support by default).
 struct AppContext {
 mut:
-	ctx          &gg.Context = unsafe { nil }
-	width        int  = 800
-	height       int  = 600
+	ctx    &gg.Context = unsafe { nil }
+	width  int         = 800
+	height int         = 600
 	// Interactive shape parameters
-	shape_x      f32  = 400.0
-	shape_y      f32  = 300.0
-	shape_size   f32  = 50.0
+	shape_x      f32      = 400.0
+	shape_y      f32      = 300.0
+	shape_size   f32      = 50.0
 	shape_color  gg.Color = gg.blue
-	active_shape int  // 0 = Circle, 1 = Rectangle, 2 = Triangle
+	active_shape int // 0 = Circle, 1 = Rectangle, 2 = Triangle
 	// Tracking mouse positions and clicks
-	mouse_x      f32
-	mouse_y      f32
-	click_x      f32  = -1.0
-	click_y      f32  = -1.0
-	click_color  gg.Color = gg.red
+	mouse_x     f32
+	mouse_y     f32
+	click_x     f32      = -1.0
+	click_y     f32      = -1.0
+	click_color gg.Color = gg.red
 	// Last key pressed message
-	last_key     string = 'None'
+	last_key string = 'None'
 }
 
 fn main() {
 	// Initialize state
 	mut app := &AppContext{
-		width: 800
+		width:  800
 		height: 600
 	}
 
@@ -42,9 +42,9 @@ fn main() {
 		height:       app.height
 		window_title: "V's gg graphics module: Tutorial & Interactive Demo"
 		bg_color:     gg.rgb(240, 244, 248) // A subtle modern light-blue background
-		user_data:    app                 // Pass our state struct to be accessible inside callbacks
-		frame_fn:     frame               // Callback called once per frame (to draw shapes/UI)
-		event_fn:     on_event            // Callback called for user inputs (mouse & keyboard)
+		user_data:    app      // Pass our state struct to be accessible inside callbacks
+		frame_fn:     frame    // Callback called once per frame (to draw shapes/UI)
+		event_fn:     on_event // Callback called for user inputs (mouse & keyboard)
 	)
 
 	println('Starting interactive graphics window...')
@@ -52,7 +52,7 @@ fn main() {
 	println('  - Move the mouse to see cursor position tracking.')
 	println('  - Left-Click anywhere to draw a red dot at the click location.')
 	println('  - Use Arrow Keys (Up/Down/Left/Right) to move the active shape.')
-	println('  - Press [C] or [c] to cycle the active shape\'s color.')
+	println("  - Press [C] or [c] to cycle the active shape's color.")
 	println('  - Press [S] or [s] to toggle between Circle, Rectangle, and Triangle.')
 	println('  - Press [Escape] to close the window.')
 	println('\nReal-world Case Study:')
@@ -71,7 +71,7 @@ fn frame(data voidptr) {
 	ctx.begin()
 
 	// --- 1. Draw Static 2D Shapes ---
-	
+
 	// Draw a thick horizontal line dividing the header from the demo workspace
 	ctx.draw_line(0, 80, app.width, 80, gg.gray)
 
@@ -90,11 +90,16 @@ fn frame(data voidptr) {
 
 	// Draw a custom convex polygon (a star-like pentagon, bottom right)
 	poly_points := [
-		f32(650.0), 480.0, // Point 1
-		750.0, 480.0,      // Point 2
-		780.0, 560.0,      // Point 3
-		700.0, 520.0,      // Point 4
-		620.0, 560.0       // Point 5
+		f32(650.0),
+		480.0, // Point 1
+		750.0,
+		480.0, // Point 2
+		780.0,
+		560.0, // Point 3
+		700.0,
+		520.0, // Point 4
+		620.0,
+		560.0, // Point 5
 	]
 	ctx.draw_convex_poly(poly_points, gg.cyan)
 
@@ -106,8 +111,8 @@ fn frame(data voidptr) {
 	// Instructions and state metadata at the top right
 	ctx.draw_text(20, 45, 'Cursor: (${app.mouse_x:.1f}, ${app.mouse_y:.1f}) | Last Key: ${app.last_key}',
 		color: gg.dark_blue
-		size: 16
-		bold: true
+		size:  16
+		bold:  true
 	)
 
 	// Context description
@@ -117,7 +122,7 @@ fn frame(data voidptr) {
 	ctx.draw_text(630, 570, 'Convex Polygon (Pentagon)', size: 12, color: gg.dark_gray)
 
 	// Help panel explaining key bindings
-	ctx.draw_rect_filled(20, 440, 280, 140, gg.Color{r: 255, g: 255, b: 255, a: 180})
+	ctx.draw_rect_filled(20, 440, 280, 140, gg.Color{ r: 255, g: 255, b: 255, a: 180 })
 	ctx.draw_rect_empty(20, 440, 280, 140, gg.gray)
 	ctx.draw_text(35, 450, 'Controls Panel', size: 15, bold: true, color: gg.black)
 	ctx.draw_text(35, 475, '- Arrows: Move active shape', size: 13, color: gg.black)
@@ -127,7 +132,11 @@ fn frame(data voidptr) {
 	ctx.draw_text(35, 555, '- Escape: Quit application', size: 13, color: gg.black)
 
 	// Case Study reference
-	ctx.draw_text(20, 585, 'Case Study: github.com/codecaine-zz/MindSpace-Journal', size: 10, italic: true, color: gg.dark_blue)
+	ctx.draw_text(20, 585, 'Case Study: github.com/codecaine-zz/MindSpace-Journal',
+		size:   10
+		italic: true
+		color:  gg.dark_blue
+	)
 
 	// --- 3. Draw Dynamic / Interactive Elements ---
 
@@ -136,7 +145,7 @@ fn frame(data voidptr) {
 		ctx.draw_circle_filled(app.click_x, app.click_y, 8, app.click_color)
 		ctx.draw_circle_empty(app.click_x, app.click_y, 12, gg.black)
 		ctx.draw_text(int(app.click_x) + 12, int(app.click_y) - 6, 'Last Click: (${app.click_x:.0f}, ${app.click_y:.0f})',
-			size: 11
+			size:  11
 			color: gg.black
 		)
 	}
@@ -151,8 +160,10 @@ fn frame(data voidptr) {
 		1 {
 			// Draw interactive Rectangle (centered on coordinates)
 			half := app.shape_size
-			ctx.draw_rect_filled(app.shape_x - half, app.shape_y - half, app.shape_size * 2, app.shape_size * 2, app.shape_color)
-			ctx.draw_rect_empty(app.shape_x - half, app.shape_y - half, app.shape_size * 2, app.shape_size * 2, gg.black)
+			ctx.draw_rect_filled(app.shape_x - half, app.shape_y - half, app.shape_size * 2,
+				app.shape_size * 2, app.shape_color)
+			ctx.draw_rect_empty(app.shape_x - half, app.shape_y - half, app.shape_size * 2,
+				app.shape_size * 2, gg.black)
 		}
 		2 {
 			// Draw interactive Equilateral Triangle (centered on coordinates)
@@ -170,9 +181,10 @@ fn frame(data voidptr) {
 	}
 
 	// Draw label above the active shape
-	ctx.draw_text(int(app.shape_x) - 40, int(app.shape_y) - int(app.shape_size) - 20, 'Active Shape',
-		size: 13
-		bold: true
+	ctx.draw_text(int(app.shape_x) - 40, int(app.shape_y) - int(app.shape_size) - 20,
+		'Active Shape',
+		size:  13
+		bold:  true
 		color: gg.black
 	)
 
@@ -194,7 +206,12 @@ fn on_event(e &gg.Event, data voidptr) {
 			app.click_y = e.mouse_y
 			// Randomize click dot color slightly for visual variety
 			if app.click_color.r == 255 {
-				app.click_color = gg.Color{r: 0, g: 180, b: 0, a: 255}
+				app.click_color = gg.Color{
+					r: 0
+					g: 180
+					b: 0
+					a: 255
+				}
 			} else {
 				app.click_color = gg.red
 			}
@@ -223,19 +240,28 @@ fn on_event(e &gg.Event, data voidptr) {
 				// Use Arrow Keys to move the active shape
 				.left {
 					app.shape_x -= 15.0
-					if app.shape_x < 0 { app.shape_x = 0 }
+					if app.shape_x < 0 {
+						app.shape_x = 0
+					}
 				}
 				.right {
 					app.shape_x += 15.0
-					if app.shape_x > app.width { app.shape_x = f32(app.width) }
+					if app.shape_x > app.width {
+						app.shape_x = f32(app.width)
+					}
 				}
 				.up {
 					app.shape_y -= 15.0
-					if app.shape_y < 80 { app.shape_y = 80 } // Keep below divider line
+					if app.shape_y < 80 {
+						app.shape_y = 80
+					}
+					// Keep below divider line
 				}
 				.down {
 					app.shape_y += 15.0
-					if app.shape_y > app.height { app.shape_y = f32(app.height) }
+					if app.shape_y > app.height {
+						app.shape_y = f32(app.height)
+					}
 				}
 				else {}
 			}

@@ -53,7 +53,7 @@ fn main() {
 	// 3. Read and parse the tar.gz archive using V's archive.tar module
 	println('Reading archive using vlib/archive/tar:')
 	mut reader := CustomReader{}
-	
+
 	// Read and parse
 	tar.read_tar_gz_file(tar_archive, reader) or {
 		println('Failed to read tar archive: ${err}')

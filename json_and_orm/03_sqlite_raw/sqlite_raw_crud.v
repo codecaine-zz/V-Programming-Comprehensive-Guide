@@ -24,26 +24,33 @@ fn main() {
 
 	// 3. Create (Insert Records using Parameterized Queries)
 	println('\n--- CREATE: Inserting records securely ---')
-	
+
 	// SAFE APPROACH: Use `exec_param_many` with '?' placeholders to prevent SQL Injection.
 	// Parameters are passed as an array of strings: []string
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Alice', 'alice@example.com', '30']) or {
-		println('Insert failed: ${err}')
-	}
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Bob', 'bob@example.com', '25']) or {
-		println('Insert failed: ${err}')
-	}
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Charlie', 'charlie@example.com', '40']) or {
-		println('Insert failed: ${err}')
-	}
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Alice',
+		'alice@example.com',
+		'30',
+	]) or { println('Insert failed: ${err}') }
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Bob',
+		'bob@example.com',
+		'25',
+	]) or { println('Insert failed: ${err}') }
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Charlie',
+		'charlie@example.com',
+		'40',
+	]) or { println('Insert failed: ${err}') }
 
 	println('Last inserted row ID: ${db.last_id()}')
 
 	// 4. Read (Select Records using Parameterized Queries)
 	println('\n--- READ: Querying records securely ---')
-	
+
 	// Querying with parameters: only retrieve users older than 20
-	rows := db.exec_param_many('SELECT id, name, email, age FROM users WHERE age > ?;', ['20']) or {
+	rows := db.exec_param_many('SELECT id, name, email, age FROM users WHERE age > ?;',
+		['20']) or {
 		println('Select failed: ${err}')
 		[]sqlite.Row{}
 	}
@@ -59,13 +66,16 @@ fn main() {
 	}
 
 	// 5. Update (Modify Records using Parameterized Queries)
-	println('\n--- UPDATE: Modifying Bob\'s email and age securely ---')
-	db.exec_param_many("UPDATE users SET email = ?, age = ? WHERE name = ?;", ['bob_new@example.com', '26', 'Bob']) or {
-		println('Update failed: ${err}')
-	}
+	println("\n--- UPDATE: Modifying Bob's email and age securely ---")
+	db.exec_param_many('UPDATE users SET email = ?, age = ? WHERE name = ?;', [
+		'bob_new@example.com',
+		'26',
+		'Bob',
+	]) or { println('Update failed: ${err}') }
 
 	// Verify update
-	updated_rows := db.exec_param_many("SELECT email, age FROM users WHERE name = ?;", ['Bob']) or { []sqlite.Row{} }
+	updated_rows := db.exec_param_many('SELECT email, age FROM users WHERE name = ?;',
+		['Bob']) or { []sqlite.Row{} }
 	if updated_rows.len > 0 {
 		println("Bob's new email: ${updated_rows[0].vals[0]}")
 		println("Bob's new age:   ${updated_rows[0].vals[1]}")
@@ -73,7 +83,7 @@ fn main() {
 
 	// 6. Delete (Remove Records using Parameterized Queries)
 	println('\n--- DELETE: Removing Charlie securely ---')
-	db.exec_param_many("DELETE FROM users WHERE name = ?;", ['Charlie']) or {
+	db.exec_param_many('DELETE FROM users WHERE name = ?;', ['Charlie']) or {
 		println('Delete failed: ${err}')
 	}
 
@@ -87,7 +97,5 @@ fn main() {
 
 	// 7. Cleanup
 	println('\nDropping "users" table...')
-	db.exec('DROP TABLE users;') or {
-		println('Drop table failed: ${err}')
-	}
+	db.exec('DROP TABLE users;') or { println('Drop table failed: ${err}') }
 }

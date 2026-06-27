@@ -1,7 +1,7 @@
 module main
 
 fn greet(name string) string {
-	return 'Hello $name!'
+	return 'Hello ${name}!'
 }
 
 fn main() {

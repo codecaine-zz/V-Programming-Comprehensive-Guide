@@ -35,7 +35,7 @@ fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
 		remaining := size - read_bytes
 		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
 		chunk_limit := if remaining > 512 { 512 } else { remaining }
-		n := conn.read(mut data[read_bytes .. read_bytes + chunk_limit]) or { return err }
+		n := conn.read(mut data[read_bytes..read_bytes + chunk_limit]) or { return err }
 		if n == 0 {
 			if read_bytes == 0 {
 				return error('EOF')
@@ -51,18 +51,16 @@ fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
 fn read_msg(mut conn net.TcpConn, max_size int) !string {
 	// Read header: 4 magic bytes + 4 length bytes = 8 bytes
 	header_bytes := read_exact(mut conn, 8) or { return err }
-	
+
 	// Validate protocol magic bytes
-	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G` || header_bytes[3] != `0` {
+	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G`
+		|| header_bytes[3] != `0` {
 		return error('invalid protocol magic bytes')
 	}
-	
+
 	// Reconstruct big-endian length
-	len := int((u32(header_bytes[4]) << 24) |
-	           (u32(header_bytes[5]) << 16) |
-	           (u32(header_bytes[6]) << 8) |
-	           u32(header_bytes[7]))
-	       
+	len := int((u32(header_bytes[4]) << 24) | (u32(header_bytes[5]) << 16) | (u32(header_bytes[6]) << 8) | u32(header_bytes[7]))
+
 	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
 	if len > max_size {
 		return error('message size ${len} exceeds limit of ${max_size} bytes')
@@ -70,7 +68,7 @@ fn read_msg(mut conn net.TcpConn, max_size int) !string {
 	if len < 0 {
 		return error('invalid negative message length')
 	}
-	
+
 	// Read the actual payload
 	payload_bytes := read_exact(mut conn, len) or { return err }
 	return payload_bytes.bytestr()
@@ -112,16 +110,14 @@ fn run_server(port int) ! {
 			}
 			break
 		}
-		
+
 		// Preview message content
 		preview_len := if message.len > 30 { 30 } else { message.len }
 		println('Server received message (len: ${message.len}): "${message[..preview_len]}"...')
 
 		if message == 'Goodbye' {
 			println('Server received Goodbye. Replying and closing connection...')
-			write_msg(mut conn, 'Goodbye!') or {
-				println('Server: Write failed: ${err}')
-			}
+			write_msg(mut conn, 'Goodbye!') or { println('Server: Write failed: ${err}') }
 			break
 		}
 
@@ -196,18 +192,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)

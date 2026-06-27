@@ -12,7 +12,7 @@ import crypto.blake3
 
 fn main() {
 	println('=== V Cryptographic Hash Algorithms ===')
-	
+
 	input := 'V Language Crypto Guide'.bytes()
 	input_str := 'V Language Crypto Guide'
 

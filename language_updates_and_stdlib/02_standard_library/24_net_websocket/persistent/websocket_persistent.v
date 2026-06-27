@@ -24,7 +24,7 @@ fn main() {
 
 	// 1. Initialize and run local WebSocket server
 	mut ws_server := websocket.new_server(.ip, port, '/')
-	
+
 	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
 		println('Server: Client connected from ${s.client_key}')
 		return true
@@ -34,7 +34,7 @@ fn main() {
 	ws_server.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			
+
 			// Safety check: Enforce maximum payload size limit (e.g., 2048 bytes) to prevent DoS (OOM)
 			max_allowed_len := 2048
 			if payload.len > max_allowed_len {
@@ -43,25 +43,25 @@ fn main() {
 				ws.close(1009, 'Message size exceeds limit') or {}
 				return
 			}
-			
+
 			// Decode the JSON protocol message
 			ws_msg := json.decode(WsMessage, payload) or {
 				println('Server: Invalid JSON protocol: ${err}')
-				err_resp := json.encode(WsMessage{action: 'error', data: 'invalid json'})
+				err_resp := json.encode(WsMessage{ action: 'error', data: 'invalid json' })
 				ws.write_string(err_resp) or {}
 				return
 			}
-			
+
 			println('Server received action "${ws_msg.action}" with data (len: ${ws_msg.data.len})')
-			
+
 			match ws_msg.action {
 				'ping' {
-					resp := json.encode(WsMessage{action: 'pong', data: ws_msg.data})
+					resp := json.encode(WsMessage{ action: 'pong', data: ws_msg.data })
 					ws.write_string(resp)!
 				}
 				'goodbye' {
 					println('Server received goodbye action. Replying and closing...')
-					resp := json.encode(WsMessage{action: 'goodbye_ack', data: 'Goodbye!'})
+					resp := json.encode(WsMessage{ action: 'goodbye_ack', data: 'Goodbye!' })
 					ws.write_string(resp)!
 					// Clean close from server side
 					ws.close(1000, 'done') or {}
@@ -75,9 +75,7 @@ fn main() {
 
 	// Start the server listen loop in a background thread
 	spawn fn [mut ws_server] () {
-		ws_server.listen() or {
-			println('Server error: ${err}')
-		}
+		ws_server.listen() or { println('Server error: ${err}') }
 	}()
 
 	// Allow the server a moment to start
@@ -97,7 +95,7 @@ fn main() {
 	ws_client1.on_open(fn (mut c websocket.Client) ! {
 		println('Client 1: Connection opened!')
 		// Initiate the first Ping message
-		ping_msg := json.encode(WsMessage{action: 'ping', data: '1'})
+		ping_msg := json.encode(WsMessage{ action: 'ping', data: '1' })
 		c.write_string(ping_msg)!
 	})
 
@@ -110,11 +108,11 @@ fn main() {
 			if ws_msg.action == 'pong' {
 				state1.count++
 				if state1.count < 3 {
-					next_ping := json.encode(WsMessage{action: 'ping', data: '${state1.count + 1}'})
+					next_ping := json.encode(WsMessage{ action: 'ping', data: '${state1.count + 1}' })
 					println('Client 1 sending: "${next_ping}"')
 					c.write_string(next_ping)!
 				} else {
-					goodbye := json.encode(WsMessage{action: 'goodbye', data: 'Goodbye'})
+					goodbye := json.encode(WsMessage{ action: 'goodbye', data: 'Goodbye' })
 					println('Client 1 sending goodbye: "${goodbye}"')
 					c.write_string(goodbye)!
 				}
@@ -153,7 +151,7 @@ fn main() {
 		println('Client 2: Connection opened!')
 		// Send oversized data (3000 bytes, exceeding server 2048-byte limit)
 		large_payload := 'A'.repeat(3000)
-		large_msg := json.encode(WsMessage{action: 'ping', data: large_payload})
+		large_msg := json.encode(WsMessage{ action: 'ping', data: large_payload })
 		println('Client 2 sending oversized payload (size: ${large_msg.len} bytes)...')
 		c.write_string(large_msg)!
 	})
@@ -181,7 +179,7 @@ fn main() {
 
 	// Wait for the second flow to finish
 	time.sleep(500 * time.millisecond)
-	
+
 	// Clean close of server listener
 	println('\nWebSocket Protocol Demo finished.')
 }

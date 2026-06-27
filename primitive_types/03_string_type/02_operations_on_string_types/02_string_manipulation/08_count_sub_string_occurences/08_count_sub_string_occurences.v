@@ -11,4 +11,3 @@ fn main() {
 	println(sp.count('-'))
 	// 0
 }
-

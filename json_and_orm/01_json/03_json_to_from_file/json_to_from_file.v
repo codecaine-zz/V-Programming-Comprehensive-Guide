@@ -14,9 +14,9 @@ fn main() {
 
 	// Create an object instance
 	book := Book{
-		title: 'The V Programming Language'
+		title:  'The V Programming Language'
 		author: 'Alex Medvednikov'
-		year: 2019
+		year:   2019
 	}
 
 	// 1. Encode object to JSON string

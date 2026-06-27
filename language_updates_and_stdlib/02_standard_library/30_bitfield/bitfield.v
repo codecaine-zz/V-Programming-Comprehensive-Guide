@@ -22,9 +22,9 @@ fn main() {
 	// 3. Logical bitwise operations
 	mut bf2 := bitfield.from_str('011010')
 	println('\nLogical operations on ${bf1.str()} and ${bf2.str()}:')
-	
+
 	and_result := bitfield.bf_and(bf1, bf2)
-	or_result  := bitfield.bf_or(bf1, bf2)
+	or_result := bitfield.bf_or(bf1, bf2)
 	xor_result := bitfield.bf_xor(bf1, bf2)
 	not_result := bitfield.bf_not(bf1)
 

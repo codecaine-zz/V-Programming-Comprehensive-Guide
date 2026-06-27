@@ -17,10 +17,10 @@ fn main() {
 
 	// --- 2. HMAC Verification ---
 	println('\n--- HMAC Verification ---')
-	
+
 	// Re-compute to verify
 	computed_mac := hmac.new(key, message, sha256.sum, sha256.block_size)
-	
+
 	// hmac.equal performs constant-time comparison to prevent timing attacks
 	is_valid := hmac.equal(mac, computed_mac)
 	println('Signature matches? -> ${is_valid}')

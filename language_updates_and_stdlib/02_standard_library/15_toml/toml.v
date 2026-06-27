@@ -42,7 +42,7 @@ fn main() {
 	// 4. Retrieving array values
 	ports_any := doc.value('database.ports')
 	println('Ports Any: ${ports_any}')
-	
+
 	// Accessing array elements with query syntax
 	port_0 := doc.value('database.ports[0]').int()
 	port_1 := doc.value('database.ports[1]').int()

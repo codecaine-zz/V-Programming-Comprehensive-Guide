@@ -25,7 +25,7 @@ fn cleanup_certs() {
 // reads a message, responds securely, and exits.
 fn run_server(port int) ! {
 	config := mbedtls.SSLConnectConfig{
-		cert: 'temp_server.crt'
+		cert:     'temp_server.crt'
 		cert_key: 'temp_server.key'
 		validate: false
 	}
@@ -127,18 +127,14 @@ fn main() {
 	port := 38295
 	// Spawn server in background
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Wait briefly for server to bind
 	time.sleep(200 * time.millisecond)
 
 	// Run client in main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	time.sleep(50 * time.millisecond)
 	println('SSL Demo finished.')

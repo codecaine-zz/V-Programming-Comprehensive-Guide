@@ -26,12 +26,12 @@ fn main() {
 	// Inserting record(s)
 	n1 := Note{
 		message: 'Get some milk'
-		status: false
+		status:  false
 	}
 
 	n2 := Note{
 		message: 'Get groceries'
-		status: false
+		status:  false
 	}
 	sql db {
 		insert n1 into Note

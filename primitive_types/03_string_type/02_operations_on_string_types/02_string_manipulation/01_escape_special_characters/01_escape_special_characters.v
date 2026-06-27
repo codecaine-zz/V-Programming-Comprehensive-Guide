@@ -11,8 +11,8 @@ fn main() {
 	println('File path: C:\\Program Files\\V')
 
 	// 4. Escaping single quotes (\') in a single-quoted string
-	println('It\'s my Daughter\'s birthday!')
+	println("It's my Daughter's birthday!")
 
 	// 5. Escaping double quotes (\") in a double-quoted string
-	println("She said, \"V is fast!\"")
+	println('She said, "V is fast!"')
 }

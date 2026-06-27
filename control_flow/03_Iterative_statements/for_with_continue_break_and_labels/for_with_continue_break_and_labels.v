@@ -9,10 +9,10 @@ fn main() {
 		return
 	}
 	first_loop: for i := 1; i <= 10; i++ {
-		println('Printing multiplication table for $i')
+		println('Printing multiplication table for ${i}')
 		for j := 1; j <= 10; j++ {
 			mul := i * j
-			println('$i * $j = $mul')
+			println('${i} * ${j} = ${mul}')
 			if mul >= limit * 10 {
 				break first_loop
 			}

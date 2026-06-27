@@ -41,7 +41,7 @@ fn main() {
 	// Moves the map contents to a new map variable and clears the original map to empty.
 	mut m_move := {
 		'three': 3
-		'four': 4
+		'four':  4
 	}
 	moved := m_move.move()
 	println('move (new map): ${moved}') // {"three": 3, "four": 4}

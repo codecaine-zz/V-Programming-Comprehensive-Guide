@@ -12,7 +12,7 @@ fn main() {
 	// --- 1. AES with CBC Block Mode ---
 	println('\n--- AES (CBC Mode) ---')
 	aes_key := [u8(1), 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] // 16-byte key (AES-128)
-	aes_iv := [u8(9), 8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4]       // 16-byte IV
+	aes_iv := [u8(9), 8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4] // 16-byte IV
 
 	aes_block := aes.new_cipher(aes_key)
 	mut aes_enc := cipher.new_cbc(aes_block, aes_iv)
@@ -33,12 +33,11 @@ fn main() {
 	mut aes_dec := cipher.new_cbc(aes_block, aes_iv)
 	mut decrypted := []u8{len: ciphertext.len}
 	aes_dec.decrypt_blocks(mut decrypted, ciphertext)
-	
+
 	// Unpad
 	unpadded_len := decrypted.len - int(decrypted.last())
 	unpadded_text := decrypted[..unpadded_len].bytestr()
 	println('Decrypted Text:   "${unpadded_text}"')
-
 
 	// --- 2. DES Block Cipher ---
 	println('\n--- DES ---')
@@ -54,7 +53,6 @@ fn main() {
 	des_block.decrypt(mut des_decrypted, des_cipher)
 	println('DES Decrypted:        "${des_decrypted.bytestr()}"')
 
-
 	// --- 3. Blowfish Block Cipher ---
 	println('\n--- Blowfish (Encryption Only) ---')
 	bf_key := 'blowfish_key'.bytes()
@@ -65,7 +63,6 @@ fn main() {
 	bf.encrypt(mut bf_cipher, bf_plain)
 	println('Blowfish Ciphertext (Hex): ${bf_cipher.hex()}')
 	println('(Note: V standard library crypto.blowfish only supports encryption)')
-
 
 	// --- 4. RC4 Stream Cipher ---
 	println('\n--- RC4 (Stream Cipher) ---')

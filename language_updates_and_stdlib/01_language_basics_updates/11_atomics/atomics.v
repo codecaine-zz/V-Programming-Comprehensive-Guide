@@ -18,7 +18,7 @@ fn main() {
 	// Initialize atomic variable
 	unsafe {
 		C.atomic_store_u32(&atom, 17)
-		
+
 		mut expected := u32(17)
 		// Atomic CAS: if atom == expected, set atom to 23 and return true
 		if C.atomic_compare_exchange_strong_u32(&atom, &expected, 23) {
@@ -26,7 +26,7 @@ fn main() {
 		} else {
 			println('Exchange failed, atom is ${C.atomic_load_u32(&atom)}')
 		}
-		
+
 		println('Final value: ${C.atomic_load_u32(&atom)}')
 	}
 }

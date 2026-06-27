@@ -83,18 +83,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)

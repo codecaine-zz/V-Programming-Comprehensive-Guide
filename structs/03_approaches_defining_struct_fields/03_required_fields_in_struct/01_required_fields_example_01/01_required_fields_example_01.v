@@ -12,4 +12,5 @@ fn main() {
 		status: false
 	}
 }
+
 // throws error

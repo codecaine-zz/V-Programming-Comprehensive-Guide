@@ -26,7 +26,7 @@ fn (shared f Fund) collect(amt f32) {
 			f.num_donors += 1
 			f.total += amt
 			// We can safely read and write to the struct fields inside the lock block.
-			println('$f.num_donors \t before: ${f.total - amt} \t funds received: $amt \t total: $f.total')
+			println('${f.num_donors} \t before: ${f.total - amt} \t funds received: ${amt} \t total: ${f.total}')
 		}
 	}
 }
@@ -42,7 +42,7 @@ fn main() {
 	// The `shared` keyword before the variable name makes it a shared object.
 	// Under the hood, V automatically associates a mutex with this object.
 	shared fund := Fund{
-		name: 'A noble cause'
+		name:   'A noble cause'
 		target: 1000.00
 	}
 
@@ -68,7 +68,7 @@ fn main() {
 
 	// 7. Final output with read lock.
 	rlock fund {
-		println('$fund.num_donors donors donated for $fund.name')
-		println('$fund.name raised total fund amount: \$ $fund.total')
+		println('${fund.num_donors} donors donated for ${fund.name}')
+		println('${fund.name} raised total fund amount: \$ ${fund.total}')
 	}
 }

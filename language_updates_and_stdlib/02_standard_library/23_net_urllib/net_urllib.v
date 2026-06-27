@@ -8,7 +8,7 @@ fn main() {
 	// 1. Parsing a URL
 	raw_url := 'https://user:pass@vlang.io:8080/docs/stdlib?lang=v&version=0.5.1#intro'
 	println('Parsing URL: ${raw_url}')
-	
+
 	u := urllib.parse(raw_url) or {
 		println('Failed to parse URL: ${err}')
 		return

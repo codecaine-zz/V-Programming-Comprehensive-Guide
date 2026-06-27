@@ -8,8 +8,8 @@ fn main() {
 
 	// Create a map[string]int
 	scores := {
-		'Alice': 95
-		'Bob': 88
+		'Alice':   95
+		'Bob':     88
 		'Charlie': 92
 	}
 

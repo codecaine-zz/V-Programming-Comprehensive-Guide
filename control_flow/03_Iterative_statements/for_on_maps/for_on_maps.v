@@ -8,6 +8,6 @@ fn main() {
 	}
 
 	for k, v in lottery {
-		println('$k prize lottery amount: $v')
+		println('${k} prize lottery amount: ${v}')
 	}
 }

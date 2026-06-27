@@ -15,14 +15,14 @@ fn main() {
 	// Create an array of objects
 	tasks := [
 		Task{
-			id: 1
+			id:    1
 			title: 'Read V Guide'
-			done: false
+			done:  false
 		},
 		Task{
-			id: 2
+			id:    2
 			title: 'Write JSON helper examples'
-			done: true
+			done:  true
 		},
 	]
 

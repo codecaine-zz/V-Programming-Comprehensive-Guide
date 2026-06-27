@@ -55,7 +55,7 @@ fn main() {
 		println('Failed to open zip for reading: ${err}')
 		return
 	}
-	
+
 	total_entries := reader.total() or { 0 }
 	println('Total entries found in zip: ${total_entries}')
 

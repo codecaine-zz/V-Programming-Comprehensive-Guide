@@ -28,7 +28,7 @@ fn main() {
 	// --- 3. CSV ---
 	println('\n--- CSV ---')
 	csv_data := 'Name,Age,City\nAlice,30,New York\nBob,25,San Francisco'
-	
+
 	mut reader := csv.new_reader(csv_data)
 	println('Reading CSV rows:')
 	for {

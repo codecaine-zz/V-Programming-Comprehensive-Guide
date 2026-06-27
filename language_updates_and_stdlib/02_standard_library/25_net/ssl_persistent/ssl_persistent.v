@@ -25,7 +25,7 @@ fn cleanup_certs() {
 // and processes incoming messages in a loop until the client sends "Goodbye".
 fn run_server(port int) ! {
 	config := mbedtls.SSLConnectConfig{
-		cert: 'temp_server.crt'
+		cert:     'temp_server.crt'
 		cert_key: 'temp_server.key'
 		validate: false
 	}
@@ -67,9 +67,7 @@ fn run_server(port int) ! {
 
 		if message == 'Goodbye' {
 			println('Server received Goodbye. Replying and closing secure connection...')
-			conn.write('Goodbye!'.bytes()) or {
-				println('Server: Write failed: ${err}')
-			}
+			conn.write('Goodbye!'.bytes()) or { println('Server: Write failed: ${err}') }
 			break
 		}
 
@@ -134,7 +132,7 @@ fn run_client(port int) ! {
 
 		response := buf[..n].bytestr()
 		println('Client received secure response: "${response}"')
-		
+
 		time.sleep(50 * time.millisecond)
 	}
 
@@ -170,18 +168,14 @@ fn main() {
 	port := 38296
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(200 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)

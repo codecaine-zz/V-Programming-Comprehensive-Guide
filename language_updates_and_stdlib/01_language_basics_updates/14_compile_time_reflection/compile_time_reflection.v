@@ -15,14 +15,15 @@ fn main() {
 	$for field in User.fields {
 		println('Field: ${field.name} | Typ: ${field.typ}')
 	}
-
 	println('\n--- Struct Attributes Reflection ---')
 	$for attr in User.attributes {
 		println('Attribute name: ${attr.name}')
 	}
-
 	println('\n--- Struct Methods Reflection ---')
-	user := User{name: 'Alice', age: 30}
+	user := User{
+		name: 'Alice'
+		age:  30
+	}
 	$for m in User.methods {
 		$if m.return_type is string {
 			println(user.$method())

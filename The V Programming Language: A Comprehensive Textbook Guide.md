@@ -18748,8 +18748,8 @@ References in V are immutable by default:
 To access the underlying value of a reference directly, or to create a copy of the pointed-to object, use the dereferencing operator `*` (e.g., `copied_foo := *ref_to_foo`), similar to Go and C.
 
 #### 4. Recursive Structures
-Recursive data structures (such as linked lists or trees) require fields that reference their own type. Because V needs to calculate the memory size of structs at compile time, recursive fields must be declared as references (e.g., `left &Node[T]`) because references have a fixed pointer size.
-* Standard V references cannot be null. To terminate a recursive structure (like a leaf node), we either use `unsafe { nil }` inside an unsafe block or initialize them using dummy node pointers.
+Recursive data structures (such as linked lists or trees) require fields that reference their own type. Because V needs to calculate the memory size of structs at compile time, recursive fields must be declared as references (e.g., `left ?&Node[T]`) because references have a fixed pointer size.
+* To allow optional/empty references (like leaf node terminations in trees), V supports **optional references** (e.g. `?&Node[T]`). These are automatically initialized to `none` by default, avoiding the need for `unsafe { nil }` pointers or dummy nodes.
 
 ---
 
@@ -18782,10 +18782,11 @@ fn modify_foo(mut foo Foo, new_val int) {
 
 // 4. References are crucial for recursive types (like trees or linked lists).
 // Since the size of Node must be known at compile time, recursive fields must be references.
+// To allow optional/empty references (like leaf node terminations), V uses optional references (?&Node[T]).
 struct Node[T] {
 	val   T
-	left  &Node[T]
-	right &Node[T]
+	left  ?&Node[T]
+	right ?&Node[T]
 }
 
 fn main() {
@@ -18812,24 +18813,14 @@ fn main() {
 	copied_foo := *ref_to_foo
 	println('Copied foo abc: ${copied_foo.abc}')
 
-	// 6. Generic Tree structure using references
-	// Create a dummy node as leaf terminations (since references cannot be null in standard V without unsafe)
-	dummy := Node[int]{
-		val: 0
-		left: unsafe { nil }
-		right: unsafe { nil }
-	}
-
+	// 6. Generic Tree structure using optional references
+	// Optional references are auto-initialized to `none`, so we don't need dummy nodes or `unsafe` blocks.
 	left_leaf := Node[int]{
 		val: 5
-		left: &dummy
-		right: &dummy
 	}
 
 	right_leaf := Node[int]{
 		val: 15
-		left: &dummy
-		right: &dummy
 	}
 
 	// Create root node pointing to leaf references
@@ -18840,8 +18831,14 @@ fn main() {
 	}
 
 	println('Root val: ${root.val}')
-	println('Left leaf val: ${root.left.val}')
-	println('Right leaf val: ${root.right.val}')
+	
+	// Access the optional child nodes safely using if guards
+	if left := root.left {
+		println('Left leaf val: ${left.val}')
+	}
+	if right := root.right {
+		println('Right leaf val: ${right.val}')
+	}
 }
 ```
 

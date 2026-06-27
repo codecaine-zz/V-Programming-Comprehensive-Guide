@@ -13,5 +13,5 @@ fn main() {
 		println('Hi')
 		count += 1
 	}
-	println('Greeted Hi $count times')
+	println('Greeted Hi ${count} times')
 }

@@ -47,7 +47,7 @@ fn find_item(id int) ?string {
 // find_item_wrapper demonstrates Option propagation with the `?` suffix.
 fn find_item_wrapper(id int) ?string {
 	// If find_item returns none, the execution stops here and propagates none up.
-	item := find_item(id)? 
+	item := find_item(id)?
 	return 'Found: ' + item
 }
 
@@ -69,7 +69,7 @@ fn fetch_data(success bool) !string {
 	if !success {
 		return CustomError{
 			message: 'Connection timed out'
-			code: 504
+			code:    504
 		}
 	}
 	return 'Raw database records'
@@ -88,7 +88,7 @@ fn query_db(query string, success bool) !string {
 // calculate_and_format demonstrates Result propagation using the `!` operator.
 fn calculate_and_format(a f64, b f64) !string {
 	// The `!` suffix propagates the error to the caller if divide fails.
-	res := divide(a, b)! 
+	res := divide(a, b)!
 	return 'Result is ${res:.2f}'
 }
 
@@ -102,11 +102,11 @@ fn force_panic() {
 
 fn main() {
 	println('=== 1. Option Types (?T) ===')
-	
+
 	// Option Handling: Option unwrapping using `or` block
 	item_1 := find_item(42) or { 'Default Item' }
 	println('Item 1 (with 42): ${item_1}')
-	
+
 	item_2 := find_item(99) or { 'Default Item' }
 	println('Item 2 (with 99): ${item_2}')
 
@@ -127,7 +127,6 @@ fn main() {
 	wrapped_item := find_item_wrapper(99) or { 'None propagated successfully' }
 	println('Propagation check: ${wrapped_item}\n')
 
-
 	println('=== 2. Result Types (!T) ===')
 
 	// Result Handling: Standard error message extraction via the `err` variable inside `or` block
@@ -136,7 +135,6 @@ fn main() {
 
 	calc_fail := calculate_and_format(10.0, 0.0) or { 'Error: ${err}' }
 	println('Calc failure: ${calc_fail}')
-
 
 	println('\n=== 3. Custom Error Matching & Type Casting ===')
 
@@ -147,7 +145,7 @@ fn main() {
 	// We use `''` (empty string) here as the fallback value to satisfy this type requirement.
 	fetch_data(false) or {
 		if err is CustomError {
-			// Inside this block, `err` is smart-cast to CustomError automatically, 
+			// Inside this block, `err` is smart-cast to CustomError automatically,
 			// allowing direct access to custom fields like `code`.
 			println('Caught CustomError! Message: "${err.msg()}", Code: ${err.code}')
 		} else {
@@ -168,7 +166,6 @@ fn main() {
 		}
 		'' // Fallback empty string returned to satisfy the !string return type of the or block
 	}
-
 
 	println('\n=== 4. Panic (Unrecoverable Error) ===')
 	// We wrap panic execution or run it last since it terminates the process.

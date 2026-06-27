@@ -5,8 +5,12 @@ module main
 fn compare_ints(a &int, b &int) int {
 	val_a := *a
 	val_b := *b
-	if val_a < val_b { return -1 }
-	if val_a > val_b { return 1 }
+	if val_a < val_b {
+		return -1
+	}
+	if val_a > val_b {
+		return 1
+	}
 	return 0
 }
 
@@ -34,7 +38,6 @@ fn main() {
 		println('repeat_to_depth: ${typed_grid}') // [[1, 2], [3, 4], [1, 2], [3, 4]]
 		rep_grid.free()
 	}
-
 	// 4. insert(index, val)
 	// Inserts a new element at the specified index.
 	a.insert(1, 15)
@@ -123,7 +126,6 @@ fn main() {
 		println('clone_to_depth: ${typed_clone}') // [[1, 2], [3, 4]]
 		grid_clone.free()
 	}
-
 	// 19. push_many(val, size) (unsafe)
 	// Appends size elements starting from a raw pointer val to the array.
 	mut a_push := [1, 2]
@@ -136,7 +138,6 @@ fn main() {
 		a_push.free()
 		vals.free()
 	}
-
 	// 20. reverse()
 	// Returns a new reversed copy of the array.
 	a_rev := [1, 2, 3]

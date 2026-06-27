@@ -29,9 +29,9 @@ fn main() {
 
 	// Testing with a multi-byte UTF-8 rune (dog emoji 🐕)
 	r2 := `🐕`
-	println(r2.bytes())           // [240, 159, 144, 149]
-	println(r2.hex())             // "1f415" (Unicode code point in hex)
+	println(r2.bytes()) // [240, 159, 144, 149]
+	println(r2.hex()) // "1f415" (Unicode code point in hex)
 	println(r2.length_in_bytes()) // 4
-	println(r2.repeat(2))         // "🐕🐕"
-	println(r2.str())             // "🐕"
+	println(r2.repeat(2)) // "🐕🐕"
+	println(r2.str()) // "🐕"
 }

@@ -11,7 +11,7 @@ fn main() {
 
 	// 1. Initialize and run a local WebSocket server in a separate thread
 	mut ws_server := websocket.new_server(.ip, port, '/')
-	
+
 	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
 		println('Server: Client connecting from ${s.client_key}')
 		return true
@@ -21,7 +21,7 @@ fn main() {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
 			println('Server received text: "${payload}"')
-			
+
 			// Echo message back to client
 			ws.write_string('Echo: ' + payload)!
 		}
@@ -29,9 +29,7 @@ fn main() {
 
 	// Run the server listening loop in a background thread
 	spawn fn [mut ws_server] () {
-		ws_server.listen() or {
-			println('Server error: ${err}')
-		}
+		ws_server.listen() or { println('Server error: ${err}') }
 	}()
 
 	// Allow the server a moment to start
@@ -71,18 +69,14 @@ fn main() {
 	time.sleep(50 * time.millisecond)
 	msg_to_send := 'Hello WebSocket Server!'
 	println('Client sending: "${msg_to_send}"')
-	ws_client.write_string(msg_to_send) or {
-		println('Client failed to send: ${err}')
-	}
+	ws_client.write_string(msg_to_send) or { println('Client failed to send: ${err}') }
 
 	// Wait for echo to arrive
 	time.sleep(200 * time.millisecond)
 
 	// Clean close
 	println('Client closing connection...')
-	ws_client.close(1000, 'Done') or {
-		println('Client close error: ${err}')
-	}
+	ws_client.close(1000, 'Done') or { println('Client close error: ${err}') }
 	time.sleep(50 * time.millisecond)
 	println('WebSocket Demo finished.')
 }
