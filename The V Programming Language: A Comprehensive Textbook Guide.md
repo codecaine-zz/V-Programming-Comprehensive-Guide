@@ -11309,7 +11309,15 @@ _File location: [sqlite/sqlite.v](file:///Users/codecaine/V-Programming-Comprehe
 
 ### Lesson: Sqlite
 
-Databases and JSON handling are essential parts of backend development. This lesson on **Sqlite** details V's built-in JSON utilities or its built-in database ORM.
+Databases and JSON handling are essential parts of backend development. A small SQLite helper module makes your application code cleaner by centralizing connection setup, schema initialization, and CRUD operations in one place.
+
+This example shows a practical pattern you can reuse in small tools, desktop apps, and prototypes:
+
+- connect to a database with a single helper
+- enable foreign keys for safer relations
+- initialize a table with a reusable setup function
+- create, read, update, and delete records with safe parameterized queries
+- prevent SQL injection by using `exec_param_many` instead of string interpolation
 
 ```v
 module sqlite
@@ -11319,9 +11327,60 @@ import db.sqlite as dbsqlite
 pub type DB = dbsqlite.DB
 
 pub fn connect(path string) !DB {
-	return dbsqlite.connect(path)!
+	mut db := dbsqlite.connect(path)!
+	db.exec('PRAGMA foreign_keys = ON;') or {
+		return error('failed to enable foreign keys: ${err}')
+	}
+	return db
+}
+
+pub fn connect_in_memory() !DB {
+	return connect(':memory:')
+}
+
+pub fn init_notes_table(mut db DB) ! {
+	db.exec('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL);') or {
+		return error('failed to create notes table: ${err}')
+	}
+}
+
+pub fn create_note(mut db DB, title string, body string) !int {
+	db.exec_param_many('INSERT INTO notes (title, body) VALUES (?, ?);', [title, body]) or {
+		return error('failed to insert note: ${err}')
+	}
+	return db.last_id()
+}
+
+pub fn list_notes(mut db DB) ![]Note {
+	rows := db.exec('SELECT id, title, body FROM notes ORDER BY id;') or {
+		return error('failed to list notes: ${err}')
+	}
+	mut notes := []Note{}
+	for row in rows {
+		notes << Note{
+			id: row.vals[0].int()
+			title: row.vals[1]
+			body: row.vals[2]
+		}
+	}
+	return notes
+}
+
+pub fn update_note(mut db DB, id int, title string, body string) ! {
+	db.exec_param_many('UPDATE notes SET title = ?, body = ? WHERE id = ?;', [title, body, id.str()]) or {
+		return error('failed to update note: ${err}')
+	}
+}
+
+pub fn delete_note(mut db DB, id int) ! {
+	db.exec_param_many('DELETE FROM notes WHERE id = ?;', [id.str()]) or {
+		return error('failed to delete note: ${err}')
+	}
 }
 ```
+
+> [!TIP]
+> **Safe database access:** always pass user input as parameters using `exec_param_many` or `exec` with placeholders like `?`. This prevents SQL injection and keeps your queries readable.
 
 ---
 
@@ -18918,6 +18977,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [HTTP Client Boilerplate](#http-client-boilerplate)
 - [CSV Processor Boilerplate](#csv-processor-boilerplate)
 - [SQLite CRUD Boilerplate](#sqlite-crud-boilerplate)
+- [Logging Boilerplate](#logging-boilerplate)
 
 ---
 
@@ -20005,6 +20065,33 @@ fn insert_user(mut db sqlite.DB, name string, email string, age int) !int {
 		return error('Insert failed: ${err}')
 	}
 	return db.last_id()
+}
+```
+
+---
+
+### Logging Boilerplate
+
+_File location: [boilerplate_templates/14_logging/logging.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/14_logging/logging.v)_
+
+### Lesson: Logging Boilerplate
+
+Structured logging is essential for debugging, monitoring, and understanding how an application behaves over time. This template shows a simple logger that writes messages with levels, timestamps, and optional file output.
+
+Key concepts illustrated:
+
+- **Log Levels**: Using `debug`, `info`, `warn`, and `error` categories.
+- **Simple Logger Struct**: Encapsulating configuration and behavior in one reusable type.
+- **File Output**: Appending log entries to a file for later inspection.
+- **Filtering**: Only emitting messages at or above the configured severity level.
+
+```v
+fn (logger Logger) log(level LogLevel, message string) {
+	if int(level) < int(logger.level) {
+		return
+	}
+	line := '${time.now().str()} ${prefix} ${message}'
+	println(line)
 }
 ```
 
