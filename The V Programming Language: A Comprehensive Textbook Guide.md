@@ -11450,7 +11450,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Interfaces](#interfaces)
 - [Sum Types](#sum-types)
 - [Attributes](#attributes)
-- [Compile-Time Directives](#compile-time-directives)
+- [Compile-Time Directives](#compile-time-directives--compile-time-code)
 - [Strings Builder](#strings-builder)
 - [Os Advanced Io](#os-advanced-io)
 - [Os Operations](#os-operations)
@@ -13957,7 +13957,7 @@ This section is grouped into focused subtopics so you can jump quickly to the ar
 - [Interfaces](#interfaces)
 - [Sum Types](#sum-types)
 - [Attributes](#attributes)
-- [Compile-Time Directives](#compile-time-directives)
+- [Compile-Time Directives](#compile-time-directives--compile-time-code)
 
 ### Standard Library and OS Modules
 
