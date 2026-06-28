@@ -52,8 +52,42 @@ function parseMarkdownToHtmlAndIndex(md) {
 
     function flushBlockquote() {
         if (inBlockquote) {
-            const contentText = blockquoteContent.join('\n');
-            const parsedContent = parseInline(contentText);
+            let parsedContent = '';
+            let blockCodeContent = [];
+            let inBlockCode = false;
+            let blockCodeLanguage = '';
+
+            for (let j = 0; j < blockquoteContent.length; j++) {
+                const bLine = blockquoteContent[j];
+                const trimmedBLine = bLine.trim();
+                
+                if (trimmedBLine.startsWith('```')) {
+                    if (inBlockCode) {
+                        // End code block inside blockquote
+                        const codeStr = blockCodeContent.join('\n');
+                        parsedContent += generateCodeBlockHtml(blockCodeLanguage, codeStr);
+                        inBlockCode = false;
+                        blockCodeContent = [];
+                    } else {
+                        // Start code block inside blockquote
+                        inBlockCode = true;
+                        blockCodeLanguage = trimmedBLine.substring(3).trim();
+                    }
+                } else if (inBlockCode) {
+                    blockCodeContent.push(bLine);
+                } else {
+                    // Regular line, wrap in <p> if not empty
+                    if (trimmedBLine !== '') {
+                        parsedContent += `<p>${parseInline(bLine)}</p>\n`;
+                    }
+                }
+            }
+
+            if (inBlockCode && blockCodeContent.length > 0) {
+                const codeStr = blockCodeContent.join('\n');
+                parsedContent += generateCodeBlockHtml(blockCodeLanguage, codeStr);
+            }
+
             if (alertType) {
                 html += `<div class="alert alert-${alertType}">
                     <div class="alert-title">
@@ -134,6 +168,42 @@ function parseMarkdownToHtmlAndIndex(md) {
         return normalized === 'vlang' ? 'v' : normalized;
     }
 
+    function generateCodeBlockHtml(codeLanguage, codeStr) {
+        let codeHtml = escapeHtml(codeStr);
+        let playgroundBtn = '';
+        if (codeLanguage.toLowerCase() === 'v' || codeLanguage.toLowerCase() === 'vlang') {
+            const base64Code = Buffer.from(codeStr).toString('base64');
+            const playgroundUrl = `https://play.vlang.io/?base64=${encodeURIComponent(base64Code)}`;
+            playgroundBtn = `<a href="${playgroundUrl}" target="_blank" class="btn-playground" title="Run in V Playground">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Run
+            </a>
+            <button class="btn-playground-copy" onclick="copyAndOpenPlayground(this)" title="Copy Code & Open V Playground">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy &amp; Open
+            </button>`;
+        }
+
+        const normalizedLanguage = normalizeCodeLanguage(codeLanguage);
+        return `<div class="code-wrapper">
+            <div class="code-header">
+                <span class="code-lang">${codeLanguage || 'text'}</span>
+                <div class="code-actions">
+                    ${playgroundBtn}
+                    <button class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
+                        Zoom
+                    </button>
+                    <button class="btn-copy" onclick="copyCode(this)" title="Copy Code">
+                        <svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <pre><code class="language-${normalizedLanguage}">${codeHtml}</code></pre>
+        </div>\n`;
+    }
+
     function normalizeTitleForComparison(text) {
         return text
             .replace(/^Lesson:\s*/i, '')
@@ -156,41 +226,7 @@ function parseMarkdownToHtmlAndIndex(md) {
             if (inCodeBlock) {
                 // End code block
                 const codeStr = codeContent.join('\n');
-                let codeHtml = escapeHtml(codeStr);
-                
-                // Base64 encoding for V Playground
-                let playgroundBtn = '';
-                if (codeLanguage.toLowerCase() === 'v' || codeLanguage.toLowerCase() === 'vlang') {
-                    const base64Code = Buffer.from(codeStr).toString('base64');
-                    const playgroundUrl = `https://play.vlang.io/?base64=${encodeURIComponent(base64Code)}`;
-                    playgroundBtn = `<a href="${playgroundUrl}" target="_blank" class="btn-playground" title="Run in V Playground">
-                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                        Run
-                    </a>
-                    <button class="btn-playground-copy" onclick="copyAndOpenPlayground(this)" title="Copy Code & Open V Playground">
-                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        Copy &amp; Open
-                    </button>`;
-                }
-
-                const normalizedLanguage = normalizeCodeLanguage(codeLanguage);
-                html += `<div class="code-wrapper">
-                    <div class="code-header">
-                        <span class="code-lang">${codeLanguage || 'text'}</span>
-                        <div class="code-actions">
-                            ${playgroundBtn}
-                            <button class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code">
-                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
-                                Zoom
-                            </button>
-                            <button class="btn-copy" onclick="copyCode(this)" title="Copy Code">
-                                <svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                Copy
-                            </button>
-                        </div>
-                    </div>
-                    <pre><code class="language-${normalizedLanguage}">${codeHtml}</code></pre>
-                </div>\n`;
+                html += generateCodeBlockHtml(codeLanguage, codeStr);
 
                 // Add to current lesson content
                 if (currentLesson) {
@@ -236,13 +272,13 @@ function parseMarkdownToHtmlAndIndex(md) {
                 cleanLine = cleanLine.substring(10).trim();
             } else if (cleanLine.startsWith('[!EXERCISE]')) {
                 alertType = 'exercise';
-                cleanLine = cleanLine.substring(10).trim();
+                cleanLine = cleanLine.substring(11).trim();
             } else if (cleanLine.startsWith('[!SOLUTION]')) {
                 alertType = 'solution';
-                cleanLine = cleanLine.substring(10).trim();
+                cleanLine = cleanLine.substring(11).trim();
             } else if (cleanLine.startsWith('[!OUTPUT]')) {
                 alertType = 'output';
-                cleanLine = cleanLine.substring(8).trim();
+                cleanLine = cleanLine.substring(9).trim();
             }
             
             if (cleanLine) {
@@ -2167,6 +2203,7 @@ const template = `<!DOCTYPE html>
 
         .alert-exercise {
             border-left-color: #8b5cf6;
+            background: linear-gradient(to right, rgba(139, 92, 246, 0.04), rgba(139, 92, 246, 0.01)), var(--bg-secondary);
         }
         .alert-exercise .alert-title {
             color: #8b5cf6;
@@ -2174,6 +2211,7 @@ const template = `<!DOCTYPE html>
 
         .alert-solution {
             border-left-color: #10b981;
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.04), rgba(16, 185, 129, 0.01)), var(--bg-secondary);
         }
         .alert-solution .alert-title {
             color: #10b981;
@@ -2181,9 +2219,17 @@ const template = `<!DOCTYPE html>
 
         .alert-output {
             border-left-color: #38bdf8;
+            background: linear-gradient(to right, rgba(56, 189, 248, 0.04), rgba(56, 189, 248, 0.01)), var(--bg-secondary);
         }
         .alert-output .alert-title {
             color: #38bdf8;
+        }
+
+        .alert-content .code-wrapper {
+            margin-top: 12px;
+            margin-bottom: 4px;
+            border-color: var(--border-color);
+            background-color: var(--code-bg);
         }
 
         .lesson-nav {
