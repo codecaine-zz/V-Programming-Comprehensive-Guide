@@ -360,6 +360,8 @@ To get the most from this book:
   - [String Utilities Boilerplate](#string-utilities-boilerplate)
   - [Math and Statistics Boilerplate](#math-and-statistics-boilerplate)
   - [Array Utilities Boilerplate](#array-utilities-boilerplate)
+- [Chapter 15: Comprehensive Practice Exercises](#chapter-15-comprehensive-practice-exercises)
+  - [Practice Exercises Overview](#practice-exercises-overview)
 
 ---
 
@@ -20505,10 +20507,699 @@ fn main() {
 
 ---
 
+# Chapter 15: Comprehensive Practice Exercises
+
+## Quick Access
+
+Below is an index of all exercises in this chapter. You can use these links to jump directly to any specific exercise:
+
+**Practice Exercises Overview**
+
+- [Exercise 1: Comments and Console Printing](#exercise-1-comments-and-console-printing)
+- [Exercise 2: Circle Area Calculator with Variables and Constants](#exercise-2-circle-area-calculator-with-variables-and-constants)
+- [Exercise 3: String and Rune Processing](#exercise-3-string-and-rune-processing)
+- [Exercise 4: Custom FizzBuzz with Match](#exercise-4-custom-fizzbuzz-with-match)
+- [Exercise 5: Filtering and Sorting Student Grades](#exercise-5-filtering-and-sorting-student-grades)
+- [Exercise 6: Higher-Order Functions with Callbacks](#exercise-6-higher-order-functions-with-callbacks)
+- [Exercise 7: Modeling a Bank Account with Structs & Methods](#exercise-7-modeling-a-bank-account-with-structs--methods)
+- [Exercise 8: Safe Division with Option/Result](#exercise-8-safe-division-with-optionresult)
+- [Exercise 9: Modular Math Utility Project](#exercise-9-modular-math-utility-project)
+- [Exercise 10: Unit Testing String Reversal](#exercise-10-unit-testing-string-reversal)
+- [Exercise 11: Concurrent Task Aggregation with Channels](#exercise-11-concurrent-task-aggregation-with-channels)
+- [Exercise 12: JSON Parsing and Validation](#exercise-12-json-parsing-and-validation)
+- [Exercise 13: HTTP Client & Query Parameter Parser](#exercise-13-http-client--query-parameter-parser)
+- [Exercise 14: Concurrent Worker Pool for String Transformation](#exercise-14-concurrent-worker-pool-for-string-transformation)
+
+---
+
+## Practice Exercises Overview
+
+Welcome to Chapter 15! This chapter contains comprehensive practice exercises designed to consolidate your learning. Each exercise targets a specific chapter from this book and includes the prompt, the correct V code solution, and the expected terminal output.
+
+Use these exercises to test your understanding as you progress through each chapter of the textbook.
+
+---
+
+### Exercise 1: Comments and Console Printing
+
+This exercise covers Chapter 1: Getting Started with V.
+
+> [!EXERCISE]
+> Write a V program that prints your favorite programming languages to the console, utilizing single-line comments for metadata (such as Author and Date) and a multi-line comment describing the compile-to-C architecture of V.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> // Author: V Learner
+> // Date: June 2026
+> fn main() {
+> 	/*
+> 	  This program prints a list of favorite languages.
+> 	  V compiles to C, resulting in fast execution and tiny binaries.
+> 	*/
+> 	println('My favorite programming languages are:')
+> 	println('- V (for speed and simplicity)')
+> 	println('- Go (for cloud networking)')
+> 	println('- Rust (for memory safety)')
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> My favorite programming languages are:
+> - V (for speed and simplicity)
+> - Go (for cloud networking)
+> - Rust (for memory safety)
+> ```
+
+---
+
+### Exercise 2: Circle Area Calculator with Variables and Constants
+
+This exercise covers Chapter 2: Variables and Constants.
+
+> [!EXERCISE]
+> Create a program that defines a constant `pi = 3.14159`. In the `main` function, declare a mutable variable for the radius of a circle, initialize it to `5.0`, and compute/print the area. Then, update the radius to `10.0`, recompute the area, and print the updated result with 2 decimal places.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> const pi = 3.14159
+> 
+> fn main() {
+> 	mut radius := 5.0
+> 	mut area := pi * radius * radius
+> 	println('Radius: ${radius} | Area: ${area:.2f}')
+> 
+> 	radius = 10.0
+> 	area = pi * radius * radius
+> 	println('Radius: ${radius} | Area: ${area:.2f}')
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Radius: 5 | Area: 78.54
+> Radius: 10 | Area: 314.16
+> ```
+
+---
+
+### Exercise 3: String and Rune Processing
+
+This exercise covers Chapter 3: Primitive Data Types.
+
+> [!EXERCISE]
+> Create a V program that takes a string representation of a username. Retrieve and print its length, convert the entire username to uppercase, extract the first letter as a rune, and print its character representation as well as its raw ASCII integer value.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> fn main() {
+> 	username := 'vlang_developer'
+> 	
+> 	// Get string length
+> 	len := username.len
+> 	println('Username length: ${len}')
+> 	
+> 	// Convert to uppercase
+> 	upper := username.to_upper()
+> 	println('Uppercase: ${upper}')
+> 	
+> 	// Extract first character as rune
+> 	first_char := username[0]
+> 	println('First character: ${first_char.ascii_str()}')
+> 	println('ASCII value: ${int(first_char)}')
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Username length: 15
+> Uppercase: VLANG_DEVELOPER
+> First character: v
+> ASCII value: 118
+> ```
+
+---
+
+### Exercise 4: Custom FizzBuzz with Match
+
+This exercise covers Chapter 4: Control Flow.
+
+> [!EXERCISE]
+> Write a V program that loops from 1 to 20. For each number, determine if it is divisible by 3, 5, both, or neither. Use a `match` expression to print "Fizz" for multiples of 3, "Buzz" for multiples of 5, "FizzBuzz" for multiples of both, and the number itself otherwise.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> fn main() {
+> 	for i in 1 .. 21 {
+> 		match true {
+> 			i % 15 == 0 { println('FizzBuzz') }
+> 			i % 3 == 0  { println('Fizz') }
+> 			i % 5 == 0  { println('Buzz') }
+> 			else        { println(i) }
+> 		}
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> 1
+> 2
+> Fizz
+> 4
+> Buzz
+> Fizz
+> 7
+> 8
+> Fizz
+> Buzz
+> 11
+> Fizz
+> 13
+> 14
+> FizzBuzz
+> 16
+> 17
+> Fizz
+> 19
+> Buzz
+> ```
+
+---
+
+### Exercise 5: Filtering and Sorting Student Grades
+
+This exercise covers Chapter 5: Collections: Arrays and Maps.
+
+> [!EXERCISE]
+> Create a map storing student names and their corresponding numeric grades. Filter the map to extract all students who scored 80 or above. Store these students' names in an array, sort the array alphabetically, and print the sorted names.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> fn main() {
+> 	grades := {
+> 		'Alice':   85
+> 		'Bob':     72
+> 		'Charlie': 90
+> 		'Diana':   65
+> 		'Ethan':   88
+> 	}
+> 
+> 	mut top_students := []string{}
+> 	for name, grade in grades {
+> 		if grade >= 80 {
+> 			top_students << name
+> 		}
+> 	}
+> 
+> 	top_students.sort()
+> 	println('Top Students (Alphabetical): ${top_students}')
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Top Students (Alphabetical): ['Alice', 'Charlie', 'Ethan']
+> ```
+
+---
+
+### Exercise 6: Higher-Order Functions with Callbacks
+
+This exercise covers Chapter 6: Functions.
+
+> [!EXERCISE]
+> Write a function `filter_ints(nums []int, f fn (int) bool) []int` that filters an array of integers using a callback function. In `main`, call `filter_ints` once to filter even numbers, and once to filter numbers greater than 10. Print the results.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> fn filter_ints(nums []int, f fn (int) bool) []int {
+> 	mut result := []int{}
+> 	for num in nums {
+> 		if f(num) {
+> 			result << num
+> 		}
+> 	}
+> 	return result
+> }
+> 
+> fn is_even(n int) bool {
+> 	return n % 2 == 0
+> }
+> 
+> fn main() {
+> 	numbers := [2, 5, 12, 7, 18, 9, 3, 22]
+> 	
+> 	evens := filter_ints(numbers, is_even)
+> 	println('Even numbers: ${evens}')
+> 	
+> 	greater_than_ten := filter_ints(numbers, fn (n int) bool {
+> 		return n > 10
+> 	})
+> 	println('Numbers > 10: ${greater_than_ten}')
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Even numbers: [2, 12, 18, 22]
+> Numbers > 10: [12, 18, 22]
+> ```
+
+---
+
+### Exercise 7: Modeling a Bank Account with Structs & Methods
+
+This exercise covers Chapter 7: Structs (Custom Types).
+
+> [!EXERCISE]
+> Define a `BankAccount` struct with fields `owner` (string), `balance` (f64), and `is_active` (bool). Implement a value receiver method to display the account details, and mutable methods to `deposit(amount f64)` and `withdraw(amount f64)`. Ensure that a withdrawal cannot exceed the balance or occur on an inactive account.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> struct BankAccount {
+> 	owner     string
+> mut:
+> 	balance   f64
+> 	is_active bool
+> }
+> 
+> fn (a BankAccount) display() {
+> 	status := if a.is_active { 'Active' } else { 'Inactive' }
+> 	println('Account Owner: ${a.owner} | Balance: $${a.balance:.2f} | Status: ${status}')
+> }
+> 
+> fn (mut a BankAccount) deposit(amount f64) {
+> 	if !a.is_active {
+> 		println('Cannot deposit: Account is inactive.')
+> 		return
+> 	}
+> 	if amount > 0 {
+> 		a.balance += amount
+> 		println('Deposited $${amount:.2f}')
+> 	}
+> }
+> 
+> fn (mut a BankAccount) withdraw(amount f64) {
+> 	if !a.is_active {
+> 		println('Cannot withdraw: Account is inactive.')
+> 		return
+> 	}
+> 	if amount > a.balance {
+> 		println('Cannot withdraw: Insufficient funds.')
+> 		return
+> 	}
+> 	if amount > 0 {
+> 		a.balance -= amount
+> 		println('Withdrew $${amount:.2f}')
+> 	}
+> }
+> 
+> fn main() {
+> 	mut acc := BankAccount{
+> 		owner:     'Jane Doe'
+> 		balance:   150.00
+> 		is_active: true
+> 	}
+> 
+> 	acc.display()
+> 	acc.deposit(50.50)
+> 	acc.withdraw(75.00)
+> 	acc.display()
+> 	
+> 	acc.withdraw(200.00)
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Account Owner: Jane Doe | Balance: $150.00 | Status: Active
+> Deposited $50.50
+> Withdrew $75.00
+> Account Owner: Jane Doe | Balance: $125.50 | Status: Active
+> Cannot withdraw: Insufficient funds.
+> ```
+
+---
+
+### Exercise 8: Safe Division with Option/Result
+
+This exercise covers Chapter 8: Error Handling.
+
+> [!EXERCISE]
+> Write a function `divide(a f64, b f64) !f64` that returns an error when dividing by zero. In `main`, call this function, handle potential errors cleanly using an `or` block, and print the results for both a valid division and an invalid division.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> fn divide(a f64, b f64) !f64 {
+> 	if b == 0.0 {
+> 		return error('division by zero error')
+> 	}
+> 	return a / b
+> }
+> 
+> fn main() {
+> 	x := 10.0
+> 	y := 2.5
+> 	z := 0.0
+> 
+> 	res1 := divide(x, y) or {
+> 		println('Error: ${err}')
+> 		return
+> 	}
+> 	println('${x} / ${y} = ${res1}')
+> 
+> 	divide(x, z) or {
+> 		println('Error occurred: ${err}')
+> 		return
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> 10 / 2.5 = 4
+> Error occurred: division by zero error
+> ```
+
+---
+
+### Exercise 9: Modular Math Utility Project
+
+This exercise covers Chapter 9: Organizing Code with Modules.
+
+> [!EXERCISE]
+> Describe how to design a modular program containing a main module and a utility sub-module named `mathutils`. Implement a public function `factorial(n int) int` inside `mathutils` and import it into your `main` module to calculate and print `factorial(5)`.
+
+> [!SOLUTION]
+> ```v
+> // Directory structure:
+> // my_project/
+> // ├── main.v
+> // └── mathutils/
+> //     └── mathutils.v
+> 
+> // mathutils/mathutils.v
+> module mathutils
+> 
+> pub fn factorial(n int) int {
+> 	if n <= 1 {
+> 		return 1
+> 	}
+> 	return n * factorial(n - 1)
+> }
+> 
+> // main.v
+> module main
+> 
+> import mathutils
+> 
+> fn main() {
+> 	val := 5
+> 	result := mathutils.factorial(val)
+> 	println('Factorial of ${val} is ${result}')
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Factorial of 5 is 120
+> ```
+
+---
+
+### Exercise 10: Unit Testing String Reversal
+
+This exercise covers Chapter 10: Writing Tests in V.
+
+> [!EXERCISE]
+> Write a V library containing a public function `reverse_string(s string) string`. Write a corresponding test file `reverse_string_test.v` with unit tests verifying correctness for empty strings, single characters, palindromes, and multi-word sentences using assert statements.
+
+> [!SOLUTION]
+> ```v
+> // reverse.v
+> module main
+> 
+> pub fn reverse_string(s string) string {
+> 	mut runes := s.runes()
+> 	mut i := 0
+> 	mut j := runes.len - 1
+> 	for i < j {
+> 		temp := runes[i]
+> 		runes[i] = runes[j]
+> 		runes[j] = temp
+> 		i++
+> 		j--
+> 	}
+> 	return runes.string()
+> }
+> 
+> // reverse_string_test.v
+> module main
+> 
+> fn test_reverse_string() {
+> 	assert reverse_string('') == ''
+> 	assert reverse_string('a') == 'a'
+> 	assert reverse_string('radar') == 'radar'
+> 	assert reverse_string('hello world') == 'dlrow olleh'
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> [PASS] test_reverse_string
+> ```
+
+---
+
+### Exercise 11: Concurrent Task Aggregation with Channels
+
+This exercise covers Chapter 11: Concurrency and Channels.
+
+> [!EXERCISE]
+> Write a program that spawns three concurrent v-routines. Each v-routine should compute a segment of a calculation (e.g. squaring a number) and send the result back through a shared channel. The main function should receive all three values from the channel, sum them up, and print the total.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> fn worker(id int, val int, ch chan int) {
+> 	println('Worker ${id} starting to calculate square of ${val}')
+> 	ch <- (val * val)
+> }
+> 
+> fn main() {
+> 	ch := chan int{cap: 3}
+> 
+> 	spawn worker(1, 4, ch)
+> 	spawn worker(2, 6, ch)
+> 	spawn worker(3, 8, ch)
+> 
+> 	mut sum := 0
+> 	for _ in 0 .. 3 {
+> 		val := <-ch
+> 		sum += val
+> 	}
+> 
+> 	println('Sum of concurrent square results: ${sum}')
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Worker 1 starting to calculate square of 4
+> Worker 2 starting to calculate square of 6
+> Worker 3 starting to calculate square of 8
+> Sum of concurrent square results: 116
+> ```
+
+---
+
+### Exercise 12: JSON Parsing and Validation
+
+This exercise covers Chapter 12: Working with Databases and JSON.
+
+> [!EXERCISE]
+> Define a struct representing a `Task` with fields `id` (int), `title` (string), and `completed` (bool). Write a program that takes a JSON string containing an array of tasks, parses it into a V array of `Task` structs, and prints the titles of the tasks that are not yet completed.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> import json
+> 
+> struct Task {
+> 	id        int
+> 	title     string
+> 	completed bool
+> }
+> 
+> fn main() {
+> 	raw_json := '[
+> 		{"id": 1, "title": "Buy groceries", "completed": true},
+> 		{"id": 2, "title": "Write V exercise guide", "completed": false},
+> 		{"id": 3, "title": "Compile textbook HTML", "completed": false}
+> 	]'
+> 
+> 	tasks := json.decode([]Task, raw_json) or {
+> 		println('Failed to parse JSON: ${err}')
+> 		return
+> 	}
+> 
+> 	println('Pending Tasks:')
+> 	for task in tasks {
+> 		if !task.completed {
+> 			println('- ${task.title}')
+> 		}
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Pending Tasks:
+> - Write V exercise guide
+> - Compile textbook HTML
+> ```
+
+---
+
+### Exercise 13: HTTP Client & Query Parameter Parser
+
+This exercise covers Chapter 13: Standard Library & Advanced Features.
+
+> [!EXERCISE]
+> Create a V program that imports the `net.http` and `net.urllib` modules. Build a small utility that sends a GET request to a public API URL or a dummy server, checks the response status code, and parses query parameters from a URL string, displaying each parameter's key and value.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> import net.http
+> import net.urllib
+> 
+> fn main() {
+> 	resp := http.get('https://httpbin.org/get') or {
+> 		println('Failed to send request: ${err}')
+> 		return
+> 	}
+> 	println('HTTP GET Status Code: ${resp.status_code}')
+> 
+> 	sample_url := 'https://example.com/search?q=vlang&limit=10&page=2'
+> 	parsed_url := urllib.parse(sample_url) or {
+> 		println('Failed to parse URL: ${err}')
+> 		return
+> 	}
+> 	
+> 	params := parsed_url.query()
+> 	println('Parsed URL Query Parameters:')
+> 	for key, values in params {
+> 		println('  ${key}: ${values.join(", ")}')
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> HTTP GET Status Code: 200
+> Parsed URL Query Parameters:
+>   q: vlang
+>   limit: 10
+>   page: 2
+> ```
+
+---
+
+### Exercise 14: Concurrent Worker Pool for String Transformation
+
+This exercise covers Chapter 14: Useful Boilerplates and Application Templates.
+
+> [!EXERCISE]
+> Adapt the worker pool concurrent processing pattern to transform an array of lowercase strings to uppercase concurrently. Use a struct for `Job` and `Result` types, spawn multiple worker threads, feed the job channel, close it, and collect the results.
+
+> [!SOLUTION]
+> ```v
+> module main
+> 
+> struct Job {
+> 	id   int
+> 	data string
+> }
+> 
+> struct Result {
+> 	job_id int
+> 	output string
+> }
+> 
+> fn worker(id int, jobs chan Job, results chan Result) {
+> 	for job in jobs {
+> 		println('Worker ${id} processing job ${job.id}: "${job.data}"')
+> 		results <- Result{
+> 			job_id: job.id
+> 			output: job.data.to_upper()
+> 		}
+> 	}
+> }
+> 
+> fn main() {
+> 	num_jobs := 5
+> 	num_workers := 3
+> 
+> 	jobs := chan Job{cap: num_jobs}
+> 	results := chan Result{cap: num_jobs}
+> 
+> 	for i in 1 .. (num_workers + 1) {
+> 		spawn worker(i, jobs, results)
+> 	}
+> 
+> 	words := ['apple', 'banana', 'cherry', 'date', 'elderberry']
+> 	for i, word in words {
+> 		jobs <- Job{
+> 			id:   i + 1
+> 			data: word
+> 		}
+> 	}
+> 	jobs.close()
+> 
+> 	for _ in 0 .. num_jobs {
+> 		res := <-results
+> 		println('Result collected: Job ${res.job_id} output = "${res.output}"')
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+> ```
+> Worker 1 processing job 1: "apple"
+> Worker 2 processing job 2: "banana"
+> Worker 3 processing job 3: "cherry"
+> Worker 1 processing job 4: "date"
+> Worker 2 processing job 5: "elderberry"
+> Result collected: Job 1 output = "APPLE"
+> Result collected: Job 2 output = "BANANA"
+> Result collected: Job 3 output = "CHERRY"
+> Result collected: Job 4 output = "DATE"
+> Result collected: Job 5 output = "ELDERBERRY"
+> ```
+
+---
+
 # End of Tutorial
 
-Congratulations! You have completed the comprehensive V Programming tutorial.
-
-```
-
-```
+Congratulations! You have completed the comprehensive V Programming tutorial and exercise guide.
