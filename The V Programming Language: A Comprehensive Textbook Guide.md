@@ -5600,6 +5600,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Struct Fields With Default Values](#struct-fields-with-default-values)
 - [Methods For Struct](#methods-for-struct)
 - [Mutable Methods](#mutable-methods)
+- [Printing Custom Types](#printing-custom-types)
 - [Adding Struct As Struct Field](#adding-struct-as-struct-field)
 - [Updating Fields Of Type Struct](#updating-fields-of-type-struct)
 - [Struct As Trailing Literal Arguments To Function](#struct-as-trailing-literal-arguments-to-function)
@@ -6197,6 +6198,39 @@ fn main() {
 	// 5. Verify the updates.
 	println('Final state - Message: "${n.message}", Completed: ${n.status}')
 	assert n.status == true
+}
+```
+
+---
+
+### Printing Custom Types
+
+_File location: [structs/04_methods_for_struct/03_printing_custom_types/03_printing_custom_types.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/04_methods_for_struct/03_printing_custom_types/03_printing_custom_types.v)_
+
+### Lesson: Printing Custom Types
+
+If you want to define a custom print value for your type, simply define a `str()` string method:
+
+```v
+module main
+
+struct Color {
+	r int
+	g int
+	b int
+}
+
+pub fn (c Color) str() string {
+	return '{${c.r}, ${c.g}, ${c.b}}'
+}
+
+fn main() {
+	red := Color{
+		r: 255
+		g: 0
+		b: 0
+	}
+	println(red)
 }
 ```
 
@@ -11455,6 +11489,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Hot Code Reloading](#hot-code-reloading)
 - [Compile-Time Reflection](#compile-time-reflection)
 - [Environment-Specific Files & Compile-Time Types](#environment-specific-files--compile-time-types)
+- [References & Pointers](#references--pointers)
+- [Dumping Expressions at Runtime](#dumping-expressions-at-runtime)
 
 ---
 
@@ -18806,6 +18842,47 @@ fn main() {
 		println('Right leaf val: ${right.val}')
 	}
 }
+```
+
+---
+
+### Dumping Expressions at Runtime
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/17_dumping_expressions/dumping_expressions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/17_dumping_expressions/dumping_expressions.v)_
+
+### Lesson: Dumping Expressions at Runtime
+
+You can dump/trace the value of any V expression using `dump(expr)`. For example, save this code sample as `factorial.v`, then run it with `v run factorial.v`:
+
+```v
+module main
+
+fn factorial(n u32) u32 {
+	if dump(n <= 1) {
+		return dump(1)
+	}
+	return dump(n * factorial(n - 1))
+}
+
+fn main() {
+	println(factorial(5))
+}
+```
+
+You will get:
+
+```
+[factorial.v:4] n <= 1: false
+[factorial.v:4] n <= 1: false
+[factorial.v:4] n <= 1: false
+[factorial.v:4] n <= 1: false
+[factorial.v:4] n <= 1: true
+[factorial.v:5] 1: 1
+[factorial.v:7] n * factorial(n - 1): 2
+[factorial.v:7] n * factorial(n - 1): 6
+[factorial.v:7] n * factorial(n - 1): 24
+[factorial.v:7] n * factorial(n - 1): 120
+120
 ```
 
 ---
