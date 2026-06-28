@@ -9,9 +9,9 @@
 *.db
 
 # Ignore compiled binaries
-modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo
-modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo
-modules/11_install_external_packages_and_webview/webview_demo/webview_demo
+modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo
+modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo
+modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo
 
 # Ignore SSL certificates/keys
 *.crt

@@ -6916,7 +6916,7 @@ Modules help organize larger codebases. In this chapter, you will learn how to c
 
 ### Creating a Simple V Project - Main (modulebasics.v)
 
-_File location: [modules/01_creating_simple_v_project/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/01_creating_simple_v_project/modulebasics/modulebasics.v)_
+_File location: [modules/ch01_creating_simple_v_project/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch01_creating_simple_v_project/modulebasics/modulebasics.v)_
 
 ### Lesson: Creating a Simple V Project
 
@@ -6936,7 +6936,7 @@ fn main() {
 
 ### Creating a Module - Helper (file1.v)
 
-_File location: [modules/02_creating_modue/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/02_creating_modue/modulebasics/mod1/file1.v)_
+_File location: [modules/ch02_creating_modue/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch02_creating_modue/modulebasics/mod1/file1.v)_
 
 ### Lesson: A Reusable Helper Module
 
@@ -6954,7 +6954,7 @@ pub fn greet(name string) string {
 
 ### Creating a Module - Main (modulebasics.v)
 
-_File location: [modules/02_creating_modue/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/02_creating_modue/modulebasics/modulebasics.v)_
+_File location: [modules/ch02_creating_modue/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch02_creating_modue/modulebasics/modulebasics.v)_
 
 ### Lesson: Module Main Entry
 
@@ -6974,7 +6974,7 @@ fn main() {
 
 ### Importing a Module - Helper (file1.v)
 
-_File location: [modules/03_importing_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/03_importing_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch03_importing_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch03_importing_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Imported Module Helper
 
@@ -6992,7 +6992,7 @@ pub fn greet(name string) string {
 
 ### Importing a Module - Main (modulebasics.v)
 
-_File location: [modules/03_importing_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/03_importing_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch03_importing_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch03_importing_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Imported Module Main
 
@@ -7013,7 +7013,7 @@ fn main() {
 
 ### Accessing Module Members - Helper (file1.v)
 
-_File location: [modules/04_accessing_members_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/04_accessing_members_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch04_accessing_members_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch04_accessing_members_of_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Public vs Private Members
 
@@ -7035,7 +7035,7 @@ fn internal_note() string {
 
 ### Accessing Module Members - Main (modulebasics.v)
 
-_File location: [modules/04_accessing_members_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/04_accessing_members_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch04_accessing_members_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch04_accessing_members_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Visibility Main
 
@@ -7056,7 +7056,7 @@ fn main() {
 
 ### Multiple Files (After Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Helper 1
 
@@ -7074,7 +7074,7 @@ pub fn hello() {
 
 ### Multiple Files (After Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Helper 2
 
@@ -7092,7 +7092,7 @@ fn hello2() {
 
 ### Multiple Files (After Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Main Entry
 
@@ -7116,7 +7116,7 @@ fn main() {
 
 ### Multiple Files (Before Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Helper 1
 
@@ -7137,7 +7137,7 @@ pub fn hello() {
 
 ### Multiple Files (Before Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Helper 2
 
@@ -7159,7 +7159,7 @@ fn main() {
 
 ### Multiple Files (Before Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Main Entry
 
@@ -7183,7 +7183,7 @@ fn main() {
 
 ### Member Scope (After Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/06_member_scope_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/mod1/file1.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/after/modulebasics/mod1/file1.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Helper 1
 
@@ -7203,7 +7203,7 @@ pub fn hello() {
 
 ### Member Scope (After Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/06_member_scope_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/mod1/file2.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/after/modulebasics/mod1/file2.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Helper 2
 
@@ -7224,7 +7224,7 @@ fn hello2() {
 
 ### Member Scope (After Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/06_member_scope_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/modulebasics.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/after/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Main Entry
 
@@ -7247,7 +7247,7 @@ fn main() {
 
 ### Member Scope (Before Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/06_member_scope_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/mod1/file1.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/before/modulebasics/mod1/file1.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Helper 1
 
@@ -7268,7 +7268,7 @@ pub fn hello() {
 
 ### Member Scope (Before Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/06_member_scope_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/mod1/file2.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/before/modulebasics/mod1/file2.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Helper 2
 
@@ -7289,7 +7289,7 @@ fn hello2() {
 
 ### Member Scope (Before Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/06_member_scope_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/modulebasics.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/before/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Main Entry
 
@@ -7313,7 +7313,7 @@ fn main() {
 
 ### Cyclic Imports - Module 1 Helper (file1.v)
 
-_File location: [modules/07_cyclic_imports/modulebasics/m1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/m1/file1.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/m1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch07_cyclic_imports/modulebasics/m1/file1.v)_
 
 ### Lesson: Cyclic Imports - Module 1
 
@@ -7335,7 +7335,7 @@ pub fn hello() {
 
 ### Cyclic Imports - Module 2 Helper (file1.v)
 
-_File location: [modules/07_cyclic_imports/modulebasics/m2/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/m2/file1.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/m2/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch07_cyclic_imports/modulebasics/m2/file1.v)_
 
 ### Lesson: Cyclic Imports - Module 2
 
@@ -7360,7 +7360,7 @@ pub fn hello() {
 
 ### Cyclic Imports - Main (modulebasics.v)
 
-_File location: [modules/07_cyclic_imports/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/modulebasics.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch07_cyclic_imports/modulebasics/modulebasics.v)_
 
 ### Lesson: Cyclic Imports - Main Entry
 
@@ -7385,7 +7385,7 @@ fn main() {
 
 ### Module Init & Cleanup Functions - Helper (file1.v)
 
-_File location: [modules/08_init_function_for_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/08_init_function_for_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch08_init_function_for_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch08_init_function_for_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Module Init & Cleanup Functions Helper
 
@@ -7414,7 +7414,7 @@ fn cleanup() {
 
 ### Module Init & Cleanup Functions - Main (modulebasics.v)
 
-_File location: [modules/08_init_function_for_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/08_init_function_for_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch08_init_function_for_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch08_init_function_for_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Module Init & Cleanup Functions
 
@@ -7457,7 +7457,7 @@ fn main() {
 
 ### Accessing Module Constants - Helper (file1.v)
 
-_File location: [modules/09_accessing_constants_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/09_accessing_constants_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch09_accessing_constants_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch09_accessing_constants_of_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Accessing Module Constants Helper
 
@@ -7473,7 +7473,7 @@ pub const greet_msg = 'Greeting from mod1!'
 
 ### Accessing Module Constants - Main (modulebasics.v)
 
-_File location: [modules/09_accessing_constants_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/09_accessing_constants_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch09_accessing_constants_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch09_accessing_constants_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Accessing Module Constants
 
@@ -7496,7 +7496,7 @@ fn main() {
 
 ### Accessing Module Structs - Helper (file1.v)
 
-_File location: [modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Accessing Module Structs Helper
 
@@ -7535,7 +7535,7 @@ pub mut:
 
 ### Accessing Module Structs - Main (modulebasics.v)
 
-_File location: [modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Accessing Module Structs
 
@@ -7616,7 +7616,7 @@ fn main() {
 
 ### Redis Console Demo
 
-_File location: [modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v)_
 
 This example demonstrates how to use the external `xiusin.vredis` client package in a console application and demonstrates key namespacing with the custom `NamespacedRedis` helper. It covers:
 
@@ -7766,7 +7766,7 @@ fn main() {
 
 ### Redis Console Demo - Helper (redis_helper.v)
 
-_File location: [modules/11_install_external_packages_and_webview/redis_console_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_console_demo/redis_helper.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_helper.v)_
 
 This helper provides a namespaced wrapper struct `NamespacedRedis` that automatically prefixes all Redis keys with a given namespace (e.g. `namespace:key`). This is a great pattern for keeping keys organized and avoiding collisions between multiple apps/environments.
 
@@ -7899,7 +7899,7 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
 
 ### Redis Namespaced Demo - Helper (redis_helper.v)
 
-_File location: [modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v)_
 
 ### Lesson: Redis Namespaced Helper
 
@@ -8032,7 +8032,7 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
 
 ### Redis Namespaced Demo
 
-_File location: [modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v)_
 
 This example provides an easy, dedicated demo showing how to use the `NamespacedRedis` helper wrapper to manage multiple independent namespaces (like `cache` and `session`) over a single underlying Redis connection without key collisions.
 
@@ -8106,7 +8106,7 @@ fn main() {
 
 ### Redis Webview Demo
 
-_File location: [modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v)_
 
 ### Lesson: Redis Webview Demo
 
@@ -8397,7 +8397,7 @@ fn main() {
 
 ### Webview Demo
 
-_File location: [modules/11_install_external_packages_and_webview/webview_demo/webview_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/webview_demo/webview_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo.v)_
 
 ### Lesson: Webview Demo
 
