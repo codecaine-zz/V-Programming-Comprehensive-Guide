@@ -6889,8 +6889,9 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Cyclic Imports - Module 1 Helper (file1.v)](#cyclic-imports---module-1-helper-file1v)
 - [Cyclic Imports - Module 2 Helper (file1.v)](#cyclic-imports---module-2-helper-file1v)
 - [Cyclic Imports - Main (modulebasics.v)](#cyclic-imports---main-modulebasicsv)
-- [Module Init Function - Helper (file1.v)](#module-init-function---helper-file1v)
-- [Module Init Function - Main (modulebasics.v)](#module-init-function---main-modulebasicsv)
+- [Module Init & Cleanup Functions - Config (config.v)](#module-init--cleanup-functions---config-configv)
+- [Module Init & Cleanup Functions - Helper (file1.v)](#module-init--cleanup-functions---helper-file1v)
+- [Module Init & Cleanup Functions - Main (modulebasics.v)](#module-init--cleanup-functions---main-modulebasicsv)
 - [Accessing Module Constants - Helper (file1.v)](#accessing-module-constants---helper-file1v)
 - [Accessing Module Constants - Main (modulebasics.v)](#accessing-module-constants---main-modulebasicsv)
 - [Accessing Module Structs - Helper (file1.v)](#accessing-module-structs---helper-file1v)
@@ -7383,13 +7384,39 @@ fn main() {
 
 ---
 
+### Module Init & Cleanup Functions - Config (config.v)
+
+_File location: [modules/ch08_init_function_for_module/modulebasics/config/config.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch08_init_function_for_module/modulebasics/config/config.v)_
+
+### Lesson: Transitive Initialization Helper
+
+V modules support lifecycle hooks for setting up and tearing down resources. A module's `init()` function runs when it is first imported, and its `cleanup()` function runs when the program terminates.
+
+In this helper module `config`, we define simple hooks to simulate loading configuration details.
+
+```v
+module config
+
+pub const version = '1.0.0'
+
+fn init() {
+	println('Initializing config module...')
+}
+
+fn cleanup() {
+	println('Cleaning up config module...')
+}
+```
+
+---
+
 ### Module Init & Cleanup Functions - Helper (file1.v)
 
 _File location: [modules/ch08_init_function_for_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch08_init_function_for_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Module Init & Cleanup Functions Helper
 
-V modules support lifecycle hooks for setting up and tearing down resources:
+This helper module `mod1` imports `config`, simulates the initialization/release of a C library wrapper, and exposes a public function `hello()`.
 
 - **`init()`**: A special private function (`fn init()`) that runs automatically when a module is first imported. It is ideal for one-time initialization, such as preparing C libraries or setting up state.
 - **`cleanup()`**: A special private function (`fn cleanup()`) that executes automatically when the program terminates. It runs in the reverse order of the `init()` calls, making it perfect for releasing C library resources or flushing files.
@@ -7397,16 +7424,18 @@ V modules support lifecycle hooks for setting up and tearing down resources:
 ```v
 module mod1
 
+import config
+
 pub fn hello() {
-	println('Hello from mod1!')
+	println('Hello from mod1! (using config v${config.version})')
 }
 
 fn init() {
-	println('Initializing mod1')
+	println('Initializing mod1 module (C library stub initialized)...')
 }
 
 fn cleanup() {
-	println('Cleaning up mod1')
+	println('Cleaning up mod1 module (C library stub released)...')
 }
 ```
 
@@ -7418,7 +7447,7 @@ _File location: [modules/ch08_init_function_for_module/modulebasics/modulebasics
 
 ### Lesson: Module Init & Cleanup Functions
 
-V is designed to be highly modular. Here is a summary of the core rules governing V modules:
+V is designed to be highly modular. Here is a summary of the core rules governing V modules, and how the program executes:
 
 #### 1. Module Basics & Organization
 
@@ -7440,16 +7469,20 @@ V is designed to be highly modular. Here is a summary of the core rules governin
 #### 4. Lifecycle Hooks (`init` & `cleanup`)
 
 - Neither `init()` nor `cleanup()` can be made public (`pub`).
-- V calls `init()` exactly once when the module is imported, regardless of how many other modules transitively import it.
-- V calls `cleanup()` automatically once at the end of program execution, in the exact reverse order of their `init()` invocations.
+- **Single Execution:** V calls `init()` exactly once when the module is imported, regardless of how many other modules transitively or directly import it. For example, `config` is imported by both `mod1` and `main`, but its `init()` runs only once.
+- **Reverse-Order Execution:** V calls `cleanup()` automatically once at the end of program execution, in the exact reverse order of their `init()` invocations.
 
 ```v
 module main
 
 import mod1
+import config
 
 fn main() {
+	println('Main function started.')
 	mod1.hello()
+	println('Using config directly in main: v${config.version}')
+	println('Main function ending.')
 }
 ```
 
