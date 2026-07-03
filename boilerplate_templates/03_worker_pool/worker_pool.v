@@ -25,9 +25,7 @@ fn worker(id int, tasks_chan chan Task, results_chan chan Result, mut wg sync.Wa
 	for {
 		// Receive a task from the channel.
 		// If the channel is closed and empty, it returns `none`
-		t := <-tasks_chan or {
-			break
-		}
+		t := <-tasks_chan or { break }
 
 		start_time := time.now()
 
@@ -38,10 +36,10 @@ fn worker(id int, tasks_chan chan Task, results_chan chan Result, mut wg sync.Wa
 
 		// Send the result to the output channel
 		results_chan <- Result{
-			task_id: t.id
+			task_id:   t.id
 			worker_id: id
-			output: 'Processed: ' + t.data.to_upper()
-			duration: elapsed
+			output:    'Processed: ' + t.data.to_upper()
+			duration:  elapsed
 		}
 	}
 }
@@ -78,7 +76,7 @@ fn main() {
 	println('Dispatching ${num_tasks} tasks to worker pool...')
 	for i in 0 .. num_tasks {
 		tasks_chan <- Task{
-			id: i + 1
+			id:   i + 1
 			data: 'task-payload-${i + 1}'
 		}
 	}

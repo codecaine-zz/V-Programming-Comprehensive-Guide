@@ -34,7 +34,7 @@ fn is_palindrome(s string) bool {
 			clean_chars << r
 		}
 	}
-	
+
 	for i in 0 .. clean_chars.len / 2 {
 		if clean_chars[i] != clean_chars[clean_chars.len - 1 - i] {
 			return false
@@ -56,7 +56,7 @@ fn truncate(s string, limit int) string {
 fn slugify(s string) string {
 	mut res := []rune{}
 	mut last_was_dash := false
-	
+
 	for r in s.to_lower().runes() {
 		if (r >= `a` && r <= `z`) || (r >= `0` && r <= `9`) {
 			res << r
@@ -68,7 +68,7 @@ fn slugify(s string) string {
 			}
 		}
 	}
-	
+
 	// Trim trailing dash if any
 	mut slug := res.string()
 	if slug.ends_with('-') {

@@ -9,4 +9,3 @@ fn main() {
 	println('Using config directly in main: v${config.version}')
 	println('Main function ending.')
 }
-

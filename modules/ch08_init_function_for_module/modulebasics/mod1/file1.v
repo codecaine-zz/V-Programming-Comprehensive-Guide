@@ -13,4 +13,3 @@ fn init() {
 fn cleanup() {
 	println('Cleaning up mod1 module (C library stub released)...')
 }
-

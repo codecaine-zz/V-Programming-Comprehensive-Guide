@@ -64,7 +64,7 @@ fn (mut app App) create_item(mut ctx Context) veb.Result {
 
 	// Auto-increment ID based on length
 	item_to_add := Item{
-		id: app.items.len + 1
+		id:   app.items.len + 1
 		name: new_item.name
 		done: new_item.done
 	}
@@ -78,8 +78,16 @@ fn main() {
 	// Initialize App with mock seed data
 	mut app := &App{
 		items: [
-			Item{id: 1, name: 'Learn V syntax', done: true},
-			Item{id: 2, name: 'Build a REST API in V', done: false},
+			Item{
+				id:   1
+				name: 'Learn V syntax'
+				done: true
+			},
+			Item{
+				id:   2
+				name: 'Build a REST API in V'
+				done: false
+			},
 		]
 	}
 
@@ -88,7 +96,7 @@ fn main() {
 	port := if port_env != '' { port_env.int() } else { 8082 }
 
 	println('Starting REST API server on http://localhost:${port}...')
-	
+
 	// Start veb web server
 	veb.run[App, Context](mut app, port)
 }

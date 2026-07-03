@@ -35,9 +35,7 @@ fn (logger Logger) log(level LogLevel, message string) {
 			eprintln('Failed to open log file: ${err}')
 			return
 		}
-		f.write((line + '\n').bytes()) or {
-			eprintln('Failed to append log: ${err}')
-		}
+		f.write((line + '\n').bytes()) or { eprintln('Failed to append log: ${err}') }
 		f.close()
 	}
 }

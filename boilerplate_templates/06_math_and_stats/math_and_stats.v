@@ -58,14 +58,14 @@ fn calculate_stats(numbers []f64) ?Stats {
 	std_dev := math.sqrt(variance)
 
 	return Stats{
-		count: numbers.len
-		min: min
-		max: max
-		sum: sum
-		mean: mean
-		median: median
+		count:    numbers.len
+		min:      min
+		max:      max
+		sum:      sum
+		mean:     mean
+		median:   median
 		variance: variance
-		std_dev: std_dev
+		std_dev:  std_dev
 	}
 }
 
@@ -173,19 +173,19 @@ fn main() {
 	// 2. Custom Math Functions Demo
 	n := 10
 	println('\nCustom Number Functions:')
-	
+
 	fact := factorial(n) or {
 		eprintln('Error: ${err}')
 		u64(0)
 	}
 	println('- Factorial of ${n}:    ${fact}')
-	
+
 	fib := fibonacci(n) or {
 		eprintln('Error: ${err}')
 		[]u64{}
 	}
 	println('- Fibonacci first ${n}: ${fib}')
-	
+
 	test_primes := [7, 12, 19, 25, 97]
 	for p in test_primes {
 		println('  Is ${p} prime?       ${is_prime(p)}')

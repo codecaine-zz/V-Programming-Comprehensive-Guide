@@ -20,7 +20,7 @@ fn chunk[T](arr []T, size int) [][]T {
 	}
 	mut result := [][]T{}
 	mut current_chunk := []T{}
-	
+
 	for item in arr {
 		current_chunk << item
 		if current_chunk.len == size {

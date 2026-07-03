@@ -22,9 +22,9 @@ fn retry[T](cfg RetryConfig, op fn () !T) !T {
 			if attempt == cfg.attempts {
 				return error('Operation failed after ${cfg.attempts} attempts. Last error: ${err}')
 			}
-			
+
 			eprintln('Attempt ${attempt}/${cfg.attempts} failed: ${err}. Retrying in ${delay.milliseconds()}ms...')
-			
+
 			// Sleep with optional jitter to prevent thundering herd problems
 			mut sleep_dur := delay
 			if cfg.jitter {
@@ -65,10 +65,10 @@ fn main() {
 
 	// Define our retry configuration
 	cfg := RetryConfig{
-		attempts: 4
+		attempts:      4
 		initial_delay: 150 * time.millisecond
-		factor: 1.5
-		jitter: true
+		factor:        1.5
+		jitter:        true
 	}
 
 	// Define the retriable operation closure

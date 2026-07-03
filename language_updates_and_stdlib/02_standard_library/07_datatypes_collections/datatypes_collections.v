@@ -246,7 +246,7 @@ fn main() {
 	println('union: ${union_set}')
 	intersection_set := set_b.intersection(set_c).array()
 	println('intersection: ${intersection_set}')
-	
+
 	// Compute the difference manually to avoid V compiler/analyzer issues with generic operator overloading (-)
 	mut diff_set := set_b.copy()
 	for item in set_c.array() {
@@ -254,7 +254,7 @@ fn main() {
 	}
 	diff_array := diff_set.array()
 	println('difference: ${diff_array}')
-	
+
 	is_subset := set_b.subset(set_c)
 	println('subset: ${is_subset}')
 	copied_set := set_b.copy().array()

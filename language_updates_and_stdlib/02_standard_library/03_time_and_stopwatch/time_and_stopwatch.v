@@ -15,7 +15,7 @@ fn main() {
 	// ==========================================
 	// Arithmetic and comparisons
 	// ==========================================
-	
+
 	// now.add() adds a duration to the timestamp.
 	// now.add_days() adds a specified number of days.
 	// now.add_seconds() adds a specified number of seconds.
@@ -33,7 +33,7 @@ fn main() {
 	// ==========================================
 	// Formatting helpers
 	// ==========================================
-	
+
 	// now.clean() formats time as YYYY-MM-DD HH:MM:SS.
 	// now.clean12() formats time using a 12-hour clock with AM/PM.
 	// now.custom_format() formats time using a custom layout pattern.
@@ -52,14 +52,15 @@ fn main() {
 	println('format_ss_milli: ${now.format_ss_milli()}')
 	println('format_ss_nano: ${now.format_ss_nano()}')
 	println('strftime: ${now.strftime('%Y-%m-%d %H:%M:%S')}')
-	println('get_fmt_str: ${now.get_fmt_str(time.FormatDelimiter.hyphen, time.FormatTime.hhmm24, time.FormatDate.yyyymmdd)}')
+	println('get_fmt_str: ${now.get_fmt_str(time.FormatDelimiter.hyphen, time.FormatTime.hhmm24,
+		time.FormatDate.yyyymmdd)}')
 	println('get_fmt_date_str: ${now.get_fmt_date_str(time.FormatDelimiter.hyphen, time.FormatDate.yyyymmdd)}')
 	println('get_fmt_time_str: ${now.get_fmt_time_str(time.FormatTime.hhmm24)}')
 
 	// ==========================================
 	// Date and time helpers
 	// ==========================================
-	
+
 	// Extra details like day_of_week(), days_from_unix_epoch(), week_of_year(), smonth(), etc.
 	println('day_of_week: ${now.day_of_week()}')
 	println('days_from_unix_epoch: ${now.days_from_unix_epoch()}')
@@ -78,7 +79,7 @@ fn main() {
 	// ==========================================
 	// UTC and local conversions
 	// ==========================================
-	
+
 	// Convert between UTC and the system local timezone.
 	// unix(), unix_milli(), etc. return timestamps since the Unix Epoch.
 	println('is_utc: ${now.is_utc()}')
@@ -97,7 +98,7 @@ fn main() {
 	// ==========================================
 	// Relative and serialization helpers
 	// ==========================================
-	
+
 	// relative() and relative_short() return values like "2 hours ago".
 	// to_json() returns the JSON representation of the time.
 	// push_to_http_header() format HTTP-standard cookie/caching header dates.
@@ -115,7 +116,7 @@ fn main() {
 	// ==========================================
 	// JSON parsing helpers
 	// ==========================================
-	
+
 	// Parse Unix timestamps or ISO/RFC 3339 strings directly back into a Time struct.
 	mut parsed_from_number := time.now()
 	parsed_from_number.from_json_number('1712345678') or {
@@ -132,7 +133,7 @@ fn main() {
 	// ==========================================
 	// Stopwatch example
 	// ==========================================
-	
+
 	// new_stopwatch starts a new stopwatch to measure high-precision elapsed code execution time.
 	println('Starting stopwatch...')
 	mut sw := time.new_stopwatch()

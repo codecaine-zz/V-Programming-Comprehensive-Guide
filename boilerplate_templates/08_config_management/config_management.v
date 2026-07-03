@@ -69,7 +69,7 @@ fn main() {
 	println('=== V Configuration Management Boilerplate ===')
 
 	config_path := 'app_config.json'
-	
+
 	// Ensure we cleanup the generated file on exit
 	defer {
 		if os.exists(config_path) {

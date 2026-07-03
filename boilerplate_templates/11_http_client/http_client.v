@@ -26,12 +26,12 @@ fn fetch_json(url string) !string {
 
 fn post_json(url string, payload PostPayload) !PostResponse {
 	body := json.encode(payload)
-	
+
 	// Set Content-Type explicitly for compliance with strict JSON APIs
 	mut req := http.Request{
 		method: .post
-		url: url
-		data: body
+		url:    url
+		data:   body
 	}
 	req.header.set(.content_type, 'application/json')
 
@@ -53,8 +53,8 @@ fn main() {
 	println(body)
 
 	response := post_json('https://jsonplaceholder.typicode.com/posts', PostPayload{
-		title: 'Ada'
-		body: 'Developer'
+		title:   'Ada'
+		body:    'Developer'
 		user_id: 1
 	}) or {
 		eprintln('${err}')

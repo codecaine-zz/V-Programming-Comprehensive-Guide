@@ -60,11 +60,7 @@ fn main() {
 
 	// 7. Clean up by deleting the file and directory
 	println('\nCleaning up temporary files and directories...')
-	os.rm(target_file) or {
-		eprintln('Failed to delete file: ${err}')
-	}
-	os.rmdir(temp_dir) or {
-		eprintln('Failed to delete directory: ${err}')
-	}
+	os.rm(target_file) or { eprintln('Failed to delete file: ${err}') }
+	os.rmdir(temp_dir) or { eprintln('Failed to delete directory: ${err}') }
 	println('Cleanup completed successfully.')
 }

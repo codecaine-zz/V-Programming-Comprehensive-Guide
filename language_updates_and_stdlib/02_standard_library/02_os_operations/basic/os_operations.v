@@ -9,7 +9,7 @@ fn main() {
 	// ==========================================
 	// 1. Basic File Operations (Writing, Reading, Existence)
 	// ==========================================
-	
+
 	// os.write_file writes a string to a file. It overwrites the file if it already exists.
 	// We handle errors using V's explicit "or" block.
 	println('Writing text to ${filename}...')
@@ -34,7 +34,7 @@ fn main() {
 	lines := ['Line 1: V has simple OS functions.', 'Line 2: Supporting multiple lines.']
 	lines_file := 'temp_lines_example.txt'
 	os.write_lines(lines_file, lines) or { println('Failed to write lines: ${err}') }
-	
+
 	// os.read_lines reads a file line-by-line and returns an array of strings.
 	read_lines := os.read_lines(lines_file) or {
 		println('Failed to read lines: ${err}')
@@ -47,7 +47,9 @@ fn main() {
 	// os.file_last_mod_unix retrieves the Unix timestamp of when the file was last modified.
 	// os.is_file returns true if the path points to a file (not a directory).
 	bytes_file := 'temp_bytes_example.bin'
-	os.write_bytes(bytes_file, 'V handles raw bytes.'.bytes()) or { println('Failed to write bytes: ${err}') }
+	os.write_bytes(bytes_file, 'V handles raw bytes.'.bytes()) or {
+		println('Failed to write bytes: ${err}')
+	}
 	read_bytes := os.read_bytes(bytes_file) or { []u8{} }
 	println('Read bytes: "${read_bytes.bytestr()}"')
 	println('Last modified time (epoch): ${os.file_last_mod_unix(bytes_file)}')
@@ -129,7 +131,7 @@ fn main() {
 	// ==========================================
 	println('\n--- Path Manipulation & Extraction ---')
 	sample_path := '/usr/local/bin/v.exe'
-	
+
 	// Path parsing helpers:
 	// os.dir returns the parent directory.
 	// os.base returns the last element of the path.
@@ -154,7 +156,7 @@ fn main() {
 	// 4. Working Directory Traversal
 	// ==========================================
 	println('\n--- Working Directory Traversal ---')
-	
+
 	// os.getwd returns the current active working directory.
 	// os.chdir changes the current active working directory.
 	original_wd := os.getwd()
@@ -217,7 +219,7 @@ fn main() {
 	// 7. File Globbing (glob)
 	// ==========================================
 	println('\n--- File Globbing ---')
-	
+
 	// os.glob finds all files matching a wildcard pattern (e.g. *.txt).
 	os.write_file('glob_test_1.txt', '1') or {}
 	os.write_file('glob_test_2.txt', '2') or {}

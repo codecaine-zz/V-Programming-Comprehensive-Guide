@@ -52,11 +52,11 @@ fn main() {
 
 	// 6. Map parsed arguments to the Config struct for clean division of concerns
 	config := Config{
-		input_file: input_file
+		input_file:  input_file
 		output_file: output_file
-		verbose: verbose
-		retries: retries
-		mode: mode
+		verbose:     verbose
+		retries:     retries
+		mode:        mode
 	}
 
 	// 7. Run the application logic

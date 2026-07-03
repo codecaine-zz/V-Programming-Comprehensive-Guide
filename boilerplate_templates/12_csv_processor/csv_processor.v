@@ -24,7 +24,7 @@ fn read_people(path string) ![]Person {
 		}
 		people << Person{
 			name: row[0]
-			age: row[1].int()
+			age:  row[1].int()
 			city: row[2]
 		}
 	}
