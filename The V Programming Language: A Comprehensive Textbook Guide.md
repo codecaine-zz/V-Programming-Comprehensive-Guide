@@ -21311,7 +21311,7 @@ This exercise covers Chapter 1: Getting Started with V.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > // Author: V Learner
 > // Date: June 2026
 > fn main() {
@@ -21346,14 +21346,14 @@ This exercise covers Chapter 2: Variables and Constants.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > const pi = 3.14159
-> 
+>
 > fn main() {
 > 	mut radius := 5.0
 > 	mut area := pi * radius * radius
 > 	println('Radius: ${radius} | Area: ${area:.2f}')
-> 
+>
 > 	radius = 10.0
 > 	area = pi * radius * radius
 > 	println('Radius: ${radius} | Area: ${area:.2f}')
@@ -21378,18 +21378,18 @@ This exercise covers Chapter 3: Primitive Data Types.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > fn main() {
 > 	username := 'vlang_developer'
-> 	
+>
 > 	// Get string length
 > 	len := username.len
 > 	println('Username length: ${len}')
-> 	
+>
 > 	// Convert to uppercase
 > 	upper := username.to_upper()
 > 	println('Uppercase: ${upper}')
-> 	
+>
 > 	// Extract first character as rune
 > 	first_char := username[0]
 > 	println('First character: ${first_char.ascii_str()}')
@@ -21417,14 +21417,14 @@ This exercise covers Chapter 4: Control Flow.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > fn main() {
 > 	for i in 1 .. 21 {
 > 		match true {
 > 			i % 15 == 0 { println('FizzBuzz') }
-> 			i % 3 == 0  { println('Fizz') }
-> 			i % 5 == 0  { println('Buzz') }
-> 			else        { println(i) }
+> 			i % 3 == 0 { println('Fizz') }
+> 			i % 5 == 0 { println('Buzz') }
+> 			else { println(i) }
 > 		}
 > 	}
 > }
@@ -21466,7 +21466,7 @@ This exercise covers Chapter 5: Collections: Arrays and Maps.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > fn main() {
 > 	grades := {
 > 		'Alice':   85
@@ -21475,14 +21475,14 @@ This exercise covers Chapter 5: Collections: Arrays and Maps.
 > 		'Diana':   65
 > 		'Ethan':   88
 > 	}
-> 
+>
 > 	mut top_students := []string{}
 > 	for name, grade in grades {
 > 		if grade >= 80 {
 > 			top_students << name
 > 		}
 > 	}
-> 
+>
 > 	top_students.sort()
 > 	println('Top Students (Alphabetical): ${top_students}')
 > }
@@ -21505,7 +21505,7 @@ This exercise covers Chapter 6: Functions.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > fn filter_ints(nums []int, f fn (int) bool) []int {
 > 	mut result := []int{}
 > 	for num in nums {
@@ -21515,17 +21515,17 @@ This exercise covers Chapter 6: Functions.
 > 	}
 > 	return result
 > }
-> 
+>
 > fn is_even(n int) bool {
 > 	return n % 2 == 0
 > }
-> 
+>
 > fn main() {
 > 	numbers := [2, 5, 12, 7, 18, 9, 3, 22]
-> 	
+>
 > 	evens := filter_ints(numbers, is_even)
 > 	println('Even numbers: ${evens}')
-> 	
+>
 > 	greater_than_ten := filter_ints(numbers, fn (n int) bool {
 > 		return n > 10
 > 	})
@@ -21551,19 +21551,19 @@ This exercise covers Chapter 7: Structs (Custom Types).
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > struct BankAccount {
-> 	owner     string
+> 	owner string
 > mut:
 > 	balance   f64
 > 	is_active bool
 > }
-> 
+>
 > fn (a BankAccount) display() {
 > 	status := if a.is_active { 'Active' } else { 'Inactive' }
 > 	println('Account Owner: ${a.owner} | Balance: $${a.balance:.2f} | Status: ${status}')
 > }
-> 
+>
 > fn (mut a BankAccount) deposit(amount f64) {
 > 	if !a.is_active {
 > 		println('Cannot deposit: Account is inactive.')
@@ -21574,7 +21574,7 @@ This exercise covers Chapter 7: Structs (Custom Types).
 > 		println('Deposited $${amount:.2f}')
 > 	}
 > }
-> 
+>
 > fn (mut a BankAccount) withdraw(amount f64) {
 > 	if !a.is_active {
 > 		println('Cannot withdraw: Account is inactive.')
@@ -21589,19 +21589,19 @@ This exercise covers Chapter 7: Structs (Custom Types).
 > 		println('Withdrew $${amount:.2f}')
 > 	}
 > }
-> 
+>
 > fn main() {
 > 	mut acc := BankAccount{
 > 		owner:     'Jane Doe'
 > 		balance:   150.00
 > 		is_active: true
 > 	}
-> 
+>
 > 	acc.display()
 > 	acc.deposit(50.50)
 > 	acc.withdraw(75.00)
 > 	acc.display()
-> 	
+>
 > 	acc.withdraw(200.00)
 > }
 > ```
@@ -21627,25 +21627,25 @@ This exercise covers Chapter 8: Error Handling.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > fn divide(a f64, b f64) !f64 {
 > 	if b == 0.0 {
 > 		return error('division by zero error')
 > 	}
 > 	return a / b
 > }
-> 
+>
 > fn main() {
 > 	x := 10.0
 > 	y := 2.5
 > 	z := 0.0
-> 
+>
 > 	res1 := divide(x, y) or {
 > 		println('Error: ${err}')
 > 		return
 > 	}
 > 	println('${x} / ${y} = ${res1}')
-> 
+>
 > 	divide(x, z) or {
 > 		println('Error occurred: ${err}')
 > 		return
@@ -21675,22 +21675,22 @@ This exercise covers Chapter 9: Organizing Code with Modules.
 > // ├── main.v
 > // └── mathutils/
 > //     └── mathutils.v
-> 
+>
 > // mathutils/mathutils.v
 > module mathutils
-> 
+>
 > pub fn factorial(n int) int {
 > 	if n <= 1 {
 > 		return 1
 > 	}
 > 	return n * factorial(n - 1)
 > }
-> 
+>
 > // main.v
 > module main
-> 
+>
 > import mathutils
-> 
+>
 > fn main() {
 > 	val := 5
 > 	result := mathutils.factorial(val)
@@ -21716,7 +21716,7 @@ This exercise covers Chapter 10: Writing Tests in V.
 > ```v
 > // reverse.v
 > module main
-> 
+>
 > pub fn reverse_string(s string) string {
 > 	mut runes := s.runes()
 > 	mut i := 0
@@ -21730,10 +21730,10 @@ This exercise covers Chapter 10: Writing Tests in V.
 > 	}
 > 	return runes.string()
 > }
-> 
+>
 > // reverse_string_test.v
 > module main
-> 
+>
 > fn test_reverse_string() {
 > 	assert reverse_string('') == ''
 > 	assert reverse_string('a') == 'a'
@@ -21759,25 +21759,25 @@ This exercise covers Chapter 11: Concurrency and Channels.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > fn worker(id int, val int, ch chan int) {
 > 	println('Worker ${id} starting to calculate square of ${val}')
 > 	ch <- (val * val)
 > }
-> 
+>
 > fn main() {
 > 	ch := chan int{cap: 3}
-> 
+>
 > 	spawn worker(1, 4, ch)
 > 	spawn worker(2, 6, ch)
 > 	spawn worker(3, 8, ch)
-> 
+>
 > 	mut sum := 0
 > 	for _ in 0 .. 3 {
 > 		val := <-ch
 > 		sum += val
 > 	}
-> 
+>
 > 	println('Sum of concurrent square results: ${sum}')
 > }
 > ```
@@ -21802,27 +21802,27 @@ This exercise covers Chapter 12: Working with Databases and JSON.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > import json
-> 
+>
 > struct Task {
 > 	id        int
 > 	title     string
 > 	completed bool
 > }
-> 
+>
 > fn main() {
 > 	raw_json := '[
 > 		{"id": 1, "title": "Buy groceries", "completed": true},
 > 		{"id": 2, "title": "Write V exercise guide", "completed": false},
 > 		{"id": 3, "title": "Compile textbook HTML", "completed": false}
 > 	]'
-> 
+>
 > 	tasks := json.decode([]Task, raw_json) or {
 > 		println('Failed to parse JSON: ${err}')
 > 		return
 > 	}
-> 
+>
 > 	println('Pending Tasks:')
 > 	for task in tasks {
 > 		if !task.completed {
@@ -21851,27 +21851,27 @@ This exercise covers Chapter 13: Standard Library & Advanced Features.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > import net.http
 > import net.urllib
-> 
+>
 > fn main() {
 > 	resp := http.get('https://httpbin.org/get') or {
 > 		println('Failed to send request: ${err}')
 > 		return
 > 	}
 > 	println('HTTP GET Status Code: ${resp.status_code}')
-> 
+>
 > 	sample_url := 'https://example.com/search?q=vlang&limit=10&page=2'
 > 	parsed_url := urllib.parse(sample_url) or {
 > 		println('Failed to parse URL: ${err}')
 > 		return
 > 	}
-> 	
+>
 > 	params := parsed_url.query()
 > 	println('Parsed URL Query Parameters:')
 > 	for key, values in params {
-> 		println('  ${key}: ${values.join(", ")}')
+> 		println('  ${key}: ${values.join(', ')}')
 > 	}
 > }
 > ```
@@ -21897,17 +21897,17 @@ This exercise covers Chapter 14: Useful Boilerplates and Application Templates.
 > [!SOLUTION]
 > ```v
 > module main
-> 
+>
 > struct Job {
 > 	id   int
 > 	data string
 > }
-> 
+>
 > struct Result {
 > 	job_id int
 > 	output string
 > }
-> 
+>
 > fn worker(id int, jobs chan Job, results chan Result) {
 > 	for job in jobs {
 > 		println('Worker ${id} processing job ${job.id}: "${job.data}"')
@@ -21917,18 +21917,18 @@ This exercise covers Chapter 14: Useful Boilerplates and Application Templates.
 > 		}
 > 	}
 > }
-> 
+>
 > fn main() {
 > 	num_jobs := 5
 > 	num_workers := 3
-> 
+>
 > 	jobs := chan Job{cap: num_jobs}
 > 	results := chan Result{cap: num_jobs}
-> 
+>
 > 	for i in 1 .. (num_workers + 1) {
 > 		spawn worker(i, jobs, results)
 > 	}
-> 
+>
 > 	words := ['apple', 'banana', 'cherry', 'date', 'elderberry']
 > 	for i, word in words {
 > 		jobs <- Job{
@@ -21937,7 +21937,7 @@ This exercise covers Chapter 14: Useful Boilerplates and Application Templates.
 > 		}
 > 	}
 > 	jobs.close()
-> 
+>
 > 	for _ in 0 .. num_jobs {
 > 		res := <-results
 > 		println('Result collected: Job ${res.job_id} output = "${res.output}"')
