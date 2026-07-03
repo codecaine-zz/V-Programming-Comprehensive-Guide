@@ -14704,7 +14704,58 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v)_
 
-This example demonstrates common file system tasks, path manipulation, working directory traversal, environmental querying, symbol links, permissions (`chmod`), and ownership (`chown`).
+### Lesson: Os Operations
+
+V's standard library provides a rich set of cross-platform functions for interacting with the operating system through the `os` module. Here is the simplest, most practical guide to when you should actually use each of these functions in real-world programming.
+
+---
+
+#### 1. Basic File Operations
+
+* **The Vibe:** The "Standard file cabinets."
+* **What it does:** Writes, reads, and checks the existence of files using simple string and byte helpers.
+* **Best to use when:** You need to dump text, save config settings, or read small files quickly.
+* **Real-world example:** Writing user session logs or reading a local settings file.
+
+#### 2. Directory Tree Operations
+
+* **The Vibe:** The "Digital folder builder."
+* **What it does:** Creates nested folders (`mkdir_all`) or removes them (`rmdir_all`).
+* **Best to use when:** You need to construct file paths for organized data storage.
+* **Real-world example:** Creating a new user cache folder like `cache/images/temp/`.
+
+#### 3. Path Manipulation & Extraction
+
+* **The Vibe:** The "Path dissection tool."
+* **What it does:** Extracts directory paths, base names, file extensions, and normalizes them.
+* **Best to use when:** You have a file path and want to rename the file or get its extension without manual string parsing.
+* **Real-world example:** Checking if an uploaded file has a `.jpg` extension.
+
+#### 4. Environment & Command Execution
+
+* **The Vibe:** "Talking to the host machine."
+* **What it does:** Reads system environment variables and runs shell commands.
+* **Best to use when:** You need to fetch config keys (like API tokens) or execute external utilities (like running `git version`).
+* **Real-world example:** Fetching the `HOME` directory to locate user configuration files.
+
+#### 5. File Permissions & Ownership (Chmod/Chown)
+
+* **The Vibe:** The "Keymaster/security guard."
+* **What it does:** Alters who can read/write/execute a file and changes user/group owner IDs.
+* **Best to use when:** Making a script executable or securing sensitive credentials.
+* **Real-world example:** Restricting a database file's permissions to be readable only by the owner (`chmod 0o600`).
+
+#### 6. Globbing
+
+* **The Vibe:** The "Wildcard detector."
+* **What it does:** Matches a list of files using wildcard patterns (like `*.txt`).
+* **Best to use when:** You need to process a batch of files matching a name template.
+* **Real-world example:** Storing files matching `log_*.txt` and deleting them in a batch.
+
+---
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **OS operations**.
 
 ```v
 module main
@@ -14718,28 +14769,33 @@ fn main() {
 	// ==========================================
 	// 1. Basic File Operations (Writing, Reading, Existence)
 	// ==========================================
+	
+	// os.write_file writes a string to a file. It overwrites the file if it already exists.
+	// We handle errors using V's explicit "or" block.
 	println('Writing text to ${filename}...')
 	os.write_file(filename, content) or {
 		println('Failed to write file: ${err}')
 		return
 	}
 
-	// Checking file existence
+	// os.exists checks if a file or directory exists at the given path.
 	if os.exists(filename) {
 		println('Confirmed: File exists.')
 	}
 
-	// Reading from a file
+	// os.read_file reads the entire content of a file and returns it as a string.
 	read_content := os.read_file(filename) or {
 		println('Failed to read file: ${err}')
 		return
 	}
 	println('Read content from file: "${read_content}"')
 
-	// Writing and reading lines
+	// os.write_lines writes an array of strings to a file, separating them with newlines.
 	lines := ['Line 1: V has simple OS functions.', 'Line 2: Supporting multiple lines.']
 	lines_file := 'temp_lines_example.txt'
 	os.write_lines(lines_file, lines) or { println('Failed to write lines: ${err}') }
+	
+	// os.read_lines reads a file line-by-line and returns an array of strings.
 	read_lines := os.read_lines(lines_file) or {
 		println('Failed to read lines: ${err}')
 		[]
@@ -14747,7 +14803,9 @@ fn main() {
 	println('Read lines: ${read_lines}')
 	os.rm(lines_file) or {}
 
-	// Raw Bytes Operations (write_bytes, read_bytes, file_last_mod_unix, is_file)
+	// os.write_bytes and os.read_bytes handle raw binary byte arrays.
+	// os.file_last_mod_unix retrieves the Unix timestamp of when the file was last modified.
+	// os.is_file returns true if the path points to a file (not a directory).
 	bytes_file := 'temp_bytes_example.bin'
 	os.write_bytes(bytes_file, 'V handles raw bytes.'.bytes()) or { println('Failed to write bytes: ${err}') }
 	read_bytes := os.read_bytes(bytes_file) or { []u8{} }
@@ -14756,7 +14814,9 @@ fn main() {
 	println('Is a file? ${os.is_file(bytes_file)}')
 	os.rm(bytes_file) or {}
 
-	// Fine-grained File Handles (open, create, open_append)
+	// os.create creates a new empty file for writing and returns a File handle.
+	// os.open_append opens an existing file or creates one, positioning the cursor at the end to append data.
+	// os.open opens an existing file in read-only mode.
 	handle_file := 'temp_handle_example.txt'
 	mut f_create := os.create(handle_file) or { panic(err) }
 	f_create.write_string('Line 1 from file handle\n') or {}
@@ -14773,30 +14833,29 @@ fn main() {
 	f_read.close()
 	os.rm(handle_file) or {}
 
-	// Listing directory contents
+	// os.ls returns a list of file and directory names inside the target directory path.
 	println('Listing files in current directory:')
 	files := os.ls('.') or {
 		println('Failed to list directory: ${err}')
 		[]
 	}
 	for file in files {
-		// Filter and print temp file
 		if file == filename {
 			println('- Found file: ${file}')
 		}
 	}
 
-	// Reading environment variables
+	// os.getenv retrieves the value of a system environment variable.
 	home_dir := os.getenv('HOME')
 	println('User HOME directory: ${home_dir}')
 
-	// Checking if a binary exists in the system PATH
+	// os.exists_in_system_path checks if a command binary is present in the system's PATH.
 	if os.exists_in_system_path('git') {
 		println('Confirmed: Git executable exists in system PATH.')
 	}
 
-	// Executing OS commands
-	// os.execute runs command in a subshell and returns a Result struct containing exit_code and output.
+	// os.execute runs a system command in a shell and returns a Result struct.
+	// The Result contains both the command exit_code and stdout/stderr output.
 	println('Running command "uname"...')
 	res := os.execute('uname')
 	if res.exit_code == 0 {
@@ -14806,16 +14865,19 @@ fn main() {
 	}
 
 	// ==========================================
-	// 2. Directory Tree Operations (Nix/CLI Focus)
+	// 2. Directory Tree Operations
 	// ==========================================
 	println('\n--- Directory Tree Operations ---')
 
-	// Create nested directories (like `mkdir -p`)
+	// os.mkdir_all recursively creates a full nested directory path (similar to mkdir -p).
 	nested_dir := os.join_path('temp_parent', 'temp_child')
 	println('Creating nested directory structure: ${nested_dir}...')
 	os.mkdir_all(nested_dir) or { println('Failed to create directory structure: ${err}') }
 
-	// Create single directory, check status, and remove it
+	// os.mkdir creates a single new directory.
+	// os.is_dir checks if a path points to a directory.
+	// os.is_dir_empty checks if the directory has no files or subfolders.
+	// os.rmdir deletes a single empty directory.
 	single_dir := 'temp_single_dir'
 	os.mkdir(single_dir) or { println('Failed to create directory: ${err}') }
 	println('Is directory? ${os.is_dir(single_dir)}')
@@ -14827,14 +14889,24 @@ fn main() {
 	// ==========================================
 	println('\n--- Path Manipulation & Extraction ---')
 	sample_path := '/usr/local/bin/v.exe'
+	
+	// Path parsing helpers:
+	// os.dir returns the parent directory.
+	// os.base returns the last element of the path.
+	// os.file_ext returns the file suffix including dot.
+	// os.file_name returns the filename without the path.
+	// os.is_abs_path checks if the path starts with root.
+	// os.real_path resolves symlinks and relative references to return the absolute canonical path.
+	// os.norm_path cleans up and normalizes path separators.
+	// os.split_path splits a path into (dir, file_name, file_extension).
 	println('Sample path: ${sample_path}')
-	println('Directory:   ${os.dir(sample_path)}') // /usr/local/bin
-	println('Base name:   ${os.base(sample_path)}') // v.exe
-	println('Extension:   ${os.file_ext(sample_path)}') // .exe
-	println('File name:   ${os.file_name(sample_path)}') // v.exe
-	println('Is absolute? ${os.is_abs_path(sample_path)}') // true
-	println('Real path:   ${os.real_path('.')}') // absolute current dir path
-	println('Norm path:   ${os.norm_path('/usr/local/../bin/v')}') // /usr/bin/v
+	println('Directory:   ${os.dir(sample_path)}')
+	println('Base name:   ${os.base(sample_path)}')
+	println('Extension:   ${os.file_ext(sample_path)}')
+	println('File name:   ${os.file_name(sample_path)}')
+	println('Is absolute? ${os.is_abs_path(sample_path)}')
+	println('Real path:   ${os.real_path('.')}')
+	println('Norm path:   ${os.norm_path('/usr/local/../bin/v')}')
 	p_dir, p_file, p_ext := os.split_path(sample_path)
 	println('Split path -> dir: ${p_dir}, file: ${p_file}, ext: ${p_ext}')
 
@@ -14842,6 +14914,9 @@ fn main() {
 	// 4. Working Directory Traversal
 	// ==========================================
 	println('\n--- Working Directory Traversal ---')
+	
+	// os.getwd returns the current active working directory.
+	// os.chdir changes the current active working directory.
 	original_wd := os.getwd()
 	println('Original working directory: ${original_wd}')
 
@@ -14849,7 +14924,7 @@ fn main() {
 	os.chdir('temp_parent') or { println('Failed to change directory: ${err}') }
 	println('New working directory: ${os.getwd()}')
 
-	// Change back to original directory
+	// Restore original working directory
 	os.chdir(original_wd) or { println('Failed to restore directory: ${err}') }
 
 	// ==========================================
@@ -14859,9 +14934,11 @@ fn main() {
 	copied_file := 'temp_book_copy.txt'
 	moved_file := 'temp_book_moved.txt'
 
+	// os.cp copies a file from source to destination.
 	println('Copying ${filename} to ${copied_file}...')
 	os.cp(filename, copied_file) or { println('Failed to copy file: ${err}') }
 
+	// os.mv moves or renames a file.
 	println('Moving ${copied_file} to ${moved_file}...')
 	os.mv(copied_file, moved_file) or { println('Failed to move file: ${err}') }
 
@@ -14871,27 +14948,26 @@ fn main() {
 	println('\n--- Nix-Specific Operations ---')
 	symlink_name := 'temp_book_link.txt'
 
-	// Create symlink
+	// os.symlink creates a symbolic link pointing to a target file.
+	// os.is_link checks if the path points to a symbolic link.
 	println('Creating symbolic link from ${moved_file} to ${symlink_name}...')
 	os.symlink(moved_file, symlink_name) or { println('Failed to create symlink: ${err}') }
 
-	// Check if path is a link
 	if os.is_link(symlink_name) {
 		println('Confirmed: ${symlink_name} is a symbolic link.')
 	}
 
-	// Change file permissions (chmod)
-	// 0o644 = Owner: read/write, Group: read, Others: read
+	// os.chmod changes permission bits on a file (using octal representation).
+	// os.is_readable, os.is_writable, os.is_executable check specific accessibility bits.
 	println('Setting file permissions to 0o644 (read/write for owner, read-only for others)...')
 	os.chmod(moved_file, 0o644) or { println('Failed to change permissions: ${err}') }
 
-	// Check permissions
 	println('Is readable?   ${os.is_readable(moved_file)}')
 	println('Is writable?   ${os.is_writable(moved_file)}')
 	println('Is executable? ${os.is_executable(moved_file)}')
 
-	// Change ownership (chown)
-	// Safe demo using our current user's UID and GID to avoid permission errors
+	// os.getuid and os.getgid get current user and group IDs.
+	// os.chown changes the user and group owner IDs on a file.
 	uid := os.getuid()
 	gid := os.getgid()
 	println('Setting ownership of ${moved_file} to UID: ${uid}, GID: ${gid}...')
@@ -14901,6 +14977,8 @@ fn main() {
 	// 7. File Globbing (glob)
 	// ==========================================
 	println('\n--- File Globbing ---')
+	
+	// os.glob finds all files matching a wildcard pattern (e.g. *.txt).
 	os.write_file('glob_test_1.txt', '1') or {}
 	os.write_file('glob_test_2.txt', '2') or {}
 	globbed_files := os.glob('glob_test_*.txt') or { [] }
@@ -14913,16 +14991,11 @@ fn main() {
 	// ==========================================
 	println('\n--- Cleanup ---')
 
-	// Remove original file
+	// os.rm deletes a file.
+	// os.rmdir_all recursively removes a directory and all of its contents.
 	os.rm(filename) or { println('Failed to remove ${filename}: ${err}') }
-
-	// Remove moved file
 	os.rm(moved_file) or { println('Failed to remove ${moved_file}: ${err}') }
-
-	// Remove symlink
 	os.rm(symlink_name) or { println('Failed to remove symlink ${symlink_name}: ${err}') }
-
-	// Remove nested directory structure recursively
 	os.rmdir_all('temp_parent') or { println('Failed to remove temp_parent directory: ${err}') }
 
 	println('Cleanup completed successfully.')
@@ -15182,7 +15255,53 @@ _File location: [language_updates_and_stdlib/02_standard_library/03_time_and_sto
 
 ### Lesson: Time And Stopwatch
 
-V has a very rich and growing standard library and is actively updated. This lesson on **Time And Stopwatch** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
+V's standard library provides a robust and precise set of utilities for time retrieval, formatting, parsing, timezone management, and execution timing via the `time` module. Here is the simplest, most practical guide to when you should actually use each of these tools in real-world programming.
+
+---
+
+#### 1. Time Retrieval & Fields
+
+* **The Vibe:** "Checking your wristwatch."
+* **What it does:** Gets the exact current date, time, and nanoseconds.
+* **Best to use when:** You need to timestamp actions or log events.
+* **Real-world example:** Recording when a user logs in.
+
+#### 2. Time Arithmetic & Comparisons
+
+* **The Vibe:** "Time-traveling and deadlines."
+* **What it does:** Adds or subtracts intervals (days, hours, seconds) and compares which time comes first.
+* **Best to use when:** You need to calculate expirations or duration differences.
+* **Real-world example:** Setting a user token to expire in 2 hours.
+
+#### 3. String Formatting & RFC Standards
+
+* **The Vibe:** "The translator for calendar dates."
+* **What it does:** Converts raw timestamps into clean, human-readable formats, custom strings, or RFC 3339 standards.
+* **Best to use when:** Displaying dates to users or sending structured time JSON over APIs.
+* **Real-world example:** Printing a post publish date as `YYYY-MM-DD HH:mm:ss`.
+
+#### 4. Timezone Conversions (Local & UTC)
+
+* **The Vibe:** "The jet-lag cure."
+* **What it does:** Converts times between local system time and UTC.
+* **Best to use when:** You store timestamps in UTC (best practice) but need to show them in the user's local timezone.
+* **Real-world example:** Normalizing database entries to UTC time.
+
+#### 5. Relative Time
+
+* **The Vibe:** "Social media date labels."
+* **What it does:** Formats dates relative to now (e.g., "5 minutes ago", "yesterday").
+* **Best to use when:** Displaying activity feeds or notification boards.
+* **Real-world example:** Showing how long ago a comment was posted.
+
+#### 6. Stopwatch
+
+* **The Vibe:** "The performance racing timer."
+* **What it does:** Measures sub-millisecond elapsed durations.
+* **Best to use when:** Benchmarking code speed or tracking long-running tasks.
+* **Real-world example:** Measuring how long an API database query took to run.
+
+---
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **time and stopwatch**.
@@ -15196,11 +15315,20 @@ fn main() {
 	println('Time API examples')
 	println('=================')
 
+	// time.now() returns the current system time.
+	// We can access properties like year, month, day, hour, etc.
 	now := time.now()
 	println('Current time: ${now}')
 	println('Fields -> year=${now.year}, month=${now.month}, day=${now.day}, hour=${now.hour}, minute=${now.minute}, second=${now.second}, nanosecond=${now.nanosecond}, is_local=${now.is_local}')
 
+	// ==========================================
 	// Arithmetic and comparisons
+	// ==========================================
+	
+	// now.add() adds a duration to the timestamp.
+	// now.add_days() adds a specified number of days.
+	// now.add_seconds() adds a specified number of seconds.
+	// We can compare Time objects using <, >, ==, and subtract them to get a Duration.
 	future := now.add(2 * time.hour)
 	tomorrow := now.add_days(1)
 	in_30_seconds := now.add_seconds(30)
@@ -15211,7 +15339,16 @@ fn main() {
 	println('comparison: now == now -> ${now == now}')
 	println('difference: future - now -> ${future - now}')
 
+	// ==========================================
 	// Formatting helpers
+	// ==========================================
+	
+	// now.clean() formats time as YYYY-MM-DD HH:MM:SS.
+	// now.clean12() formats time using a 12-hour clock with AM/PM.
+	// now.custom_format() formats time using a custom layout pattern.
+	// now.format() and format_rfc3339() print standard ISO/RFC timestamps.
+	// format_ss methods print time down to micro, milli, or nanoseconds.
+	// strftime() uses C-like format specifiers.
 	println('clean: ${now.clean()}')
 	println('clean12: ${now.clean12()}')
 	println('custom_format: ${now.custom_format('YYYY-MM-DD HH:mm:ss')}')
@@ -15228,7 +15365,11 @@ fn main() {
 	println('get_fmt_date_str: ${now.get_fmt_date_str(time.FormatDelimiter.hyphen, time.FormatDate.yyyymmdd)}')
 	println('get_fmt_time_str: ${now.get_fmt_time_str(time.FormatTime.hhmm24)}')
 
+	// ==========================================
 	// Date and time helpers
+	// ==========================================
+	
+	// Extra details like day_of_week(), days_from_unix_epoch(), week_of_year(), smonth(), etc.
 	println('day_of_week: ${now.day_of_week()}')
 	println('days_from_unix_epoch: ${now.days_from_unix_epoch()}')
 	println('ddmmy: ${now.ddmmy()}')
@@ -15243,7 +15384,12 @@ fn main() {
 	println('year_day: ${now.year_day()}')
 	println('ymmdd: ${now.ymmdd()}')
 
+	// ==========================================
 	// UTC and local conversions
+	// ==========================================
+	
+	// Convert between UTC and the system local timezone.
+	// unix(), unix_milli(), etc. return timestamps since the Unix Epoch.
 	println('is_utc: ${now.is_utc()}')
 	println('as_local: ${now.as_local()}')
 	println('as_utc: ${now.as_utc()}')
@@ -15257,7 +15403,13 @@ fn main() {
 	println('unix_nano: ${now.unix_nano()}')
 	println('utc_string: ${now.utc_string()}')
 
+	// ==========================================
 	// Relative and serialization helpers
+	// ==========================================
+	
+	// relative() and relative_short() return values like "2 hours ago".
+	// to_json() returns the JSON representation of the time.
+	// push_to_http_header() format HTTP-standard cookie/caching header dates.
 	println('relative: ${now.relative()}')
 	println('relative_short: ${now.relative_short()}')
 	println('debug: ${now.debug()}')
@@ -15269,7 +15421,11 @@ fn main() {
 	println('http_header_string: ${now.http_header_string()}')
 	println('push_to_http_header: ${header_buffer.bytestr()}')
 
+	// ==========================================
 	// JSON parsing helpers
+	// ==========================================
+	
+	// Parse Unix timestamps or ISO/RFC 3339 strings directly back into a Time struct.
 	mut parsed_from_number := time.now()
 	parsed_from_number.from_json_number('1712345678') or {
 		println('from_json_number error: ${err}')
@@ -15282,7 +15438,11 @@ fn main() {
 	}
 	println('from_json_string: ${parsed_from_string}')
 
+	// ==========================================
 	// Stopwatch example
+	// ==========================================
+	
+	// new_stopwatch starts a new stopwatch to measure high-precision elapsed code execution time.
 	println('Starting stopwatch...')
 	mut sw := time.new_stopwatch()
 	time.sleep(150 * time.millisecond)
@@ -17043,7 +17203,51 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/17_term/term.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/17_term/term.v)_
 
-This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, mixing text and background colors with styles, and retrieving the terminal size using the `term` module.
+### Lesson: Term
+
+V's standard library provides a direct, cross-platform module named `term` for querying terminal attributes, altering console text colors/styles, and printing preformatted output badges. Here is the simplest, most practical guide to when you should actually use each of these tools in real-world programming.
+
+---
+
+#### 1. Terminal Size Metadata
+
+* **The Vibe:** "Measuring the room size."
+* **What it does:** Tells you how many columns (width) and rows (height) are currently visible in the user's terminal window.
+* **Best to use when:** You are rendering custom terminal layouts, tables, or ASCII art that must fit the screen.
+* **Real-world example:** Wrapping text dynamically so it doesn't spill over the screen edge.
+
+#### 2. ANSI Text Coloring
+
+* **The Vibe:** "Adding paint to the console."
+* **What it does:** Applies green, red, yellow, or blue styling to terminal characters.
+* **Best to use when:** Highlighting success, errors, warnings, or structural tags.
+* **Real-world example:** Printing error messages in bold red.
+
+#### 3. Styling Modifiers
+
+* **The Vibe:** "The font options panel."
+* **What it does:** Renders text as bold, underlined, or strikethrough.
+* **Best to use when:** Emphasizing headings, showing links, or marking deprecated options.
+* **Real-world example:** Printing column headers of a CLI table in bold.
+
+#### 4. Background Fills & Combinations
+
+* **The Vibe:** "The highlighter pen."
+* **What it does:** Fills the text background block with color, and supports mixing foreground styles and background styles.
+* **Best to use when:** Creating alerts, status blocks, or highlighting active menu items.
+* **Real-world example:** Printing a yellow warning status badge with a blue background.
+
+#### 5. Preformatted Messages
+
+* **The Vibe:** "The instant status stamp."
+* **What it does:** Provides preformatted `[OK]`, `[WARNING]`, and `[FAILED]` status boxes with colors built in.
+* **Best to use when:** Logging task progress or system bootstrap outputs.
+* **Real-world example:** Printing `[OK] Server started on port 8080`.
+
+---
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **term**.
 
 ```v
 module main
@@ -17053,30 +17257,55 @@ import term
 fn main() {
 	println('=== term Module Demo ===')
 
-	// 1. Get terminal size
+	// ==========================================
+	// 1. Terminal Size Metadata
+	// ==========================================
+	
+	// term.get_terminal_size() returns the (width, height) of the active terminal session in columns and rows.
 	width, height := term.get_terminal_size()
 	println('Terminal size: ${width} columns x ${height} rows')
 
-	// 2. Colored text helpers
+	// ==========================================
+	// 2. Colored Text (Foreground Styling)
+	// ==========================================
+	
+	// Foreground color helpers wrap the string with ANSI escape codes to change the text color.
 	println(term.green('This text is green!'))
 	println(term.red('This text is red!'))
 	println(term.yellow('This text is yellow!'))
 	println(term.blue('This text is blue!'))
 
-	// 3. Text styling modifiers
+	// ==========================================
+	// 3. Text Styles & Modifiers
+	// ==========================================
+	
+	// Text modifiers add visual decorations like bold, underline, or strikethrough.
 	println(term.bold('This text is bold!'))
 	println(term.underline('This text is underlined!'))
 	println(term.strikethrough('This text has a strikethrough!'))
 
-	// 4. Background styling
+	// ==========================================
+	// 4. Background Styling
+	// ==========================================
+	
+	// Background color helpers fill the background area behind the printed characters.
 	println(term.bg_blue(' This has a blue background! '))
 
-	// 5. Mixing background and text colors (with styles)
+	// ==========================================
+	// 5. Mixed Styling & Layering
+	// ==========================================
+	
+	// We can combine text color, style (bold/underline), and background color by nesting the calls.
 	println(term.bg_blue(term.yellow(' Yellow text on a blue background ')))
 	println(term.bg_red(term.white(term.bold(' Bold white text on a red background '))))
 	println(term.bg_green(term.black(term.underline(' Underlined black text on a green background '))))
 
-	// 6. Message box helper formats
+	// ==========================================
+	// 6. Preformatted Status Messages
+	// ==========================================
+	
+	// V's term module provides built-in preformatted status message helper templates.
+	// These automatically print colored status stamps like [OK], [WARNING], or [FAILED] followed by the message.
 	println(term.ok_message('Operation succeeded!'))
 	println(term.warn_message('This is a warning!'))
 	println(term.fail_message('Operation failed!'))
