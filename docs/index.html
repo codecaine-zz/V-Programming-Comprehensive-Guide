@@ -28037,12 +28037,12 @@ fn main() {
                 <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                 <span>File: </span><a href="file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/17_term/term.v">language_updates_and_stdlib/02_standard_library/17_term/term.v</a>
             </div>
-<p>This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, and retrieving the terminal size using the <code>term</code> module.</p>
+<p>This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, mixing text and background colors with styles, and retrieving the terminal size using the <code>term</code> module.</p>
 <div class="code-wrapper">
             <div class="code-header">
                 <span class="code-lang">v</span>
                 <div class="code-actions">
-                    <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCB0ZXJtCgpmbiBtYWluKCkgewoJcHJpbnRsbignPT09IHRlcm0gTW9kdWxlIERlbW8gPT09JykKCgkvLyAxLiBHZXQgdGVybWluYWwgc2l6ZQoJd2lkdGgsIGhlaWdodCA6PSB0ZXJtLmdldF90ZXJtaW5hbF9zaXplKCkKCXByaW50bG4oJ1Rlcm1pbmFsIHNpemU6ICR7d2lkdGh9IGNvbHVtbnMgeCAke2hlaWdodH0gcm93cycpCgoJLy8gMi4gQ29sb3JlZCB0ZXh0IGhlbHBlcnMKCXByaW50bG4odGVybS5ncmVlbignVGhpcyB0ZXh0IGlzIGdyZWVuIScpKQoJcHJpbnRsbih0ZXJtLnJlZCgnVGhpcyB0ZXh0IGlzIHJlZCEnKSkKCXByaW50bG4odGVybS55ZWxsb3coJ1RoaXMgdGV4dCBpcyB5ZWxsb3chJykpCglwcmludGxuKHRlcm0uYmx1ZSgnVGhpcyB0ZXh0IGlzIGJsdWUhJykpCgoJLy8gMy4gVGV4dCBzdHlsaW5nIG1vZGlmaWVycwoJcHJpbnRsbih0ZXJtLmJvbGQoJ1RoaXMgdGV4dCBpcyBib2xkIScpKQoJcHJpbnRsbih0ZXJtLnVuZGVybGluZSgnVGhpcyB0ZXh0IGlzIHVuZGVybGluZWQhJykpCglwcmludGxuKHRlcm0uc3RyaWtldGhyb3VnaCgnVGhpcyB0ZXh0IGhhcyBhIHN0cmlrZXRocm91Z2ghJykpCgoJLy8gNC4gQmFja2dyb3VuZCBzdHlsaW5nCglwcmludGxuKHRlcm0uYmdfYmx1ZSgnIFRoaXMgaGFzIGEgYmx1ZSBiYWNrZ3JvdW5kISAnKSkKCgkvLyA1LiBNZXNzYWdlIGJveCBoZWxwZXIgZm9ybWF0cwoJcHJpbnRsbih0ZXJtLm9rX21lc3NhZ2UoJ09wZXJhdGlvbiBzdWNjZWVkZWQhJykpCglwcmludGxuKHRlcm0ud2Fybl9tZXNzYWdlKCdUaGlzIGlzIGEgd2FybmluZyEnKSkKCXByaW50bG4odGVybS5mYWlsX21lc3NhZ2UoJ09wZXJhdGlvbiBmYWlsZWQhJykpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                    <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCB0ZXJtCgpmbiBtYWluKCkgewoJcHJpbnRsbignPT09IHRlcm0gTW9kdWxlIERlbW8gPT09JykKCgkvLyAxLiBHZXQgdGVybWluYWwgc2l6ZQoJd2lkdGgsIGhlaWdodCA6PSB0ZXJtLmdldF90ZXJtaW5hbF9zaXplKCkKCXByaW50bG4oJ1Rlcm1pbmFsIHNpemU6ICR7d2lkdGh9IGNvbHVtbnMgeCAke2hlaWdodH0gcm93cycpCgoJLy8gMi4gQ29sb3JlZCB0ZXh0IGhlbHBlcnMKCXByaW50bG4odGVybS5ncmVlbignVGhpcyB0ZXh0IGlzIGdyZWVuIScpKQoJcHJpbnRsbih0ZXJtLnJlZCgnVGhpcyB0ZXh0IGlzIHJlZCEnKSkKCXByaW50bG4odGVybS55ZWxsb3coJ1RoaXMgdGV4dCBpcyB5ZWxsb3chJykpCglwcmludGxuKHRlcm0uYmx1ZSgnVGhpcyB0ZXh0IGlzIGJsdWUhJykpCgoJLy8gMy4gVGV4dCBzdHlsaW5nIG1vZGlmaWVycwoJcHJpbnRsbih0ZXJtLmJvbGQoJ1RoaXMgdGV4dCBpcyBib2xkIScpKQoJcHJpbnRsbih0ZXJtLnVuZGVybGluZSgnVGhpcyB0ZXh0IGlzIHVuZGVybGluZWQhJykpCglwcmludGxuKHRlcm0uc3RyaWtldGhyb3VnaCgnVGhpcyB0ZXh0IGhhcyBhIHN0cmlrZXRocm91Z2ghJykpCgoJLy8gNC4gQmFja2dyb3VuZCBzdHlsaW5nCglwcmludGxuKHRlcm0uYmdfYmx1ZSgnIFRoaXMgaGFzIGEgYmx1ZSBiYWNrZ3JvdW5kIS AnKSkKCgkvLyA1LiBNaXhpbmcgYmFja2dyb3VuZCBhbmQgdGV4dCBjb2xvcnMgKHdpdGggc3R5bGVzKQoJcHJpbnRsbih0ZXJtLmJnX2JsdWUodGVybS55ZWxsb3coJyBZZWxsb3cgdGV4dCBvbiBhIGJsdWUgYmFja2dyb3VuZCAnKSkpCglwcmludGxuKHRlcm0uYmdfcmVkKHRlcm0ud2hpdGUodGVybS5ib2xkKCcgQm9sZCB3aGl0ZSB0ZXh0IG9uIGEgcmVkIGJhY2tncm91bmQgJykpKSkKCXByaW50bG4odGVybS5iZ19ncmVlbih0ZXJtLmJsYWNrKHRlcm0udW5kZXJsaW5lKCcgVW5kZXJsaW5lZCBibGFjayB0ZXh0IG9uIGEgZ3JlZW4gYmFja2dyb3VuZCAnKSkpKQoKCS8vIDYuIE1lc3NhZ2UgYm94IGhlbHBlciBmb3JtYXRzCglwcmludGxuKHRlcm0ub2tfbWVzc2FnZSgnT3BlcmF0aW9uIHN1Y2NlZWRlZCEnKSkKCXByaW50bG4odGVybS53YXJuX21lc3NhZ2UoJ1RoaXMgaXMgYSB3YXJuaW5nIScpKQoJcHJpbnRsbih0ZXJtLmZhaWxfbWVzc2FnZSgnT3BlcmF0aW9uIGZhaWxlZCEnKSkKfQo%3D" target="_blank" class="btn-playground" title="Run in V Playground">
                 <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                 Run
             </a>
@@ -28085,7 +28085,12 @@ fn main() {
 	// 4. Background styling
 	println(term.bg_blue(&#039; This has a blue background! &#039;))
 
-	// 5. Message box helper formats
+	// 5. Mixing background and text colors (with styles)
+	println(term.bg_blue(term.yellow(&#039; Yellow text on a blue background &#039;)))
+	println(term.bg_red(term.white(term.bold(&#039; Bold white text on a red background &#039;))))
+	println(term.bg_green(term.black(term.underline(&#039; Underlined black text on a green background &#039;))))
+
+	// 6. Message box helper formats
 	println(term.ok_message(&#039;Operation succeeded!&#039;))
 	println(term.warn_message(&#039;This is a warning!&#039;))
 	println(term.fail_message(&#039;Operation failed!&#039;))

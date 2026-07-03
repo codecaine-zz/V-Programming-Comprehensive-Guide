@@ -16886,7 +16886,7 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/17_term/term.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/17_term/term.v)_
 
-This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, and retrieving the terminal size using the `term` module.
+This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, mixing text and background colors with styles, and retrieving the terminal size using the `term` module.
 
 ```v
 module main
@@ -16914,7 +16914,12 @@ fn main() {
 	// 4. Background styling
 	println(term.bg_blue(' This has a blue background! '))
 
-	// 5. Message box helper formats
+	// 5. Mixing background and text colors (with styles)
+	println(term.bg_blue(term.yellow(' Yellow text on a blue background ')))
+	println(term.bg_red(term.white(term.bold(' Bold white text on a red background '))))
+	println(term.bg_green(term.black(term.underline(' Underlined black text on a green background '))))
+
+	// 6. Message box helper formats
 	println(term.ok_message('Operation succeeded!'))
 	println(term.warn_message('This is a warning!'))
 	println(term.fail_message('Operation failed!'))
