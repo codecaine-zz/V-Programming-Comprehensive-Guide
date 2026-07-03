@@ -26215,7 +26215,81 @@ fn main() {
                             <svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                         </button>
                     </h3>
-<p>V has a very rich and growing standard library and is actively updated. This lesson on <strong>Datatypes Collections</strong> showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.</p>
+<p>V's standard library provides a rich set of built-in collections and data structures through the <code>datatypes</code> module. Here is the simplest, most practical guide to when you should actually use each of these data structures in real-world programming.</p>
+
+<hr />
+
+<h4>1. Bloom Filter</h4>
+<ul>
+    <li><strong>The Vibe:</strong> The "Fast bouncer at the door."</li>
+    <li><strong>What it does:</strong> It tells you with 100% certainty if something is <strong>not</strong> there, but if it says something <strong>is</strong> there, it might be guessing (a false positive).</li>
+    <li><strong>Best to use when:</strong> You have a massive database and searching it takes too long. You use a Bloom Filter as a quick shield. If the filter says <em>"Nope, that username doesn't exist,"</em> you don't waste time searching the database.</li>
+    <li><strong>Real-world example:</strong> Checking if a chosen username is taken, or filtering out malicious URLs before loading a website.</li>
+</ul>
+
+<h4>2. Set</h4>
+<ul>
+    <li><strong>The Vibe:</strong> The "No Duplicates Allowed" club.</li>
+    <li><strong>What it does:</strong> Stores a collection of items where everything <strong>must be unique</strong>. It also lets you do math operations like combining two groups (Union) or finding what they have in common (Intersection).</li>
+    <li><strong>Best to use when:</strong> You need to filter out duplicates instantly, or you need to compare two groups of data to find common ground.</li>
+    <li><strong>Real-world example:</strong> Storing unique visitor IP addresses on a website, or finding a list of mutual friends between you and someone else.</li>
+</ul>
+
+<h4>3. Queue</h4>
+<ul>
+    <li><strong>The Vibe:</strong> Waiting in line at a grocery store (First In, First Out / FIFO).</li>
+    <li><strong>What it does:</strong> The first item you put in is the first item you take out.</li>
+    <li><strong>Best to use when:</strong> You have tasks that need to be processed exactly in the order they arrived.</li>
+    <li><strong>Real-world example:</strong> A printer queue handling documents, or customer support tickets waiting to be answered by an agent.</li>
+</ul>
+
+<h4>4. Stack</h4>
+<ul>
+    <li><strong>The Vibe:</strong> A stack of dinner plates (Last In, First Out / LIFO).</li>
+    <li><strong>What it does:</strong> The last item you put on top is the first one you have to take off.</li>
+    <li><strong>Best to use when:</strong> You need to keep track of a history of actions so you can reverse them, or track active processes.</li>
+    <li><strong>Real-world example:</strong> The "Undo" (Ctrl+Z) feature in a text editor, or the "Back" button history in your web browser.</li>
+</ul>
+
+<h4>5. Ring Buffer (Circular Buffer)</h4>
+<ul>
+    <li><strong>The Vibe:</strong> A streaming video that continuously overwrites itself.</li>
+    <li><strong>What it does:</strong> A queue with a strict maximum size. When it gets full, new data wraps around to the beginning and overwrites the oldest data.</li>
+    <li><strong>Best to use when:</strong> You are handling a continuous stream of data and you only care about the most recent information, without wasting memory.</li>
+    <li><strong>Real-world example:</strong> Audio/video streaming playback buffers, or a flight data recorder ("black box") that only saves the last 24 hours of flight data.</li>
+</ul>
+
+<h4>6. Min Heap</h4>
+<ul>
+    <li><strong>The Vibe:</strong> A VIP line where the most urgent person always gets to go first.</li>
+    <li><strong>What it does:</strong> A specialized structure that always keeps the <em>smallest</em> (or highest priority) value at the very top.</li>
+    <li><strong>Best to use when:</strong> You need to constantly pull the lowest/highest value out of a changing list without sorting the entire list every single time.</li>
+    <li><strong>Real-world example:</strong> A hospital emergency room triage system, or GPS apps calculating the shortest route dynamically.</li>
+</ul>
+
+<h4>7. BSTree (Binary Search Tree)</h4>
+<ul>
+    <li><strong>The Vibe:</strong> A perfectly organized filing cabinet.</li>
+    <li><strong>What it does:</strong> Keeps data sorted automatically as you add it. Smaller numbers go left, larger numbers go right.</li>
+    <li><strong>Best to use when:</strong> You need to search, add, and delete items constantly, and you always need the data to stay in perfect alphabetical or numerical order.</li>
+    <li><strong>Real-world example:</strong> File systems on your computer, or database indexing to make searching millions of records instant.</li>
+</ul>
+
+<h4>8. LinkedList vs. DoublyLinkedList</h4>
+<ul>
+    <li><strong>The Vibe:</strong> A scavenger hunt. Item A gives you a clue to find Item B, which gives you a clue to find Item C.</li>
+    <li><strong>What it does:</strong>
+        <ul>
+            <li><strong>LinkedList (Singly):</strong> Each item points only to the <em>next</em> item. You can only move forward.</li>
+            <li><strong>DoublyLinkedList:</strong> Each item points to both the <em>next</em> item and the <em>previous</em> item. You can move forward and backward.</li>
+        </ul>
+    </li>
+    <li><strong>Best to use when:</strong> You are constantly adding or removing items from the very beginning or middle of a list. (Standard arrays are slow at this because they have to shift all the other items over; Linked Lists just change where the "clues" point).</li>
+    <li><strong>Real-world example:</strong> A music playlist. A regular linked list only lets you hit "Next". A doubly linked list lets you hit "Next" and "Previous".</li>
+</ul>
+
+<hr />
+
 <p><strong>Additional Context from Repository docs:</strong></p>
 <p>This example demonstrates the concepts of <strong>datatypes collections</strong>.</p>
 <div class="code-wrapper">

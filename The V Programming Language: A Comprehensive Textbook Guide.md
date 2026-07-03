@@ -15473,7 +15473,69 @@ _File location: [language_updates_and_stdlib/02_standard_library/07_datatypes_co
 
 ### Lesson: Datatypes Collections
 
-V has a very rich and growing standard library and is actively updated. This lesson on **Datatypes Collections** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
+V's standard library provides a rich set of built-in collections and data structures through the `datatypes` module. Here is the simplest, most practical guide to when you should actually use each of these data structures in real-world programming.
+
+---
+
+#### 1. Bloom Filter
+
+* **The Vibe:** The "Fast bouncer at the door."
+* **What it does:** It tells you with 100% certainty if something is **not** there, but if it says something **is** there, it might be guessing (a false positive).
+* **Best to use when:** You have a massive database and searching it takes too long. You use a Bloom Filter as a quick shield. If the filter says *"Nope, that username doesn't exist,"* you don't waste time searching the database.
+* **Real-world example:** Checking if a chosen username is taken, or filtering out malicious URLs before loading a website.
+
+#### 2. Set
+
+* **The Vibe:** The "No Duplicates Allowed" club.
+* **What it does:** Stores a collection of items where everything **must be unique**. It also lets you do math operations like combining two groups (Union) or finding what they have in common (Intersection).
+* **Best to use when:** You need to filter out duplicates instantly, or you need to compare two groups of data to find common ground.
+* **Real-world example:** Storing unique visitor IP addresses on a website, or finding a list of mutual friends between you and someone else.
+
+#### 3. Queue
+
+* **The Vibe:** Waiting in line at a grocery store (First In, First Out / FIFO).
+* **What it does:** The first item you put in is the first item you take out.
+* **Best to use when:** You have tasks that need to be processed exactly in the order they arrived.
+* **Real-world example:** A printer queue handling documents, or customer support tickets waiting to be answered by an agent.
+
+#### 4. Stack
+
+* **The Vibe:** A stack of dinner plates (Last In, First Out / LIFO).
+* **What it does:** The last item you put on top is the first one you have to take off.
+* **Best to use when:** You need to keep track of a history of actions so you can reverse them, or track active processes.
+* **Real-world example:** The "Undo" ($Ctrl+Z$) feature in a text editor, or the "Back" button history in your web browser.
+
+#### 5. Ring Buffer (Circular Buffer)
+
+* **The Vibe:** A streaming video that continuously overwrites itself.
+* **What it does:** A queue with a strict maximum size. When it gets full, new data wraps around to the beginning and overwrites the oldest data.
+* **Best to use when:** You are handling a continuous stream of data and you only care about the most recent information, without wasting memory.
+* **Real-world example:** Audio/video streaming playback buffers, or a flight data recorder ("black box") that only saves the last 24 hours of flight data.
+
+#### 6. Min Heap
+
+* **The Vibe:** A VIP line where the most urgent person always gets to go first.
+* **What it does:** A specialized structure that always keeps the *smallest* (or highest priority) value at the very top.
+* **Best to use when:** You need to constantly pull the lowest/highest value out of a changing list without sorting the entire list every single time.
+* **Real-world example:** A hospital emergency room triage system, or GPS apps calculating the shortest route dynamically.
+
+#### 7. BSTree (Binary Search Tree)
+
+* **The Vibe:** A perfectly organized filing cabinet.
+* **What it does:** Keeps data sorted automatically as you add it. Smaller numbers go left, larger numbers go right.
+* **Best to use when:** You need to search, add, and delete items constantly, and you always need the data to stay in perfect alphabetical or numerical order.
+* **Real-world example:** File systems on your computer, or database indexing to make searching millions of records instant.
+
+#### 8. LinkedList vs. DoublyLinkedList
+
+* **The Vibe:** A scavenger hunt. Item A gives you a clue to find Item B, which gives you a clue to find Item C.
+* **What it does:**
+  * **LinkedList (Singly):** Each item points only to the *next* item. You can only move forward.
+  * **DoublyLinkedList:** Each item points to both the *next* item and the *previous* item. You can move forward and backward.
+* **Best to use when:** You are constantly adding or removing items from the very beginning or middle of a list. (Standard arrays are slow at this because they have to shift all the other items over; Linked Lists just change where the "clues" point).
+* **Real-world example:** A music playlist. A regular linked list only lets you hit "Next". A doubly linked list lets you hit "Next" and "Previous".
+
+---
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **datatypes collections**.
