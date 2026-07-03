@@ -15145,30 +15145,100 @@ module main
 import time
 
 fn main() {
-	// 1. Getting current local time
+	println('Time API examples')
+	println('=================')
+
 	now := time.now()
-	println('Current local time: ${now}')
-	println('Components -> Year: ${now.year}, Month: ${now.month}, Day: ${now.day}')
+	println('Current time: ${now}')
+	println('Fields -> year=${now.year}, month=${now.month}, day=${now.day}, hour=${now.hour}, minute=${now.minute}, second=${now.second}, nanosecond=${now.nanosecond}, is_local=${now.is_local}')
 
-	// 2. Custom time formatting
-	formatted := now.custom_format('YYYY-MM-DD HH:mm:ss')
-	println('Custom formatted: ${formatted}')
+	// Arithmetic and comparisons
+	future := now.add(2 * time.hour)
+	tomorrow := now.add_days(1)
+	in_30_seconds := now.add_seconds(30)
+	println('add: ${future}')
+	println('add_days: ${tomorrow}')
+	println('add_seconds: ${in_30_seconds}')
+	println('comparison: now < future -> ${now < future}')
+	println('comparison: now == now -> ${now == now}')
+	println('difference: future - now -> ${future - now}')
 
-	// 3. Time calculations (adding/subtracting durations)
-	// V provides constants like time.hour, time.minute, time.second, etc.
-	two_hours := 2 * time.hour
-	future := now.add(two_hours)
-	println('Time in 2 hours: ${future}')
+	// Formatting helpers
+	println('clean: ${now.clean()}')
+	println('clean12: ${now.clean12()}')
+	println('custom_format: ${now.custom_format('YYYY-MM-DD HH:mm:ss')}')
+	println('format: ${now.format()}')
+	println('format_rfc3339: ${now.format_rfc3339()}')
+	println('format_rfc3339_micro: ${now.format_rfc3339_micro()}')
+	println('format_rfc3339_nano: ${now.format_rfc3339_nano()}')
+	println('format_ss: ${now.format_ss()}')
+	println('format_ss_micro: ${now.format_ss_micro()}')
+	println('format_ss_milli: ${now.format_ss_milli()}')
+	println('format_ss_nano: ${now.format_ss_nano()}')
+	println('strftime: ${now.strftime('%Y-%m-%d %H:%M:%S')}')
+	println('get_fmt_str: ${now.get_fmt_str(time.FormatDelimiter.hyphen, time.FormatTime.hhmm24, time.FormatDate.yyyymmdd)}')
+	println('get_fmt_date_str: ${now.get_fmt_date_str(time.FormatDelimiter.hyphen, time.FormatDate.yyyymmdd)}')
+	println('get_fmt_time_str: ${now.get_fmt_time_str(time.FormatTime.hhmm24)}')
 
-	// 4. Measuring elapsed time using a Stopwatch
+	// Date and time helpers
+	println('day_of_week: ${now.day_of_week()}')
+	println('days_from_unix_epoch: ${now.days_from_unix_epoch()}')
+	println('ddmmy: ${now.ddmmy()}')
+	println('hhmm: ${now.hhmm()}')
+	println('hhmm12: ${now.hhmm12()}')
+	println('hhmmss: ${now.hhmmss()}')
+	println('long_weekday_str: ${now.long_weekday_str()}')
+	println('md: ${now.md()}')
+	println('smonth: ${now.smonth()}')
+	println('weekday_str: ${now.weekday_str()}')
+	println('week_of_year: ${now.week_of_year()}')
+	println('year_day: ${now.year_day()}')
+	println('ymmdd: ${now.ymmdd()}')
+
+	// UTC and local conversions
+	println('is_utc: ${now.is_utc()}')
+	println('as_local: ${now.as_local()}')
+	println('as_utc: ${now.as_utc()}')
+	println('local: ${now.local()}')
+	println('local_to_utc: ${now.local_to_utc()}')
+	println('utc_to_local: ${now.utc_to_local()}')
+	println('local_unix: ${now.local_unix()}')
+	println('unix: ${now.unix()}')
+	println('unix_micro: ${now.unix_micro()}')
+	println('unix_milli: ${now.unix_milli()}')
+	println('unix_nano: ${now.unix_nano()}')
+	println('utc_string: ${now.utc_string()}')
+
+	// Relative and serialization helpers
+	println('relative: ${now.relative()}')
+	println('relative_short: ${now.relative_short()}')
+	println('debug: ${now.debug()}')
+	println('str: ${now.str()}')
+	println('to_json: ${now.to_json()}')
+
+	mut header_buffer := []u8{}
+	now.push_to_http_header(mut header_buffer)
+	println('http_header_string: ${now.http_header_string()}')
+	println('push_to_http_header: ${header_buffer.bytestr()}')
+
+	// JSON parsing helpers
+	mut parsed_from_number := time.now()
+	parsed_from_number.from_json_number('1712345678') or {
+		println('from_json_number error: ${err}')
+	}
+	println('from_json_number: ${parsed_from_number}')
+
+	mut parsed_from_string := time.now()
+	parsed_from_string.from_json_string('2024-04-06T12:34:56Z') or {
+		println('from_json_string error: ${err}')
+	}
+	println('from_json_string: ${parsed_from_string}')
+
+	// Stopwatch example
 	println('Starting stopwatch...')
 	mut sw := time.new_stopwatch()
-
-	// Sleep for a short duration to simulate work
 	time.sleep(150 * time.millisecond)
-
-	elapsed := sw.elapsed()
-	println('Elapsed time: ${elapsed.milliseconds()} ms')
+	println('Elapsed: ${sw.elapsed().milliseconds()} ms')
 }
 ```
 
