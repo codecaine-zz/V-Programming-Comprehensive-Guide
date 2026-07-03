@@ -798,13 +798,10 @@ Here, we declare two mutable variables `a` and `b` at the same time using `mut`.
 This example demonstrates the concepts of **parallel declaration mutable variables**.
 
 ```v
-// mutable variables parallel assignment
-
 fn main() {
 	mut greeting, mut recipient := 'Hi', 'world'
 	println('${greeting}, ${recipient}!')
 
-	// updating mutable variables in parallel
 	greeting, recipient = 'Hello', 'Ada'
 	println('${greeting}, ${recipient}!')
 }
@@ -830,7 +827,6 @@ fn main() {
 	message = 'Hi'
 	println(message)
 	println(count)
-	// count = 2 // Uncommenting this would fail because count is immutable.
 }
 ```
 
@@ -875,12 +871,14 @@ This example demonstrates the concepts of **augmented assignment integer**.
 
 ```v
 fn main() {
-	mut cnt := 10
-	println(cnt)
-	cnt = cnt + 5
-	println(cnt)
-	cnt += 5
-	println(cnt)
+	mut score := 10
+	println(score)
+
+	score = score + 5
+	println(score)
+
+	score += 5
+	println(score)
 }
 ```
 
@@ -901,10 +899,9 @@ This example demonstrates the concepts of **declare mutable variable**.
 
 ```v
 fn main() {
-	mut count := 0
-	count += 1
-	count += 2
-	println('Current count: ${count}')
+	mut counter := 0
+	counter += 1
+	println(counter)
 }
 ```
 
@@ -944,9 +941,8 @@ This example demonstrates the concepts of **declare immutable variable**.
 
 ```v
 fn main() {
-	greeting := 'Hello'
-	message := greeting + ', V!'
-	println(message)
+	msg := 'Hello'
+	println(msg)
 }
 ```
 
@@ -1600,14 +1596,29 @@ This example demonstrates the concepts of **arithmetic operators**.
 module main
 
 fn main() {
-	price := 120
-	tax_rate := 8
-	tax := price * tax_rate / 100
-	total := price + tax
+	a := 10
+	b := 2
 
-	println('Subtotal: ${price}')
-	println('Tax: ${tax}')
-	println('Total: ${total}')
+	// add using +
+	sum := a + b
+
+	// subtract using -
+	diff := b - a
+
+	// product using *
+	prod := a * b
+
+	// / results in quotient
+	quotient := a / b
+
+	// % modulo results in remainder
+	remainder := a % b
+
+	println('Sum of ${a} and ${b} is ${sum}')
+	println('Subtracting ${a} from ${b} is ${diff}')
+	println('Product of ${a} and ${b} is ${prod}')
+	println('Quotient when ${a} divided by ${b} is ${quotient}')
+	println('Remainder when ${a} divided by ${b} is ${remainder}')
 }
 ```
 
@@ -1866,7 +1877,7 @@ fn main() {
 	usz := usize(200)
 
 	// str() returns string representation
-	println(sz.str())  // "100"
+	println(sz.str()) // "100"
 	println(usz.str()) // "200"
 
 	// voidptr methods
@@ -1906,13 +1917,10 @@ This example demonstrates the concepts of **declare rune**.
 
 ```v
 fn main() {
-	initial := `A`
-	symbol := `🔥`
-
-	println(typeof(initial).name)
-	println(typeof(symbol).name)
-	println('Initial: ${initial.str()}')
-	println('Symbol: ${symbol.str()}')
+	// A rune stores a single Unicode character.
+	l := `a`
+	println(typeof(l).name)
+	// rune
 }
 ```
 
@@ -1984,11 +1992,11 @@ fn main() {
 
 	// Testing with a multi-byte UTF-8 rune (dog emoji 🐕)
 	r2 := `🐕`
-	println(r2.bytes())           // [240, 159, 144, 149]
-	println(r2.hex())             // "1f415" (Unicode code point in hex)
+	println(r2.bytes()) // [240, 159, 144, 149]
+	println(r2.hex()) // "1f415" (Unicode code point in hex)
 	println(r2.length_in_bytes()) // 4
-	println(r2.repeat(2))         // "🐕🐕"
-	println(r2.str())             // "🐕"
+	println(r2.repeat(2)) // "🐕🐕"
+	println(r2.str()) // "🐕"
 }
 ```
 
@@ -2008,6 +2016,8 @@ In V, primitive data types are the core building blocks of the language. This se
 This example demonstrates the concepts of **declare string**.
 
 ```v
+module main
+
 fn main() {
 	greeting := 'hello'
 	name := 'Ada'
@@ -2171,10 +2181,10 @@ fn main() {
 	println('File path: C:\\Program Files\\V')
 
 	// 4. Escaping single quotes (\') in a single-quoted string
-	println('It\'s my Daughter\'s birthday!')
+	println("It's my Daughter's birthday!")
 
 	// 5. Escaping double quotes (\") in a double-quoted string
-	println("She said, \"V is fast!\"")
+	println('She said, "V is fast!"')
 }
 ```
 
@@ -2484,7 +2494,7 @@ fn main() {
 	println(s.is_pure_ascii()) // true
 
 	// split_into_lines() splits a string into an array of lines
-	multiline := "line 1\nline 2"
+	multiline := 'line 1\nline 2'
 	println(multiline.split_into_lines()) // ["line 1", "line 2"]
 
 	// split_by_space() splits a string by space as delimiter
@@ -2541,6 +2551,7 @@ This example demonstrates the concepts of **chaining else if**.
 ```v
 module main
 
+// This helper chooses a meal plan based on the weekday.
 fn breakfast_menu(day string) {
 	if day == 'Monday' {
 		println('Bread, Jam, Half boiled Egg')
@@ -2562,6 +2573,7 @@ fn breakfast_menu(day string) {
 }
 
 fn main() {
+	// Call the helper with a sample weekday.
 	breakfast_menu('Saturday')
 }
 ```
@@ -2717,9 +2729,9 @@ module main
 fn main() {
 	age := 18
 	res := match age {
-		0...18 { 'Person with age $age classified as a Child' }
-		19...120 { 'Person with age $age classified as an Adult' }
-		else { '$age is must be in the range 0 to 120' }
+		0...18 { 'Person with age ${age} classified as a Child' }
+		19...120 { 'Person with age ${age} classified as an Adult' }
+		else { '${age} is must be in the range 0 to 120' }
 	}
 	println(res)
 }
@@ -2854,7 +2866,7 @@ module main
 fn main() {
 	mut count := 1
 	for {
-		println('Hi $count times')
+		println('Hi ${count} times')
 		count += 1
 	}
 }
@@ -2889,7 +2901,7 @@ fn main() {
 		println('Hi')
 		count += 1
 	}
-	println('Greeted Hi $count times')
+	println('Greeted Hi ${count} times')
 }
 ```
 
@@ -2963,9 +2975,9 @@ fn main() {
 	col := [1, 2, 3, 4, 5, 6, 7]
 	for val in col {
 		if val % 2 == 0 {
-			println('$val is Even')
+			println('${val} is Even')
 		} else {
-			println('$val is Odd')
+			println('${val} is Odd')
 		}
 	}
 }
@@ -2990,7 +3002,7 @@ module main
 fn main() {
 	fruits := ['apple', 'banana', 'coconut']
 	for idx, ele in fruits {
-		println('idx: $idx \t fruit: $ele')
+		println('idx: ${idx} \t fruit: ${ele}')
 	}
 }
 ```
@@ -3019,7 +3031,7 @@ fn main() {
 	}
 
 	for k, v in lottery {
-		println('$k prize lottery amount: $v')
+		println('${k} prize lottery amount: ${v}')
 	}
 }
 ```
@@ -3050,7 +3062,7 @@ fn main() {
 	for _, v in basket {
 		total += v
 	}
-	println('Total number of fruits: $total')
+	println('Total number of fruits: ${total}')
 }
 ```
 
@@ -3102,10 +3114,10 @@ fn main() {
 		return
 	}
 	first_loop: for i := 1; i <= 10; i++ {
-		println('Printing multiplication table for $i')
+		println('Printing multiplication table for ${i}')
 		for j := 1; j <= 10; j++ {
 			mul := i * j
-			println('$i * $j = $mul')
+			println('${i} * ${j} = ${mul}')
 			if mul >= limit * 10 {
 				break first_loop
 			}
@@ -3975,8 +3987,12 @@ module main
 fn compare_ints(a &int, b &int) int {
 	val_a := *a
 	val_b := *b
-	if val_a < val_b { return -1 }
-	if val_a > val_b { return 1 }
+	if val_a < val_b {
+		return -1
+	}
+	if val_a > val_b {
+		return 1
+	}
 	return 0
 }
 
@@ -4004,7 +4020,6 @@ fn main() {
 		println('repeat_to_depth: ${typed_grid}') // [[1, 2], [3, 4], [1, 2], [3, 4]]
 		rep_grid.free()
 	}
-
 	// 4. insert(index, val)
 	// Inserts a new element at the specified index.
 	a.insert(1, 15)
@@ -4093,7 +4108,6 @@ fn main() {
 		println('clone_to_depth: ${typed_clone}') // [[1, 2], [3, 4]]
 		grid_clone.free()
 	}
-
 	// 19. push_many(val, size) (unsafe)
 	// Appends size elements starting from a raw pointer val to the array.
 	mut a_push := [1, 2]
@@ -4106,7 +4120,6 @@ fn main() {
 		a_push.free()
 		vals.free()
 	}
-
 	// 20. reverse()
 	// Returns a new reversed copy of the array.
 	a_rev := [1, 2, 3]
@@ -4499,7 +4512,7 @@ fn main() {
 	// Moves the map contents to a new map variable and clears the original map to empty.
 	mut m_move := {
 		'three': 3
-		'four': 4
+		'four':  4
 	}
 	moved := m_move.move()
 	println('move (new map): ${moved}') // {"three": 3, "four": 4}
@@ -4536,29 +4549,35 @@ import maps
 fn main() {
 	println('--- Import Maps Module Helpers ---')
 
+	// Start with a simple map of fruit counts.
 	m1 := {
 		'apple':  1
 		'banana': 2
 		'cherry': 3
 	}
 
+	// filter() keeps only the entries that satisfy the callback condition.
 	filtered := maps.filter(m1, fn (k string, v int) bool {
 		return v > 1
 	})
 	println('filter(): ${filtered}')
 
+	// to_array() builds a new array by transforming each entry.
 	keys_upper := maps.to_array(m1, fn (k string, v int) string {
 		return k.to_upper()
 	})
 	println('to_array(): ${keys_upper}')
 
+	// invert() swaps each key/value pair so the values become the keys.
 	inverted := maps.invert(m1)
 	println('invert(): ${inverted}')
 
+	// from_array() creates a map from a list of strings.
 	fruits := ['apple', 'banana', 'cherry']
 	map_from_arr := maps.from_array(fruits)
 	println('from_array(): ${map_from_arr}')
 
+	// merge() combines two maps and lets the second map override duplicates.
 	m2 := {
 		'banana': 20
 		'date':   4
@@ -4566,6 +4585,7 @@ fn main() {
 	merged := maps.merge(m1, m2)
 	println('merge(): ${merged}')
 
+	// merge_in_place() mutates the first map directly.
 	mut mut_map := {
 		'a': 1
 	}
@@ -4575,11 +4595,13 @@ fn main() {
 	})
 	println('merge_in_place(): ${mut_map}')
 
+	// flat_map() can expand each entry into multiple output values.
 	flat_items := maps.flat_map[string, int, string](m1, fn (k string, v int) []string {
 		return [k, v.str()]
 	})
 	println('flat_map(): ${flat_items}')
 
+	// to_map() transforms each entry into a new key/value pair.
 	transformed := maps.to_map[string, int, string, int](m1, fn (k string, v int) (string, int) {
 		return k.to_upper(), v * 10
 	})
@@ -4652,8 +4674,7 @@ fn add(a int, b int) int {
 }
 
 fn main() {
-	total := add(7, 5)
-	println('7 + 5 = ${total}')
+	println(add(2, 3))
 }
 ```
 
@@ -4671,13 +4692,15 @@ A function does not need to print anything itself. It can build a value and hand
 This example demonstrates the concepts of **function returns value example 2**.
 
 ```v
-fn say_hello(name string) string {
-	return 'Hello, ${name}!'
+fn say_hello() string {
+	return 'Hello!'
 }
 
 fn main() {
-	message := say_hello('Ada')
-	println(message)
+	// call the method
+	res := say_hello()
+	println(res)
+	// prints: Hello!
 }
 ```
 
@@ -4695,12 +4718,13 @@ Some functions are used for actions rather than calculations. They may print out
 This example demonstrates the concepts of **funtions without return type**.
 
 ```v
-fn print_welcome_message() {
-	println('Welcome to V!')
+fn console_greeter() {
+	println('Hello!')
 }
 
 fn main() {
-	print_welcome_message()
+	console_greeter()
+	// prints: Hello!
 }
 ```
 
@@ -4723,8 +4747,9 @@ fn add(a int, b int) int {
 }
 
 fn main() {
-	result := add(15, 27)
-	println('15 + 27 = ${result}')
+	res := add(2, 4)
+	println(res)
+	// prints: 6
 }
 ```
 
@@ -4743,14 +4768,14 @@ This example demonstrates the concepts of **function return multiple values**.
 
 ```v
 fn greet_and_message_length(name string) (string, int) {
-	greeting := 'Hello, ${name}!'
+	mut greeting := 'Hello, ' + name + '!'
 	return greeting, greeting.len
 }
 
 fn main() {
-	greeting, length := greet_and_message_length('Navule')
-	println(greeting)
-	println('Length: ${length}')
+	i, j := greet_and_message_length('Navule')
+	println(i)
+	println(j)
 }
 ```
 
@@ -4769,13 +4794,13 @@ This example demonstrates the concepts of **ignore function return value**.
 
 ```v
 fn greet_and_message_length(name string) (string, int) {
-	greeting := 'Hello, ${name}!'
+	mut greeting := 'Hello, ' + name + '!'
 	return greeting, greeting.len
 }
 
 fn main() {
-	greeting, _ := greet_and_message_length('Navule')
-	println(greeting)
+	i, _ := greet_and_message_length('Navule')
+	println(i)
 }
 ```
 
@@ -5332,11 +5357,13 @@ A basic function packages a task so you can call it later instead of repeating t
 This example demonstrates the concepts of **basic functions**.
 
 ```v
+// Define a simple function that prints a greeting.
 fn greet(name string) {
 	println('Hello, ${name}!')
 }
 
 fn main() {
+	// Call the function with different argument values.
 	greet('Ada')
 	greet('Grace')
 }
@@ -5359,9 +5386,12 @@ This example demonstrates the concepts of **anonymous functions**.
 module main
 
 fn main() {
+	// Create an anonymous function and assign it to a variable.
 	greet := fn (name string) {
 		println('Hello, ${name}')
 	}
+
+	// Invoke the function twice with different names.
 	greet('Pavan')
 	greet('Sahithi')
 }
@@ -5988,6 +6018,7 @@ fn main() {
 		status: false
 	}
 }
+
 // throws error
 ```
 
@@ -6427,23 +6458,29 @@ This example demonstrates the concepts of **anonymous structs**.
 ```v
 module main
 
+import json
+
 struct Book {
+	title string
+mut:
 	author struct {
 		name string
-		age  int
+	mut:
+		age int
 	}
-	title string
 }
 
 fn main() {
-	book := Book{
-		title: 'The V Programming Language'
+	mut book := Book{
+		title:  'The V Programming Language'
 		author: struct {
 			name: 'Samantha Black'
 			age:  24
 		}
 	}
-	println('Book: ${book.title} by ${book.author.name} (${book.author.age})')
+	book.author.age = 25
+	println('${book.title} by ${book.author.name} (${book.author.age})')
+	println(json.encode(book))
 }
 ```
 
@@ -6523,7 +6560,6 @@ V supports `[noinit]` structs which are structs that cannot be initialized direc
 This example demonstrates the concepts of **noinit structs**.
 
 ```v
-// file: noinit_config/noinit_config.v
 module noinit_config
 
 @[noinit]
@@ -6543,7 +6579,6 @@ pub fn new_config(port int, host string) Config {
 ```
 
 ```v
-// file: noinit_structs.v
 import noinit_config
 
 fn main() {
@@ -6590,7 +6625,9 @@ mut:
 }
 
 fn main() {
-	mut d := Data{i: 10}
+	mut d := Data{
+		i: 10
+	}
 
 	// Accessing union members must be performed in an unsafe block
 	unsafe {
@@ -6709,7 +6746,7 @@ fn fetch_data(success bool) !string {
 	if !success {
 		return CustomError{
 			message: 'Connection timed out'
-			code: 504
+			code:    504
 		}
 	}
 	return 'Raw database records'
@@ -6767,7 +6804,6 @@ fn main() {
 	wrapped_item := find_item_wrapper(99) or { 'None propagated successfully' }
 	println('Propagation check: ${wrapped_item}\n')
 
-
 	println('=== 2. Result Types (!T) ===')
 
 	// Result Handling: Standard error message extraction via the `err` variable inside `or` block
@@ -6776,7 +6812,6 @@ fn main() {
 
 	calc_fail := calculate_and_format(10.0, 0.0) or { 'Error: ${err}' }
 	println('Calc failure: ${calc_fail}')
-
 
 	println('\n=== 3. Custom Error Matching & Type Casting ===')
 
@@ -6808,7 +6843,6 @@ fn main() {
 		}
 		'' // Fallback empty string returned to satisfy the !string return type of the or block
 	}
-
 
 	println('\n=== 4. Panic (Unrecoverable Error) ===')
 	// We wrap panic execution or run it last since it terminates the process.
@@ -6965,7 +6999,7 @@ This first example is intentionally simple: it shows the structure of a single-f
 module main
 
 fn main() {
-	println('Welcome to the V module demo!')
+	println('Hello World!')
 }
 ```
 
@@ -6982,8 +7016,8 @@ A module can hold functions that other parts of your program can reuse. In this 
 ```v
 module mod1
 
-pub fn greet(name string) string {
-	return 'Hello, ${name}!'
+pub fn hello() {
+	println('Hello from mod1!')
 }
 ```
 
@@ -7000,10 +7034,8 @@ This file acts as the application entry point. It imports the helper module and 
 ```v
 module main
 
-import mod1
-
 fn main() {
-	println(mod1.greet('Ada'))
+	println('Hello World!')
 }
 ```
 
@@ -7020,8 +7052,8 @@ Importing a module gives your program access to its public members. The module n
 ```v
 module mod1
 
-pub fn greet(name string) string {
-	return 'Hello, ${name}!'
+pub fn hello() {
+	println('Hello from mod1!')
 }
 ```
 
@@ -7041,8 +7073,7 @@ module main
 import mod1
 
 fn main() {
-	message := mod1.greet('Lina')
-	println(message)
+	println('Hello World!')
 }
 ```
 
@@ -7059,12 +7090,8 @@ Not everything in a module should be accessible from outside. In V, `pub` makes 
 ```v
 module mod1
 
-pub fn greet(name string) string {
-	return 'Hello, ${name}!'
-}
-
-fn internal_note() string {
-	return 'This helper stays inside the module.'
+pub fn hello() {
+	println('Hello from mod1!')
 }
 ```
 
@@ -7084,8 +7111,8 @@ module main
 import mod1
 
 fn main() {
-	println(mod1.greet('Noor'))
-	// mod1.internal_note() is not allowed from here
+	mod1.hello()
+	println('Hello World!')
 }
 ```
 
@@ -7856,7 +7883,7 @@ pub:
 // new_namespaced_redis creates a new NamespacedRedis helper wrapper.
 fn new_namespaced_redis(client &vredis.Redis, namespace string) NamespacedRedis {
 	return NamespacedRedis{
-		client: client
+		client:    client
 		namespace: namespace
 	}
 }
@@ -7990,7 +8017,7 @@ pub:
 // new_namespaced_redis creates a new NamespacedRedis helper wrapper.
 fn new_namespaced_redis(client &vredis.Redis, namespace string) NamespacedRedis {
 	return NamespacedRedis{
-		client: client
+		client:    client
 		namespace: namespace
 	}
 }
@@ -8223,10 +8250,10 @@ fn connect_redis() !&vredis.Redis {
 fn redis_connect_status(e &webview.Event) !string {
 	mut client := connect_redis() or {
 		status_info := ConnectStatus{
-			status: 'disconnected'
-			host: '127.0.0.1'
-			port: 6379
-			version: ''
+			status:     'disconnected'
+			host:       '127.0.0.1'
+			port:       6379
+			version:    ''
 			keys_count: 0
 		}
 		return json.encode(status_info)
@@ -8239,10 +8266,10 @@ fn redis_connect_status(e &webview.Event) !string {
 	info := client.send('INFO', 'server') or {
 		count := client.dbsize() or { 0 }
 		status_info := ConnectStatus{
-			status: 'connected'
-			host: '127.0.0.1'
-			port: 6379
-			version: 'Unknown'
+			status:     'connected'
+			host:       '127.0.0.1'
+			port:       6379
+			version:    'Unknown'
 			keys_count: count
 		}
 		return json.encode(status_info)
@@ -8263,10 +8290,10 @@ fn redis_connect_status(e &webview.Event) !string {
 	count := client.dbsize() or { 0 }
 
 	status_info := ConnectStatus{
-		status: 'connected'
-		host: '127.0.0.1'
-		port: 6379
-		version: version
+		status:     'connected'
+		host:       '127.0.0.1'
+		port:       6379
+		version:    version
 		keys_count: count
 	}
 	return json.encode(status_info)
@@ -8284,9 +8311,9 @@ fn redis_get_keys(e &webview.Event) !string {
 		t := client.@type(key) or { 'unknown' }
 		ttl := client.ttl(key) or { -1 }
 		items << KeyInfo{
-			name: key
+			name:  key
 			@type: t
-			ttl: ttl
+			ttl:   ttl
 		}
 	}
 	return json.encode(items)
@@ -8303,10 +8330,10 @@ fn redis_get_key_detail(e &webview.Event) !string {
 	ttl := client.ttl(key)!
 
 	mut detail := KeyDetail{
-		name: key
-		@type: t
-		ttl: ttl
-		value: ''
+		name:     key
+		@type:    t
+		ttl:      ttl
+		value:    ''
 		list_val: []string{}
 		hash_val: map[string]string{}
 	}
@@ -8322,7 +8349,9 @@ fn redis_get_key_detail(e &webview.Event) !string {
 			detail.list_val = client.smembers(key) or { []string{} }
 		}
 		'hash' {
-			detail.hash_val = client.hgetall(key) or { map[string]string{} }
+			detail.hash_val = client.hgetall(key) or {
+				map[string]string{}
+			}
 		}
 		else {}
 	}
@@ -8572,31 +8601,31 @@ const html = '
 
 // V binding function. Must take &webview.Event and can return a type (like string).
 fn greet_from_v(e &webview.Event) string {
-    // 1. Retrieve the argument passed from JavaScript (at index 0)
-    msg := e.get_arg[string](0) or { 'No arguments passed' }
-    println('V side: Received from JS: ${msg}')
+	// 1. Retrieve the argument passed from JavaScript (at index 0)
+	msg := e.get_arg[string](0) or { 'No arguments passed' }
+	println('V side: Received from JS: ${msg}')
 
-    // 2. We can run custom JavaScript on the webview page from V
-    e.eval('console.log("V successfully invoked eval in JS context!");')
+	// 2. We can run custom JavaScript on the webview page from V
+	e.eval('console.log("V successfully invoked eval in JS context!");')
 
-    // 3. Return string back to the JS Promise resolver
-    return 'V responds: "Message received: ${msg}"'
+	// 3. Return string back to the JS Promise resolver
+	return 'V responds: "Message received: ${msg}"'
 }
 
 fn main() {
-    // Initialize Webview
-    mut w := webview.create(debug: true)
-    w.set_title('V Webview Binding Demo')
-    w.set_size(600, 450, .@none)
+	// Initialize Webview
+	mut w := webview.create(debug: true)
+	w.set_title('V Webview Binding Demo')
+	w.set_size(600, 450, .@none)
 
-    // Bind V function "greet_from_v" to JS window.greet_from_v
-    w.bind('greet_from_v', greet_from_v)
+	// Bind V function "greet_from_v" to JS window.greet_from_v
+	w.bind('greet_from_v', greet_from_v)
 
-    // Load the HTML content
-    w.set_html(html)
+	// Load the HTML content
+	w.set_html(html)
 
-    // Run the main loop
-    w.run()
+	// Run the main loop
+	w.run()
 }
 ```
 
@@ -8757,7 +8786,7 @@ This example demonstrates the concepts of **demo test**.
 ```v
 fn greet(name string) !string {
 	if name != '' {
-		return 'Hello $name!'
+		return 'Hello ${name}!'
 	}
 	return error('name not provided')
 }
@@ -8797,7 +8826,7 @@ This example demonstrates the concepts of **greet**.
 module main
 
 fn greet(name string) string {
-	return 'Hello $name!'
+	return 'Hello ${name}!'
 }
 
 fn main() {
@@ -9855,9 +9884,9 @@ fn main() {
 	sw := time.new_stopwatch()
 
 	for i in 1 .. 5 {
-		println('$i')
+		println('${i}')
 	}
-	println('Total time took to finish: $sw.elapsed().seconds() seconds')
+	println('Total time took to finish: ${sw.elapsed().seconds()} seconds')
 }
 ```
 
@@ -9939,21 +9968,21 @@ module main
 import time
 
 fn hot_water() {
-	println('Started Switch on Water heater: $time.now().hhmmss()')
+	println('Started Switch on Water heater: ${time.now().hhmmss()}')
 	time.sleep(5 * time.second)
-	println('Water heater indicates hot water ready!: $time.now().hhmmss()')
+	println('Water heater indicates hot water ready!: ${time.now().hhmmss()}')
 }
 
 fn brush_teeth() {
-	println('Started brushing:  $time.now().hhmmss()')
+	println('Started brushing:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End Brushing:  $time.now().hhmmss()')
+	println('End Brushing:  ${time.now().hhmmss()}')
 }
 
 fn select_clothes() {
-	println('Started choosing pair of clothes :  $time.now().hhmmss()')
+	println('Started choosing pair of clothes :  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End choosing pair of clothes:  $time.now().hhmmss()')
+	println('End choosing pair of clothes:  ${time.now().hhmmss()}')
 }
 
 fn main() {
@@ -9961,7 +9990,7 @@ fn main() {
 	hot_water()
 	brush_teeth()
 	select_clothes()
-	println('Your pre bath morning chores took: $sw.elapsed().seconds() seconds')
+	println('Your pre bath morning chores took: ${sw.elapsed().seconds()} seconds')
 }
 ```
 
@@ -9986,21 +10015,21 @@ module main
 import time
 
 fn hot_water() {
-	println('Started Switch on Water heater: $time.now().hhmmss()')
+	println('Started Switch on Water heater: ${time.now().hhmmss()}')
 	time.sleep(5 * time.second)
-	println('Water heater indicates hot water ready! : $time.now().hhmmss()')
+	println('Water heater indicates hot water ready! : ${time.now().hhmmss()}')
 }
 
 fn brush_teeth() {
-	println('Started brushing:  $time.now().hhmmss()')
+	println('Started brushing:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End Brushing:  $time.now().hhmmss()')
+	println('End Brushing:  ${time.now().hhmmss()}')
 }
 
 fn select_clothes() {
-	println('Started choosing pair of clothes:  $time.now().hhmmss()')
+	println('Started choosing pair of clothes:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End choosing pair of clothes:  $time.now().hhmmss()')
+	println('End choosing pair of clothes:  ${time.now().hhmmss()}')
 }
 
 fn main() {
@@ -10010,7 +10039,7 @@ fn main() {
 	t << go brush_teeth()
 	t << go select_clothes()
 	t.wait()
-	println('Your pre bath morning chores took: $sw.elapsed().seconds() seconds')
+	println('Your pre bath morning chores took: ${sw.elapsed().seconds()} seconds')
 }
 ```
 
@@ -10035,23 +10064,23 @@ module main
 import time
 
 fn hot_water() string {
-	println('Started Switch on Water heater: $time.now().hhmmss()')
+	println('Started Switch on Water heater: ${time.now().hhmmss()}')
 	time.sleep(5 * time.second)
-	println('Water heater indicates hot water ready! : $time.now().hhmmss()')
+	println('Water heater indicates hot water ready! : ${time.now().hhmmss()}')
 	return 'Hot water ready!'
 }
 
 fn brush_teeth() string {
-	println('Started brushing:  $time.now().hhmmss()')
+	println('Started brushing:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End Brushing:  $time.now().hhmmss()')
+	println('End Brushing:  ${time.now().hhmmss()}')
 	return 'Sparkling Teeth ready!'
 }
 
 fn select_clothes() string {
-	println('Started choosing pair of clothes:  $time.now().hhmmss()')
+	println('Started choosing pair of clothes:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End choosing pair of clothes:  $time.now().hhmmss()')
+	println('End choosing pair of clothes:  ${time.now().hhmmss()}')
 	return 'Pair of clothes ready!'
 }
 
@@ -10062,7 +10091,7 @@ fn main() {
 	t << go brush_teeth()
 	t << go select_clothes()
 	res := t.wait()
-	println('Your pre bath morning chores took: $sw.elapsed().seconds() seconds')
+	println('Your pre bath morning chores took: ${sw.elapsed().seconds()} seconds')
 	println('*** Type Check ***')
 	println('Type of thread array of strings t: ${typeof(t).name}')
 	println('Type of res: ${typeof(res).name}')
@@ -10121,7 +10150,7 @@ fn main() {
 	mut t := []thread string{}
 	for i in 1 .. 3 {
 		t << go fn (i int, msg string) string {
-			return 'iteration: $i, message: $msg'
+			return 'iteration: ${i}, message: ${msg}'
 		}(i, 'hello') // <- arguments must match list in the anonymous function definition
 	}
 	res := t.wait()
@@ -10173,7 +10202,7 @@ fn (shared f Fund) collect(amt f32) {
 			f.num_donors += 1
 			f.total += amt
 			// We can safely read and write to the struct fields inside the lock block.
-			println('$f.num_donors \t before: ${f.total - amt} \t funds received: $amt \t total: $f.total')
+			println('${f.num_donors} \t before: ${f.total - amt} \t funds received: ${amt} \t total: ${f.total}')
 		}
 	}
 }
@@ -10189,7 +10218,7 @@ fn main() {
 	// The `shared` keyword before the variable name makes it a shared object.
 	// Under the hood, V automatically associates a mutex with this object.
 	shared fund := Fund{
-		name: 'A noble cause'
+		name:   'A noble cause'
 		target: 1000.00
 	}
 
@@ -10215,8 +10244,8 @@ fn main() {
 
 	// 7. Final output with read lock.
 	rlock fund {
-		println('$fund.num_donors donors donated for $fund.name')
-		println('$fund.name raised total fund amount: \$ $fund.total')
+		println('${fund.num_donors} donors donated for ${fund.name}')
+		println('${fund.name} raised total fund amount: \$ ${fund.total}')
 	}
 }
 ```
@@ -10571,9 +10600,12 @@ struct Note {
 }
 
 fn main() {
+	// Decode a JSON payload into a struct instance.
 	n := json.decode(Note, '{"id":1,"message":"Plan a holiday","status":false}') or {
 		panic('invalid json data')
 	}
+
+	// Print the type name and the decoded data for inspection.
 	println(typeof(n).name) // Note
 	println(n)
 }
@@ -10602,13 +10634,19 @@ struct Note {
 }
 
 fn main() {
+	// Create a note object that will be converted to JSON.
 	m := Note{
-		id: 2
+		id:      2
 		message: 'Get groceries'
-		status: false
+		status:  false
 	}
 
-	j := json.encode(m)
+	// Encode the struct to a compact JSON string.
+	mut j := json.encode(m)
+	println(j)
+
+	// Encode the same object with pretty formatting for readability.
+	j = json.encode_pretty(m)
 	println(j)
 }
 ```
@@ -10668,9 +10706,9 @@ fn main() {
 
 	// Create an object instance
 	book := Book{
-		title: 'The V Programming Language'
+		title:  'The V Programming Language'
 		author: 'Alex Medvednikov'
-		year: 2019
+		year:   2019
 	}
 
 	// 1. Encode object to JSON string
@@ -10732,14 +10770,14 @@ fn main() {
 	// Create an array of objects
 	tasks := [
 		Task{
-			id: 1
+			id:    1
 			title: 'Read V Guide'
-			done: false
+			done:  false
 		},
 		Task{
-			id: 2
+			id:    2
 			title: 'Write JSON helper examples'
-			done: true
+			done:  true
 		},
 	]
 
@@ -10798,8 +10836,8 @@ fn main() {
 
 	// Create a map[string]int
 	scores := {
-		'Alice': 95
-		'Bob': 88
+		'Alice':   95
+		'Bob':     88
 		'Charlie': 92
 	}
 
@@ -10956,12 +10994,12 @@ fn main() {
 	// Inserting record(s)
 	n1 := Note{
 		message: 'Get some milk'
-		status: false
+		status:  false
 	}
 
 	n2 := Note{
 		message: 'Get groceries'
-		status: false
+		status:  false
 	}
 	sql db {
 		insert n1 into Note
@@ -11101,6 +11139,12 @@ import db.sqlite as dbsqlite
 
 pub type DB = dbsqlite.DB
 
+pub struct Note {
+	id    int
+	title string
+	body  string
+}
+
 pub fn connect(path string) !DB {
 	mut db := dbsqlite.connect(path)!
 	db.exec('PRAGMA foreign_keys = ON;') or {
@@ -11133,18 +11177,17 @@ pub fn list_notes(mut db DB) ![]Note {
 	mut notes := []Note{}
 	for row in rows {
 		notes << Note{
-			id: row.vals[0].int()
+			id:    row.vals[0].int()
 			title: row.vals[1]
-			body: row.vals[2]
+			body:  row.vals[2]
 		}
 	}
 	return notes
 }
 
 pub fn update_note(mut db DB, id int, title string, body string) ! {
-	db.exec_param_many('UPDATE notes SET title = ?, body = ? WHERE id = ?;', [title, body, id.str()]) or {
-		return error('failed to update note: ${err}')
-	}
+	db.exec_param_many('UPDATE notes SET title = ?, body = ? WHERE id = ?;', [title, body,
+		id.str()]) or { return error('failed to update note: ${err}') }
 }
 
 pub fn delete_note(mut db DB, id int) ! {
@@ -11322,15 +11365,21 @@ fn main() {
 
 	// SAFE APPROACH: Use `exec_param_many` with '?' placeholders to prevent SQL Injection.
 	// Parameters are passed as an array of strings: []string
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Alice', 'alice@example.com', '30']) or {
-		println('Insert failed: ${err}')
-	}
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Bob', 'bob@example.com', '25']) or {
-		println('Insert failed: ${err}')
-	}
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Charlie', 'charlie@example.com', '40']) or {
-		println('Insert failed: ${err}')
-	}
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Alice',
+		'alice@example.com',
+		'30',
+	]) or { println('Insert failed: ${err}') }
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Bob',
+		'bob@example.com',
+		'25',
+	]) or { println('Insert failed: ${err}') }
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Charlie',
+		'charlie@example.com',
+		'40',
+	]) or { println('Insert failed: ${err}') }
 
 	println('Last inserted row ID: ${db.last_id()}')
 
@@ -11338,7 +11387,8 @@ fn main() {
 	println('\n--- READ: Querying records securely ---')
 
 	// Querying with parameters: only retrieve users older than 20
-	rows := db.exec_param_many('SELECT id, name, email, age FROM users WHERE age > ?;', ['20']) or {
+	rows := db.exec_param_many('SELECT id, name, email, age FROM users WHERE age > ?;',
+		['20']) or {
 		println('Select failed: ${err}')
 		[]sqlite.Row{}
 	}
@@ -11354,13 +11404,16 @@ fn main() {
 	}
 
 	// 5. Update (Modify Records using Parameterized Queries)
-	println('\n--- UPDATE: Modifying Bob\'s email and age securely ---')
-	db.exec_param_many("UPDATE users SET email = ?, age = ? WHERE name = ?;", ['bob_new@example.com', '26', 'Bob']) or {
-		println('Update failed: ${err}')
-	}
+	println("\n--- UPDATE: Modifying Bob's email and age securely ---")
+	db.exec_param_many('UPDATE users SET email = ?, age = ? WHERE name = ?;', [
+		'bob_new@example.com',
+		'26',
+		'Bob',
+	]) or { println('Update failed: ${err}') }
 
 	// Verify update
-	updated_rows := db.exec_param_many("SELECT email, age FROM users WHERE name = ?;", ['Bob']) or { []sqlite.Row{} }
+	updated_rows := db.exec_param_many('SELECT email, age FROM users WHERE name = ?;',
+		['Bob']) or { []sqlite.Row{} }
 	if updated_rows.len > 0 {
 		println("Bob's new email: ${updated_rows[0].vals[0]}")
 		println("Bob's new age:   ${updated_rows[0].vals[1]}")
@@ -11368,7 +11421,7 @@ fn main() {
 
 	// 6. Delete (Remove Records using Parameterized Queries)
 	println('\n--- DELETE: Removing Charlie securely ---')
-	db.exec_param_many("DELETE FROM users WHERE name = ?;", ['Charlie']) or {
+	db.exec_param_many('DELETE FROM users WHERE name = ?;', ['Charlie']) or {
 		println('Delete failed: ${err}')
 	}
 
@@ -11382,9 +11435,7 @@ fn main() {
 
 	// 7. Cleanup
 	println('\nDropping "users" table...')
-	db.exec('DROP TABLE users;') or {
-		println('Drop table failed: ${err}')
-	}
+	db.exec('DROP TABLE users;') or { println('Drop table failed: ${err}') }
 }
 ```
 
@@ -11758,9 +11809,7 @@ fn main() {
 
 	// Run the server listening loop in a background thread
 	spawn fn [mut ws_server] () {
-		ws_server.listen() or {
-			println('Server error: ${err}')
-		}
+		ws_server.listen() or { println('Server error: ${err}') }
 	}()
 
 	// Allow the server a moment to start
@@ -11800,18 +11849,14 @@ fn main() {
 	time.sleep(50 * time.millisecond)
 	msg_to_send := 'Hello WebSocket Server!'
 	println('Client sending: "${msg_to_send}"')
-	ws_client.write_string(msg_to_send) or {
-		println('Client failed to send: ${err}')
-	}
+	ws_client.write_string(msg_to_send) or { println('Client failed to send: ${err}') }
 
 	// Wait for echo to arrive
 	time.sleep(200 * time.millisecond)
 
 	// Clean close
 	println('Client closing connection...')
-	ws_client.close(1000, 'Done') or {
-		println('Client close error: ${err}')
-	}
+	ws_client.close(1000, 'Done') or { println('Client close error: ${err}') }
 	time.sleep(50 * time.millisecond)
 	println('WebSocket Demo finished.')
 }
@@ -11875,7 +11920,7 @@ fn main() {
 			// Decode the JSON protocol message
 			ws_msg := json.decode(WsMessage, payload) or {
 				println('Server: Invalid JSON protocol: ${err}')
-				err_resp := json.encode(WsMessage{action: 'error', data: 'invalid json'})
+				err_resp := json.encode(WsMessage{ action: 'error', data: 'invalid json' })
 				ws.write_string(err_resp) or {}
 				return
 			}
@@ -11884,12 +11929,12 @@ fn main() {
 
 			match ws_msg.action {
 				'ping' {
-					resp := json.encode(WsMessage{action: 'pong', data: ws_msg.data})
+					resp := json.encode(WsMessage{ action: 'pong', data: ws_msg.data })
 					ws.write_string(resp)!
 				}
 				'goodbye' {
 					println('Server received goodbye action. Replying and closing...')
-					resp := json.encode(WsMessage{action: 'goodbye_ack', data: 'Goodbye!'})
+					resp := json.encode(WsMessage{ action: 'goodbye_ack', data: 'Goodbye!' })
 					ws.write_string(resp)!
 					// Clean close from server side
 					ws.close(1000, 'done') or {}
@@ -11903,9 +11948,7 @@ fn main() {
 
 	// Start the server listen loop in a background thread
 	spawn fn [mut ws_server] () {
-		ws_server.listen() or {
-			println('Server error: ${err}')
-		}
+		ws_server.listen() or { println('Server error: ${err}') }
 	}()
 
 	// Allow the server a moment to start
@@ -11925,7 +11968,7 @@ fn main() {
 	ws_client1.on_open(fn (mut c websocket.Client) ! {
 		println('Client 1: Connection opened!')
 		// Initiate the first Ping message
-		ping_msg := json.encode(WsMessage{action: 'ping', data: '1'})
+		ping_msg := json.encode(WsMessage{ action: 'ping', data: '1' })
 		c.write_string(ping_msg)!
 	})
 
@@ -11938,11 +11981,11 @@ fn main() {
 			if ws_msg.action == 'pong' {
 				state1.count++
 				if state1.count < 3 {
-					next_ping := json.encode(WsMessage{action: 'ping', data: '${state1.count + 1}'})
+					next_ping := json.encode(WsMessage{ action: 'ping', data: '${state1.count + 1}' })
 					println('Client 1 sending: "${next_ping}"')
 					c.write_string(next_ping)!
 				} else {
-					goodbye := json.encode(WsMessage{action: 'goodbye', data: 'Goodbye'})
+					goodbye := json.encode(WsMessage{ action: 'goodbye', data: 'Goodbye' })
 					println('Client 1 sending goodbye: "${goodbye}"')
 					c.write_string(goodbye)!
 				}
@@ -11981,7 +12024,7 @@ fn main() {
 		println('Client 2: Connection opened!')
 		// Send oversized data (3000 bytes, exceeding server 2048-byte limit)
 		large_payload := 'A'.repeat(3000)
-		large_msg := json.encode(WsMessage{action: 'ping', data: large_payload})
+		large_msg := json.encode(WsMessage{ action: 'ping', data: large_payload })
 		println('Client 2 sending oversized payload (size: ${large_msg.len} bytes)...')
 		c.write_string(large_msg)!
 	})
@@ -12233,18 +12276,14 @@ fn main() {
 
 	// Spawn JSON-RPC server in background thread
 	spawn fn (path string) {
-		run_rpc_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_rpc_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Wait briefly for the server socket to bind
 	time.sleep(100 * time.millisecond)
 
 	// Run JSON-RPC client in main thread
-	run_rpc_client(socket_path) or {
-		println('Client thread failed: ${err}')
-	}
+	run_rpc_client(socket_path) or { println('Client thread failed: ${err}') }
 
 	// Wait briefly for server post-handling cleanups
 	time.sleep(50 * time.millisecond)
@@ -12384,18 +12423,14 @@ fn main() {
 
 	// Spawn JSON-RPC server in background thread
 	spawn fn (path string) {
-		run_rpc_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_rpc_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Wait briefly for the server socket to bind
 	time.sleep(100 * time.millisecond)
 
 	// Run JSON-RPC client in main thread
-	run_rpc_client(socket_path) or {
-		println('Client thread failed: ${err}')
-	}
+	run_rpc_client(socket_path) or { println('Client thread failed: ${err}') }
 
 	// Wait briefly for server post-handling cleanups
 	time.sleep(50 * time.millisecond)
@@ -12439,7 +12474,7 @@ fn cleanup_certs() {
 // reads a message, responds securely, and exits.
 fn run_server(port int) ! {
 	config := mbedtls.SSLConnectConfig{
-		cert: 'temp_server.crt'
+		cert:     'temp_server.crt'
 		cert_key: 'temp_server.key'
 		validate: false
 	}
@@ -12541,18 +12576,14 @@ fn main() {
 	port := 38295
 	// Spawn server in background
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Wait briefly for server to bind
 	time.sleep(200 * time.millisecond)
 
 	// Run client in main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	time.sleep(50 * time.millisecond)
 	println('SSL Demo finished.')
@@ -12595,7 +12626,7 @@ fn cleanup_certs() {
 // and processes incoming messages in a loop until the client sends "Goodbye".
 fn run_server(port int) ! {
 	config := mbedtls.SSLConnectConfig{
-		cert: 'temp_server.crt'
+		cert:     'temp_server.crt'
 		cert_key: 'temp_server.key'
 		validate: false
 	}
@@ -12637,9 +12668,7 @@ fn run_server(port int) ! {
 
 		if message == 'Goodbye' {
 			println('Server received Goodbye. Replying and closing secure connection...')
-			conn.write('Goodbye!'.bytes()) or {
-				println('Server: Write failed: ${err}')
-			}
+			conn.write('Goodbye!'.bytes()) or { println('Server: Write failed: ${err}') }
 			break
 		}
 
@@ -12740,18 +12769,14 @@ fn main() {
 	port := 38296
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(200 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -12853,18 +12878,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -12888,21 +12909,24 @@ import time
 
 const max_message_size = 8192
 
-// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length.
+// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length in a single write syscall.
 fn write_msg(mut conn net.TcpConn, payload string) ! {
-	magic := [u8(`M`), `S`, `G`, `0`]
-	len := payload.len
-	len_bytes := [
-		u8((u32(len) >> 24) & 0xff),
-		u8((u32(len) >> 16) & 0xff),
-		u8((u32(len) >> 8) & 0xff),
-		u8(u32(len) & 0xff),
-	]
-	// Send header (magic signature + message length)
-	conn.write(magic) or { return err }
-	conn.write(len_bytes) or { return err }
-	// Send the actual message payload
-	conn.write(payload.bytes()) or { return err }
+	mut buf := []u8{len: 8 + payload.len}
+	buf[0] = `M`
+	buf[1] = `S`
+	buf[2] = `G`
+	buf[3] = `0`
+	buf[4] = u8((u32(payload.len) >> 24) & 0xff)
+	buf[5] = u8((u32(payload.len) >> 16) & 0xff)
+	buf[6] = u8((u32(payload.len) >> 8) & 0xff)
+	buf[7] = u8(u32(payload.len) & 0xff)
+	if payload.len > 0 {
+		unsafe {
+			C.memcpy(&buf[8], payload.str, payload.len)
+		}
+	}
+	// Send consolidated buffer in a single system call
+	conn.write(buf) or { return err }
 }
 
 // read_exact reads exactly `size` bytes from the connection, processing data in chunks.
@@ -12915,8 +12939,11 @@ fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
 		remaining := size - read_bytes
 		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
 		chunk_limit := if remaining > 512 { 512 } else { remaining }
-		n := conn.read(mut data[read_bytes .. read_bytes + chunk_limit]) or { return err }
+		n := conn.read(mut data[read_bytes..read_bytes + chunk_limit]) or { return err }
 		if n == 0 {
+			if read_bytes == 0 {
+				return error('EOF')
+			}
 			return error('unexpected end of stream')
 		}
 		read_bytes += n
@@ -12930,15 +12957,13 @@ fn read_msg(mut conn net.TcpConn, max_size int) !string {
 	header_bytes := read_exact(mut conn, 8) or { return err }
 
 	// Validate protocol magic bytes
-	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G` || header_bytes[3] != `0` {
+	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G`
+		|| header_bytes[3] != `0` {
 		return error('invalid protocol magic bytes')
 	}
 
 	// Reconstruct big-endian length
-	len := int((u32(header_bytes[4]) << 24) |
-	           (u32(header_bytes[5]) << 16) |
-	           (u32(header_bytes[6]) << 8) |
-	           u32(header_bytes[7]))
+	len := int((u32(header_bytes[4]) << 24) | (u32(header_bytes[5]) << 16) | (u32(header_bytes[6]) << 8) | u32(header_bytes[7]))
 
 	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
 	if len > max_size {
@@ -12982,7 +13007,11 @@ fn run_server(port int) ! {
 
 	for {
 		message := read_msg(mut conn, max_message_size) or {
-			println('Server: Connection closed or protocol error: ${err}')
+			if err.msg() == 'EOF' {
+				println('Server: Client disconnected cleanly (EOF).')
+			} else {
+				println('Server: Connection closed or protocol error: ${err}')
+			}
 			break
 		}
 
@@ -12992,9 +13021,7 @@ fn run_server(port int) ! {
 
 		if message == 'Goodbye' {
 			println('Server received Goodbye. Replying and closing connection...')
-			write_msg(mut conn, 'Goodbye!') or {
-				println('Server: Write failed: ${err}')
-			}
+			write_msg(mut conn, 'Goodbye!') or { println('Server: Write failed: ${err}') }
 			break
 		}
 
@@ -13069,18 +13096,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -13195,18 +13218,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -13233,13 +13252,15 @@ struct UdpReassembler {
 mut:
 	fragments map[int][]u8
 	total     int
+	last_seen time.Time
 }
 
 // write_udp_msg fragments and sends a message to dialed destination.
+// Real-world performance optimization: Avoids allocating a full payload copy by writing fragments
+// directly from string memory slices using C.memcpy.
 fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 	chunk_size := 1024
-	payload_bytes := payload.bytes()
-	total_frags := (payload_bytes.len + chunk_size - 1) / chunk_size
+	total_frags := (payload.len + chunk_size - 1) / chunk_size
 
 	if total_frags == 0 {
 		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
@@ -13250,23 +13271,26 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 	for i in 0 .. total_frags {
 		start := i * chunk_size
 		mut end := (i + 1) * chunk_size
-		if end > payload_bytes.len {
-			end = payload_bytes.len
+		if end > payload.len {
+			end = payload.len
 		}
-		frag_payload := payload_bytes[start..end]
-		frag_len := frag_payload.len
+		frag_len := end - start
 
-		header := [
-			u8(`U`), `D`, `P`, `0`,
-			u8(i),
-			u8(total_frags),
-			u8((u32(frag_len) >> 8) & 0xff),
-			u8(u32(frag_len) & 0xff),
-		]
+		mut packet := []u8{len: 8 + frag_len}
+		packet[0] = `U`
+		packet[1] = `D`
+		packet[2] = `P`
+		packet[3] = `0`
+		packet[4] = u8(i)
+		packet[5] = u8(total_frags)
+		packet[6] = u8((u32(frag_len) >> 8) & 0xff)
+		packet[7] = u8(u32(frag_len) & 0xff)
 
-		mut packet := []u8{cap: 8 + frag_len}
-		packet << header
-		packet << frag_payload
+		if frag_len > 0 {
+			unsafe {
+				C.memcpy(&packet[8], payload.str + start, frag_len)
+			}
+		}
 
 		socket.write(packet) or { return err }
 		// Sleep briefly to avoid packet loss during loopback transmission
@@ -13275,10 +13299,11 @@ fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
 }
 
 // write_udp_msg_to fragments and sends a message to a specific address using write_to.
+// Real-world performance optimization: Avoids allocating a full payload copy by writing fragments
+// directly from string memory slices using C.memcpy.
 fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 	chunk_size := 1024
-	payload_bytes := payload.bytes()
-	total_frags := (payload_bytes.len + chunk_size - 1) / chunk_size
+	total_frags := (payload.len + chunk_size - 1) / chunk_size
 
 	if total_frags == 0 {
 		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
@@ -13289,23 +13314,26 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 	for i in 0 .. total_frags {
 		start := i * chunk_size
 		mut end := (i + 1) * chunk_size
-		if end > payload_bytes.len {
-			end = payload_bytes.len
+		if end > payload.len {
+			end = payload.len
 		}
-		frag_payload := payload_bytes[start..end]
-		frag_len := frag_payload.len
+		frag_len := end - start
 
-		header := [
-			u8(`U`), `D`, `P`, `0`,
-			u8(i),
-			u8(total_frags),
-			u8((u32(frag_len) >> 8) & 0xff),
-			u8(u32(frag_len) & 0xff),
-		]
+		mut packet := []u8{len: 8 + frag_len}
+		packet[0] = `U`
+		packet[1] = `D`
+		packet[2] = `P`
+		packet[3] = `0`
+		packet[4] = u8(i)
+		packet[5] = u8(total_frags)
+		packet[6] = u8((u32(frag_len) >> 8) & 0xff)
+		packet[7] = u8(u32(frag_len) & 0xff)
 
-		mut packet := []u8{cap: 8 + frag_len}
-		packet << header
-		packet << frag_payload
+		if frag_len > 0 {
+			unsafe {
+				C.memcpy(&packet[8], payload.str + start, frag_len)
+			}
+		}
 
 		socket.write_to(addr, packet) or { return err }
 		time.sleep(2 * time.millisecond)
@@ -13313,6 +13341,8 @@ fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
 }
 
 // read_udp_msg reads packets from a socket and reassembles them into a single string.
+// Security boundary: Filters out packets from unexpected addresses during reassembly,
+// verifies index boundaries, and checks fragment total counts.
 fn read_udp_msg(mut socket net.UdpConn, max_allowed_fragments int) !(string, net.Addr) {
 	mut fragments := map[int][]u8{}
 	mut total_frags := -1
@@ -13342,13 +13372,28 @@ fn read_udp_msg(mut socket net.UdpConn, max_allowed_fragments int) !(string, net
 		if total > max_allowed_fragments {
 			return error('incoming message total fragments ${total} exceeds limit of ${max_allowed_fragments}')
 		}
+		if total <= 0 {
+			return error('invalid total fragments count')
+		}
+		if frag_idx < 0 || frag_idx >= total {
+			return error('invalid fragment index')
+		}
 
 		if total_frags == -1 {
 			total_frags = total
 			remote_addr = addr
+		} else {
+			// Injection defense: Ignore packets from other addresses during this reassembly
+			if addr.str() != remote_addr.str() {
+				continue
+			}
+			// Security validation: Mismatched fragment count from client mid-stream
+			if total != total_frags {
+				return error('fragment total count mismatch during reassembly')
+			}
 		}
 
-		fragments[frag_idx] = buf[8 .. 8 + frag_len].clone()
+		fragments[frag_idx] = buf[8..8 + frag_len].clone()
 
 		if fragments.len == total_frags {
 			mut full_payload := []u8{}
@@ -13381,6 +13426,14 @@ fn run_server(port int) ! {
 	mut buf := []u8{len: 2048}
 
 	for {
+		// Real-world security pruning: Sweeps stale reassembler states to prevent memory exhaustion DoS
+		now := time.now()
+		for key, state in reassemblers {
+			if now - state.last_seen > 5 * time.second {
+				reassemblers.delete(key)
+			}
+		}
+
 		read, addr := socket.read(mut buf) or {
 			println('Server: Read failed: ${err}')
 			break
@@ -13419,16 +13472,35 @@ fn run_server(port int) ! {
 			}
 			continue
 		}
+		if total_frags <= 0 {
+			println('Server: Invalid total fragments count ${total_frags}')
+			continue
+		}
+		if frag_idx < 0 || frag_idx >= total_frags {
+			println('Server: Invalid fragment index ${frag_idx} for total ${total_frags}')
+			continue
+		}
 
 		addr_str := addr.str()
 		if addr_str !in reassemblers {
 			reassemblers[addr_str] = UdpReassembler{
-				total: total_frags
+				total:     total_frags
+				last_seen: now
 			}
 		}
 
 		mut r := reassemblers[addr_str]
-		r.fragments[frag_idx] = buf[8 .. 8 + frag_len].clone()
+		// Reset state if fragment total count changes mid-stream
+		if r.total != total_frags {
+			println('Server: Resetting reassembler for ${addr} due to fragment total count change')
+			r = UdpReassembler{
+				total:     total_frags
+				last_seen: now
+			}
+		}
+
+		r.last_seen = now
+		r.fragments[frag_idx] = buf[8..8 + frag_len].clone()
 
 		if r.fragments.len == r.total {
 			mut full_payload := []u8{}
@@ -13522,18 +13594,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -13678,18 +13746,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (path string) {
-		run_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(socket_path) or {
-		println('Client failed: ${err}')
-	}
+	run_client(socket_path) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -13714,21 +13778,24 @@ import time
 
 const max_message_size = 8192
 
-// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length.
+// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length in a single write syscall.
 fn write_msg(mut conn unix.StreamConn, payload string) ! {
-	magic := [u8(`M`), `S`, `G`, `0`]
-	len := payload.len
-	len_bytes := [
-		u8((u32(len) >> 24) & 0xff),
-		u8((u32(len) >> 16) & 0xff),
-		u8((u32(len) >> 8) & 0xff),
-		u8(u32(len) & 0xff),
-	]
-	// Send header (magic signature + message length)
-	conn.write(magic) or { return err }
-	conn.write(len_bytes) or { return err }
-	// Send the actual message payload
-	conn.write(payload.bytes()) or { return err }
+	mut buf := []u8{len: 8 + payload.len}
+	buf[0] = `M`
+	buf[1] = `S`
+	buf[2] = `G`
+	buf[3] = `0`
+	buf[4] = u8((u32(payload.len) >> 24) & 0xff)
+	buf[5] = u8((u32(payload.len) >> 16) & 0xff)
+	buf[6] = u8((u32(payload.len) >> 8) & 0xff)
+	buf[7] = u8(u32(payload.len) & 0xff)
+	if payload.len > 0 {
+		unsafe {
+			C.memcpy(&buf[8], payload.str, payload.len)
+		}
+	}
+	// Send consolidated buffer in a single system call
+	conn.write(buf) or { return err }
 }
 
 // read_exact reads exactly `size` bytes from the connection, processing data in chunks.
@@ -13741,8 +13808,11 @@ fn read_exact(mut conn unix.StreamConn, size int) ![]u8 {
 		remaining := size - read_bytes
 		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
 		chunk_limit := if remaining > 512 { 512 } else { remaining }
-		n := conn.read(mut data[read_bytes .. read_bytes + chunk_limit]) or { return err }
+		n := conn.read(mut data[read_bytes..read_bytes + chunk_limit]) or { return err }
 		if n == 0 {
+			if read_bytes == 0 {
+				return error('EOF')
+			}
 			return error('unexpected end of stream')
 		}
 		read_bytes += n
@@ -13756,15 +13826,13 @@ fn read_msg(mut conn unix.StreamConn, max_size int) !string {
 	header_bytes := read_exact(mut conn, 8) or { return err }
 
 	// Validate protocol magic bytes
-	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G` || header_bytes[3] != `0` {
+	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G`
+		|| header_bytes[3] != `0` {
 		return error('invalid protocol magic bytes')
 	}
 
 	// Reconstruct big-endian length
-	len := int((u32(header_bytes[4]) << 24) |
-	           (u32(header_bytes[5]) << 16) |
-	           (u32(header_bytes[6]) << 8) |
-	           u32(header_bytes[7]))
+	len := int((u32(header_bytes[4]) << 24) | (u32(header_bytes[5]) << 16) | (u32(header_bytes[6]) << 8) | u32(header_bytes[7]))
 
 	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
 	if len > max_size {
@@ -13815,7 +13883,11 @@ fn run_server(socket_path string) ! {
 
 	for {
 		message := read_msg(mut conn, max_message_size) or {
-			println('Server: Connection closed or protocol error: ${err}')
+			if err.msg() == 'EOF' {
+				println('Server: Client disconnected cleanly (EOF).')
+			} else {
+				println('Server: Connection closed or protocol error: ${err}')
+			}
 			break
 		}
 
@@ -13825,9 +13897,7 @@ fn run_server(socket_path string) ! {
 
 		if message == 'Goodbye' {
 			println('Server received Goodbye. Replying and closing connection...')
-			write_msg(mut conn, 'Goodbye!') or {
-				println('Server: Write failed: ${err}')
-			}
+			write_msg(mut conn, 'Goodbye!') or { println('Server: Write failed: ${err}') }
 			break
 		}
 
@@ -13902,18 +13972,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (path string) {
-		run_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(socket_path) or {
-		println('Client failed: ${err}')
-	}
+	run_client(socket_path) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -14286,51 +14352,72 @@ module main
 
 import json
 
-// User struct defines field attributes for custom JSON serialization/deserialization.
+// User uses attributes to control JSON field names and to hide a field from encoding.
 struct User {
-	name string @[json: 'username']
-	age  int    @[json: 'user_age']
+	name   string @[json: 'username']
+	age    int    @[json: 'user_age']
+	secret string @[json: '-']
 }
 
-// @[deprecated] warns the developer at compile time that the function shouldn't be used.
+// Note shows how database-related attributes can describe a schema shape.
+struct Note {
+	id      int    @[primary; sql: serial]
+	message string @[sql: 'detail'; unique]
+}
+
+// deprecated warns developers when they call this function.
 @[deprecated: 'use modern_greet instead']
 fn old_greet() {
 	println('Hello from the old greeting!')
 }
 
+// modern_greet is the preferred replacement for old_greet.
 fn modern_greet() {
 	println('Hello from the modern greeting!')
 }
 
-// @[inline] suggests the compiler to inline the function body.
+// inline hints the compiler that this small function should be inlined.
 @[inline]
 fn add(a int, b int) int {
 	return a + b
 }
 
+// required marks a function parameter as something that should be supplied explicitly.
+@[required]
+fn greet_user(name string) string {
+	return 'Hello, ${name}!'
+}
+
 fn main() {
-	// 1. JSON serialization/deserialization using @[json] mapping
+	println('=== attributes demo ===')
+
+	// Build a User instance and encode it to JSON.
 	u := User{
-		name: 'Bob'
-		age:  30
+		name:   'Bob'
+		age:    30
+		secret: 'hidden'
 	}
 	encoded := json.encode(u)
 	println('Encoded JSON: ${encoded}')
 
+	// Decode a JSON payload that uses the custom field names from the attributes.
 	decoded := json.decode(User, '{"username":"Alice","user_age":25}') or {
 		println('JSON error: ${err}')
 		User{}
 	}
 	println('Decoded User -> Name: ${decoded.name}, Age: ${decoded.age}')
 
-	// 2. Calling inline function
+	// The inline attribute is only a hint, but the example shows the function call.
 	sum := add(10, 20)
 	println('Sum: ${sum}')
 
-	// 3. Calling modern function
+	// Call the modern function and the required-parameter helper.
 	modern_greet()
+	println(greet_user('Ada'))
 
-	// Note: Calling old_greet() will compile successfully but output a warning:
+	// The Note struct is only used to demonstrate the attribute syntax here.
+	println('Note schema fields: ${Note{}.id} / ${Note{}.message}')
+	// Calling old_greet() will compile successfully but output a warning:
 	// warning: old_greet has been deprecated. use modern_greet instead
 	// old_greet()
 }
@@ -14596,8 +14683,8 @@ fn main() {
 	}
 
 	mut cfg := Config{
-		id: 101
-		val: 99.99
+		id:   101
+		val:  99.99
 		name: [u8(0), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]!
 	}
 
@@ -14610,11 +14697,8 @@ fn main() {
 	}
 
 	// Write struct representation directly to the file
-	f.write_struct(cfg) or {
-		println('Failed to write struct: ${err}')
-	}
+	f.write_struct(cfg) or { println('Failed to write struct: ${err}') }
 	println('Struct successfully serialized to file.')
-
 
 	// --- 2. Seeking & Cursor Position (seek/tell) ---
 	println('\n--- 2. File Seeking & Cursor Position ---')
@@ -14625,22 +14709,20 @@ fn main() {
 
 	// Seek back to the beginning of the file (.start)
 	println('Seeking back to the start of the file...')
-	f.seek(0, .start) or {
-		println('Failed to seek: ${err}')
-	}
+	f.seek(0, .start) or { println('Failed to seek: ${err}') }
 
 	// Read struct back from file
 	mut read_cfg := Config{
 		name: [u8(0), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]!
 	}
-	f.read_struct(mut read_cfg) or {
-		println('Failed to read struct: ${err}')
-	}
+	f.read_struct(mut read_cfg) or { println('Failed to read struct: ${err}') }
 
 	// Extract string from fixed-size byte array
 	mut bytes := []u8{}
 	for b in read_cfg.name {
-		if b == 0 { break }
+		if b == 0 {
+			break
+		}
 		bytes << b
 	}
 	name_read := bytes.bytestr()
@@ -14652,21 +14734,17 @@ fn main() {
 
 	f.close()
 
-
 	// --- 3. Truncating Files ---
 	println('\n--- 3. File Truncation (truncate) ---')
 
 	// Note: V's os.truncate opens the file with O_TRUNC, resetting it first before sizing.
 	// Shrinking/sizing a file directly using os.truncate:
 	println('Truncating file "${file_path}" to 10 bytes...')
-	os.truncate(file_path, 10) or {
-		println('Failed to truncate: ${err}')
-	}
+	os.truncate(file_path, 10) or { println('Failed to truncate: ${err}') }
 	println('File size after truncation: ${os.file_size(file_path)} bytes')
 
 	// Clean up binary file
 	os.rm(file_path) or {}
-
 
 	// --- 4. Recursive Directory Tree Walking ---
 	println('\n--- 4. Directory Tree Walking (walk) ---')
@@ -14769,7 +14847,7 @@ fn main() {
 	// ==========================================
 	// 1. Basic File Operations (Writing, Reading, Existence)
 	// ==========================================
-	
+
 	// os.write_file writes a string to a file. It overwrites the file if it already exists.
 	// We handle errors using V's explicit "or" block.
 	println('Writing text to ${filename}...')
@@ -14794,7 +14872,7 @@ fn main() {
 	lines := ['Line 1: V has simple OS functions.', 'Line 2: Supporting multiple lines.']
 	lines_file := 'temp_lines_example.txt'
 	os.write_lines(lines_file, lines) or { println('Failed to write lines: ${err}') }
-	
+
 	// os.read_lines reads a file line-by-line and returns an array of strings.
 	read_lines := os.read_lines(lines_file) or {
 		println('Failed to read lines: ${err}')
@@ -14807,7 +14885,9 @@ fn main() {
 	// os.file_last_mod_unix retrieves the Unix timestamp of when the file was last modified.
 	// os.is_file returns true if the path points to a file (not a directory).
 	bytes_file := 'temp_bytes_example.bin'
-	os.write_bytes(bytes_file, 'V handles raw bytes.'.bytes()) or { println('Failed to write bytes: ${err}') }
+	os.write_bytes(bytes_file, 'V handles raw bytes.'.bytes()) or {
+		println('Failed to write bytes: ${err}')
+	}
 	read_bytes := os.read_bytes(bytes_file) or { []u8{} }
 	println('Read bytes: "${read_bytes.bytestr()}"')
 	println('Last modified time (epoch): ${os.file_last_mod_unix(bytes_file)}')
@@ -14889,7 +14969,7 @@ fn main() {
 	// ==========================================
 	println('\n--- Path Manipulation & Extraction ---')
 	sample_path := '/usr/local/bin/v.exe'
-	
+
 	// Path parsing helpers:
 	// os.dir returns the parent directory.
 	// os.base returns the last element of the path.
@@ -14914,7 +14994,7 @@ fn main() {
 	// 4. Working Directory Traversal
 	// ==========================================
 	println('\n--- Working Directory Traversal ---')
-	
+
 	// os.getwd returns the current active working directory.
 	// os.chdir changes the current active working directory.
 	original_wd := os.getwd()
@@ -14977,7 +15057,7 @@ fn main() {
 	// 7. File Globbing (glob)
 	// ==========================================
 	println('\n--- File Globbing ---')
-	
+
 	// os.glob finds all files matching a wildcard pattern (e.g. *.txt).
 	os.write_file('glob_test_1.txt', '1') or {}
 	os.write_file('glob_test_2.txt', '2') or {}
@@ -15070,7 +15150,6 @@ fn main() {
 	println('Child process exited with status: ${p.status} (Code: ${p.code})')
 	p.close()
 
-
 	// --- 3. Pipes ---
 	println('\n--- 3. Low-Level Descriptor Pipes (Pipe) ---')
 
@@ -15096,7 +15175,6 @@ fn main() {
 	}
 	println('Read message from pipe: "${pipe_buf[..bytes_read].bytestr()}"')
 	my_pipe.close()
-
 
 	// --- 4. Capture Stdout/Stderr ---
 	println('\n--- 4. Capture Stdout and Stderr (IOCapture) ---')
@@ -15159,16 +15237,16 @@ fn main() {
 	println('User OS:              ${os.user_os()}')
 	println('Home Directory:       ${os.home_dir()}')
 	println('Temp Directory:       ${os.temp_dir()}')
-	println('Config Directory:     ${os.config_dir() or { "N/A" }}')
+	println('Config Directory:     ${os.config_dir() or { 'N/A' }}')
 	println('Cache Directory:      ${os.cache_dir()}')
 	println('Data Directory:       ${os.data_dir()}')
 
 	// Executable details
 	println('Current Executable:   ${os.executable()}')
-	println('Git Abs Path:         ${os.find_abs_path_of_executable("git") or { "not found" }}')
+	println('Git Abs Path:         ${os.find_abs_path_of_executable('git') or { 'not found' }}')
 
 	// Optional environment access & full environment map
-	println('Home via getenv_opt:  ${os.getenv_opt("HOME") or { "not set" }}')
+	println('Home via getenv_opt:  ${os.getenv_opt('HOME') or { 'not set' }}')
 	env_map := os.environ()
 	// Safely print first few environment keys if available
 	limit := if env_map.len < 3 { env_map.len } else { 3 }
@@ -15324,7 +15402,7 @@ fn main() {
 	// ==========================================
 	// Arithmetic and comparisons
 	// ==========================================
-	
+
 	// now.add() adds a duration to the timestamp.
 	// now.add_days() adds a specified number of days.
 	// now.add_seconds() adds a specified number of seconds.
@@ -15342,7 +15420,7 @@ fn main() {
 	// ==========================================
 	// Formatting helpers
 	// ==========================================
-	
+
 	// now.clean() formats time as YYYY-MM-DD HH:MM:SS.
 	// now.clean12() formats time using a 12-hour clock with AM/PM.
 	// now.custom_format() formats time using a custom layout pattern.
@@ -15361,14 +15439,15 @@ fn main() {
 	println('format_ss_milli: ${now.format_ss_milli()}')
 	println('format_ss_nano: ${now.format_ss_nano()}')
 	println('strftime: ${now.strftime('%Y-%m-%d %H:%M:%S')}')
-	println('get_fmt_str: ${now.get_fmt_str(time.FormatDelimiter.hyphen, time.FormatTime.hhmm24, time.FormatDate.yyyymmdd)}')
+	println('get_fmt_str: ${now.get_fmt_str(time.FormatDelimiter.hyphen, time.FormatTime.hhmm24,
+		time.FormatDate.yyyymmdd)}')
 	println('get_fmt_date_str: ${now.get_fmt_date_str(time.FormatDelimiter.hyphen, time.FormatDate.yyyymmdd)}')
 	println('get_fmt_time_str: ${now.get_fmt_time_str(time.FormatTime.hhmm24)}')
 
 	// ==========================================
 	// Date and time helpers
 	// ==========================================
-	
+
 	// Extra details like day_of_week(), days_from_unix_epoch(), week_of_year(), smonth(), etc.
 	println('day_of_week: ${now.day_of_week()}')
 	println('days_from_unix_epoch: ${now.days_from_unix_epoch()}')
@@ -15387,7 +15466,7 @@ fn main() {
 	// ==========================================
 	// UTC and local conversions
 	// ==========================================
-	
+
 	// Convert between UTC and the system local timezone.
 	// unix(), unix_milli(), etc. return timestamps since the Unix Epoch.
 	println('is_utc: ${now.is_utc()}')
@@ -15406,7 +15485,7 @@ fn main() {
 	// ==========================================
 	// Relative and serialization helpers
 	// ==========================================
-	
+
 	// relative() and relative_short() return values like "2 hours ago".
 	// to_json() returns the JSON representation of the time.
 	// push_to_http_header() format HTTP-standard cookie/caching header dates.
@@ -15424,7 +15503,7 @@ fn main() {
 	// ==========================================
 	// JSON parsing helpers
 	// ==========================================
-	
+
 	// Parse Unix timestamps or ISO/RFC 3339 strings directly back into a Time struct.
 	mut parsed_from_number := time.now()
 	parsed_from_number.from_json_number('1712345678') or {
@@ -15441,7 +15520,7 @@ fn main() {
 	// ==========================================
 	// Stopwatch example
 	// ==========================================
-	
+
 	// new_stopwatch starts a new stopwatch to measure high-precision elapsed code execution time.
 	println('Starting stopwatch...')
 	mut sw := time.new_stopwatch()
@@ -15513,22 +15592,29 @@ module main
 
 import regex
 
+// replace_callback is used by replace_by_fn() to show how a match can be rewritten.
 fn replace_callback(re regex.RE, in_txt string, start int, end int) string {
 	return '[${start}-${end}]'
 }
 
 fn main() {
+	// This sample text contains numbers and words that the regex API will inspect.
 	text := 'We have 15 apples, 32 bananas, and 120 oranges.'
 
+	// Compile a regex that finds one or more digits.
 	mut re := regex.regex_opt(r'\d+') or {
 		println('Failed to compile regex: ${err}')
 		return
 	}
+
+	// Create another regex object and compile a word-matching pattern.
 	mut re_from_new := regex.new()
 	re_from_new.compile_opt(r'\w+') or {
 		println('compile_opt() failed: ${err}')
 		return
 	}
+
+	// regex_base() returns the compiled regex plus a status code and error message.
 	base_re, base_code, base_err := regex.regex_base(r'\d+')
 	println('regex_base(): ${base_code}, ${base_err}')
 	println('regex_base query: ${base_re.get_query()}')
@@ -15536,6 +15622,7 @@ fn main() {
 	println('=== regex module demo ===')
 	println('query: ${re.get_query()}')
 
+	// find() returns the first match position and span.
 	start, end := re.find(text)
 	if start >= 0 {
 		matched := text[start..end]
@@ -15544,23 +15631,26 @@ fn main() {
 		println('find(): no match')
 	}
 
+	// The next calls demonstrate the other common regex helpers.
 	println('find_from(): ${re.find_from(text, 10)}')
 	println('find_all(): ${re.find_all(text)}')
 	println('find_all_str(): ${re.find_all_str(text)}')
 	println('match_string(): ${re.match_string(text)}')
 	println('matches_string(): ${re.matches_string(text)}')
-	println('replace(): ${re.replace(text, "NUM")}')
-	println('replace_n(): ${re.replace_n(text, "NUM", 2)}')
-	println('replace_simple(): ${re.replace_simple(text, "NUM")}')
+	println('replace(): ${re.replace(text, 'NUM')}')
+	println('replace_n(): ${re.replace_n(text, 'NUM', 2)}')
+	println('replace_simple(): ${re.replace_simple(text, 'NUM')}')
 	println('replace_by_fn(): ${re.replace_by_fn(text, replace_callback)}')
 	println('split(): ${re.split(text)}')
 	println('get_group_list(): ${re.get_group_list()}')
 	println('get_code(): ${re.get_code()}')
 	println('get_group_by_id(): ${re.get_group_by_id(text, 0)}')
-	println('get_group_by_name(): ${re.get_group_by_name(text, "")}')
+	println('get_group_by_name(): ${re.get_group_by_name(text, '')}')
 	println('get_group_bounds_by_id(): ${re.get_group_bounds_by_id(0)}')
-	println('get_group_bounds_by_name(): ${re.get_group_bounds_by_name("")}')
+	println('get_group_bounds_by_name(): ${re.get_group_bounds_by_name('')}')
 	println('match_base(): ${unsafe { re.match_base(text.str, text.len) }}')
+
+	// reset() clears the regex state so we can reuse the object.
 	re.reset()
 	println('reset() query: ${re.get_query()}')
 	println('new() compile_opt query: ${re_from_new.get_query()}')
@@ -15949,7 +16039,7 @@ fn main() {
 	println('union: ${union_set}')
 	intersection_set := set_b.intersection(set_c).array()
 	println('intersection: ${intersection_set}')
-	
+
 	// Compute the difference manually to avoid V compiler/analyzer issues with generic operator overloading (-)
 	mut diff_set := set_b.copy()
 	for item in set_c.array() {
@@ -15957,7 +16047,7 @@ fn main() {
 	}
 	diff_array := diff_set.array()
 	println('difference: ${diff_array}')
-	
+
 	is_subset := set_b.subset(set_c)
 	println('subset: ${is_subset}')
 	copied_set := set_b.copy().array()
@@ -16010,29 +16100,29 @@ import math
 // to avoid global variables (which V does not support by default).
 struct AppContext {
 mut:
-	ctx          &gg.Context = unsafe { nil }
-	width        int  = 800
-	height       int  = 600
+	ctx    &gg.Context = unsafe { nil }
+	width  int         = 800
+	height int         = 600
 	// Interactive shape parameters
-	shape_x      f32  = 400.0
-	shape_y      f32  = 300.0
-	shape_size   f32  = 50.0
+	shape_x      f32      = 400.0
+	shape_y      f32      = 300.0
+	shape_size   f32      = 50.0
 	shape_color  gg.Color = gg.blue
-	active_shape int  // 0 = Circle, 1 = Rectangle, 2 = Triangle
+	active_shape int // 0 = Circle, 1 = Rectangle, 2 = Triangle
 	// Tracking mouse positions and clicks
-	mouse_x      f32
-	mouse_y      f32
-	click_x      f32  = -1.0
-	click_y      f32  = -1.0
-	click_color  gg.Color = gg.red
+	mouse_x     f32
+	mouse_y     f32
+	click_x     f32      = -1.0
+	click_y     f32      = -1.0
+	click_color gg.Color = gg.red
 	// Last key pressed message
-	last_key     string = 'None'
+	last_key string = 'None'
 }
 
 fn main() {
 	// Initialize state
 	mut app := &AppContext{
-		width: 800
+		width:  800
 		height: 600
 	}
 
@@ -16044,9 +16134,9 @@ fn main() {
 		height:       app.height
 		window_title: "V's gg graphics module: Tutorial & Interactive Demo"
 		bg_color:     gg.rgb(240, 244, 248) // A subtle modern light-blue background
-		user_data:    app                 // Pass our state struct to be accessible inside callbacks
-		frame_fn:     frame               // Callback called once per frame (to draw shapes/UI)
-		event_fn:     on_event            // Callback called for user inputs (mouse & keyboard)
+		user_data:    app      // Pass our state struct to be accessible inside callbacks
+		frame_fn:     frame    // Callback called once per frame (to draw shapes/UI)
+		event_fn:     on_event // Callback called for user inputs (mouse & keyboard)
 	)
 
 	println('Starting interactive graphics window...')
@@ -16054,7 +16144,7 @@ fn main() {
 	println('  - Move the mouse to see cursor position tracking.')
 	println('  - Left-Click anywhere to draw a red dot at the click location.')
 	println('  - Use Arrow Keys (Up/Down/Left/Right) to move the active shape.')
-	println('  - Press [C] or [c] to cycle the active shape\'s color.')
+	println("  - Press [C] or [c] to cycle the active shape's color.")
 	println('  - Press [S] or [s] to toggle between Circle, Rectangle, and Triangle.')
 	println('  - Press [Escape] to close the window.')
 	println('\nReal-world Case Study:')
@@ -16092,11 +16182,16 @@ fn frame(data voidptr) {
 
 	// Draw a custom convex polygon (a star-like pentagon, bottom right)
 	poly_points := [
-		f32(650.0), 480.0, // Point 1
-		750.0, 480.0,      // Point 2
-		780.0, 560.0,      // Point 3
-		700.0, 520.0,      // Point 4
-		620.0, 560.0       // Point 5
+		f32(650.0),
+		480.0, // Point 1
+		750.0,
+		480.0, // Point 2
+		780.0,
+		560.0, // Point 3
+		700.0,
+		520.0, // Point 4
+		620.0,
+		560.0, // Point 5
 	]
 	ctx.draw_convex_poly(poly_points, gg.cyan)
 
@@ -16108,8 +16203,8 @@ fn frame(data voidptr) {
 	// Instructions and state metadata at the top right
 	ctx.draw_text(20, 45, 'Cursor: (${app.mouse_x:.1f}, ${app.mouse_y:.1f}) | Last Key: ${app.last_key}',
 		color: gg.dark_blue
-		size: 16
-		bold: true
+		size:  16
+		bold:  true
 	)
 
 	// Context description
@@ -16119,7 +16214,7 @@ fn frame(data voidptr) {
 	ctx.draw_text(630, 570, 'Convex Polygon (Pentagon)', size: 12, color: gg.dark_gray)
 
 	// Help panel explaining key bindings
-	ctx.draw_rect_filled(20, 440, 280, 140, gg.Color{r: 255, g: 255, b: 255, a: 180})
+	ctx.draw_rect_filled(20, 440, 280, 140, gg.Color{ r: 255, g: 255, b: 255, a: 180 })
 	ctx.draw_rect_empty(20, 440, 280, 140, gg.gray)
 	ctx.draw_text(35, 450, 'Controls Panel', size: 15, bold: true, color: gg.black)
 	ctx.draw_text(35, 475, '- Arrows: Move active shape', size: 13, color: gg.black)
@@ -16129,7 +16224,11 @@ fn frame(data voidptr) {
 	ctx.draw_text(35, 555, '- Escape: Quit application', size: 13, color: gg.black)
 
 	// Case Study reference
-	ctx.draw_text(20, 585, 'Case Study: github.com/codecaine-zz/MindSpace-Journal', size: 10, italic: true, color: gg.dark_blue)
+	ctx.draw_text(20, 585, 'Case Study: github.com/codecaine-zz/MindSpace-Journal',
+		size:   10
+		italic: true
+		color:  gg.dark_blue
+	)
 
 	// --- 3. Draw Dynamic / Interactive Elements ---
 
@@ -16138,7 +16237,7 @@ fn frame(data voidptr) {
 		ctx.draw_circle_filled(app.click_x, app.click_y, 8, app.click_color)
 		ctx.draw_circle_empty(app.click_x, app.click_y, 12, gg.black)
 		ctx.draw_text(int(app.click_x) + 12, int(app.click_y) - 6, 'Last Click: (${app.click_x:.0f}, ${app.click_y:.0f})',
-			size: 11
+			size:  11
 			color: gg.black
 		)
 	}
@@ -16153,8 +16252,10 @@ fn frame(data voidptr) {
 		1 {
 			// Draw interactive Rectangle (centered on coordinates)
 			half := app.shape_size
-			ctx.draw_rect_filled(app.shape_x - half, app.shape_y - half, app.shape_size * 2, app.shape_size * 2, app.shape_color)
-			ctx.draw_rect_empty(app.shape_x - half, app.shape_y - half, app.shape_size * 2, app.shape_size * 2, gg.black)
+			ctx.draw_rect_filled(app.shape_x - half, app.shape_y - half, app.shape_size * 2,
+				app.shape_size * 2, app.shape_color)
+			ctx.draw_rect_empty(app.shape_x - half, app.shape_y - half, app.shape_size * 2,
+				app.shape_size * 2, gg.black)
 		}
 		2 {
 			// Draw interactive Equilateral Triangle (centered on coordinates)
@@ -16172,9 +16273,10 @@ fn frame(data voidptr) {
 	}
 
 	// Draw label above the active shape
-	ctx.draw_text(int(app.shape_x) - 40, int(app.shape_y) - int(app.shape_size) - 20, 'Active Shape',
-		size: 13
-		bold: true
+	ctx.draw_text(int(app.shape_x) - 40, int(app.shape_y) - int(app.shape_size) - 20,
+		'Active Shape',
+		size:  13
+		bold:  true
 		color: gg.black
 	)
 
@@ -16196,7 +16298,12 @@ fn on_event(e &gg.Event, data voidptr) {
 			app.click_y = e.mouse_y
 			// Randomize click dot color slightly for visual variety
 			if app.click_color.r == 255 {
-				app.click_color = gg.Color{r: 0, g: 180, b: 0, a: 255}
+				app.click_color = gg.Color{
+					r: 0
+					g: 180
+					b: 0
+					a: 255
+				}
 			} else {
 				app.click_color = gg.red
 			}
@@ -16225,19 +16332,28 @@ fn on_event(e &gg.Event, data voidptr) {
 				// Use Arrow Keys to move the active shape
 				.left {
 					app.shape_x -= 15.0
-					if app.shape_x < 0 { app.shape_x = 0 }
+					if app.shape_x < 0 {
+						app.shape_x = 0
+					}
 				}
 				.right {
 					app.shape_x += 15.0
-					if app.shape_x > app.width { app.shape_x = f32(app.width) }
+					if app.shape_x > app.width {
+						app.shape_x = f32(app.width)
+					}
 				}
 				.up {
 					app.shape_y -= 15.0
-					if app.shape_y < 80 { app.shape_y = 80 } // Keep below divider line
+					if app.shape_y < 80 {
+						app.shape_y = 80
+					}
+					// Keep below divider line
 				}
 				.down {
 					app.shape_y += 15.0
-					if app.shape_y > app.height { app.shape_y = f32(app.height) }
+					if app.shape_y > app.height {
+						app.shape_y = f32(app.height)
+					}
 				}
 				else {}
 			}
@@ -16436,7 +16552,6 @@ fn main() {
 	}
 	println('ECDSA Signature Verified? -> ${verified_ec}')
 
-
 	// --- 2. Ed25519 ---
 	println('\n--- Ed25519 ---')
 
@@ -16459,7 +16574,6 @@ fn main() {
 		return
 	}
 	println('Ed25519 Signature Verified? -> ${verified_ed}')
-
 
 	// --- 3. PEM Encoding/Decoding ---
 	println('\n--- PEM (Privacy Enhanced Mail) Encoding ---')
@@ -16674,7 +16788,6 @@ fn main() {
 	}
 	println('Bcrypt verification successful!')
 
-
 	// --- 2. Scrypt ---
 	println('\n--- Scrypt ---')
 	scrypt_pass := 'my_scrypt_pass'.bytes()
@@ -16686,7 +16799,6 @@ fn main() {
 		return
 	}
 	println('Scrypt Key (Hex): ${scrypt_key.hex()}')
-
 
 	// --- 3. PBKDF2 ---
 	println('\n--- PBKDF2 ---')
@@ -16773,7 +16885,7 @@ fn main() {
 	// --- 1. AES with CBC Block Mode ---
 	println('\n--- AES (CBC Mode) ---')
 	aes_key := [u8(1), 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] // 16-byte key (AES-128)
-	aes_iv := [u8(9), 8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4]       // 16-byte IV
+	aes_iv := [u8(9), 8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4] // 16-byte IV
 
 	aes_block := aes.new_cipher(aes_key)
 	mut aes_enc := cipher.new_cbc(aes_block, aes_iv)
@@ -16800,7 +16912,6 @@ fn main() {
 	unpadded_text := decrypted[..unpadded_len].bytestr()
 	println('Decrypted Text:   "${unpadded_text}"')
 
-
 	// --- 2. DES Block Cipher ---
 	println('\n--- DES ---')
 	des_key := [u8(1), 2, 3, 4, 5, 6, 7, 8] // 8-byte key
@@ -16815,7 +16926,6 @@ fn main() {
 	des_block.decrypt(mut des_decrypted, des_cipher)
 	println('DES Decrypted:        "${des_decrypted.bytestr()}"')
 
-
 	// --- 3. Blowfish Block Cipher ---
 	println('\n--- Blowfish (Encryption Only) ---')
 	bf_key := 'blowfish_key'.bytes()
@@ -16826,7 +16936,6 @@ fn main() {
 	bf.encrypt(mut bf_cipher, bf_plain)
 	println('Blowfish Ciphertext (Hex): ${bf_cipher.hex()}')
 	println('(Note: V standard library crypto.blowfish only supports encryption)')
-
 
 	// --- 4. RC4 Stream Cipher ---
 	println('\n--- RC4 (Stream Cipher) ---')
@@ -17019,14 +17128,16 @@ fn main() {
 	println('=== arrays Utility Module Examples ===')
 
 	nums := [5, 3, 9, 1, 7, 3]
+	sorted_nums := [1, 3, 5, 7, 9]
 	words := ['apple', 'banana', 'pear', 'banana']
 	repeated := [1, 1, 2, 2, 3, 3]
+	letters := ['a', 'b', 'c']
 
 	min_val := arrays.min(nums) or { 0 }
 	max_val := arrays.max(nums) or { 0 }
 	println('Array: ${nums}')
-	println('Min: ${min_val}')
-	println('Max: ${max_val}')
+	println('Min:   ${min_val}')
+	println('Max:   ${max_val}')
 
 	min_idx := arrays.idx_min(nums) or { -1 }
 	max_idx := arrays.idx_max(nums) or { -1 }
@@ -17036,31 +17147,173 @@ fn main() {
 	chunked := arrays.chunk(nums, 2)
 	println('chunk(): ${chunked}')
 
+	append_result := arrays.append(nums, [10, 11])
+	println('append(): ${append_result}')
+
+	concat_result := arrays.concat(nums, 10, 11)
+	println('concat(): ${concat_result}')
+
+	mut copy_result := []int{}
+	copied_count := arrays.copy(mut copy_result, nums)
+	println('copy(): ${copied_count} -> ${copy_result}')
+
 	distinct_result := arrays.distinct(words)
 	println('distinct(): ${distinct_result}')
+
+	arrays.each(nums, fn (elem int) {
+		println('each(): ${elem}')
+	})
+
+	arrays.each_indexed(nums, fn (i int, elem int) {
+		println('each_indexed(): ${i} -> ${elem}')
+	})
 
 	filtered := arrays.filter_indexed(nums, fn (idx int, elem int) bool {
 		return idx % 2 == 0 && elem > 3
 	})
 	println('filter_indexed(): ${filtered}')
 
-	find_first := arrays.find_first(nums, fn (elem int) bool {
+	first_match := arrays.find_first(nums, fn (elem int) bool {
 		return elem > 5
 	}) or { 0 }
-	println('find_first(): ${find_first}')
+	println('find_first(): ${first_match}')
+
+	last_match := arrays.find_last(nums, fn (elem int) bool {
+		return elem > 5
+	}) or { 0 }
+	println('find_last(): ${last_match}')
+
+	flat_mapped := arrays.flat_map[int, string](nums, fn (elem int) []string {
+		return [elem.str(), '!']
+	})
+	println('flat_map(): ${flat_mapped}')
+
+	flat_mapped_indexed := arrays.flat_map_indexed[int, string](nums, fn (idx int, elem int) []string {
+		return ['${idx}', elem.str()]
+	})
+	println('flat_map_indexed(): ${flat_mapped_indexed}')
+
+	flattened := arrays.flatten([[1, 2], [3, 4], [5]])
+	println('flatten(): ${flattened}')
 
 	folded := arrays.fold(nums, 0, fn (acc int, elem int) int {
 		return acc + elem
 	})
 	println('fold(): ${folded}')
 
-	part_even, part_odd := arrays.partition(nums, fn (elem int) bool {
+	folded_indexed := arrays.fold_indexed(nums, 0, fn (idx int, acc int, elem int) int {
+		return acc + idx + elem
+	})
+	println('fold_indexed(): ${folded_indexed}')
+
+	println('group(): skipped in this sample because the helper expects variadic slices and is sensitive to local analyzer parsing')
+
+	grouped_by_parity := arrays.group_by(nums, fn (val int) string {
+		if val % 2 == 0 {
+			return 'even'
+		}
+		return 'odd'
+	})
+	println('group_by(): ${grouped_by_parity}')
+
+	binary_search_result := arrays.binary_search(sorted_nums, 7) or { -1 }
+	println('binary_search(): ${binary_search_result}')
+
+	c_array_example := unsafe { arrays.carray_to_varray[int](nil, 0) }
+	println('carray_to_varray(): ${c_array_example}')
+
+	chunked_while := arrays.chunk_while(nums, fn (before int, after int) bool {
+		return before < after
+	})
+	println('chunk_while(): ${chunked_while}')
+
+	index_first := arrays.index_of_first(nums, fn (idx int, elem int) bool {
+		return idx > 0 && elem == 3
+	})
+	println('index_of_first(): ${index_first}')
+
+	index_last := arrays.index_of_last(nums, fn (idx int, elem int) bool {
+		return idx > 0 && elem == 3
+	})
+	println('index_of_last(): ${index_last}')
+
+	joined := arrays.join_to_string(words, ' | ', fn (elem string) string {
+		return elem.to_upper()
+	})
+	println('join_to_string(): ${joined}')
+
+	lower := arrays.lower_bound(sorted_nums, 4) or { 0 }
+	upper := arrays.upper_bound(sorted_nums, 4) or { 0 }
+	println('lower_bound(): ${lower}')
+	println('upper_bound(): ${upper}')
+
+	mapped := arrays.map_indexed(nums, fn (idx int, elem int) int {
+		return idx + elem
+	})
+	println('map_indexed(): ${mapped}')
+
+	counts := arrays.map_of_counts([1, 2, 2, 3, 1])
+	println('map_of_counts(): ${counts}')
+
+	indexes := arrays.map_of_indexes([9, 1, 9, 4])
+	println('map_of_indexes(): ${indexes}')
+
+	merge_result := arrays.merge(letters, ['d'])
+	println('merge(): ${merge_result}')
+
+	partition_even, partition_odd := arrays.partition(nums, fn (elem int) bool {
 		return elem % 2 == 0
 	})
-	println('partition(): even=${part_even}, odd=${part_odd}')
+	println('partition(): even=${partition_even}, odd=${partition_odd}')
+
+	reduce_result := arrays.reduce(nums, fn (acc int, elem int) int {
+		return acc + elem
+	}) or { 0 }
+	println('reduce(): ${reduce_result}')
+
+	reduce_indexed_result := arrays.reduce_indexed(nums, fn (idx int, acc int, elem int) int {
+		return acc + idx + elem
+	}) or { 0 }
+	println('reduce_indexed(): ${reduce_indexed_result}')
+
+	mut reverse_iter := arrays.reverse_iterator(nums)
+	println('reverse_iterator():')
+	for {
+		if value := reverse_iter.next() {
+			println('  ${*value}')
+		} else {
+			break
+		}
+	}
+	reverse_iter.free()
+
+	mut rotate_left_example := [1, 2, 3, 4, 5]
+	arrays.rotate_left(mut rotate_left_example, 2)
+	println('rotate_left(): ${rotate_left_example}')
+
+	mut rotate_right_example := [1, 2, 3, 4, 5]
+	arrays.rotate_right(mut rotate_right_example, 2)
+	println('rotate_right(): ${rotate_right_example}')
+
+	sum_result := arrays.sum(nums) or { 0 }
+	println('sum(): ${sum_result}')
 
 	unique_result := arrays.uniq(repeated)
 	println('uniq(): ${unique_result}')
+
+	uniq_all_result := arrays.uniq_all_repeated(repeated)
+	println('uniq_all_repeated(): ${uniq_all_result}')
+
+	uniq_only_result := arrays.uniq_only(repeated)
+	println('uniq_only(): ${uniq_only_result}')
+
+	uniq_only_repeated_result := arrays.uniq_only_repeated(repeated)
+	println('uniq_only_repeated(): ${uniq_only_repeated_result}')
+
+	window_result := arrays.window(nums, arrays.WindowAttribute{ size: 2, step: 1 })
+	println('window(): ${window_result}')
+
+	println('All arrays examples completed.')
 }
 ```
 
@@ -17260,7 +17513,7 @@ fn main() {
 	// ==========================================
 	// 1. Terminal Size Metadata
 	// ==========================================
-	
+
 	// term.get_terminal_size() returns the (width, height) of the active terminal session in columns and rows.
 	width, height := term.get_terminal_size()
 	println('Terminal size: ${width} columns x ${height} rows')
@@ -17268,7 +17521,7 @@ fn main() {
 	// ==========================================
 	// 2. Colored Text (Foreground Styling)
 	// ==========================================
-	
+
 	// Foreground color helpers wrap the string with ANSI escape codes to change the text color.
 	println(term.green('This text is green!'))
 	println(term.red('This text is red!'))
@@ -17278,7 +17531,7 @@ fn main() {
 	// ==========================================
 	// 3. Text Styles & Modifiers
 	// ==========================================
-	
+
 	// Text modifiers add visual decorations like bold, underline, or strikethrough.
 	println(term.bold('This text is bold!'))
 	println(term.underline('This text is underlined!'))
@@ -17287,14 +17540,14 @@ fn main() {
 	// ==========================================
 	// 4. Background Styling
 	// ==========================================
-	
+
 	// Background color helpers fill the background area behind the printed characters.
 	println(term.bg_blue(' This has a blue background! '))
 
 	// ==========================================
 	// 5. Mixed Styling & Layering
 	// ==========================================
-	
+
 	// We can combine text color, style (bold/underline), and background color by nesting the calls.
 	println(term.bg_blue(term.yellow(' Yellow text on a blue background ')))
 	println(term.bg_red(term.white(term.bold(' Bold white text on a red background '))))
@@ -17303,7 +17556,7 @@ fn main() {
 	// ==========================================
 	// 6. Preformatted Status Messages
 	// ==========================================
-	
+
 	// V's term module provides built-in preformatted status message helper templates.
 	// These automatically print colored status stamps like [OK], [WARNING], or [FAILED] followed by the message.
 	println(term.ok_message('Operation succeeded!'))
@@ -18012,9 +18265,7 @@ fn main() {
 
 	// Read lines until EOF
 	for {
-		line := buf_reader.read_line() or {
-			break
-		}
+		line := buf_reader.read_line() or { break }
 		println('Buffered Read Line: "${line}"')
 	}
 	read_file.close()
@@ -18272,7 +18523,7 @@ fn main() {
 	println('\nLogical operations on ${bf1.str()} and ${bf2.str()}:')
 
 	and_result := bitfield.bf_and(bf1, bf2)
-	or_result  := bitfield.bf_or(bf1, bf2)
+	or_result := bitfield.bf_or(bf1, bf2)
 	xor_result := bitfield.bf_xor(bf1, bf2)
 	not_result := bitfield.bf_not(bf1)
 
@@ -18301,7 +18552,7 @@ fn main() {
 
 	mut app := cli.Command{
 		name:        'tool'
-		description: 'A sample CLI tool showing V\'s cli package.'
+		description: "A sample CLI tool showing V's cli package."
 		version:     '1.0.0'
 		posix_mode:  true
 		execute:     fn (cmd cli.Command) ! {
@@ -18321,7 +18572,7 @@ fn main() {
 					}
 					println('Hello, ${name}!')
 				}
-				flags: [
+				flags:       [
 					cli.Flag{
 						flag:        .string
 						name:        'name'
@@ -18517,9 +18768,9 @@ fn main() {
 	// 2. Custom Layout Configuration (Paragraphs, Sentences, Words)
 	println('\n--- 2. Custom Layout Generation ---')
 	custom_layout := lorem.generate(lorem.LoremCfg{
-		paragraphs: 2
+		paragraphs:              2
 		sentences_per_paragraph: 3
-		words_per_sentence: 6
+		words_per_sentence:      6
 	})
 	println(custom_layout)
 
@@ -18534,10 +18785,10 @@ fn main() {
 	corpora := ['lorem', 'poe', 'darwin', 'bard']
 	for corpus in corpora {
 		text := lorem.generate(lorem.LoremCfg{
-			corpus_name: corpus
-			paragraphs: 1
+			corpus_name:             corpus
+			paragraphs:              1
 			sentences_per_paragraph: 2
-			words_per_sentence: 8
+			words_per_sentence:      8
 		})
 		println('Corpus [${corpus}]:')
 		println(text)
@@ -18549,21 +18800,21 @@ fn main() {
 	// and identical across multiple runs. Custom `seed_text` provides a starting phrase for the Markov chain.
 	println('\n--- 4. Deterministic Generation with Seed & Custom Starting Phrase ---')
 	deterministic_lorem_1 := lorem.generate(lorem.LoremCfg{
-		corpus_name: 'poe'
-		rng_seed: 42
-		seed_text: 'once upon a midnight'
-		paragraphs: 1
+		corpus_name:             'poe'
+		rng_seed:                42
+		seed_text:               'once upon a midnight'
+		paragraphs:              1
 		sentences_per_paragraph: 2
-		words_per_sentence: 8
+		words_per_sentence:      8
 	})
 
 	deterministic_lorem_2 := lorem.generate(lorem.LoremCfg{
-		corpus_name: 'poe'
-		rng_seed: 42
-		seed_text: 'once upon a midnight'
-		paragraphs: 1
+		corpus_name:             'poe'
+		rng_seed:                42
+		seed_text:               'once upon a midnight'
+		paragraphs:              1
 		sentences_per_paragraph: 2
-		words_per_sentence: 8
+		words_per_sentence:      8
 	})
 
 	println('Run 1:')
@@ -18714,7 +18965,6 @@ fn main() {
 	}
 	m.commit(mul_fn, true)
 
-
 	// --- 2. Global Variables ---
 	println('\n2. Creating Global Variables...')
 	// Global variable named '__vsp' (Stack Pointer), internal/non-exported, type i32, mutable, init value 10
@@ -18730,7 +18980,6 @@ fn main() {
 		vsp_fn.global_get(vsp)
 	}
 	m.commit(vsp_fn, true)
-
 
 	// --- 3. Recursive Functions (Factorial) ---
 	println('\n3. Generating Recursive Function (fac)...')
@@ -18752,15 +19001,14 @@ fn main() {
 
 			fac_fn.local_get(0)
 			fac_fn.i64_const(1)
-			fac_fn.sub(.i64_t)   // n - 1
-			fac_fn.call('fac')   // recursive call to fac(n - 1)
+			fac_fn.sub(.i64_t) // n - 1
+			fac_fn.call('fac') // recursive call to fac(n - 1)
 
-			fac_fn.mul(.i64_t)   // n * fac(n - 1)
+			fac_fn.mul(.i64_t) // n * fac(n - 1)
 		}
 		fac_fn.c_end(ifs)
 	}
 	m.commit(fac_fn, true)
-
 
 	// --- 4. Compilation & Output ---
 	println('\n4. Compiling Module to WebAssembly Binary...')
@@ -18822,14 +19070,14 @@ struct Foo {
 fn main() {
 	// sizeof gives the size of a type in bytes
 	println('sizeof(Point) = ${sizeof(Point)} bytes') // 8
-	println('sizeof(Foo) = ${sizeof(Foo)} bytes')     // 12 (due to alignment/padding in C backend)
+	println('sizeof(Foo) = ${sizeof(Foo)} bytes') // 12 (due to alignment/padding in C backend)
 
 	// __offsetof gives the offset in bytes of a struct field
 	println('__offsetof(Point, x) = ${__offsetof(Point, x)}') // 0
 	println('__offsetof(Point, y) = ${__offsetof(Point, y)}') // 4
-	println('__offsetof(Foo, a) = ${__offsetof(Foo, a)}')     // 0
-	println('__offsetof(Foo, b) = ${__offsetof(Foo, b)}')     // 4
-	println('__offsetof(Foo, c) = ${__offsetof(Foo, c)}')     // 8
+	println('__offsetof(Foo, a) = ${__offsetof(Foo, a)}') // 0
+	println('__offsetof(Foo, b) = ${__offsetof(Foo, b)}') // 4
+	println('__offsetof(Foo, c) = ${__offsetof(Foo, c)}') // 8
 }
 ```
 
@@ -19083,14 +19331,15 @@ fn main() {
 	$for field in User.fields {
 		println('Field: ${field.name} | Typ: ${field.typ}')
 	}
-
 	println('\n--- Struct Attributes Reflection ---')
 	$for attr in User.attributes {
 		println('Attribute name: ${attr.name}')
 	}
-
 	println('\n--- Struct Methods Reflection ---')
-	user := User{name: 'Alice', age: 30}
+	user := User{
+		name: 'Alice'
+		age:  30
+	}
 	$for m in User.methods {
 		$if m.return_type is string {
 			println(user.$method())
@@ -19199,7 +19448,9 @@ fn main() {
 	println('V Backend: ' + @BACKEND)
 	println('CPU Platform: ' + @PLATFORM)
 
-	u := User{name: 'Alice'}
+	u := User{
+		name: 'Alice'
+	}
 	u.register()
 	log_event()
 }
@@ -19338,8 +19589,8 @@ fn main() {
 
 	// Create root node pointing to leaf references
 	root := Node[int]{
-		val: 10
-		left: &left_leaf
+		val:   10
+		left:  &left_leaf
 		right: &right_leaf
 	}
 
@@ -19496,11 +19747,11 @@ fn main() {
 
 	// 6. Map parsed arguments to the Config struct for clean division of concerns
 	config := Config{
-		input_file: input_file
+		input_file:  input_file
 		output_file: output_file
-		verbose: verbose
-		retries: retries
-		mode: mode
+		verbose:     verbose
+		retries:     retries
+		mode:        mode
 	}
 
 	// 7. Run the application logic
@@ -19611,7 +19862,7 @@ fn (mut app App) create_item(mut ctx Context) veb.Result {
 
 	// Auto-increment ID based on length
 	item_to_add := Item{
-		id: app.items.len + 1
+		id:   app.items.len + 1
 		name: new_item.name
 		done: new_item.done
 	}
@@ -19625,8 +19876,16 @@ fn main() {
 	// Initialize App with mock seed data
 	mut app := &App{
 		items: [
-			Item{id: 1, name: 'Learn V syntax', done: true},
-			Item{id: 2, name: 'Build a REST API in V', done: false},
+			Item{
+				id:   1
+				name: 'Learn V syntax'
+				done: true
+			},
+			Item{
+				id:   2
+				name: 'Build a REST API in V'
+				done: false
+			},
 		]
 	}
 
@@ -19687,9 +19946,7 @@ fn worker(id int, tasks_chan chan Task, results_chan chan Result, mut wg sync.Wa
 	for {
 		// Receive a task from the channel.
 		// If the channel is closed and empty, it returns `none`
-		t := <-tasks_chan or {
-			break
-		}
+		t := <-tasks_chan or { break }
 
 		start_time := time.now()
 
@@ -19700,10 +19957,10 @@ fn worker(id int, tasks_chan chan Task, results_chan chan Result, mut wg sync.Wa
 
 		// Send the result to the output channel
 		results_chan <- Result{
-			task_id: t.id
+			task_id:   t.id
 			worker_id: id
-			output: 'Processed: ' + t.data.to_upper()
-			duration: elapsed
+			output:    'Processed: ' + t.data.to_upper()
+			duration:  elapsed
 		}
 	}
 }
@@ -19740,7 +19997,7 @@ fn main() {
 	println('Dispatching ${num_tasks} tasks to worker pool...')
 	for i in 0 .. num_tasks {
 		tasks_chan <- Task{
-			id: i + 1
+			id:   i + 1
 			data: 'task-payload-${i + 1}'
 		}
 	}
@@ -19792,6 +20049,7 @@ fn main() {
 	println('=== V OS & File Utilities Boilerplate ===')
 
 	// 1. Join paths safely across different operating systems using os.join_path
+	// V's home_dir() gives the user's home directory. Let's use it as a base path inside a temporary subfolder in workspace.
 	cwd := os.getwd()
 	temp_dir := os.join_path(cwd, 'temp_file_demo')
 	println('Target directory: ${temp_dir}')
@@ -19845,12 +20103,8 @@ fn main() {
 
 	// 7. Clean up by deleting the file and directory
 	println('\nCleaning up temporary files and directories...')
-	os.rm(target_file) or {
-		eprintln('Failed to delete file: ${err}')
-	}
-	os.rmdir(temp_dir) or {
-		eprintln('Failed to delete directory: ${err}')
-	}
+	os.rm(target_file) or { eprintln('Failed to delete file: ${err}') }
+	os.rmdir(temp_dir) or { eprintln('Failed to delete directory: ${err}') }
 	println('Cleanup completed successfully.')
 }
 ```
@@ -20065,14 +20319,14 @@ fn calculate_stats(numbers []f64) ?Stats {
 	std_dev := math.sqrt(variance)
 
 	return Stats{
-		count: numbers.len
-		min: min
-		max: max
-		sum: sum
-		mean: mean
-		median: median
+		count:    numbers.len
+		min:      min
+		max:      max
+		sum:      sum
+		mean:     mean
+		median:   median
 		variance: variance
-		std_dev: std_dev
+		std_dev:  std_dev
 	}
 }
 
@@ -20180,7 +20434,7 @@ fn main() {
 	// 2. Custom Math Functions Demo
 	n := 10
 	println('\nCustom Number Functions:')
-	
+
 	fact := factorial(n) or {
 		eprintln('Error: ${err}')
 		u64(0)
@@ -20248,7 +20502,7 @@ fn chunk[T](arr []T, size int) [][]T {
 	}
 	mut result := [][]T{}
 	mut current_chunk := []T{}
-	
+
 	for item in arr {
 		current_chunk << item
 		if current_chunk.len == size {
@@ -20488,7 +20742,7 @@ fn main() {
 	println('=== V Configuration Management Boilerplate ===')
 
 	config_path := 'app_config.json'
-	
+
 	// Ensure we cleanup the generated file on exit
 	defer {
 		if os.exists(config_path) {
@@ -20601,7 +20855,7 @@ fn main() {
 	println('=== V JSON File Store Boilerplate ===')
 
 	store_path := 'todos.json'
-	
+
 	// Ensure we cleanup the generated file on exit
 	defer {
 		if os.exists(store_path) {
@@ -20671,9 +20925,9 @@ fn retry[T](cfg RetryConfig, op fn () !T) !T {
 			if attempt == cfg.attempts {
 				return error('Operation failed after ${cfg.attempts} attempts. Last error: ${err}')
 			}
-			
+
 			eprintln('Attempt ${attempt}/${cfg.attempts} failed: ${err}. Retrying in ${delay.milliseconds()}ms...')
-			
+
 			// Sleep with optional jitter to prevent thundering herd problems
 			mut sleep_dur := delay
 			if cfg.jitter {
@@ -20714,10 +20968,10 @@ fn main() {
 
 	// Define our retry configuration
 	cfg := RetryConfig{
-		attempts: 4
+		attempts:      4
 		initial_delay: 150 * time.millisecond
-		factor: 1.5
-		jitter: true
+		factor:        1.5
+		jitter:        true
 	}
 
 	// Define the retriable operation closure
@@ -20787,12 +21041,12 @@ fn fetch_json(url string) !string {
 
 fn post_json(url string, payload PostPayload) !PostResponse {
 	body := json.encode(payload)
-	
+
 	// Set Content-Type explicitly for compliance with strict JSON APIs
 	mut req := http.Request{
 		method: .post
-		url: url
-		data: body
+		url:    url
+		data:   body
 	}
 	req.header.set(.content_type, 'application/json')
 
@@ -20814,8 +21068,8 @@ fn main() {
 	println(body)
 
 	response := post_json('https://jsonplaceholder.typicode.com/posts', PostPayload{
-		title: 'Ada'
-		body: 'Developer'
+		title:   'Ada'
+		body:    'Developer'
 		user_id: 1
 	}) or {
 		eprintln('${err}')
@@ -20984,9 +21238,7 @@ fn (logger Logger) log(level LogLevel, message string) {
 			eprintln('Failed to open log file: ${err}')
 			return
 		}
-		f.write((line + '\n').bytes()) or {
-			eprintln('Failed to append log: ${err}')
-		}
+		f.write((line + '\n').bytes()) or { eprintln('Failed to append log: ${err}') }
 		f.close()
 	}
 }
