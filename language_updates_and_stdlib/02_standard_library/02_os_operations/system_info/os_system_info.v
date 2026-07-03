@@ -22,6 +22,25 @@ fn main() {
 	println('Hostname:             ${host}')
 	println('Login Name:           ${user}')
 
+	// V standard user/system directories
+	println('User OS:              ${os.user_os()}')
+	println('Home Directory:       ${os.home_dir()}')
+	println('Temp Directory:       ${os.temp_dir()}')
+	println('Config Directory:     ${os.config_dir() or { "N/A" }}')
+	println('Cache Directory:      ${os.cache_dir()}')
+	println('Data Directory:       ${os.data_dir()}')
+
+	// Executable details
+	println('Current Executable:   ${os.executable()}')
+	println('Git Abs Path:         ${os.find_abs_path_of_executable("git") or { "not found" }}')
+
+	// Optional environment access & full environment map
+	println('Home via getenv_opt:  ${os.getenv_opt("HOME") or { "not set" }}')
+	env_map := os.environ()
+	// Safely print first few environment keys if available
+	limit := if env_map.len < 3 { env_map.len } else { 3 }
+	println('Sample Env Keys:      ${env_map.keys()[..limit]}')
+
 	// --- 2. Identity and Process Metrics ---
 	println('\n--- 2. User/Group IDs & Process Context ---')
 

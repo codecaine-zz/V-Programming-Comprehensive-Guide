@@ -38,6 +38,32 @@ fn main() {
 	println('Read lines: ${read_lines}')
 	os.rm(lines_file) or {}
 
+	// Raw Bytes Operations (write_bytes, read_bytes, file_last_mod_unix, is_file)
+	bytes_file := 'temp_bytes_example.bin'
+	os.write_bytes(bytes_file, 'V handles raw bytes.'.bytes()) or { println('Failed to write bytes: ${err}') }
+	read_bytes := os.read_bytes(bytes_file) or { []u8{} }
+	println('Read bytes: "${read_bytes.bytestr()}"')
+	println('Last modified time (epoch): ${os.file_last_mod_unix(bytes_file)}')
+	println('Is a file? ${os.is_file(bytes_file)}')
+	os.rm(bytes_file) or {}
+
+	// Fine-grained File Handles (open, create, open_append)
+	handle_file := 'temp_handle_example.txt'
+	mut f_create := os.create(handle_file) or { panic(err) }
+	f_create.write_string('Line 1 from file handle\n') or {}
+	f_create.close()
+
+	mut f_append := os.open_append(handle_file) or { panic(err) }
+	f_append.write_string('Line 2 appended\n') or {}
+	f_append.close()
+
+	mut f_read := os.open(handle_file) or { panic(err) }
+	mut buf := []u8{len: 100}
+	n_read := f_read.read(mut buf) or { 0 }
+	println('Content via file handle:\n${buf[..n_read].bytestr().trim_space()}')
+	f_read.close()
+	os.rm(handle_file) or {}
+
 	// Listing directory contents
 	println('Listing files in current directory:')
 	files := os.ls('.') or {
@@ -80,6 +106,13 @@ fn main() {
 	println('Creating nested directory structure: ${nested_dir}...')
 	os.mkdir_all(nested_dir) or { println('Failed to create directory structure: ${err}') }
 
+	// Create single directory, check status, and remove it
+	single_dir := 'temp_single_dir'
+	os.mkdir(single_dir) or { println('Failed to create directory: ${err}') }
+	println('Is directory? ${os.is_dir(single_dir)}')
+	println('Is empty?     ${os.is_dir_empty(single_dir)}')
+	os.rmdir(single_dir) or { println('Failed to remove directory: ${err}') }
+
 	// ==========================================
 	// 3. Path Manipulation & Extraction
 	// ==========================================
@@ -89,6 +122,12 @@ fn main() {
 	println('Directory:   ${os.dir(sample_path)}') // /usr/local/bin
 	println('Base name:   ${os.base(sample_path)}') // v.exe
 	println('Extension:   ${os.file_ext(sample_path)}') // .exe
+	println('File name:   ${os.file_name(sample_path)}') // v.exe
+	println('Is absolute? ${os.is_abs_path(sample_path)}') // true
+	println('Real path:   ${os.real_path('.')}') // absolute current dir path
+	println('Norm path:   ${os.norm_path('/usr/local/../bin/v')}') // /usr/bin/v
+	p_dir, p_file, p_ext := os.split_path(sample_path)
+	println('Split path -> dir: ${p_dir}, file: ${p_file}, ext: ${p_ext}')
 
 	// ==========================================
 	// 4. Working Directory Traversal
@@ -150,7 +189,18 @@ fn main() {
 	os.chown(moved_file, uid, gid) or { println('Failed to change ownership: ${err}') }
 
 	// ==========================================
-	// 7. Cleanup
+	// 7. File Globbing (glob)
+	// ==========================================
+	println('\n--- File Globbing ---')
+	os.write_file('glob_test_1.txt', '1') or {}
+	os.write_file('glob_test_2.txt', '2') or {}
+	globbed_files := os.glob('glob_test_*.txt') or { [] }
+	println('Glob results: ${globbed_files}')
+	os.rm('glob_test_1.txt') or {}
+	os.rm('glob_test_2.txt') or {}
+
+	// ==========================================
+	// 8. Cleanup
 	// ==========================================
 	println('\n--- Cleanup ---')
 

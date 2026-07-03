@@ -14739,15 +14739,39 @@ fn main() {
 	// Writing and reading lines
 	lines := ['Line 1: V has simple OS functions.', 'Line 2: Supporting multiple lines.']
 	lines_file := 'temp_lines_example.txt'
-	os.write_lines(lines_file, lines) or {
-		println('Failed to write lines: ${err}')
-	}
+	os.write_lines(lines_file, lines) or { println('Failed to write lines: ${err}') }
 	read_lines := os.read_lines(lines_file) or {
 		println('Failed to read lines: ${err}')
 		[]
 	}
 	println('Read lines: ${read_lines}')
 	os.rm(lines_file) or {}
+
+	// Raw Bytes Operations (write_bytes, read_bytes, file_last_mod_unix, is_file)
+	bytes_file := 'temp_bytes_example.bin'
+	os.write_bytes(bytes_file, 'V handles raw bytes.'.bytes()) or { println('Failed to write bytes: ${err}') }
+	read_bytes := os.read_bytes(bytes_file) or { []u8{} }
+	println('Read bytes: "${read_bytes.bytestr()}"')
+	println('Last modified time (epoch): ${os.file_last_mod_unix(bytes_file)}')
+	println('Is a file? ${os.is_file(bytes_file)}')
+	os.rm(bytes_file) or {}
+
+	// Fine-grained File Handles (open, create, open_append)
+	handle_file := 'temp_handle_example.txt'
+	mut f_create := os.create(handle_file) or { panic(err) }
+	f_create.write_string('Line 1 from file handle\n') or {}
+	f_create.close()
+
+	mut f_append := os.open_append(handle_file) or { panic(err) }
+	f_append.write_string('Line 2 appended\n') or {}
+	f_append.close()
+
+	mut f_read := os.open(handle_file) or { panic(err) }
+	mut buf := []u8{len: 100}
+	n_read := f_read.read(mut buf) or { 0 }
+	println('Content via file handle:\n${buf[..n_read].bytestr().trim_space()}')
+	f_read.close()
+	os.rm(handle_file) or {}
 
 	// Listing directory contents
 	println('Listing files in current directory:')
@@ -14789,9 +14813,14 @@ fn main() {
 	// Create nested directories (like `mkdir -p`)
 	nested_dir := os.join_path('temp_parent', 'temp_child')
 	println('Creating nested directory structure: ${nested_dir}...')
-	os.mkdir_all(nested_dir) or {
-		println('Failed to create directory structure: ${err}')
-	}
+	os.mkdir_all(nested_dir) or { println('Failed to create directory structure: ${err}') }
+
+	// Create single directory, check status, and remove it
+	single_dir := 'temp_single_dir'
+	os.mkdir(single_dir) or { println('Failed to create directory: ${err}') }
+	println('Is directory? ${os.is_dir(single_dir)}')
+	println('Is empty?     ${os.is_dir_empty(single_dir)}')
+	os.rmdir(single_dir) or { println('Failed to remove directory: ${err}') }
 
 	// ==========================================
 	// 3. Path Manipulation & Extraction
@@ -14799,9 +14828,15 @@ fn main() {
 	println('\n--- Path Manipulation & Extraction ---')
 	sample_path := '/usr/local/bin/v.exe'
 	println('Sample path: ${sample_path}')
-	println('Directory:   ${os.dir(sample_path)}')      // /usr/local/bin
-	println('Base name:   ${os.base(sample_path)}')     // v.exe
+	println('Directory:   ${os.dir(sample_path)}') // /usr/local/bin
+	println('Base name:   ${os.base(sample_path)}') // v.exe
 	println('Extension:   ${os.file_ext(sample_path)}') // .exe
+	println('File name:   ${os.file_name(sample_path)}') // v.exe
+	println('Is absolute? ${os.is_abs_path(sample_path)}') // true
+	println('Real path:   ${os.real_path('.')}') // absolute current dir path
+	println('Norm path:   ${os.norm_path('/usr/local/../bin/v')}') // /usr/bin/v
+	p_dir, p_file, p_ext := os.split_path(sample_path)
+	println('Split path -> dir: ${p_dir}, file: ${p_file}, ext: ${p_ext}')
 
 	// ==========================================
 	// 4. Working Directory Traversal
@@ -14811,15 +14846,11 @@ fn main() {
 	println('Original working directory: ${original_wd}')
 
 	println('Changing directory to: temp_parent...')
-	os.chdir('temp_parent') or {
-		println('Failed to change directory: ${err}')
-	}
+	os.chdir('temp_parent') or { println('Failed to change directory: ${err}') }
 	println('New working directory: ${os.getwd()}')
 
 	// Change back to original directory
-	os.chdir(original_wd) or {
-		println('Failed to restore directory: ${err}')
-	}
+	os.chdir(original_wd) or { println('Failed to restore directory: ${err}') }
 
 	// ==========================================
 	// 5. Advanced File Operations (Copying, Moving)
@@ -14829,14 +14860,10 @@ fn main() {
 	moved_file := 'temp_book_moved.txt'
 
 	println('Copying ${filename} to ${copied_file}...')
-	os.cp(filename, copied_file) or {
-		println('Failed to copy file: ${err}')
-	}
+	os.cp(filename, copied_file) or { println('Failed to copy file: ${err}') }
 
 	println('Moving ${copied_file} to ${moved_file}...')
-	os.mv(copied_file, moved_file) or {
-		println('Failed to move file: ${err}')
-	}
+	os.mv(copied_file, moved_file) or { println('Failed to move file: ${err}') }
 
 	// ==========================================
 	// 6. Symbolic Links & Nix-Specific Operations
@@ -14846,9 +14873,7 @@ fn main() {
 
 	// Create symlink
 	println('Creating symbolic link from ${moved_file} to ${symlink_name}...')
-	os.symlink(moved_file, symlink_name) or {
-		println('Failed to create symlink: ${err}')
-	}
+	os.symlink(moved_file, symlink_name) or { println('Failed to create symlink: ${err}') }
 
 	// Check if path is a link
 	if os.is_link(symlink_name) {
@@ -14858,9 +14883,7 @@ fn main() {
 	// Change file permissions (chmod)
 	// 0o644 = Owner: read/write, Group: read, Others: read
 	println('Setting file permissions to 0o644 (read/write for owner, read-only for others)...')
-	os.chmod(moved_file, 0o644) or {
-		println('Failed to change permissions: ${err}')
-	}
+	os.chmod(moved_file, 0o644) or { println('Failed to change permissions: ${err}') }
 
 	// Check permissions
 	println('Is readable?   ${os.is_readable(moved_file)}')
@@ -14872,12 +14895,21 @@ fn main() {
 	uid := os.getuid()
 	gid := os.getgid()
 	println('Setting ownership of ${moved_file} to UID: ${uid}, GID: ${gid}...')
-	os.chown(moved_file, uid, gid) or {
-		println('Failed to change ownership: ${err}')
-	}
+	os.chown(moved_file, uid, gid) or { println('Failed to change ownership: ${err}') }
 
 	// ==========================================
-	// 7. Cleanup
+	// 7. File Globbing (glob)
+	// ==========================================
+	println('\n--- File Globbing ---')
+	os.write_file('glob_test_1.txt', '1') or {}
+	os.write_file('glob_test_2.txt', '2') or {}
+	globbed_files := os.glob('glob_test_*.txt') or { [] }
+	println('Glob results: ${globbed_files}')
+	os.rm('glob_test_1.txt') or {}
+	os.rm('glob_test_2.txt') or {}
+
+	// ==========================================
+	// 8. Cleanup
 	// ==========================================
 	println('\n--- Cleanup ---')
 
@@ -15050,6 +15082,24 @@ fn main() {
 	println('Hostname:             ${host}')
 	println('Login Name:           ${user}')
 
+	// V standard user/system directories
+	println('User OS:              ${os.user_os()}')
+	println('Home Directory:       ${os.home_dir()}')
+	println('Temp Directory:       ${os.temp_dir()}')
+	println('Config Directory:     ${os.config_dir() or { "N/A" }}')
+	println('Cache Directory:      ${os.cache_dir()}')
+	println('Data Directory:       ${os.data_dir()}')
+
+	// Executable details
+	println('Current Executable:   ${os.executable()}')
+	println('Git Abs Path:         ${os.find_abs_path_of_executable("git") or { "not found" }}')
+
+	// Optional environment access & full environment map
+	println('Home via getenv_opt:  ${os.getenv_opt("HOME") or { "not set" }}')
+	env_map := os.environ()
+	// Safely print first few environment keys if available
+	limit := if env_map.len < 3 { env_map.len } else { 3 }
+	println('Sample Env Keys:      ${env_map.keys()[..limit]}')
 
 	// --- 2. Identity and Process Metrics ---
 	println('\n--- 2. User/Group IDs & Process Context ---')
@@ -15063,7 +15113,6 @@ fn main() {
 	// Current Process ID and Parent Process ID
 	println('Process ID (PID):     ${os.getpid()}')
 	println('Parent PID (PPID):    ${os.getppid()}')
-
 
 	// --- 3. Disk Space Usage ---
 	println('\n--- 3. Disk Space Stats ---')
@@ -15082,7 +15131,6 @@ fn main() {
 	println('Disk Total:     ${total_gb:.2f} GB')
 	println('Disk Available: ${avail_gb:.2f} GB')
 	println('Disk Used:      ${used_gb:.2f} GB')
-
 
 	// --- 4. Detailed File Metadata (stat/lstat) ---
 	println('\n--- 4. File Metadata via stat ---')
