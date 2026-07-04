@@ -19,7 +19,7 @@ The interactive guide turns the V tutorial into a full learning experience with 
 - Adjust the reading font size and use quick-jump controls to move through the guide faster.
 - Copy section links to share a specific lesson or topic.
 - Copy code examples or open them directly in the V Playground.
-- Use keyboard shortcuts for search, focus mode, and font-size adjustments.
+- Use keyboard shortcuts for search and focus mode.
 - Read comfortably on desktop and mobile thanks to the responsive layout.
 
 ### Keyboard shortcuts
@@ -27,7 +27,6 @@ The interactive guide turns the V tutorial into a full learning experience with 
 - / or Ctrl+K: focus the search box
 - F: toggle focus mode
 - Esc: exit focus mode
-- Ctrl+[ / Ctrl+]: decrease or increase font size
 
 ### How the site is built
 
