@@ -3138,6 +3138,34 @@ const template = `<!DOCTYPE html>
             }
         }
 
+        function getThemeConfigForCustomStart() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'dark';
+            const currentInputs = collectCustomThemeFromInputs();
+            const hasCurrentInputValues = currentInputs.bgPrimary && currentInputs.bgSecondary && currentInputs.textPrimary && currentInputs.accentPrimary;
+
+            if (currentTheme === 'custom' && hasCurrentInputValues) {
+                return currentInputs;
+            }
+
+            if (themePresets[currentTheme]) {
+                return { ...customThemeDefaults, ...themePresets[currentTheme] };
+            }
+
+            const computed = window.getComputedStyle(document.documentElement);
+            const fromCurrentTheme = {
+                bgPrimary: computed.getPropertyValue('--bg-primary').trim(),
+                bgSecondary: computed.getPropertyValue('--bg-secondary').trim(),
+                textPrimary: computed.getPropertyValue('--text-primary').trim(),
+                accentPrimary: computed.getPropertyValue('--accent-primary').trim()
+            };
+
+            if (fromCurrentTheme.bgPrimary && fromCurrentTheme.bgSecondary && fromCurrentTheme.textPrimary && fromCurrentTheme.accentPrimary) {
+                return { ...customThemeDefaults, ...fromCurrentTheme };
+            }
+
+            return getStoredCustomTheme();
+        }
+
         function populateCustomThemeInputs(themeConfig = getStoredCustomTheme()) {
             const inputs = {
                 bgPrimary: document.getElementById('customBgPrimary'),
@@ -3205,8 +3233,8 @@ const template = `<!DOCTYPE html>
             localStorage.setItem('theme', theme);
 
             if (theme === 'custom') {
-                const savedCustomTheme = getStoredCustomTheme();
-                applyCustomTheme(savedCustomTheme);
+                const initialCustomTheme = getThemeConfigForCustomStart();
+                applyCustomTheme(initialCustomTheme);
                 if (customThemePanel) {
                     customThemePanel.classList.toggle('open', !isCustomToggle);
                 }
