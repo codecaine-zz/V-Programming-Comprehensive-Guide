@@ -1781,9 +1781,9 @@
         }
 
         .btn-copy, .btn-playground, .btn-playground-copy, .btn-zoom, .btn-close-zoom {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
+            background-color: rgba(251, 191, 36, 0.16);
+            border: 1px solid rgba(251, 191, 36, 0.45);
+            color: #fff7ed;
             padding: 4px 10px;
             border-radius: 6px;
             font-size: 12px;
@@ -1792,12 +1792,15 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: background-color var(--transition-speed), color var(--transition-speed), transform var(--transition-speed);
+            font-weight: 700;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: background-color var(--transition-speed), color var(--transition-speed), transform var(--transition-speed), border-color var(--transition-speed);
         }
 
         .btn-copy:hover, .btn-playground:hover, .btn-playground-copy:hover, .btn-zoom:hover, .btn-close-zoom:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
+            background-color: rgba(251, 191, 36, 0.28);
+            color: #fffbeb;
+            border-color: rgba(251, 191, 36, 0.72);
         }
 
         .btn-playground {
