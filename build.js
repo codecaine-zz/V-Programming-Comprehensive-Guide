@@ -2344,6 +2344,11 @@ const template = `<!DOCTYPE html>
             background: none !important;
         }
 
+        pre code {
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
         .code-zoom-modal {
             position: fixed;
             inset: 0;
@@ -2377,7 +2382,7 @@ const template = `<!DOCTYPE html>
 
         code {
             font-family: var(--font-code);
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.5;
         }
 
