@@ -190,11 +190,11 @@ function parseMarkdownToHtmlAndIndex(md) {
                 <span class="code-lang">${codeLanguage || 'text'}</span>
                 <div class="code-actions">
                     ${playgroundBtn}
-                    <button class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code">
+                    <button type="button" class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code" aria-label="Zoom code block">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
                         Zoom
                     </button>
-                    <button class="btn-copy" onclick="copyCode(this)" title="Copy Code">
+                    <button type="button" class="btn-copy" onclick="copyCode(this)" title="Copy Code" aria-label="Copy code block">
                         <svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         Copy
                     </button>
@@ -2292,51 +2292,59 @@ const template = `<!DOCTYPE html>
         .code-actions {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .btn-copy, .btn-playground, .btn-playground-copy, .btn-zoom, .btn-close-zoom {
-            background-color: rgba(251, 191, 36, 0.16);
-            border: 1px solid rgba(251, 191, 36, 0.45);
-            color: #fff7ed;
-            padding: 4px 10px;
-            border-radius: 6px;
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 7px 12px;
+            min-height: 32px;
+            border-radius: 8px;
             font-size: 12px;
             font-family: var(--font-ui);
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
             font-weight: 700;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 3px rgba(0, 0, 0, 0.2);
-            transition: background-color var(--transition-speed), color var(--transition-speed), transform var(--transition-speed), border-color var(--transition-speed);
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14);
+            transition: background-color var(--transition-speed), color var(--transition-speed), transform var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed);
+            text-decoration: none;
         }
 
         .btn-copy:hover, .btn-playground:hover, .btn-playground-copy:hover, .btn-zoom:hover, .btn-close-zoom:hover {
-            background-color: rgba(251, 191, 36, 0.28);
-            color: #fffbeb;
-            border-color: rgba(251, 191, 36, 0.72);
+            background: var(--bg-secondary);
+            color: var(--accent-glow);
+            border-color: var(--accent-glow);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
         }
 
         .btn-playground {
             background: var(--accent-gradient);
             color: #ffffff !important;
-            border: none;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+            border: 1px solid transparent;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.28);
         }
 
         .btn-playground-copy {
-            border-color: rgba(99, 102, 241, 0.4);
+            border-color: var(--accent-glow);
             color: var(--accent-glow);
         }
 
         .btn-playground-copy:hover {
-            background-color: rgba(99, 102, 241, 0.1);
+            background: rgba(99, 102, 241, 0.12);
             border-color: var(--accent-glow);
         }
 
         .btn-playground:hover {
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.5);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
             transform: translateY(-1px);
         }
 
