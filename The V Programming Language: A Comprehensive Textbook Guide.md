@@ -127,6 +127,7 @@ These projects will make the guide feel much more practical:
 - A number guessing game
 - A simple file organizer or text search tool
 - A notes app that stores data in JSON or SQLite
+- A macOS desktop app with a webview-based UI: [vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template)
 
 ## Practice Exercises
 
@@ -14790,45 +14791,45 @@ V's standard library provides a rich set of cross-platform functions for interac
 
 #### 1. Basic File Operations
 
-* **The Vibe:** The "Standard file cabinets."
-* **What it does:** Writes, reads, and checks the existence of files using simple string and byte helpers.
-* **Best to use when:** You need to dump text, save config settings, or read small files quickly.
-* **Real-world example:** Writing user session logs or reading a local settings file.
+- **The Vibe:** The "Standard file cabinets."
+- **What it does:** Writes, reads, and checks the existence of files using simple string and byte helpers.
+- **Best to use when:** You need to dump text, save config settings, or read small files quickly.
+- **Real-world example:** Writing user session logs or reading a local settings file.
 
 #### 2. Directory Tree Operations
 
-* **The Vibe:** The "Digital folder builder."
-* **What it does:** Creates nested folders (`mkdir_all`) or removes them (`rmdir_all`).
-* **Best to use when:** You need to construct file paths for organized data storage.
-* **Real-world example:** Creating a new user cache folder like `cache/images/temp/`.
+- **The Vibe:** The "Digital folder builder."
+- **What it does:** Creates nested folders (`mkdir_all`) or removes them (`rmdir_all`).
+- **Best to use when:** You need to construct file paths for organized data storage.
+- **Real-world example:** Creating a new user cache folder like `cache/images/temp/`.
 
 #### 3. Path Manipulation & Extraction
 
-* **The Vibe:** The "Path dissection tool."
-* **What it does:** Extracts directory paths, base names, file extensions, and normalizes them.
-* **Best to use when:** You have a file path and want to rename the file or get its extension without manual string parsing.
-* **Real-world example:** Checking if an uploaded file has a `.jpg` extension.
+- **The Vibe:** The "Path dissection tool."
+- **What it does:** Extracts directory paths, base names, file extensions, and normalizes them.
+- **Best to use when:** You have a file path and want to rename the file or get its extension without manual string parsing.
+- **Real-world example:** Checking if an uploaded file has a `.jpg` extension.
 
 #### 4. Environment & Command Execution
 
-* **The Vibe:** "Talking to the host machine."
-* **What it does:** Reads system environment variables and runs shell commands.
-* **Best to use when:** You need to fetch config keys (like API tokens) or execute external utilities (like running `git version`).
-* **Real-world example:** Fetching the `HOME` directory to locate user configuration files.
+- **The Vibe:** "Talking to the host machine."
+- **What it does:** Reads system environment variables and runs shell commands.
+- **Best to use when:** You need to fetch config keys (like API tokens) or execute external utilities (like running `git version`).
+- **Real-world example:** Fetching the `HOME` directory to locate user configuration files.
 
 #### 5. File Permissions & Ownership (Chmod/Chown)
 
-* **The Vibe:** The "Keymaster/security guard."
-* **What it does:** Alters who can read/write/execute a file and changes user/group owner IDs.
-* **Best to use when:** Making a script executable or securing sensitive credentials.
-* **Real-world example:** Restricting a database file's permissions to be readable only by the owner (`chmod 0o600`).
+- **The Vibe:** The "Keymaster/security guard."
+- **What it does:** Alters who can read/write/execute a file and changes user/group owner IDs.
+- **Best to use when:** Making a script executable or securing sensitive credentials.
+- **Real-world example:** Restricting a database file's permissions to be readable only by the owner (`chmod 0o600`).
 
 #### 6. Globbing
 
-* **The Vibe:** The "Wildcard detector."
-* **What it does:** Matches a list of files using wildcard patterns (like `*.txt`).
-* **Best to use when:** You need to process a batch of files matching a name template.
-* **Real-world example:** Storing files matching `log_*.txt` and deleting them in a batch.
+- **The Vibe:** The "Wildcard detector."
+- **What it does:** Matches a list of files using wildcard patterns (like `*.txt`).
+- **Best to use when:** You need to process a batch of files matching a name template.
+- **Real-world example:** Storing files matching `log_*.txt` and deleting them in a batch.
 
 ---
 
@@ -15339,45 +15340,45 @@ V's standard library provides a robust and precise set of utilities for time ret
 
 #### 1. Time Retrieval & Fields
 
-* **The Vibe:** "Checking your wristwatch."
-* **What it does:** Gets the exact current date, time, and nanoseconds.
-* **Best to use when:** You need to timestamp actions or log events.
-* **Real-world example:** Recording when a user logs in.
+- **The Vibe:** "Checking your wristwatch."
+- **What it does:** Gets the exact current date, time, and nanoseconds.
+- **Best to use when:** You need to timestamp actions or log events.
+- **Real-world example:** Recording when a user logs in.
 
 #### 2. Time Arithmetic & Comparisons
 
-* **The Vibe:** "Time-traveling and deadlines."
-* **What it does:** Adds or subtracts intervals (days, hours, seconds) and compares which time comes first.
-* **Best to use when:** You need to calculate expirations or duration differences.
-* **Real-world example:** Setting a user token to expire in 2 hours.
+- **The Vibe:** "Time-traveling and deadlines."
+- **What it does:** Adds or subtracts intervals (days, hours, seconds) and compares which time comes first.
+- **Best to use when:** You need to calculate expirations or duration differences.
+- **Real-world example:** Setting a user token to expire in 2 hours.
 
 #### 3. String Formatting & RFC Standards
 
-* **The Vibe:** "The translator for calendar dates."
-* **What it does:** Converts raw timestamps into clean, human-readable formats, custom strings, or RFC 3339 standards.
-* **Best to use when:** Displaying dates to users or sending structured time JSON over APIs.
-* **Real-world example:** Printing a post publish date as `YYYY-MM-DD HH:mm:ss`.
+- **The Vibe:** "The translator for calendar dates."
+- **What it does:** Converts raw timestamps into clean, human-readable formats, custom strings, or RFC 3339 standards.
+- **Best to use when:** Displaying dates to users or sending structured time JSON over APIs.
+- **Real-world example:** Printing a post publish date as `YYYY-MM-DD HH:mm:ss`.
 
 #### 4. Timezone Conversions (Local & UTC)
 
-* **The Vibe:** "The jet-lag cure."
-* **What it does:** Converts times between local system time and UTC.
-* **Best to use when:** You store timestamps in UTC (best practice) but need to show them in the user's local timezone.
-* **Real-world example:** Normalizing database entries to UTC time.
+- **The Vibe:** "The jet-lag cure."
+- **What it does:** Converts times between local system time and UTC.
+- **Best to use when:** You store timestamps in UTC (best practice) but need to show them in the user's local timezone.
+- **Real-world example:** Normalizing database entries to UTC time.
 
 #### 5. Relative Time
 
-* **The Vibe:** "Social media date labels."
-* **What it does:** Formats dates relative to now (e.g., "5 minutes ago", "yesterday").
-* **Best to use when:** Displaying activity feeds or notification boards.
-* **Real-world example:** Showing how long ago a comment was posted.
+- **The Vibe:** "Social media date labels."
+- **What it does:** Formats dates relative to now (e.g., "5 minutes ago", "yesterday").
+- **Best to use when:** Displaying activity feeds or notification boards.
+- **Real-world example:** Showing how long ago a comment was posted.
 
 #### 6. Stopwatch
 
-* **The Vibe:** "The performance racing timer."
-* **What it does:** Measures sub-millisecond elapsed durations.
-* **Best to use when:** Benchmarking code speed or tracking long-running tasks.
-* **Real-world example:** Measuring how long an API database query took to run.
+- **The Vibe:** "The performance racing timer."
+- **What it does:** Measures sub-millisecond elapsed durations.
+- **Best to use when:** Benchmarking code speed or tracking long-running tasks.
+- **Real-world example:** Measuring how long an API database query took to run.
 
 ---
 
@@ -15729,61 +15730,61 @@ V's standard library provides a rich set of built-in collections and data struct
 
 #### 1. Bloom Filter
 
-* **The Vibe:** The "Fast bouncer at the door."
-* **What it does:** It tells you with 100% certainty if something is **not** there, but if it says something **is** there, it might be guessing (a false positive).
-* **Best to use when:** You have a massive database and searching it takes too long. You use a Bloom Filter as a quick shield. If the filter says *"Nope, that username doesn't exist,"* you don't waste time searching the database.
-* **Real-world example:** Checking if a chosen username is taken, or filtering out malicious URLs before loading a website.
+- **The Vibe:** The "Fast bouncer at the door."
+- **What it does:** It tells you with 100% certainty if something is **not** there, but if it says something **is** there, it might be guessing (a false positive).
+- **Best to use when:** You have a massive database and searching it takes too long. You use a Bloom Filter as a quick shield. If the filter says _"Nope, that username doesn't exist,"_ you don't waste time searching the database.
+- **Real-world example:** Checking if a chosen username is taken, or filtering out malicious URLs before loading a website.
 
 #### 2. Set
 
-* **The Vibe:** The "No Duplicates Allowed" club.
-* **What it does:** Stores a collection of items where everything **must be unique**. It also lets you do math operations like combining two groups (Union) or finding what they have in common (Intersection).
-* **Best to use when:** You need to filter out duplicates instantly, or you need to compare two groups of data to find common ground.
-* **Real-world example:** Storing unique visitor IP addresses on a website, or finding a list of mutual friends between you and someone else.
+- **The Vibe:** The "No Duplicates Allowed" club.
+- **What it does:** Stores a collection of items where everything **must be unique**. It also lets you do math operations like combining two groups (Union) or finding what they have in common (Intersection).
+- **Best to use when:** You need to filter out duplicates instantly, or you need to compare two groups of data to find common ground.
+- **Real-world example:** Storing unique visitor IP addresses on a website, or finding a list of mutual friends between you and someone else.
 
 #### 3. Queue
 
-* **The Vibe:** Waiting in line at a grocery store (First In, First Out / FIFO).
-* **What it does:** The first item you put in is the first item you take out.
-* **Best to use when:** You have tasks that need to be processed exactly in the order they arrived.
-* **Real-world example:** A printer queue handling documents, or customer support tickets waiting to be answered by an agent.
+- **The Vibe:** Waiting in line at a grocery store (First In, First Out / FIFO).
+- **What it does:** The first item you put in is the first item you take out.
+- **Best to use when:** You have tasks that need to be processed exactly in the order they arrived.
+- **Real-world example:** A printer queue handling documents, or customer support tickets waiting to be answered by an agent.
 
 #### 4. Stack
 
-* **The Vibe:** A stack of dinner plates (Last In, First Out / LIFO).
-* **What it does:** The last item you put on top is the first one you have to take off.
-* **Best to use when:** You need to keep track of a history of actions so you can reverse them, or track active processes.
-* **Real-world example:** The "Undo" ($Ctrl+Z$) feature in a text editor, or the "Back" button history in your web browser.
+- **The Vibe:** A stack of dinner plates (Last In, First Out / LIFO).
+- **What it does:** The last item you put on top is the first one you have to take off.
+- **Best to use when:** You need to keep track of a history of actions so you can reverse them, or track active processes.
+- **Real-world example:** The "Undo" ($Ctrl+Z$) feature in a text editor, or the "Back" button history in your web browser.
 
 #### 5. Ring Buffer (Circular Buffer)
 
-* **The Vibe:** A streaming video that continuously overwrites itself.
-* **What it does:** A queue with a strict maximum size. When it gets full, new data wraps around to the beginning and overwrites the oldest data.
-* **Best to use when:** You are handling a continuous stream of data and you only care about the most recent information, without wasting memory.
-* **Real-world example:** Audio/video streaming playback buffers, or a flight data recorder ("black box") that only saves the last 24 hours of flight data.
+- **The Vibe:** A streaming video that continuously overwrites itself.
+- **What it does:** A queue with a strict maximum size. When it gets full, new data wraps around to the beginning and overwrites the oldest data.
+- **Best to use when:** You are handling a continuous stream of data and you only care about the most recent information, without wasting memory.
+- **Real-world example:** Audio/video streaming playback buffers, or a flight data recorder ("black box") that only saves the last 24 hours of flight data.
 
 #### 6. Min Heap
 
-* **The Vibe:** A VIP line where the most urgent person always gets to go first.
-* **What it does:** A specialized structure that always keeps the *smallest* (or highest priority) value at the very top.
-* **Best to use when:** You need to constantly pull the lowest/highest value out of a changing list without sorting the entire list every single time.
-* **Real-world example:** A hospital emergency room triage system, or GPS apps calculating the shortest route dynamically.
+- **The Vibe:** A VIP line where the most urgent person always gets to go first.
+- **What it does:** A specialized structure that always keeps the _smallest_ (or highest priority) value at the very top.
+- **Best to use when:** You need to constantly pull the lowest/highest value out of a changing list without sorting the entire list every single time.
+- **Real-world example:** A hospital emergency room triage system, or GPS apps calculating the shortest route dynamically.
 
 #### 7. BSTree (Binary Search Tree)
 
-* **The Vibe:** A perfectly organized filing cabinet.
-* **What it does:** Keeps data sorted automatically as you add it. Smaller numbers go left, larger numbers go right.
-* **Best to use when:** You need to search, add, and delete items constantly, and you always need the data to stay in perfect alphabetical or numerical order.
-* **Real-world example:** File systems on your computer, or database indexing to make searching millions of records instant.
+- **The Vibe:** A perfectly organized filing cabinet.
+- **What it does:** Keeps data sorted automatically as you add it. Smaller numbers go left, larger numbers go right.
+- **Best to use when:** You need to search, add, and delete items constantly, and you always need the data to stay in perfect alphabetical or numerical order.
+- **Real-world example:** File systems on your computer, or database indexing to make searching millions of records instant.
 
 #### 8. LinkedList vs. DoublyLinkedList
 
-* **The Vibe:** A scavenger hunt. Item A gives you a clue to find Item B, which gives you a clue to find Item C.
-* **What it does:**
-  * **LinkedList (Singly):** Each item points only to the *next* item. You can only move forward.
-  * **DoublyLinkedList:** Each item points to both the *next* item and the *previous* item. You can move forward and backward.
-* **Best to use when:** You are constantly adding or removing items from the very beginning or middle of a list. (Standard arrays are slow at this because they have to shift all the other items over; Linked Lists just change where the "clues" point).
-* **Real-world example:** A music playlist. A regular linked list only lets you hit "Next". A doubly linked list lets you hit "Next" and "Previous".
+- **The Vibe:** A scavenger hunt. Item A gives you a clue to find Item B, which gives you a clue to find Item C.
+- **What it does:**
+  - **LinkedList (Singly):** Each item points only to the _next_ item. You can only move forward.
+  - **DoublyLinkedList:** Each item points to both the _next_ item and the _previous_ item. You can move forward and backward.
+- **Best to use when:** You are constantly adding or removing items from the very beginning or middle of a list. (Standard arrays are slow at this because they have to shift all the other items over; Linked Lists just change where the "clues" point).
+- **Real-world example:** A music playlist. A regular linked list only lets you hit "Next". A doubly linked list lets you hit "Next" and "Previous".
 
 ---
 
@@ -17464,38 +17465,38 @@ V's standard library provides a direct, cross-platform module named `term` for q
 
 #### 1. Terminal Size Metadata
 
-* **The Vibe:** "Measuring the room size."
-* **What it does:** Tells you how many columns (width) and rows (height) are currently visible in the user's terminal window.
-* **Best to use when:** You are rendering custom terminal layouts, tables, or ASCII art that must fit the screen.
-* **Real-world example:** Wrapping text dynamically so it doesn't spill over the screen edge.
+- **The Vibe:** "Measuring the room size."
+- **What it does:** Tells you how many columns (width) and rows (height) are currently visible in the user's terminal window.
+- **Best to use when:** You are rendering custom terminal layouts, tables, or ASCII art that must fit the screen.
+- **Real-world example:** Wrapping text dynamically so it doesn't spill over the screen edge.
 
 #### 2. ANSI Text Coloring
 
-* **The Vibe:** "Adding paint to the console."
-* **What it does:** Applies green, red, yellow, or blue styling to terminal characters.
-* **Best to use when:** Highlighting success, errors, warnings, or structural tags.
-* **Real-world example:** Printing error messages in bold red.
+- **The Vibe:** "Adding paint to the console."
+- **What it does:** Applies green, red, yellow, or blue styling to terminal characters.
+- **Best to use when:** Highlighting success, errors, warnings, or structural tags.
+- **Real-world example:** Printing error messages in bold red.
 
 #### 3. Styling Modifiers
 
-* **The Vibe:** "The font options panel."
-* **What it does:** Renders text as bold, underlined, or strikethrough.
-* **Best to use when:** Emphasizing headings, showing links, or marking deprecated options.
-* **Real-world example:** Printing column headers of a CLI table in bold.
+- **The Vibe:** "The font options panel."
+- **What it does:** Renders text as bold, underlined, or strikethrough.
+- **Best to use when:** Emphasizing headings, showing links, or marking deprecated options.
+- **Real-world example:** Printing column headers of a CLI table in bold.
 
 #### 4. Background Fills & Combinations
 
-* **The Vibe:** "The highlighter pen."
-* **What it does:** Fills the text background block with color, and supports mixing foreground styles and background styles.
-* **Best to use when:** Creating alerts, status blocks, or highlighting active menu items.
-* **Real-world example:** Printing a yellow warning status badge with a blue background.
+- **The Vibe:** "The highlighter pen."
+- **What it does:** Fills the text background block with color, and supports mixing foreground styles and background styles.
+- **Best to use when:** Creating alerts, status blocks, or highlighting active menu items.
+- **Real-world example:** Printing a yellow warning status badge with a blue background.
 
 #### 5. Preformatted Messages
 
-* **The Vibe:** "The instant status stamp."
-* **What it does:** Provides preformatted `[OK]`, `[WARNING]`, and `[FAILED]` status boxes with colors built in.
-* **Best to use when:** Logging task progress or system bootstrap outputs.
-* **Real-world example:** Printing `[OK] Server started on port 8080`.
+- **The Vibe:** "The instant status stamp."
+- **What it does:** Provides preformatted `[OK]`, `[WARNING]`, and `[FAILED]` status boxes with colors built in.
+- **Best to use when:** Logging task progress or system bootstrap outputs.
+- **Real-world example:** Printing `[OK] Server started on port 8080`.
 
 ---
 
@@ -21309,6 +21310,7 @@ This exercise covers Chapter 1: Getting Started with V.
 > Write a V program that prints your favorite programming languages to the console, utilizing single-line comments for metadata (such as Author and Date) and a multi-line comment describing the compile-to-C architecture of V.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21327,6 +21329,7 @@ This exercise covers Chapter 1: Getting Started with V.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > My favorite programming languages are:
 > - V (for speed and simplicity)
@@ -21344,6 +21347,7 @@ This exercise covers Chapter 2: Variables and Constants.
 > Create a program that defines a constant `pi = 3.14159`. In the `main` function, declare a mutable variable for the radius of a circle, initialize it to `5.0`, and compute/print the area. Then, update the radius to `10.0`, recompute the area, and print the updated result with 2 decimal places.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21361,6 +21365,7 @@ This exercise covers Chapter 2: Variables and Constants.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Radius: 5 | Area: 78.54
 > Radius: 10 | Area: 314.16
@@ -21376,6 +21381,7 @@ This exercise covers Chapter 3: Primitive Data Types.
 > Create a V program that takes a string representation of a username. Retrieve and print its length, convert the entire username to uppercase, extract the first letter as a rune, and print its character representation as well as its raw ASCII integer value.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21398,6 +21404,7 @@ This exercise covers Chapter 3: Primitive Data Types.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Username length: 15
 > Uppercase: VLANG_DEVELOPER
@@ -21415,6 +21422,7 @@ This exercise covers Chapter 4: Control Flow.
 > Write a V program that loops from 1 to 20. For each number, determine if it is divisible by 3, 5, both, or neither. Use a `match` expression to print "Fizz" for multiples of 3, "Buzz" for multiples of 5, "FizzBuzz" for multiples of both, and the number itself otherwise.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21431,6 +21439,7 @@ This exercise covers Chapter 4: Control Flow.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > 1
 > 2
@@ -21464,6 +21473,7 @@ This exercise covers Chapter 5: Collections: Arrays and Maps.
 > Create a map storing student names and their corresponding numeric grades. Filter the map to extract all students who scored 80 or above. Store these students' names in an array, sort the array alphabetically, and print the sorted names.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21489,6 +21499,7 @@ This exercise covers Chapter 5: Collections: Arrays and Maps.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Top Students (Alphabetical): ['Alice', 'Charlie', 'Ethan']
 > ```
@@ -21503,6 +21514,7 @@ This exercise covers Chapter 6: Functions.
 > Write a function `filter_ints(nums []int, f fn (int) bool) []int` that filters an array of integers using a callback function. In `main`, call `filter_ints` once to filter even numbers, and once to filter numbers greater than 10. Print the results.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21534,6 +21546,7 @@ This exercise covers Chapter 6: Functions.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Even numbers: [2, 12, 18, 22]
 > Numbers > 10: [12, 18, 22]
@@ -21549,6 +21562,7 @@ This exercise covers Chapter 7: Structs (Custom Types).
 > Define a `BankAccount` struct with fields `owner` (string), `balance` (f64), and `is_active` (bool). Implement a value receiver method to display the account details, and mutable methods to `deposit(amount f64)` and `withdraw(amount f64)`. Ensure that a withdrawal cannot exceed the balance or occur on an inactive account.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21607,6 +21621,7 @@ This exercise covers Chapter 7: Structs (Custom Types).
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Account Owner: Jane Doe | Balance: $150.00 | Status: Active
 > Deposited $50.50
@@ -21625,6 +21640,7 @@ This exercise covers Chapter 8: Error Handling.
 > Write a function `divide(a f64, b f64) !f64` that returns an error when dividing by zero. In `main`, call this function, handle potential errors cleanly using an `or` block, and print the results for both a valid division and an invalid division.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21654,6 +21670,7 @@ This exercise covers Chapter 8: Error Handling.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > 10 / 2.5 = 4
 > Error occurred: division by zero error
@@ -21669,6 +21686,7 @@ This exercise covers Chapter 9: Organizing Code with Modules.
 > Describe how to design a modular program containing a main module and a utility sub-module named `mathutils`. Implement a public function `factorial(n int) int` inside `mathutils` and import it into your `main` module to calculate and print `factorial(5)`.
 
 > [!SOLUTION]
+>
 > ```v
 > // Directory structure:
 > // my_project/
@@ -21699,6 +21717,7 @@ This exercise covers Chapter 9: Organizing Code with Modules.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Factorial of 5 is 120
 > ```
@@ -21713,6 +21732,7 @@ This exercise covers Chapter 10: Writing Tests in V.
 > Write a V library containing a public function `reverse_string(s string) string`. Write a corresponding test file `reverse_string_test.v` with unit tests verifying correctness for empty strings, single characters, palindromes, and multi-word sentences using assert statements.
 
 > [!SOLUTION]
+>
 > ```v
 > // reverse.v
 > module main
@@ -21743,6 +21763,7 @@ This exercise covers Chapter 10: Writing Tests in V.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > [PASS] test_reverse_string
 > ```
@@ -21757,6 +21778,7 @@ This exercise covers Chapter 11: Concurrency and Channels.
 > Write a program that spawns three concurrent v-routines. Each v-routine should compute a segment of a calculation (e.g. squaring a number) and send the result back through a shared channel. The main function should receive all three values from the channel, sum them up, and print the total.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21783,6 +21805,7 @@ This exercise covers Chapter 11: Concurrency and Channels.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Worker 1 starting to calculate square of 4
 > Worker 2 starting to calculate square of 6
@@ -21800,6 +21823,7 @@ This exercise covers Chapter 12: Working with Databases and JSON.
 > Define a struct representing a `Task` with fields `id` (int), `title` (string), and `completed` (bool). Write a program that takes a JSON string containing an array of tasks, parses it into a V array of `Task` structs, and prints the titles of the tasks that are not yet completed.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21833,6 +21857,7 @@ This exercise covers Chapter 12: Working with Databases and JSON.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Pending Tasks:
 > - Write V exercise guide
@@ -21849,6 +21874,7 @@ This exercise covers Chapter 13: Standard Library & Advanced Features.
 > Create a V program that imports the `net.http` and `net.urllib` modules. Build a small utility that sends a GET request to a public API URL or a dummy server, checks the response status code, and parses query parameters from a URL string, displaying each parameter's key and value.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21877,6 +21903,7 @@ This exercise covers Chapter 13: Standard Library & Advanced Features.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > HTTP GET Status Code: 200
 > Parsed URL Query Parameters:
@@ -21895,6 +21922,7 @@ This exercise covers Chapter 14: Useful Boilerplates and Application Templates.
 > Adapt the worker pool concurrent processing pattern to transform an array of lowercase strings to uppercase concurrently. Use a struct for `Job` and `Result` types, spawn multiple worker threads, feed the job channel, close it, and collect the results.
 
 > [!SOLUTION]
+>
 > ```v
 > module main
 >
@@ -21946,6 +21974,7 @@ This exercise covers Chapter 14: Useful Boilerplates and Application Templates.
 > ```
 
 > [!OUTPUT]
+>
 > ```
 > Worker 1 processing job 1: "apple"
 > Worker 2 processing job 2: "banana"
