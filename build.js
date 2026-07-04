@@ -1138,10 +1138,15 @@ const template = `<!DOCTYPE html>
         }
 
         .menu-link.active {
-            color: #ffffff;
-            background: var(--accent-gradient);
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+            color: var(--text-primary);
+            background: linear-gradient(90deg, color-mix(in srgb, var(--accent-glow) 16%, var(--bg-tertiary)) 0%, color-mix(in srgb, var(--accent-primary) 10%, var(--bg-tertiary)) 100%);
+            font-weight: 600;
+            box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-glow) 24%, transparent), 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .menu-link.active .bullet {
+            color: inherit;
+            opacity: 1;
         }
 
         .menu-section-wrapper {
@@ -1192,12 +1197,13 @@ const template = `<!DOCTYPE html>
         }
 
         .menu-lesson-link.active {
-            color: #ffffff;
-            background-color: var(--bg-tertiary);
-            font-weight: 500;
+            color: var(--text-primary);
+            background: linear-gradient(90deg, color-mix(in srgb, var(--accent-glow) 12%, var(--bg-tertiary)) 0%, color-mix(in srgb, var(--accent-primary) 8%, var(--bg-tertiary)) 100%);
+            font-weight: 600;
             border-left: 2px solid var(--accent-glow);
-            border-radius: 0 4px 4px 0;
+            border-radius: 0 6px 6px 0;
             padding-left: 8px;
+            box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-glow) 18%, transparent);
         }
 
         /* Sidebar Footer / Config */
