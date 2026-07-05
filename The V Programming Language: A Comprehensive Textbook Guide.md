@@ -21229,7 +21229,7 @@ The full project in this repository includes multiple demos and a reusable modul
 
 For the complete source, demo list, screenshots, and setup instructions, visit the original GitHub repository: https://github.com/codecaine-zz/vlang_simplegui/tree/master
 
-To use the project end to end, clone the repo, run the main demo with `v run .`, or explore the individual demos in the `demos/` folder to see the available UI patterns.
+To use the project end to end, open the folder at [boilerplate_templates/13_simplegui](boilerplate_templates/13_simplegui) and change into that directory first so it becomes the current working directory, then run the main demo with `v run main.v`. This matters because the example expects to be launched from its own folder. You can also explore the other demo files in the same directory to see the available UI patterns.
 
 ---
 
