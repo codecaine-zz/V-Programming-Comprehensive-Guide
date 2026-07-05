@@ -21227,6 +21227,10 @@ fn on_run_clicked(mut win simplegui.SimpleWindow) {
 
 The full project in this repository includes multiple demos and a reusable module implementation in [boilerplate_templates/13_simplegui/simplegui/simplegui.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/13_simplegui/simplegui/simplegui.v), making it an excellent example for learners who want to move from console programs into desktop interfaces.
 
+For the complete source, demo list, screenshots, and setup instructions, visit the original GitHub repository: https://github.com/codecaine-zz/vlang_simplegui/tree/master
+
+To use the project end to end, clone the repo, run the main demo with `v run .`, or explore the individual demos in the `demos/` folder to see the available UI patterns.
+
 ---
 
 ### Logging Boilerplate
