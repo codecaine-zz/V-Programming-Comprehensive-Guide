@@ -19670,6 +19670,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Retry and Backoff Boilerplate](#retry-and-backoff-boilerplate)
 - [HTTP Client Boilerplate](#http-client-boilerplate)
 - [CSV Processor Boilerplate](#csv-processor-boilerplate)
+- [macOS Native GUI Boilerplate](#macos-native-gui-boilerplate)
 - [Logging Boilerplate](#logging-boilerplate)
 
 ---
@@ -21183,6 +21184,48 @@ fn main() {
 	println('Wrote processed CSV to ${output_path}')
 }
 ```
+
+---
+
+### macOS Native GUI Boilerplate
+
+_File location: [boilerplate_templates/13_simplegui/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/13_simplegui/main.v)_
+
+### Lesson: macOS Native GUI Boilerplate
+
+V is not limited to command-line tools. This starter project shows how to build a native macOS desktop app with a small, beginner-friendly API over Cocoa. It is a practical bridge between simple scripting-style V code and real GUI development.
+
+Key concepts illustrated:
+
+- **Native Window Creation**: Starting a real macOS window with `simplegui.new_simple_window(...)`.
+- **Named Controls**: Creating labels, text inputs, buttons, checkboxes, sliders, and more with one-line helpers.
+- **Event-Driven UI**: Connecting UI actions with callbacks such as `on_click` and `on_change`.
+- **State Updates from V**: Reading and writing control values with helpers like `get_text`, `set_text`, `set_checked`, and `set_value_int`.
+- **Crossing into Desktop Apps**: Showing how V can be used for interactive desktop experiences beyond console programs.
+
+```v
+module main
+
+import simplegui
+
+fn main() {
+	mut gui := simplegui.new_simple_window('V Native GUI Demo', 760, 950)
+	gui.set_title('V Native GUI Demo')
+	gui.add_label('intro', 'Create controls with one small call')
+	gui.add_input('name', 'Ada')
+	gui.add_button('run', 'Run')
+	gui.on_click('run', on_run_clicked)
+	gui.run()
+}
+
+fn on_run_clicked(mut win simplegui.SimpleWindow) {
+	println('run clicked')
+	name := win.get_text('name')
+	win.alert('Hello', 'Hello, ${name}!')
+}
+```
+
+The full project in this repository includes multiple demos and a reusable module implementation in [boilerplate_templates/13_simplegui/simplegui/simplegui.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/13_simplegui/simplegui/simplegui.v), making it an excellent example for learners who want to move from console programs into desktop interfaces.
 
 ---
 
