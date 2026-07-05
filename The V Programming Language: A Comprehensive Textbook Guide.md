@@ -6980,6 +6980,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Redis Namespaced Demo](#redis-namespaced-demo)
 - [Redis Webview Demo](#redis-webview-demo)
 - [Webview Demo](#webview-demo)
+- [Packaging Webview as macOS Binaries](#packaging-webview-as-macos-binaries)
 
 ---
 
@@ -8630,6 +8631,96 @@ fn main() {
 	w.run()
 }
 ```
+
+---
+
+### Packaging Webview as macOS Binaries
+
+### Lesson: Packaging Webview as macOS Binaries
+
+V can run JavaScript, HTML, and CSS under the hood inside its lightweight webview bindings to build impressive cross-platform desktop GUIs. Once your webview-based application is ready to ship, you can package it as a standalone, production-ready macOS app bundle.
+
+To make this seamless, you can use [vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template). This is a pure-V template framework featuring a specialized build tool build.vsh that runs native macOS utilities (such as sips and iconutil) to assemble, compile, and structure your app without any Node or Bun JavaScript toolchain requirements.
+
+#### Step-by-Step Packaging Guide
+
+To package your webview app, follow the instructions below:
+
+##### 1. Prerequisites and Installation
+
+Ensure you have the V compiler installed and ttytm.webview registered:
+
+```bash
+# Install the webview library
+v install ttytm.webview
+
+# Clone the packaging template repository
+git clone https://github.com/codecaine-zz/vlang_macos_webview_app_template.git
+cd vlang_macos_webview_app_template
+```
+
+##### 2. Running Locally under Development
+
+To execute your webview application inline without compilation to verify behaviors:
+
+```bash
+v run main.v
+```
+
+##### 3. Packaging as a Default macOS App Bundle
+
+To compile main.v with full release-mode optimizations (-prod) and package it using the default name and default wave icon:
+
+```bash
+v run build.vsh
+```
+
+This compiles your application and structures:
+
+```
+dist/Vlang Macos Webview App Template.app
+```
+
+##### 4. Custom App Packaging (Custom Name, Icon, and ID)
+
+You can customize the compilation by specifying command flags to customize display names, custom bundle identifiers, and apply any of the 101 built-in glassmorphism workspace icons:
+
+```bash
+v run build.vsh main.v --name "My custom App" --icon resources/developer.png --identifier "com.example.myapp"
+```
+
+Available build parameters:
+
+- `-i, --icon <path>`: Path to a PNG icon. Defaults to resources/icon.png or icon.png.
+- `-n, --name <name>`: Custom display name for the .app bundle wrapper.
+- `-d, --identifier <id>`: CFBundleIdentifier mapping (e.g. com.example.id).
+- `-v, --version <version>`: App version (defaults to version in v.mod, or 1.0.0).
+- `-o, --out <dir>`: Custom destination output directory (defaults to dist).
+
+###### Example building with local premium glassmorphism icons:
+
+```bash
+# Build an IDE app using the Developer icon template
+v run build.vsh --name "Code Studio" --icon resources/developer.png
+
+# Build a database tool using the Database Admin icon
+v run build.vsh --name "DB Browser" --icon resources/database_admin.png
+
+# Build a task planner using the Kanban Board icon
+v run build.vsh --name "Task Board" --icon resources/kanban_board.png
+```
+
+##### 5. Running the Packaged macOS App
+
+Once built, you can run and distribute your app bundle by:
+
+1. Double-clicking the .app bundle inside Finder (located in the dist/ output directory).
+2. Launching it from the terminal:
+   ```bash
+   open "dist/Vlang Macos Webview App Template.app"
+   ```
+
+Using premium templates like this ensures your compiled V webview apps have zero runtime bloat and deliver a sleek, fully native feel matches Apple's premium macOS Sequoia glassmorphism specifications.
 
 ---
 
