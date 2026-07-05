@@ -387,7 +387,7 @@ This chapter introduces the core design philosophies of V. You will learn how to
 
 ### Single Line Comments
 
-_File location: [variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v)_
+_File location: [variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v](variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v)_
 
 ### Lesson: Single Line Comments
 
@@ -413,7 +413,7 @@ fn main() {
 
 ### Multi Line Comments
 
-_File location: [variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v)_
+_File location: [variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v](variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v)_
 
 ### Lesson: Multi Line Comments
 
@@ -452,7 +452,7 @@ fn main() {
 
 ### Programm Commented All Places
 
-_File location: [variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v)_
+_File location: [variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v](variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v)_
 
 ### Lesson: Programm Commented All Places
 
@@ -546,7 +546,7 @@ Variables are the basic storage units of any program. In this chapter, we explor
 
 ### Define Single Constant
 
-_File location: [variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v)_
+_File location: [variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v](variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v)_
 
 ### Lesson: Define Single Constant
 
@@ -569,7 +569,7 @@ fn main() {
 
 ### Define Multiple Constants
 
-_File location: [variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v)_
+_File location: [variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v](variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v)_
 
 ### Lesson: Define Multiple Constants
 
@@ -598,7 +598,7 @@ fn main() {
 
 ### Define Constant Of Type Struct
 
-_File location: [variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v)_
+_File location: [variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v](variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v)_
 
 ### Lesson: Define Constant Of Type Struct
 
@@ -632,7 +632,7 @@ fn main() {
 
 ### Define Constant Of Type Function
 
-_File location: [variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v)_
+_File location: [variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v](variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v)_
 
 ### Lesson: Define Constant Of Type Function
 
@@ -670,7 +670,7 @@ fn main() {
 
 ### Define Module Level Constants
 
-_File location: [variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v)_
+_File location: [variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v](variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v)_
 
 ### Lesson: Define Module Level Constants
 
@@ -693,7 +693,7 @@ fn main() {
 
 ### Cannot Define Constants Inside Functions
 
-_File location: [variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v)_
+_File location: [variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v](variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v)_
 
 ### Lesson: Cannot Define Constants Inside Functions
 
@@ -717,7 +717,7 @@ fn main() {
 
 ### Constants Module - Main (main.v)
 
-_File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v)_
+_File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v](variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v)_
 
 ### Lesson: Constants Module - Main
 
@@ -740,7 +740,7 @@ fn main() {
 
 ### Constant Module Prefix - Helper (file1.v)
 
-_File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v)_
+_File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v](variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v)_
 
 ### Lesson: Constant Module Prefix - Helper
 
@@ -765,7 +765,7 @@ pub fn do_work() {
 
 ### Parallel Declaration Immutable Variables
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v](variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v)_
 
 ### Lesson: Parallel Declaration Immutable Variables
 
@@ -788,7 +788,7 @@ fn main() {
 
 ### Parallel Declaration Mutable Variables
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel\_\_declaration_mutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel\_\_declaration_mutable_variables.v](variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v)_
 
 ### Lesson: Parallel Declaration Mutable Variables
 
@@ -813,7 +813,7 @@ fn main() {
 
 ### Parallel Declaration Mut And Immutable Vars
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v](variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v)_
 
 ### Lesson: Parallel Declaration Mut And Immutable Vars
 
@@ -836,7 +836,7 @@ fn main() {
 
 ### Augmented Assignment String
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v](variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v)_
 
 ### Lesson: Augmented Assignment String
 
@@ -862,7 +862,7 @@ fn main() {
 
 ### Augmented Assignment Integer
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v](variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v)_
 
 ### Lesson: Augmented Assignment Integer
 
@@ -888,7 +888,7 @@ fn main() {
 
 ### Declare Mutable Variable
 
-_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v](variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v)_
 
 ### Lesson: Declare Mutable Variable
 
@@ -911,7 +911,7 @@ fn main() {
 
 ### Cannot Update Mutable With Another Type
 
-_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v](variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v)_
 
 ### Lesson: Cannot Update Mutable With Another Type
 
@@ -932,7 +932,7 @@ fn main() {
 
 ### Declare Immutable Variable
 
-_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v](variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v)_
 
 ### Lesson: Declare Immutable Variable
 
@@ -952,7 +952,7 @@ fn main() {
 
 ### Cannot Update Immutable Variables
 
-_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v](variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v)_
 
 ### Lesson: Cannot Update Immutable Variables
 
@@ -974,7 +974,7 @@ fn main() {
 
 ### Declared And Assigned
 
-_File location: [variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v](variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v)_
 
 ### Lesson: Declared And Assigned
 
@@ -995,7 +995,7 @@ fn main() {
 
 ### Declared And Not Assigned
 
-_File location: [variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v](variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v)_
 
 ### Lesson: Declared And Not Assigned
 
@@ -1016,7 +1016,7 @@ fn main() {
 
 ### Unused Variables Will Be Warned
 
-_File location: [variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v](variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v)_
 
 ### Lesson: Unused Variables Will Be Warned
 
@@ -1040,7 +1040,7 @@ fn main() {
 
 ### Global Variables Not Allowed - Scope Demo
 
-_File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v](variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v)_
 
 ### Lesson: Global Variables Not Allowed - Scope Demo
 
@@ -1069,7 +1069,7 @@ fn main() {
 
 ### Global Variables Not Allowed - File Scope Demo
 
-_File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v](variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v)_
 
 ### Lesson: Global Variables Not Allowed - File Scope Demo
 
@@ -1100,7 +1100,7 @@ fn main() {
 
 ### Variable Redeclaration
 
-_File location: [variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v](variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v)_
 
 ### Lesson: Variable Redeclaration
 
@@ -1124,7 +1124,7 @@ fn main() {
 
 ### Variable Scope For Same Variable Names
 
-_File location: [variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v](variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v)_
 
 ### Lesson: Variable Scope For Same Variable Names
 
@@ -1156,7 +1156,7 @@ fn main() {
 
 ### Variable Shadowing Not Allowed
 
-_File location: [variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v](variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v)_
 
 ### Lesson: Variable Shadowing Not Allowed
 
@@ -1247,7 +1247,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 ### Primitive Types Demo Code
 
-_File location: [primitive_types/05_primitive_types_demo/primitive_types_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/05_primitive_types_demo/primitive_types_demo.v)_
+_File location: [primitive_types/05_primitive_types_demo/primitive_types_demo.v](primitive_types/05_primitive_types_demo/primitive_types_demo.v)_
 
 ### Lesson: Primitive Types Demo Code
 
@@ -1330,7 +1330,7 @@ V is a statically-typed language, meaning every variable has a fixed data type a
 
 ### Logical Operators
 
-_File location: [primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v)_
+_File location: [primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v](primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v)_
 
 ### Lesson: Logical Operators
 
@@ -1386,7 +1386,7 @@ fn main() {
 
 ### Relational Operators
 
-_File location: [primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v)_
+_File location: [primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v](primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v)_
 
 ### Lesson: Relational Operators
 
@@ -1434,7 +1434,7 @@ fn main() {
 
 ### Boolean Methods
 
-_File location: [primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v)_
+_File location: [primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v](primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v)_
 
 ### Lesson: Boolean Methods
 
@@ -1464,7 +1464,7 @@ fn main() {
 
 ### Declaring Integers
 
-_File location: [primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v)_
+_File location: [primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v](primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v)_
 
 ### Lesson: Declaring Integers
 
@@ -1494,7 +1494,7 @@ fn main() {
 
 ### Hex Binary Octa Notation Of Declaring Integers
 
-_File location: [primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v)_
+_File location: [primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v](primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v)_
 
 ### Lesson: Hex Binary Octa Notation Of Declaring Integers
 
@@ -1529,7 +1529,7 @@ fn main() {
 
 ### Promoting Numeric Types
 
-_File location: [primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v)_
+_File location: [primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v](primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v)_
 
 ### Lesson: Promoting Numeric Types
 
@@ -1585,7 +1585,7 @@ fn main() {
 
 ### Arithmetic Operators
 
-_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v)_
+_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v](primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v)_
 
 ### Lesson: Arithmetic Operators
 
@@ -1628,7 +1628,7 @@ fn main() {
 
 ### Bitwise Operators
 
-_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v)_
+_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v](primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v)_
 
 ### Lesson: Bitwise Operators
 
@@ -1666,7 +1666,7 @@ fn main() {
 
 ### Shift Operators
 
-_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v)_
+_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v](primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v)_
 
 ### Lesson: Shift Operators
 
@@ -1698,7 +1698,7 @@ fn main() {
 
 ### Shift Operator On Range Of Integers
 
-_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v)_
+_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v](primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v)_
 
 ### Lesson: Shift Operator On Range Of Integers
 
@@ -1728,7 +1728,7 @@ fn main() {
 
 ### Integer Methods
 
-_File location: [primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v)_
+_File location: [primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v](primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v)_
 
 ### Lesson: Integer Methods
 
@@ -1761,7 +1761,7 @@ fn main() {
 
 ### Float Methods
 
-_File location: [primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v)_
+_File location: [primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v](primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v)_
 
 ### Lesson: Float Methods
 
@@ -1798,7 +1798,7 @@ fn main() {
 
 ### U8 Methods
 
-_File location: [primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v)_
+_File location: [primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v](primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v)_
 
 ### Lesson: U8 Methods
 
@@ -1861,7 +1861,7 @@ fn main() {
 
 ### Size Pointer Methods
 
-_File location: [primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v)_
+_File location: [primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v](primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v)_
 
 ### Lesson: Size Pointer Methods
 
@@ -1906,7 +1906,7 @@ fn main() {
 
 ### Declare Rune
 
-_File location: [primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v)_
+_File location: [primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v](primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v)_
 
 ### Lesson: Declare Rune
 
@@ -1930,7 +1930,7 @@ fn main() {
 
 ### Rune Operations With Strings
 
-_File location: [primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v)_
+_File location: [primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v](primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v)_
 
 ### Lesson: Rune Operations With Strings
 
@@ -1953,7 +1953,7 @@ fn main() {
 
 ### Rune Methods
 
-_File location: [primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v)_
+_File location: [primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v](primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v)_
 
 ### Lesson: Rune Methods
 
@@ -2008,7 +2008,7 @@ fn main() {
 
 ### Declare String
 
-_File location: [primitive_types/03_string_type/01_declare_string/01_declare_string.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_declare_string/01_declare_string.v)_
+_File location: [primitive_types/03_string_type/01_declare_string/01_declare_string.v](primitive_types/03_string_type/01_declare_string/01_declare_string.v)_
 
 ### Lesson: Declare String
 
@@ -2035,7 +2035,7 @@ fn main() {
 
 ### String Read Only Array Of Bytes
 
-_File location: [primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v)_
+_File location: [primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v](primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v)_
 
 ### Lesson: String Read Only Array Of Bytes
 
@@ -2060,7 +2060,7 @@ fn main() {
 
 ### Strings Immutable By Default
 
-_File location: [primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v)_
+_File location: [primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v](primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v)_
 
 ### Lesson: Strings Immutable By Default
 
@@ -2084,7 +2084,7 @@ fn main() {
 
 ### Declaring Mutable Strings
 
-_File location: [primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v)_
+_File location: [primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v](primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v)_
 
 ### Lesson: Declaring Mutable Strings
 
@@ -2111,7 +2111,7 @@ fn main() {
 
 ### Cannot Mutate String Elements
 
-_File location: [primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v)_
+_File location: [primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v](primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v)_
 
 ### Lesson: Cannot Mutate String Elements
 
@@ -2134,7 +2134,7 @@ fn main() {
 
 ### String Interpolation
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v](primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v)_
 
 ### Lesson: String Interpolation
 
@@ -2158,7 +2158,7 @@ fn main() {
 
 ### Escape Special Characters
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v)_
 
 ### Lesson: Escape Special Characters
 
@@ -2194,7 +2194,7 @@ fn main() {
 
 ### Declare Raw Strings
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v)_
 
 ### Lesson: Declare Raw Strings
 
@@ -2218,7 +2218,7 @@ fn main() {
 
 ### String Concatenation Using Plus Sign
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v)_
 
 ### Lesson: String Concatenation Using Plus Sign
 
@@ -2242,7 +2242,7 @@ fn main() {
 
 ### String Concatenation Using Interpolation
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v)_
 
 ### Lesson: String Concatenation Using Interpolation
 
@@ -2265,7 +2265,7 @@ fn main() {
 
 ### Extract Substring From String Literal
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v)_
 
 ### Lesson: Extract Substring From String Literal
 
@@ -2311,7 +2311,7 @@ fn main() {
 
 ### Split String
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v)_
 
 ### Lesson: Split String
 
@@ -2338,7 +2338,7 @@ fn main() {
 
 ### String To Runes Array
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v)_
 
 ### Lesson: String To Runes Array
 
@@ -2362,7 +2362,7 @@ fn main() {
 
 ### Count Sub String Occurences
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v)_
 
 ### Lesson: Count Sub String Occurences
 
@@ -2391,7 +2391,7 @@ fn main() {
 
 ### Check String Contains Substring
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v)_
 
 ### Lesson: Check String Contains Substring
 
@@ -2418,7 +2418,7 @@ fn main() {
 
 ### String Contains Is Case Sensitive
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v)_
 
 ### Lesson: String Contains Is Case Sensitive
 
@@ -2445,7 +2445,7 @@ fn main() {
 
 ### Common String Methods
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v)_
 
 ### Lesson: Common String Methods
 
@@ -2541,7 +2541,7 @@ Control flow determines the execution path of your code. In this chapter, we cov
 
 ### Chaining Else If
 
-_File location: [control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v)_
+_File location: [control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v](control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v)_
 
 ### Lesson: Chaining Else If
 
@@ -2584,7 +2584,7 @@ fn main() {
 
 ### If With Goto
 
-_File location: [control_flow/01_If_Statement/if_with_goto/if_with_goto.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/01_If_Statement/if_with_goto/if_with_goto.v)_
+_File location: [control_flow/01_If_Statement/if_with_goto/if_with_goto.v](control_flow/01_If_Statement/if_with_goto/if_with_goto.v)_
 
 ### Lesson: If With Goto
 
@@ -2628,7 +2628,7 @@ fn main() {
 
 ### Cascade Match Conditions
 
-_File location: [control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v)_
+_File location: [control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v](control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v)_
 
 ### Lesson: Cascade Match Conditions
 
@@ -2682,7 +2682,7 @@ fn main() {
 
 ### Match As Switch Case
 
-_File location: [control_flow/02_Match/match_as_switch_case/match_as_switch_case.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/match_as_switch_case/match_as_switch_case.v)_
+_File location: [control_flow/02_Match/match_as_switch_case/match_as_switch_case.v](control_flow/02_Match/match_as_switch_case/match_as_switch_case.v)_
 
 ### Lesson: Match As Switch Case
 
@@ -2716,7 +2716,7 @@ fn main() {
 
 ### Match Pattern Matching
 
-_File location: [control_flow/02_Match/match_pattern_matching/match_pattern_matching.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/match_pattern_matching/match_pattern_matching.v)_
+_File location: [control_flow/02_Match/match_pattern_matching/match_pattern_matching.v](control_flow/02_Match/match_pattern_matching/match_pattern_matching.v)_
 
 ### Lesson: Match Pattern Matching
 
@@ -2743,7 +2743,7 @@ fn main() {
 
 ### Match With Enum
 
-_File location: [control_flow/02_Match/match_with_enum/match_with_enum.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/match_with_enum/match_with_enum.v)_
+_File location: [control_flow/02_Match/match_with_enum/match_with_enum.v](control_flow/02_Match/match_with_enum/match_with_enum.v)_
 
 ### Lesson: Match With Enum
 
@@ -2804,7 +2804,7 @@ fn main() {
 
 ### Match With Enum And Else
 
-_File location: [control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v)_
+_File location: [control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v](control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v)_
 
 ### Lesson: Match With Enum And Else
 
@@ -2853,7 +2853,7 @@ fn main() {
 
 ### Bare For
 
-_File location: [control_flow/03_Iterative_statements/bare_for/bare_for.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/bare_for/bare_for.v)_
+_File location: [control_flow/03_Iterative_statements/bare_for/bare_for.v](control_flow/03_Iterative_statements/bare_for/bare_for.v)_
 
 ### Lesson: Bare For
 
@@ -2878,7 +2878,7 @@ fn main() {
 
 ### Break For
 
-_File location: [control_flow/03_Iterative_statements/break_for/break_for.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/break_for/break_for.v)_
+_File location: [control_flow/03_Iterative_statements/break_for/break_for.v](control_flow/03_Iterative_statements/break_for/break_for.v)_
 
 ### Lesson: Break For
 
@@ -2911,7 +2911,7 @@ fn main() {
 
 ### Continue For
 
-_File location: [control_flow/03_Iterative_statements/continue_for/continue_for.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/continue_for/continue_for.v)_
+_File location: [control_flow/03_Iterative_statements/continue_for/continue_for.v](control_flow/03_Iterative_statements/continue_for/continue_for.v)_
 
 ### Lesson: Continue For
 
@@ -2937,7 +2937,7 @@ fn main() {
 
 ### For C Style
 
-_File location: [control_flow/03_Iterative_statements/for_c_style/for_c_style.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_c_style/for_c_style.v)_
+_File location: [control_flow/03_Iterative_statements/for_c_style/for_c_style.v](control_flow/03_Iterative_statements/for_c_style/for_c_style.v)_
 
 ### Lesson: For C Style
 
@@ -2961,7 +2961,7 @@ fn main() {
 
 ### For On Array Without Index
 
-_File location: [control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v](control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v)_
 
 ### Lesson: For On Array Without Index
 
@@ -2989,7 +2989,7 @@ fn main() {
 
 ### For On Arrays
 
-_File location: [control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v](control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v)_
 
 ### Lesson: For On Arrays
 
@@ -3013,7 +3013,7 @@ fn main() {
 
 ### For On Maps
 
-_File location: [control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v](control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v)_
 
 ### Lesson: For On Maps
 
@@ -3042,7 +3042,7 @@ fn main() {
 
 ### For On Maps Ignore Key
 
-_File location: [control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v](control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v)_
 
 ### Lesson: For On Maps Ignore Key
 
@@ -3072,7 +3072,7 @@ fn main() {
 
 ### For On Range
 
-_File location: [control_flow/03_Iterative_statements/for_on_range/for_on_range.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_range/for_on_range.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_range/for_on_range.v](control_flow/03_Iterative_statements/for_on_range/for_on_range.v)_
 
 ### Lesson: For On Range
 
@@ -3095,7 +3095,7 @@ fn main() {
 
 ### For With Continue Break And Labels
 
-_File location: [control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v)_
+_File location: [control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v](control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v)_
 
 ### Lesson: For With Continue Break And Labels
 
@@ -3133,7 +3133,7 @@ fn main() {
 
 ### Reverse For
 
-_File location: [control_flow/03_Iterative_statements/reverse_for/reverse_for.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/reverse_for/reverse_for.v)_
+_File location: [control_flow/03_Iterative_statements/reverse_for/reverse_for.v](control_flow/03_Iterative_statements/reverse_for/reverse_for.v)_
 
 ### Lesson: Reverse For
 
@@ -3212,7 +3212,7 @@ Collections allow you to group multiple data items together. V provides two prim
 
 ### Declare And Initialize
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v](arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v)_
 
 ### Lesson: Declare And Initialize
 
@@ -3234,7 +3234,7 @@ fn main() {
 
 ### Declare Empty Array
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v](arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v)_
 
 ### Lesson: Declare Empty Array
 
@@ -3261,7 +3261,7 @@ fn main() {
 
 ### Declare Array With Len
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v](arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v)_
 
 ### Lesson: Declare Array With Len
 
@@ -3283,7 +3283,7 @@ fn main() {
 
 ### Declare Array With Init And Len
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v](arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v)_
 
 ### Lesson: Declare Array With Init And Len
 
@@ -3305,7 +3305,7 @@ fn main() {
 
 ### Declare Array With Cap
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v](arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v)_
 
 ### Lesson: Declare Array With Cap
 
@@ -3327,7 +3327,7 @@ fn main() {
 
 ### Working With Array Properties
 
-_File location: [arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v)_
+_File location: [arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v](arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v)_
 
 ### Lesson: Working With Array Properties
 
@@ -3364,7 +3364,7 @@ fn main() {
 
 ### Access Array Elements Using Index
 
-_File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v)_
+_File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v](arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v)_
 
 ### Lesson: Access Array Elements Using Index
 
@@ -3387,7 +3387,7 @@ fn main() {
 
 ### Access Array Elements Using Slices
 
-_File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v)_
+_File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v](arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v)_
 
 ### Lesson: Access Array Elements Using Slices
 
@@ -3460,7 +3460,7 @@ fn main() {
 
 ### In Operator With Array
 
-_File location: [arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v)_
+_File location: [arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v](arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v)_
 
 ### Lesson: In Operator With Array
 
@@ -3486,7 +3486,7 @@ fn main() {
 
 ### Append Array
 
-_File location: [arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v)_
+_File location: [arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v](arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v)_
 
 ### Lesson: Append Array
 
@@ -3513,7 +3513,7 @@ fn main() {
 
 ### Define Fixed Size Array
 
-_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v)_
+_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v](arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v)_
 
 ### Lesson: Define Fixed Size Array
 
@@ -3536,7 +3536,7 @@ fn main() {
 
 ### Update Fixed Size Array Elements
 
-_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v)_
+_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v](arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v)_
 
 ### Lesson: Update Fixed Size Array Elements
 
@@ -3560,7 +3560,7 @@ fn main() {
 
 ### Determining Type Of Fixed Array
 
-_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v)_
+_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v](arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v)_
 
 ### Lesson: Determining Type Of Fixed Array
 
@@ -3582,7 +3582,7 @@ fn main() {
 
 ### Slicing Fixed Size Array Results In Ordinary Array
 
-_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v)_
+_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v](arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v)_
 
 ### Lesson: Slicing Fixed Size Array Results In Ordinary Array
 
@@ -3608,7 +3608,7 @@ fn main() {
 
 ### Declaring Multi Dimensional Arrays
 
-_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v)_
+_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v](arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v)_
 
 ### Lesson: Declaring Multi Dimensional Arrays
 
@@ -3633,7 +3633,7 @@ fn main() {
 
 ### Updating Multi Dimensional Array Indices
 
-_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v)_
+_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v](arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v)_
 
 ### Lesson: Updating Multi Dimensional Array Indices
 
@@ -3666,7 +3666,7 @@ fn main() {
 
 ### Reassigning Multi Dimensional Arrays
 
-_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v)_
+_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v](arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v)_
 
 ### Lesson: Reassigning Multi Dimensional Arrays
 
@@ -3695,7 +3695,7 @@ fn main() {
 
 ### Clone Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v](arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v)_
 
 ### Lesson: Clone Array
 
@@ -3719,7 +3719,7 @@ fn main() {
 
 ### Copy Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v](arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v)_
 
 ### Lesson: Copy Array
 
@@ -3745,7 +3745,7 @@ fn main() {
 
 ### Sort Integer Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v](arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v)_
 
 ### Lesson: Sort Integer Array
 
@@ -3772,7 +3772,7 @@ fn main() {
 
 ### Sort String Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v](arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v)_
 
 ### Lesson: Sort String Array
 
@@ -3800,7 +3800,7 @@ fn main() {
 
 ### Sort Struct Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v](arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v)_
 
 ### Lesson: Sort Struct Array
 
@@ -3869,7 +3869,7 @@ fn main() {
 
 ### Filter Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v](arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v)_
 
 ### Lesson: Filter Array
 
@@ -3893,7 +3893,7 @@ fn main() {
 
 ### Filter With Anonymous Funcs On Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v](arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v)_
 
 ### Lesson: Filter With Anonymous Funcs On Array
 
@@ -3920,7 +3920,7 @@ fn main() {
 
 ### Map Array Items
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v](arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v)_
 
 ### Lesson: Map Array Items
 
@@ -3943,7 +3943,7 @@ fn main() {
 
 ### Map Using Anonymous Funcs On Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v](arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v)_
 
 ### Lesson: Map Using Anonymous Funcs On Array
 
@@ -3970,7 +3970,7 @@ fn main() {
 
 ### Array Methods
 
-_File location: [arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v)_
+_File location: [arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v](arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v)_
 
 ### Lesson: Array Methods
 
@@ -4236,7 +4236,7 @@ fn main() {
 
 ### Explicit Map Initialization
 
-_File location: [arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v)_
+_File location: [arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v](arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v)_
 
 ### Lesson: Explicit Map Initialization
 
@@ -4261,7 +4261,7 @@ fn main() {
 
 ### Short Syntax Initialization Of Map
 
-_File location: [arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v)_
+_File location: [arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v](arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v)_
 
 ### Lesson: Short Syntax Initialization Of Map
 
@@ -4288,7 +4288,7 @@ fn main() {
 
 ### Count Key Value Pairs In Map
 
-_File location: [arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v)_
+_File location: [arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v](arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v)_
 
 ### Lesson: Count Key Value Pairs In Map
 
@@ -4316,7 +4316,7 @@ fn main() {
 
 ### Value Given Key Of Map
 
-_File location: [arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v)_
+_File location: [arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v](arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v)_
 
 ### Lesson: Value Given Key Of Map
 
@@ -4344,7 +4344,7 @@ fn main() {
 
 ### Value Given Non Existent Key Of Map
 
-_File location: [arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v)_
+_File location: [arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v](arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v)_
 
 ### Lesson: Value Given Non Existent Key Of Map
 
@@ -4372,7 +4372,7 @@ fn main() {
 
 ### Handling Missing Keys In Map
 
-_File location: [arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v)_
+_File location: [arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v](arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v)_
 
 ### Lesson: Handling Missing Keys In Map
 
@@ -4401,7 +4401,7 @@ fn main() {
 
 ### Update Value Given A Key In Map
 
-_File location: [arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v)_
+_File location: [arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v](arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v)_
 
 ### Lesson: Update Value Given A Key In Map
 
@@ -4429,7 +4429,7 @@ fn main() {
 
 ### Delete Key Value Pair From Map
 
-_File location: [arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v)_
+_File location: [arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v](arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v)_
 
 ### Lesson: Delete Key Value Pair From Map
 
@@ -4459,7 +4459,7 @@ fn main() {
 
 ### Map Methods
 
-_File location: [arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v)_
+_File location: [arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v](arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v)_
 
 ### Lesson: Map Methods
 
@@ -4534,7 +4534,7 @@ fn main() {
 
 ### Import Maps Helpers
 
-_File location: [arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/02_import_maps_helpers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/02_import_maps_helpers.v)_
+_File location: [arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/02_import_maps_helpers.v](arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/02_import_maps_helpers.v)_
 
 ### Lesson: Import Maps Helpers
 
@@ -4661,7 +4661,7 @@ Functions let you turn repeated or complex logic into small, named building bloc
 
 ### Function Returns Value Example 1
 
-_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v)_
+_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v](functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v)_
 
 ### Lesson: Function Returns Value Example 1
 
@@ -4684,7 +4684,7 @@ fn main() {
 
 ### Function Returns Value Example 2
 
-_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v)_
+_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v](functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v)_
 
 ### Lesson: Function Returns Value Example 2
 
@@ -4710,7 +4710,7 @@ fn main() {
 
 ### Functions Without Return Type
 
-_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v)_
+_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v](functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v)_
 
 ### Lesson: Functions Without Return Type
 
@@ -4734,7 +4734,7 @@ fn main() {
 
 ### Function With Input Arguments
 
-_File location: [functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v)_
+_File location: [functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v](functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v)_
 
 ### Lesson: Function With Input Arguments
 
@@ -4759,7 +4759,7 @@ fn main() {
 
 ### Function Return Multiple Values
 
-_File location: [functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v)_
+_File location: [functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v](functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v)_
 
 ### Lesson: Function Return Multiple Values
 
@@ -4785,7 +4785,7 @@ fn main() {
 
 ### Ignore Function Return Value
 
-_File location: [functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v)_
+_File location: [functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v](functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v)_
 
 ### Lesson: Ignore Function Return Value
 
@@ -4810,7 +4810,7 @@ fn main() {
 
 ### Function Calls Other Function
 
-_File location: [functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v)_
+_File location: [functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v](functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v)_
 
 ### Lesson: Function Calls Other Function
 
@@ -4841,7 +4841,7 @@ fn main() {
 
 ### Example 1
 
-_File location: [functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v)_
+_File location: [functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v](functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v)_
 
 ### Lesson: Example 1
 
@@ -4880,7 +4880,7 @@ fn main() {
 
 ### Example 2
 
-_File location: [functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v)_
+_File location: [functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v](functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v)_
 
 ### Lesson: Example 2
 
@@ -4915,7 +4915,7 @@ fn main() {
 
 ### Error Script Functions
 
-_File location: [functions/02_understanding_funtion_features/07_functions_in_v_scripts/01_error_script_functions.vsh](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/07_functions_in_v_scripts/01_error_script_functions.vsh)_
+_File location: [functions/02_understanding_funtion_features/07_functions_in_v_scripts/01_error_script_functions.vsh](functions/02_understanding_funtion_features/07_functions_in_v_scripts/01_error_script_functions.vsh)_
 
 ### Lesson: Error Script Functions
 
@@ -4946,7 +4946,7 @@ fn log(msg string) {
 
 ### Script Functions
 
-_File location: [functions/02_understanding_funtion_features/07_functions_in_v_scripts/02_script_functions.vsh](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/07_functions_in_v_scripts/02_script_functions.vsh)_
+_File location: [functions/02_understanding_funtion_features/07_functions_in_v_scripts/02_script_functions.vsh](functions/02_understanding_funtion_features/07_functions_in_v_scripts/02_script_functions.vsh)_
 
 ### Lesson: Script Functions
 
@@ -4977,7 +4977,7 @@ for i in 0 .. cnt {
 
 ### Functions Module Variables - Main (main.v)
 
-_File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v)_
+_File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v](functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v)_
 
 ### Lesson: Functions Module Variables - Main
 
@@ -5009,7 +5009,7 @@ fn main() {
 
 ### Mymod
 
-_File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v)_
+_File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v](functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v)_
 
 ### Lesson: Mymod
 
@@ -5038,7 +5038,7 @@ __global (
 
 ### Functions With Optional Return Types Example 1
 
-_File location: [functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v)_
+_File location: [functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v](functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v)_
 
 ### Lesson: Functions With Optional Return Types Example 1
 
@@ -5077,7 +5077,7 @@ fn main() {
 
 ### Function With Optional Return Type Example 2
 
-_File location: [functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v)_
+_File location: [functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v](functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v)_
 
 ### Lesson: Function With Optional Return Type Example 2
 
@@ -5116,7 +5116,7 @@ fn main() {
 
 ### Mod1
 
-_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v)_
+_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v](functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v)_
 
 ### Lesson: Mod1
 
@@ -5154,7 +5154,7 @@ pub fn greet_and_wish() string {
 
 ### Public Function Demo1
 
-_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v)_
+_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v](functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v)_
 
 ### Lesson: Public Function Demo1
 
@@ -5184,7 +5184,7 @@ fn main() {
 
 ### Public Function Demo2
 
-_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v)_
+_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v](functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v)_
 
 ### Lesson: Public Function Demo2
 
@@ -5214,7 +5214,7 @@ fn main() {
 
 ### Public Function Demo3
 
-_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v)_
+_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v](functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v)_
 
 ### Lesson: Public Function Demo3
 
@@ -5244,7 +5244,7 @@ fn main() {
 
 ### Function With Defer Block
 
-_File location: [functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v)_
+_File location: [functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v](functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v)_
 
 ### Lesson: Function With Defer Block
 
@@ -5275,7 +5275,7 @@ fn main() {
 
 ### Functions As Elements Of Array Or Map
 
-_File location: [functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v)_
+_File location: [functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v](functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v)_
 
 ### Lesson: Functions As Elements Of Array Or Map
 
@@ -5328,7 +5328,7 @@ fn main() {
 
 ### Hello
 
-_File location: [functions/01_function_types/00_main_function/hello.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/00_main_function/hello.v)_
+_File location: [functions/01_function_types/00_main_function/hello.v](functions/01_function_types/00_main_function/hello.v)_
 
 ### Lesson: Hello
 
@@ -5349,7 +5349,7 @@ fn main() {
 
 ### Basic Functions
 
-_File location: [functions/01_function_types/01_basic_functions/basic_functions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/01_basic_functions/basic_functions.v)_
+_File location: [functions/01_function_types/01_basic_functions/basic_functions.v](functions/01_function_types/01_basic_functions/basic_functions.v)_
 
 ### Lesson: Basic Functions
 
@@ -5375,7 +5375,7 @@ fn main() {
 
 ### Anonymous Functions
 
-_File location: [functions/01_function_types/02_anonymous_functions/anonymous_functions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/02_anonymous_functions/anonymous_functions.v)_
+_File location: [functions/01_function_types/02_anonymous_functions/anonymous_functions.v](functions/01_function_types/02_anonymous_functions/anonymous_functions.v)_
 
 ### Lesson: Anonymous Functions
 
@@ -5403,7 +5403,7 @@ fn main() {
 
 ### Functions As Input Arguments
 
-_File location: [functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v)_
+_File location: [functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v](functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v)_
 
 ### Lesson: Functions As Input Arguments
 
@@ -5449,7 +5449,7 @@ fn main() {
 
 ### Functions That Return Other Functions
 
-_File location: [functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v)_
+_File location: [functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v](functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v)_
 
 ### Lesson: Functions That Return Other Functions
 
@@ -5513,7 +5513,7 @@ fn main() {
 
 ### Lambda Expressions
 
-_File location: [functions/01_function_types/04_lambda_expressions/lambda_expressions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/04_lambda_expressions/lambda_expressions.v)_
+_File location: [functions/01_function_types/04_lambda_expressions/lambda_expressions.v](functions/01_function_types/04_lambda_expressions/lambda_expressions.v)_
 
 ### Lesson: Lambda Expressions
 
@@ -5560,7 +5560,7 @@ fn main() {
 
 ### Closures
 
-_File location: [functions/01_function_types/05_closures/closures.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/05_closures/closures.v)_
+_File location: [functions/01_function_types/05_closures/closures.v](functions/01_function_types/05_closures/closures.v)_
 
 ### Lesson: Closures
 
@@ -5651,7 +5651,7 @@ Structs are user-defined data structures that allow you to group related fields 
 
 ### Defining Struct
 
-_File location: [structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v)_
+_File location: [structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v](structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v)_
 
 ### Lesson: Defining Struct
 
@@ -5682,7 +5682,7 @@ fn main() {
 
 ### Initialize Struct Example 1
 
-_File location: [structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v)_
+_File location: [structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v](structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v)_
 
 ### Lesson: Initialize Struct Example 1
 
@@ -5711,7 +5711,7 @@ fn main() {
 
 ### Initialize Struct Example 2
 
-_File location: [structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v)_
+_File location: [structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v](structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v)_
 
 ### Lesson: Initialize Struct Example 2
 
@@ -5743,7 +5743,7 @@ fn main() {
 
 ### Access Struct Fields
 
-_File location: [structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v)_
+_File location: [structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v](structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v)_
 
 ### Lesson: Access Struct Fields
 
@@ -5770,7 +5770,7 @@ fn main() {
 
 ### Heap Structs
 
-_File location: [structs/01_introducing_structs/03_heap_structs/01_heap_structs.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/03_heap_structs/01_heap_structs.v)_
+_File location: [structs/01_introducing_structs/03_heap_structs/01_heap_structs.v](structs/01_introducing_structs/03_heap_structs/01_heap_structs.v)_
 
 ### Lesson: Heap Structs
 
@@ -5797,7 +5797,7 @@ fn main() {
 
 ### Updating Immutable Struct Variable Throws Error
 
-_File location: [structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v)_
+_File location: [structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v](structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v)_
 
 ### Lesson: Updating Immutable Struct Variable Throws Error
 
@@ -5829,7 +5829,7 @@ fn main() {
 
 ### Updating Mutable Fields Of Struct
 
-_File location: [structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v)_
+_File location: [structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v](structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v)_
 
 ### Lesson: Updating Mutable Fields Of Struct
 
@@ -5864,7 +5864,7 @@ fn main() {
 
 ### Updating Immutable Fields Throws Error
 
-_File location: [structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v)_
+_File location: [structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v](structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v)_
 
 ### Lesson: Updating Immutable Fields Throws Error
 
@@ -5894,7 +5894,7 @@ fn main() {
 
 ### Updating Struct With Unspecified Fields Are Zeroed
 
-_File location: [structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v)_
+_File location: [structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v](structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v)_
 
 ### Lesson: Updating Struct With Unspecified Fields Are Zeroed
 
@@ -5939,7 +5939,7 @@ fn main() {
 
 ### Struct With Multiple Fields
 
-_File location: [structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v)_
+_File location: [structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v](structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v)_
 
 ### Lesson: Struct With Multiple Fields
 
@@ -5966,7 +5966,7 @@ fn main() {
 
 ### Grouping Struct Fields Based On Access Modifiers
 
-_File location: [structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v)_
+_File location: [structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v](structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v)_
 
 ### Lesson: Grouping Struct Fields Based On Access Modifiers
 
@@ -5994,7 +5994,7 @@ fn main() {
 
 ### Required Fields Example 01
 
-_File location: [structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v)_
+_File location: [structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v](structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v)_
 
 ### Lesson: Required Fields Example 01
 
@@ -6028,7 +6028,7 @@ fn main() {
 
 ### Required Fields Example 02
 
-_File location: [structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v)_
+_File location: [structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v](structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v)_
 
 ### Lesson: Required Fields Example 02
 
@@ -6064,7 +6064,7 @@ fn main() {
 
 ### Struct Fields With Default Values
 
-_File location: [structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v)_
+_File location: [structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v](structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v)_
 
 ### Lesson: Struct Fields With Default Values
 
@@ -6101,7 +6101,7 @@ fn main() {
 
 ### Methods For Struct
 
-_File location: [structs/04_methods_for_struct/01_methods_for_struct/01_methods_for_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/04_methods_for_struct/01_methods_for_struct/01_methods_for_struct.v)_
+_File location: [structs/04_methods_for_struct/01_methods_for_struct/01_methods_for_struct.v](structs/04_methods_for_struct/01_methods_for_struct/01_methods_for_struct.v)_
 
 ### Lesson: Methods For Struct
 
@@ -6171,7 +6171,7 @@ fn main() {
 
 ### Mutable Methods
 
-_File location: [structs/04_methods_for_struct/02_mutable_methods/02_mutable_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/04_methods_for_struct/02_mutable_methods/02_mutable_methods.v)_
+_File location: [structs/04_methods_for_struct/02_mutable_methods/02_mutable_methods.v](structs/04_methods_for_struct/02_mutable_methods/02_mutable_methods.v)_
 
 ### Lesson: Mutable Methods
 
@@ -6240,7 +6240,7 @@ fn main() {
 
 ### Printing Custom Types
 
-_File location: [structs/04_methods_for_struct/03_printing_custom_types/03_printing_custom_types.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/04_methods_for_struct/03_printing_custom_types/03_printing_custom_types.v)_
+_File location: [structs/04_methods_for_struct/03_printing_custom_types/03_printing_custom_types.v](structs/04_methods_for_struct/03_printing_custom_types/03_printing_custom_types.v)_
 
 ### Lesson: Printing Custom Types
 
@@ -6273,7 +6273,7 @@ fn main() {
 
 ### Adding Struct As Struct Field
 
-_File location: [structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v)_
+_File location: [structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v](structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v)_
 
 ### Lesson: Adding Struct As Struct Field
 
@@ -6319,7 +6319,7 @@ fn main() {
 
 ### Updating Fields Of Type Struct
 
-_File location: [structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v)_
+_File location: [structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v](structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v)_
 
 ### Lesson: Updating Fields Of Type Struct
 
@@ -6375,7 +6375,7 @@ fn main() {
 
 ### Struct As Trailing Literal Arguments To Function
 
-_File location: [structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v)_
+_File location: [structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v](structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v)_
 
 ### Lesson: Struct As Trailing Literal Arguments To Function
 
@@ -6439,7 +6439,7 @@ fn main() {
 
 ### Anonymous Structs
 
-_File location: [structs/07_anonymous_structs/anonymous_structs.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/07_anonymous_structs/anonymous_structs.v)_
+_File location: [structs/07_anonymous_structs/anonymous_structs.v](structs/07_anonymous_structs/anonymous_structs.v)_
 
 ### Lesson: Anonymous Structs
 
@@ -6490,7 +6490,7 @@ fn main() {
 
 ### Static Type Methods
 
-_File location: [structs/08_static_type_methods/static_type_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/08_static_type_methods/static_type_methods.v)_
+_File location: [structs/08_static_type_methods/static_type_methods.v](structs/08_static_type_methods/static_type_methods.v)_
 
 ### Lesson: Static Type Methods
 
@@ -6543,7 +6543,7 @@ fn main() {
 
 ### noinit Structs
 
-_File location: [structs/09_noinit_structs/noinit_structs.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/09_noinit_structs/noinit_structs.v)_
+_File location: [structs/09_noinit_structs/noinit_structs.v](structs/09_noinit_structs/noinit_structs.v)_
 
 ### Lesson: noinit Structs
 
@@ -6597,7 +6597,7 @@ fn main() {
 
 ### Unions
 
-_File location: [structs/10_unions/unions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/10_unions/unions.v)_
+_File location: [structs/10_unions/unions.v](structs/10_unions/unions.v)_
 
 ### Lesson: Unions
 
@@ -6663,7 +6663,7 @@ V has no exceptions. Instead, it handles errors using **Option** and **Result** 
 
 ### Error Handling
 
-_File location: [error_handling/error_handling.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/error_handling/error_handling.v)_
+_File location: [error_handling/error_handling.v](error_handling/error_handling.v)_
 
 In many programming languages, errors are handled using exceptions (with `try`, `catch`, and `throw` blocks). Exception blocks can make code hard to read and trace because control flow can jump unpredictably.
 
@@ -6989,7 +6989,7 @@ Modules help organize larger codebases. In this chapter, you will learn how to c
 
 ### Creating a Simple V Project - Main (modulebasics.v)
 
-_File location: [modules/ch01_creating_simple_v_project/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch01_creating_simple_v_project/modulebasics/modulebasics.v)_
+_File location: [modules/ch01_creating_simple_v_project/modulebasics/modulebasics.v](modules/ch01_creating_simple_v_project/modulebasics/modulebasics.v)_
 
 ### Lesson: Creating a Simple V Project
 
@@ -7009,7 +7009,7 @@ fn main() {
 
 ### Creating a Module - Helper (file1.v)
 
-_File location: [modules/ch02_creating_modue/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch02_creating_modue/modulebasics/mod1/file1.v)_
+_File location: [modules/ch02_creating_modue/modulebasics/mod1/file1.v](modules/ch02_creating_modue/modulebasics/mod1/file1.v)_
 
 ### Lesson: A Reusable Helper Module
 
@@ -7027,7 +7027,7 @@ pub fn hello() {
 
 ### Creating a Module - Main (modulebasics.v)
 
-_File location: [modules/ch02_creating_modue/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch02_creating_modue/modulebasics/modulebasics.v)_
+_File location: [modules/ch02_creating_modue/modulebasics/modulebasics.v](modules/ch02_creating_modue/modulebasics/modulebasics.v)_
 
 ### Lesson: Module Main Entry
 
@@ -7045,7 +7045,7 @@ fn main() {
 
 ### Importing a Module - Helper (file1.v)
 
-_File location: [modules/ch03_importing_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch03_importing_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch03_importing_module/modulebasics/mod1/file1.v](modules/ch03_importing_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Imported Module Helper
 
@@ -7063,7 +7063,7 @@ pub fn hello() {
 
 ### Importing a Module - Main (modulebasics.v)
 
-_File location: [modules/ch03_importing_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch03_importing_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch03_importing_module/modulebasics/modulebasics.v](modules/ch03_importing_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Imported Module Main
 
@@ -7083,7 +7083,7 @@ fn main() {
 
 ### Accessing Module Members - Helper (file1.v)
 
-_File location: [modules/ch04_accessing_members_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch04_accessing_members_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch04_accessing_members_of_module/modulebasics/mod1/file1.v](modules/ch04_accessing_members_of_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Public vs Private Members
 
@@ -7101,7 +7101,7 @@ pub fn hello() {
 
 ### Accessing Module Members - Main (modulebasics.v)
 
-_File location: [modules/ch04_accessing_members_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch04_accessing_members_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch04_accessing_members_of_module/modulebasics/modulebasics.v](modules/ch04_accessing_members_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Visibility Main
 
@@ -7122,7 +7122,7 @@ fn main() {
 
 ### Multiple Files (After Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v](modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Helper 1
 
@@ -7140,7 +7140,7 @@ pub fn hello() {
 
 ### Multiple Files (After Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v](modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Helper 2
 
@@ -7158,7 +7158,7 @@ fn hello2() {
 
 ### Multiple Files (After Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v](modules/ch05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Main Entry
 
@@ -7182,7 +7182,7 @@ fn main() {
 
 ### Multiple Files (Before Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v](modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Helper 1
 
@@ -7203,7 +7203,7 @@ pub fn hello() {
 
 ### Multiple Files (Before Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v](modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Helper 2
 
@@ -7225,7 +7225,7 @@ fn main() {
 
 ### Multiple Files (Before Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v](modules/ch05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Main Entry
 
@@ -7249,7 +7249,7 @@ fn main() {
 
 ### Member Scope (After Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/after/modulebasics/mod1/file1.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/file1.v](modules/ch06_member_scope_in_module/after/modulebasics/mod1/file1.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Helper 1
 
@@ -7269,7 +7269,7 @@ pub fn hello() {
 
 ### Member Scope (After Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/after/modulebasics/mod1/file2.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/file2.v](modules/ch06_member_scope_in_module/after/modulebasics/mod1/file2.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Helper 2
 
@@ -7290,7 +7290,7 @@ fn hello2() {
 
 ### Member Scope (After Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/ch06_member_scope_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/after/modulebasics/modulebasics.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/modulebasics.v](modules/ch06_member_scope_in_module/after/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Main Entry
 
@@ -7313,7 +7313,7 @@ fn main() {
 
 ### Member Scope (Before Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/before/modulebasics/mod1/file1.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/file1.v](modules/ch06_member_scope_in_module/before/modulebasics/mod1/file1.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Helper 1
 
@@ -7334,7 +7334,7 @@ pub fn hello() {
 
 ### Member Scope (Before Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/before/modulebasics/mod1/file2.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/file2.v](modules/ch06_member_scope_in_module/before/modulebasics/mod1/file2.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Helper 2
 
@@ -7355,7 +7355,7 @@ fn hello2() {
 
 ### Member Scope (Before Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/ch06_member_scope_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch06_member_scope_in_module/before/modulebasics/modulebasics.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/modulebasics.v](modules/ch06_member_scope_in_module/before/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Main Entry
 
@@ -7379,7 +7379,7 @@ fn main() {
 
 ### Cyclic Imports - Module 1 Helper (file1.v)
 
-_File location: [modules/ch07_cyclic_imports/modulebasics/m1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch07_cyclic_imports/modulebasics/m1/file1.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/m1/file1.v](modules/ch07_cyclic_imports/modulebasics/m1/file1.v)_
 
 ### Lesson: Cyclic Imports - Module 1
 
@@ -7401,7 +7401,7 @@ pub fn hello() {
 
 ### Cyclic Imports - Module 2 Helper (file1.v)
 
-_File location: [modules/ch07_cyclic_imports/modulebasics/m2/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch07_cyclic_imports/modulebasics/m2/file1.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/m2/file1.v](modules/ch07_cyclic_imports/modulebasics/m2/file1.v)_
 
 ### Lesson: Cyclic Imports - Module 2
 
@@ -7426,7 +7426,7 @@ pub fn hello() {
 
 ### Cyclic Imports - Main (modulebasics.v)
 
-_File location: [modules/ch07_cyclic_imports/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch07_cyclic_imports/modulebasics/modulebasics.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/modulebasics.v](modules/ch07_cyclic_imports/modulebasics/modulebasics.v)_
 
 ### Lesson: Cyclic Imports - Main Entry
 
@@ -7451,7 +7451,7 @@ fn main() {
 
 ### Module Init & Cleanup Functions - Config (config.v)
 
-_File location: [modules/ch08_init_function_for_module/modulebasics/config/config.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch08_init_function_for_module/modulebasics/config/config.v)_
+_File location: [modules/ch08_init_function_for_module/modulebasics/config/config.v](modules/ch08_init_function_for_module/modulebasics/config/config.v)_
 
 ### Lesson: Transitive Initialization Helper
 
@@ -7477,7 +7477,7 @@ fn cleanup() {
 
 ### Module Init & Cleanup Functions - Helper (file1.v)
 
-_File location: [modules/ch08_init_function_for_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch08_init_function_for_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch08_init_function_for_module/modulebasics/mod1/file1.v](modules/ch08_init_function_for_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Module Init & Cleanup Functions Helper
 
@@ -7508,7 +7508,7 @@ fn cleanup() {
 
 ### Module Init & Cleanup Functions - Main (modulebasics.v)
 
-_File location: [modules/ch08_init_function_for_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch08_init_function_for_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch08_init_function_for_module/modulebasics/modulebasics.v](modules/ch08_init_function_for_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Module Init & Cleanup Functions
 
@@ -7555,7 +7555,7 @@ fn main() {
 
 ### Accessing Module Constants - Helper (file1.v)
 
-_File location: [modules/ch09_accessing_constants_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch09_accessing_constants_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch09_accessing_constants_of_module/modulebasics/mod1/file1.v](modules/ch09_accessing_constants_of_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Accessing Module Constants Helper
 
@@ -7571,7 +7571,7 @@ pub const greet_msg = 'Greeting from mod1!'
 
 ### Accessing Module Constants - Main (modulebasics.v)
 
-_File location: [modules/ch09_accessing_constants_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch09_accessing_constants_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch09_accessing_constants_of_module/modulebasics/modulebasics.v](modules/ch09_accessing_constants_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Accessing Module Constants
 
@@ -7594,7 +7594,7 @@ fn main() {
 
 ### Accessing Module Structs - Helper (file1.v)
 
-_File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v](modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Accessing Module Structs Helper
 
@@ -7633,7 +7633,7 @@ pub mut:
 
 ### Accessing Module Structs - Main (modulebasics.v)
 
-_File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v](modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Accessing Module Structs
 
@@ -7714,7 +7714,7 @@ fn main() {
 
 ### Redis Console Demo
 
-_File location: [modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v](modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v)_
 
 This example demonstrates how to use the external `xiusin.vredis` client package in a console application and demonstrates key namespacing with the custom `NamespacedRedis` helper. It covers:
 
@@ -7864,7 +7864,7 @@ fn main() {
 
 ### Redis Console Demo - Helper (redis_helper.v)
 
-_File location: [modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_helper.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_helper.v](modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_helper.v)_
 
 This helper provides a namespaced wrapper struct `NamespacedRedis` that automatically prefixes all Redis keys with a given namespace (e.g. `namespace:key`). This is a great pattern for keeping keys organized and avoiding collisions between multiple apps/environments.
 
@@ -7997,7 +7997,7 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
 
 ### Redis Namespaced Demo - Helper (redis_helper.v)
 
-_File location: [modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v](modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v)_
 
 ### Lesson: Redis Namespaced Helper
 
@@ -8130,7 +8130,7 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
 
 ### Redis Namespaced Demo
 
-_File location: [modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v](modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v)_
 
 This example provides an easy, dedicated demo showing how to use the `NamespacedRedis` helper wrapper to manage multiple independent namespaces (like `cache` and `session`) over a single underlying Redis connection without key collisions.
 
@@ -8204,7 +8204,7 @@ fn main() {
 
 ### Redis Webview Demo
 
-_File location: [modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v](modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v)_
 
 ### Lesson: Redis Webview Demo
 
@@ -8497,7 +8497,7 @@ fn main() {
 
 ### Webview Demo
 
-_File location: [modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo.v](modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo.v)_
 
 ### Lesson: Webview Demo
 
@@ -8661,7 +8661,7 @@ V has testing built directly into the compiler. This chapter explains how to wri
 
 ### Assert Demo
 
-_File location: [testing/01_assert/assert_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/01_assert/assert_demo.v)_
+_File location: [testing/01_assert/assert_demo.v](testing/01_assert/assert_demo.v)_
 
 ### Lesson: Assert Demo
 
@@ -8689,7 +8689,7 @@ fn main() {
 
 ### Simple Test - Before (demo_test.v)
 
-_File location: [testing/02_simple_test/01_before/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/02_simple_test/01_before/demo_test.v)_
+_File location: [testing/02_simple_test/01_before/demo_test.v](testing/02_simple_test/01_before/demo_test.v)_
 
 ### Lesson: Simple Test - Before
 
@@ -8710,7 +8710,7 @@ fn test_first() {
 
 ### Simple Test - After (demo_test.v)
 
-_File location: [testing/02_simple_test/02_after/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/02_simple_test/02_after/demo_test.v)_
+_File location: [testing/02_simple_test/02_after/demo_test.v](testing/02_simple_test/02_after/demo_test.v)_
 
 ### Lesson: Simple Test - After
 
@@ -8731,7 +8731,7 @@ fn test_first() {
 
 ### Testsuite Demo Test
 
-_File location: [testing/04_testsuite/testsuite_demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/04_testsuite/testsuite_demo_test.v)_
+_File location: [testing/04_testsuite/testsuite_demo_test.v](testing/04_testsuite/testsuite_demo_test.v)_
 
 ### Lesson: Testsuite Demo Test
 
@@ -8774,7 +8774,7 @@ fn testsuite_end() {
 
 ### Testing Optional Return Functions (demo_test.v)
 
-_File location: [testing/05_test_optional_return_functions/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/05_test_optional_return_functions/demo_test.v)_
+_File location: [testing/05_test_optional_return_functions/demo_test.v](testing/05_test_optional_return_functions/demo_test.v)_
 
 ### Lesson: Testing Optional Return Functions
 
@@ -8813,7 +8813,7 @@ fn test_greet_when_empty() {
 
 ### Greet
 
-_File location: [testing/06_testing_program_file/greet.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/06_testing_program_file/greet.v)_
+_File location: [testing/06_testing_program_file/greet.v](testing/06_testing_program_file/greet.v)_
 
 ### Lesson: Greet
 
@@ -8841,7 +8841,7 @@ fn main() {
 
 ### Greet Test
 
-_File location: [testing/06_testing_program_file/greet_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/06_testing_program_file/greet_test.v)_
+_File location: [testing/06_testing_program_file/greet_test.v](testing/06_testing_program_file/greet_test.v)_
 
 ### Lesson: Greet Test
 
@@ -8873,7 +8873,7 @@ fn test_greet() {
 
 ### Main Test
 
-_File location: [testing/07_testing_program_with_modules/modulebasics/main_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/main_test.v)_
+_File location: [testing/07_testing_program_with_modules/modulebasics/main_test.v](testing/07_testing_program_with_modules/modulebasics/main_test.v)_
 
 ### Lesson: Main Test
 
@@ -8906,7 +8906,7 @@ fn test_hello() {
 
 ### Testing Program Modules - Helper (file1.v)
 
-_File location: [testing/07_testing_program_with_modules/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/mod1/file1.v)_
+_File location: [testing/07_testing_program_with_modules/modulebasics/mod1/file1.v](testing/07_testing_program_with_modules/modulebasics/mod1/file1.v)_
 
 ### Lesson: Testing Program Modules - Helper
 
@@ -8929,7 +8929,7 @@ pub fn hello() string {
 
 ### Mod1 Test
 
-_File location: [testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v)_
+_File location: [testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v](testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v)_
 
 ### Lesson: Mod1 Test
 
@@ -8959,7 +8959,7 @@ fn test_hello() {
 
 ### Modulebasics
 
-_File location: [testing/07_testing_program_with_modules/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/modulebasics.v)_
+_File location: [testing/07_testing_program_with_modules/modulebasics/modulebasics.v](testing/07_testing_program_with_modules/modulebasics/modulebasics.v)_
 
 ### Lesson: Modulebasics
 
@@ -9034,7 +9034,7 @@ V makes concurrent programming easy and safe. This chapter covers spawning threa
 
 ### Unbuffered Channel
 
-_File location: [channels/01_define_channels/01_unbuffered_channel.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/01_define_channels/01_unbuffered_channel.v)_
+_File location: [channels/01_define_channels/01_unbuffered_channel.v](channels/01_define_channels/01_unbuffered_channel.v)_
 
 ### Lesson: Unbuffered Channel
 
@@ -9068,7 +9068,7 @@ fn main() {
 
 ### Define Buffered Channel (buffered_channel.v)
 
-_File location: [channels/01_define_channels/02_buffered_channel.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/01_define_channels/02_buffered_channel.v)_
+_File location: [channels/01_define_channels/02_buffered_channel.v](channels/01_define_channels/02_buffered_channel.v)_
 
 ### Lesson: Define Buffered Channel
 
@@ -9100,7 +9100,7 @@ fn main() {
 
 ### Push Buffered
 
-_File location: [channels/02_channel_operations/01_push_buffered.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/02_channel_operations/01_push_buffered.v)_
+_File location: [channels/02_channel_operations/01_push_buffered.v](channels/02_channel_operations/01_push_buffered.v)_
 
 ### Lesson: Push Buffered
 
@@ -9123,7 +9123,7 @@ fn main() {
 
 ### Push Unbuffered
 
-_File location: [channels/02_channel_operations/02_push_unbuffered.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/02_channel_operations/02_push_unbuffered.v)_
+_File location: [channels/02_channel_operations/02_push_unbuffered.v](channels/02_channel_operations/02_push_unbuffered.v)_
 
 ### Lesson: Push Unbuffered
 
@@ -9146,7 +9146,7 @@ fn main() {
 
 ### Pop
 
-_File location: [channels/02_channel_operations/03_pop.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/02_channel_operations/03_pop.v)_
+_File location: [channels/02_channel_operations/03_pop.v](channels/02_channel_operations/03_pop.v)_
 
 ### Lesson: Pop
 
@@ -9192,7 +9192,7 @@ fn main() {
 
 ### Channel Properties
 
-_File location: [channels/03_channel_properties/01_channel_properties.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/03_channel_properties/01_channel_properties.v)_
+_File location: [channels/03_channel_properties/01_channel_properties.v](channels/03_channel_properties/01_channel_properties.v)_
 
 ### Lesson: Channel Properties
 
@@ -9217,7 +9217,7 @@ fn main() {
 
 ### Try Push Unbuffered
 
-_File location: [channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v)_
+_File location: [channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v](channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v)_
 
 ### Lesson: Try Push Unbuffered
 
@@ -9241,7 +9241,7 @@ fn main() {
 
 ### Try Push Buffered
 
-_File location: [channels/04_channel_methods/01_try_push/02_try_push_buffered.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/01_try_push/02_try_push_buffered.v)_
+_File location: [channels/04_channel_methods/01_try_push/02_try_push_buffered.v](channels/04_channel_methods/01_try_push/02_try_push_buffered.v)_
 
 ### Lesson: Try Push Buffered
 
@@ -9272,7 +9272,7 @@ fn main() {
 
 ### Try Pop
 
-_File location: [channels/04_channel_methods/02_try_pop/01_try_pop.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/02_try_pop/01_try_pop.v)_
+_File location: [channels/04_channel_methods/02_try_pop/01_try_pop.v](channels/04_channel_methods/02_try_pop/01_try_pop.v)_
 
 ### Lesson: Try Pop
 
@@ -9299,7 +9299,7 @@ fn main() {
 
 ### Close
 
-_File location: [channels/04_channel_methods/03_close/01_close/01_close.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/03_close/01_close/01_close.v)_
+_File location: [channels/04_channel_methods/03_close/01_close/01_close.v](channels/04_channel_methods/03_close/01_close/01_close.v)_
 
 ### Lesson: Close
 
@@ -9336,7 +9336,7 @@ fn main() {
 
 ### Defer Close
 
-_File location: [channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v)_
+_File location: [channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v](channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v)_
 
 ### Lesson: Defer Close
 
@@ -9375,7 +9375,7 @@ fn main() {
 
 ### Blocking Channels
 
-_File location: [channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v)_
+_File location: [channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v](channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v)_
 
 ### Lesson: Blocking Channels
 
@@ -9405,7 +9405,7 @@ fn main() {
 
 ### Dealing Before
 
-_File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v)_
+_File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v](channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v)_
 
 ### Lesson: Dealing Before
 
@@ -9438,7 +9438,7 @@ fn main() {
 
 ### Dealing After
 
-_File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v)_
+_File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v](channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v)_
 
 ### Lesson: Dealing After
 
@@ -9472,7 +9472,7 @@ fn main() {
 
 ### Unbuffered Sync Before (sync_before.v)
 
-_File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
+_File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v](channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
 
 ### Lesson: Unbuffered Sync Before
 
@@ -9515,7 +9515,7 @@ fn main() {
 
 ### Unbuffered Sync After (sync_after.v)
 
-_File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
+_File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v](channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
 
 ### Lesson: Unbuffered Sync After
 
@@ -9560,7 +9560,7 @@ fn main() {
 
 ### Understanding Buffered Channel (buffered_channel.v)
 
-_File location: [channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v)_
+_File location: [channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v](channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v)_
 
 ### Lesson: Understanding Buffered Channel
 
@@ -9590,7 +9590,7 @@ fn main() {
 
 ### Coroutines Communication
 
-_File location: [channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v)_
+_File location: [channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v](channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v)_
 
 ### Lesson: Coroutines Communication
 
@@ -9632,7 +9632,7 @@ fn main() {
 
 ### Buffered Sync Before (sync_before.v)
 
-_File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
+_File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v](channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
 
 ### Lesson: Buffered Sync Before
 
@@ -9676,7 +9676,7 @@ fn main() {
 
 ### Buffered Sync After (sync_after.v)
 
-_File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
+_File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v](channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
 
 ### Lesson: Buffered Sync After
 
@@ -9722,7 +9722,7 @@ fn main() {
 
 ### Channel Select Before
 
-_File location: [channels/07_channel_select/01_before/01_channel_select_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/07_channel_select/01_before/01_channel_select_before.v)_
+_File location: [channels/07_channel_select/01_before/01_channel_select_before.v](channels/07_channel_select/01_before/01_channel_select_before.v)_
 
 ### Lesson: Channel Select Before
 
@@ -9774,7 +9774,7 @@ fn main() {
 
 ### Channel Select
 
-_File location: [channels/07_channel_select/02_after/01_channel_select.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/07_channel_select/02_after/01_channel_select.v)_
+_File location: [channels/07_channel_select/02_after/01_channel_select.v](channels/07_channel_select/02_after/01_channel_select.v)_
 
 ### Lesson: Channel Select
 
@@ -9866,7 +9866,7 @@ V's `select` statement monitors multiple channel operations simultaneously:
 
 ### Stopwatch Demo
 
-_File location: [concurrency/01_time_module_overview/stopwatch_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/01_time_module_overview/stopwatch_demo.v)_
+_File location: [concurrency/01_time_module_overview/stopwatch_demo.v](concurrency/01_time_module_overview/stopwatch_demo.v)_
 
 ### Lesson: Stopwatch Demo
 
@@ -9896,7 +9896,7 @@ fn main() {
 
 ### Spawn Void Function
 
-_File location: [concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v)_
+_File location: [concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v](concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v)_
 
 ### Lesson: Spawn Void Function
 
@@ -9924,7 +9924,7 @@ fn main() {
 
 ### Waiting On Concurrent Thread
 
-_File location: [concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v)_
+_File location: [concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v](concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v)_
 
 ### Lesson: Waiting On Concurrent Thread
 
@@ -9953,7 +9953,7 @@ fn main() {
 
 ### Running Multiple Tasks In Sequence
 
-_File location: [concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v)_
+_File location: [concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v](concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v)_
 
 ### Lesson: Running Multiple Tasks In Sequence
 
@@ -10000,7 +10000,7 @@ fn main() {
 
 ### Spawning Multiple Tasks Concurrently
 
-_File location: [concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v)_
+_File location: [concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v](concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v)_
 
 ### Lesson: Spawning Multiple Tasks Concurrently
 
@@ -10049,7 +10049,7 @@ fn main() {
 
 ### Functions With Return Values
 
-_File location: [concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v)_
+_File location: [concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v](concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v)_
 
 ### Lesson: Functions With Return Values
 
@@ -10106,7 +10106,7 @@ fn main() {
 
 ### Spawn Anonymous Funcs Without Input Args
 
-_File location: [concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v)_
+_File location: [concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v](concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v)_
 
 ### Lesson: Spawn Anonymous Funcs Without Input Args
 
@@ -10134,7 +10134,7 @@ fn main() {
 
 ### Spawn Anonymous Funcs With Input Args
 
-_File location: [concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v)_
+_File location: [concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v](concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v)_
 
 ### Lesson: Spawn Anonymous Funcs With Input Args
 
@@ -10166,7 +10166,7 @@ fn main() {
 
 ### Sharing Data Main And Concurrent Tasks
 
-_File location: [concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v)_
+_File location: [concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v](concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v)_
 
 ### Lesson: Sharing Data Main And Concurrent Tasks
 
@@ -10330,7 +10330,7 @@ Most applications need to work with databases or API payloads. This chapter teac
 
 ### Notes API Case Study - Main (main.v)
 
-_File location: [notes_api/notes_api/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/notes_api/notes_api/main.v)_
+_File location: [notes_api/notes_api/main.v](notes_api/notes_api/main.v)_
 
 ### Lesson: Notes API Case Study - Main
 
@@ -10375,7 +10375,7 @@ fn main() {
 
 ### Note
 
-_File location: [notes_api/notes_api/note.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/notes_api/notes_api/note.v)_
+_File location: [notes_api/notes_api/note.v](notes_api/notes_api/note.v)_
 
 ### Lesson: Note
 
@@ -10544,7 +10544,7 @@ fn (mut app App) delete(mut ctx Context, id int) veb.Result {
 
 ### Util
 
-_File location: [notes_api/notes_api/util.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/notes_api/notes_api/util.v)_
+_File location: [notes_api/notes_api/util.v](notes_api/notes_api/util.v)_
 
 ### Lesson: Util
 
@@ -10583,7 +10583,7 @@ fn error_response(status int, message string) string {
 
 ### Decode
 
-_File location: [json_and_orm/01_json/01_decode/decode.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/01_decode/decode.v)_
+_File location: [json_and_orm/01_json/01_decode/decode.v](json_and_orm/01_json/01_decode/decode.v)_
 
 ### Lesson: Decode
 
@@ -10617,7 +10617,7 @@ fn main() {
 
 ### Encode
 
-_File location: [json_and_orm/01_json/02_encode/encode.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/02_encode/encode.v)_
+_File location: [json_and_orm/01_json/02_encode/encode.v](json_and_orm/01_json/02_encode/encode.v)_
 
 ### Lesson: Encode
 
@@ -10687,7 +10687,7 @@ V provides structural attributes to customize JSON mapping. These are written in
 
 ### Json To From File
 
-_File location: [json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v)_
+_File location: [json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v](json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v)_
 
 This example demonstrates how to encode an object to JSON, write it to a file, read it back, and decode it into a V struct.
 
@@ -10750,7 +10750,7 @@ fn main() {
 
 ### Json Array Of Objects
 
-_File location: [json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v)_
+_File location: [json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v](json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v)_
 
 This example demonstrates how to serialize and deserialize an array of objects (structs) to and from JSON, and how to write/read them using the filesystem.
 
@@ -10823,7 +10823,7 @@ fn main() {
 
 ### Json Map To From File
 
-_File location: [json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v)_
+_File location: [json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v](json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v)_
 
 This example demonstrates how to serialize a map structure (`map[string]int`) into a JSON string, write it to a file, read it back, and deserialize it back into a map in V.
 
@@ -10883,7 +10883,7 @@ fn main() {
 
 ### Json Array To From File
 
-_File location: [json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v)_
+_File location: [json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v](json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v)_
 
 This example demonstrates two different methods for reading and writing arrays to/from files in V:
 
@@ -10958,7 +10958,7 @@ fn main() {
 
 ### Orm Demo
 
-_File location: [json_and_orm/02_orm/orm_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/02_orm/orm_demo.v)_
+_File location: [json_and_orm/02_orm/orm_demo.v](json_and_orm/02_orm/orm_demo.v)_
 
 ### Lesson: Orm Demo
 
@@ -11120,7 +11120,7 @@ You configure your database schema by annotating V structs with attributes:
 
 ### Sqlite
 
-_File location: [sqlite/sqlite.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/sqlite/sqlite.v)_
+_File location: [sqlite/sqlite.v](sqlite/sqlite.v)_
 
 ### Lesson: Sqlite
 
@@ -11204,7 +11204,7 @@ pub fn delete_note(mut db DB, id int) ! {
 
 ### SQLite CRUD Helper
 
-_File location: [sqlite/sqlite_crud.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/sqlite/sqlite_crud.v)_
+_File location: [sqlite/sqlite_crud.v](sqlite/sqlite_crud.v)_
 
 ### Lesson: SQLite CRUD Helper
 
@@ -11321,7 +11321,7 @@ fn main() {
 
 ## Sqlite Raw Crud
 
-_File location: [json_and_orm/03_sqlite_raw/sqlite_raw_crud.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/03_sqlite_raw/sqlite_raw_crud.v)_
+_File location: [json_and_orm/03_sqlite_raw/sqlite_raw_crud.v](json_and_orm/03_sqlite_raw/sqlite_raw_crud.v)_
 
 This example demonstrates how to connect to a SQLite database and execute raw SQL queries securely using parameterized queries (`db.exec_param_many`) to prevent SQL Injection attacks.
 
@@ -11555,7 +11555,7 @@ This chapter highlights the power of V's standard library and advanced integrati
 
 ### Inline Assembly
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/06_inline_assembly/inline_assembly.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/06_inline_assembly/inline_assembly.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/06_inline_assembly/inline_assembly.v](language_updates_and_stdlib/01_language_basics_updates/06_inline_assembly/inline_assembly.v)_
 
 V supports inline assembly block definitions using the `asm` keyword, allowing developers to execute architecture-specific instructions directly from V code. It integrates directly with V variables by mapping them to inputs and outputs using register constraints.
 
@@ -11640,7 +11640,7 @@ fn main() {
 
 ### C Interop
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/08_c_interop/c_interop.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/08_c_interop/c_interop.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/08_c_interop/c_interop.v](language_updates_and_stdlib/01_language_basics_updates/08_c_interop/c_interop.v)_
 
 ### Lesson: C Interop
 
@@ -11714,7 +11714,7 @@ fn main() {
 
 ### Net Urllib
 
-_File location: [language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v](language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v)_
 
 This example demonstrates parsing URLs into components, escaping and unescaping query parameters, and encoding query parameters using the `net.urllib` module.
 
@@ -11775,7 +11775,7 @@ fn main() {
 
 ### Net Websocket
 
-_File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v](language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v)_
 
 This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly using the `net.websocket` module.
 
@@ -11868,7 +11868,7 @@ fn main() {
 
 ### Websocket Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v](language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v)_
 
 This example demonstrates a persistent WebSocket connection with structured JSON message routing, validation of payload size, and connection closure on limit violation.
 
@@ -12064,7 +12064,7 @@ fn main() {
 
 ### Net Html
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v](language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v)_
 
 This example demonstrates parsing HTML strings, querying tags by class name and attribute values, and extracting node text and properties using the `net.html` module.
 
@@ -12142,7 +12142,7 @@ fn main() {
 
 ### Net Jsonrpc
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v](language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v)_
 
 This example demonstrates implementing JSON-RPC 2.0 servers and clients using V's `net.jsonrpc` module, utilizing a Unix domain socket connection as the transport layer.
 
@@ -12297,7 +12297,7 @@ fn main() {
 
 ### Net Jsonrpc Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_persistent/net_jsonrpc_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_persistent/net_jsonrpc_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_persistent/net_jsonrpc_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_persistent/net_jsonrpc_persistent.v)_
 
 This example demonstrates how to build a persistent JSON-RPC 2.0 connection. The server calls `server.start()` to continuously process incoming requests, and the client sends multiple method invocations sequentially over a single socket connection.
 
@@ -12444,7 +12444,7 @@ fn main() {
 
 ### Net Ssl
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v](language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v)_
 
 This example demonstrates setting up a secure SSL/TLS server and client connection using the standard library's `net.mbedtls` module, including programmatically generating a self-signed key/cert pair using OpenSSL and cleaning them up on exit.
 
@@ -12596,7 +12596,7 @@ fn main() {
 
 ### Ssl Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v)_
 
 This example demonstrates keeping an SSL/TLS connection open for multiple rounds of secure back-and-forth ping-pong communication over `net.mbedtls`.
 
@@ -12790,7 +12790,7 @@ fn main() {
 
 ### Net Tcp
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v](language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v)_
 
 This example demonstrates how to create a simple TCP server and client in V. The server listens on a local port, accepts an incoming client connection, receives data, sends a response, and closes the connection.
 
@@ -12899,7 +12899,7 @@ fn main() {
 
 ### Tcp Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v)_
 
 This example demonstrates a persistent length-prefixed TCP connection, processing payloads in chunks, and rejecting messages exceeding safety size boundaries.
 
@@ -13145,7 +13145,7 @@ Production socket servers must defend against malicious input and network timeou
 
 ### Net Udp
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v](language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v)_
 
 This example demonstrates sending and receiving connectionless UDP packets. The server binds to a local port and receives a message along with the sender's address, and responds to it using `write_to`.
 
@@ -13239,7 +13239,7 @@ fn main() {
 
 ### Udp Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v)_
 
 This example demonstrates application-level packet fragmentation, reassembly, and fragment count limit enforcement over UDP.
 
@@ -13646,7 +13646,7 @@ Because UDP does not guarantee packet delivery order, packets can arrive out of 
 
 ### Net Unix
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v](language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v)_
 
 This example demonstrates Unix domain socket client-server communication using the `net.unix` module.
 
@@ -13767,7 +13767,7 @@ fn main() {
 
 ### Unix Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v)_
 
 This example demonstrates a persistent length-prefixed Unix domain socket connection, processing payloads in chunks, and rejecting messages exceeding safety size boundaries.
 
@@ -14064,7 +14064,7 @@ This section is grouped into focused subtopics so you can jump quickly to the ar
 
 ### Options And Results
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v](language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v)_
 
 ### Lesson: Options And Results
 
@@ -14129,7 +14129,7 @@ fn main() {
 
 ### Generics
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v](language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v)_
 
 ### Lesson: Generics
 
@@ -14192,7 +14192,7 @@ fn main() {
 
 ### Interfaces
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v](language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v)_
 
 ### Lesson: Interfaces
 
@@ -14257,7 +14257,7 @@ fn main() {
 
 ### Sum Types
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v](language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v)_
 
 ### Lesson: Sum Types
 
@@ -14340,7 +14340,7 @@ fn main() {
 
 ### Attributes
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v](language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v)_
 
 ### Lesson: Attributes
 
@@ -14429,7 +14429,7 @@ fn main() {
 
 ### Compile-Time Directives & Compile-Time Code
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v](language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v)_
 
 ### Lesson: Compile-Time Directives & Compile-Time Code
 
@@ -14603,7 +14603,7 @@ fn main() {
 
 ### Strings Builder
 
-_File location: [language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v](language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v)_
 
 ### Lesson: Strings Builder
 
@@ -14652,7 +14652,7 @@ fn main() {
 
 ### Os Advanced Io
 
-_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v](language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v)_
 
 This example demonstrates advanced Unix file behaviors such as raw struct binary serialization, cursor seeking (`seek`/`tell`), file size truncation, and recursive directory tree traversal.
 
@@ -14782,7 +14782,7 @@ fn main() {
 
 ### Os Operations
 
-_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v](language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v)_
 
 ### Lesson: Os Operations
 
@@ -15088,7 +15088,7 @@ fn main() {
 
 ### Os Process Pipe
 
-_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v](language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v)_
 
 This example demonstrates managing subprocesses asynchronously using `os.Process`, exchanging data via stdin/stdout redirection, passing custom environments, sending POSIX signals (`SIGSTOP`, `SIGCONT`, `SIGTERM`), creating low-level descriptor pipes, and capturing stdout/stderr dynamically via `IOCapture`.
 
@@ -15206,7 +15206,7 @@ fn main() {
 
 ### Os System Info
 
-_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v](language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v)_
 
 This example demonstrates calling system diagnostics (`os.uname`), retrieving current host/user identities, assessing disk capacity and usage metrics (`os.disk_usage`), and parsing detailed file metadata using POSIX stat/lstat mappings (`os.Stat` and `os.FileMode`).
 
@@ -15331,7 +15331,7 @@ fn main() {
 
 ### Time And Stopwatch
 
-_File location: [language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v](language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v)_
 
 ### Lesson: Time And Stopwatch
 
@@ -15535,7 +15535,7 @@ fn main() {
 
 ### Http Client
 
-_File location: [language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v](language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v)_
 
 ### Lesson: Http Client
 
@@ -15580,7 +15580,7 @@ fn main() {
 
 ### Regex Matching
 
-_File location: [language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v](language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v)_
 
 ### Lesson: Regex Matching
 
@@ -15663,7 +15663,7 @@ fn main() {
 
 ### Command Line Flags
 
-_File location: [language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v](language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v)_
 
 ### Lesson: Command Line Flags
 
@@ -15721,7 +15721,7 @@ fn main() {
 
 ### Datatypes Collections
 
-_File location: [language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v](language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v)_
 
 ### Lesson: Datatypes Collections
 
@@ -16082,7 +16082,7 @@ fn main() {
 
 ### Gg Graphics
 
-_File location: [language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v](language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v)_
 
 ### Lesson: Gg Graphics
 
@@ -16369,7 +16369,7 @@ fn on_event(e &gg.Event, data voidptr) {
 
 ### Command Line Arguments
 
-_File location: [language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v](language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v)_
 
 This example demonstrates how to directly access and parse command-line arguments using `os.args` to build simple command-line applications.
 
@@ -16430,7 +16430,7 @@ fn main() {
 
 ### Math And Rand
 
-_File location: [language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v](language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v)_
 
 ### Lesson: Math And Rand
 
@@ -16513,7 +16513,7 @@ fn main() {
 
 ### Crypto Asymmetric
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v)_
 
 ### Lesson: Crypto Asymmetric
 
@@ -16609,7 +16609,7 @@ fn main() {
 
 ### Crypto Entropy
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v)_
 
 ### Lesson: Crypto Entropy
 
@@ -16665,7 +16665,7 @@ fn main() {
 
 ### Crypto Hash
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v)_
 
 For a detailed demonstration of every cryptographic module, the standard library examples are structured into subdirectories under `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/`.
 
@@ -16758,7 +16758,7 @@ fn main() {
 
 ### Crypto Kdf
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v)_
 
 ### Lesson: Crypto Kdf
 
@@ -16820,7 +16820,7 @@ fn main() {
 
 ### Crypto Mac
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v)_
 
 ### Lesson: Crypto Mac
 
@@ -16866,7 +16866,7 @@ fn main() {
 
 ### Crypto Symmetric
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v)_
 
 ### Lesson: Crypto Symmetric
 
@@ -16960,7 +16960,7 @@ fn main() {
 
 ### Log And Crypto
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v)_
 
 ### Lesson: Log And Crypto
 
@@ -17009,7 +17009,7 @@ fn main() {
 
 ### Sync Concurrency
 
-_File location: [language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v](language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v)_
 
 ### Lesson: Sync Concurrency
 
@@ -17061,7 +17061,7 @@ fn main() {
 
 ### Encoding Formats
 
-_File location: [language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v](language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v)_
 
 ### Lesson: Encoding Formats
 
@@ -17115,7 +17115,7 @@ fn main() {
 
 ### Arrays Utility
 
-_File location: [language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v](language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v)_
 
 ### Lesson: Arrays Utility
 
@@ -17325,7 +17325,7 @@ This section is intentionally broader than a quick smoke test; it mirrors the ru
 
 ### Toml
 
-_File location: [language_updates_and_stdlib/02_standard_library/15_toml/toml.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/15_toml/toml.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/15_toml/toml.v](language_updates_and_stdlib/02_standard_library/15_toml/toml.v)_
 
 This example demonstrates how to parse and query TOML configuration files using V's built-in `toml` module.
 
@@ -17397,7 +17397,7 @@ fn main() {
 
 ### Strconv
 
-_File location: [language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v](language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v)_
 
 This example demonstrates how to convert strings to numbers, parse numbers in different bases and bit-sizes, and convert numbers back to base string representations using the `strconv` module.
 
@@ -17456,7 +17456,7 @@ fn main() {
 
 ### Term
 
-_File location: [language_updates_and_stdlib/02_standard_library/17_term/term.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/17_term/term.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/17_term/term.v](language_updates_and_stdlib/02_standard_library/17_term/term.v)_
 
 ### Lesson: Term
 
@@ -17571,7 +17571,7 @@ fn main() {
 
 ### Benchmark
 
-_File location: [language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v](language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v)_
 
 This example demonstrates timing code execution chunks and step-by-step progress benchmarking using the `benchmark` module.
 
@@ -17622,7 +17622,7 @@ fn main() {
 
 ### Clipboard
 
-_File location: [language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v](language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v)_
 
 This example demonstrates writing to and reading from the system clipboard on macOS using the `clipboard` module, including a backup and restore mechanism.
 
@@ -17673,7 +17673,7 @@ fn main() {
 
 ### Semver
 
-_File location: [language_updates_and_stdlib/02_standard_library/20_semver/semver.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/20_semver/semver.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/20_semver/semver.v](language_updates_and_stdlib/02_standard_library/20_semver/semver.v)_
 
 This example demonstrates parsing semantic versions and checking constraint satisfaction using the `semver` module.
 
@@ -17731,7 +17731,7 @@ fn main() {
 
 ### Maps Standard Library Module (maps.v)
 
-_File location: [language_updates_and_stdlib/02_standard_library/21_maps/maps.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/21_maps/maps.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/21_maps/maps.v](language_updates_and_stdlib/02_standard_library/21_maps/maps.v)_
 
 This example demonstrates the high-level helpers in V's maps module, including filtering, transforming, inverting, merging, and converting between maps and arrays. The repository version is a verified walkthrough that exercises the full set of documented helpers.
 
@@ -17798,7 +17798,7 @@ fn main() {
 
 ### Context
 
-_File location: [language_updates_and_stdlib/02_standard_library/22_context/context.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/22_context/context.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/22_context/context.v](language_updates_and_stdlib/02_standard_library/22_context/context.v)_
 
 This example demonstrates propagating request-scoped values, cancellation signals, and timeouts across thread boundaries using the `context` module.
 
@@ -17866,7 +17866,7 @@ fn main() {
 
 ### Archive Tar
 
-_File location: [language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v](language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v)_
 
 This example demonstrates reading and inspecting the contents of `.tar.gz` files using the `archive.tar` module.
 
@@ -17941,7 +17941,7 @@ fn main() {
 
 ### Compress Deflate
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v](language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v)_
 
 This example demonstrates standard Deflate byte stream compression and decompression using the `compress.deflate` module.
 
@@ -17982,7 +17982,7 @@ fn main() {
 
 ### Compress Gzip
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v](language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v)_
 
 This example demonstrates compressing and decompressing binary or text data using the `compress.gzip` module.
 
@@ -18023,7 +18023,7 @@ fn main() {
 
 ### Compress Szip
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v](language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v)_
 
 This example demonstrates packaging multiple files into zip archives recursively, inspecting zip contents/meta-data (size, CRC32), and extracting zip files to folders using the `compress.szip` module.
 
@@ -18130,7 +18130,7 @@ fn main() {
 
 ### Compress Zlib
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v](language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v)_
 
 This example demonstrates standard Zlib byte stream compression and decompression using the `compress.zlib` module.
 
@@ -18171,7 +18171,7 @@ fn main() {
 
 ### Compress Zstd
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v](language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v)_
 
 This example demonstrates Zstd compression and decompression using the fast Facebook Zstandard algorithm in the `compress.zstd` module.
 
@@ -18216,7 +18216,7 @@ fn main() {
 
 ### Io Fs
 
-_File location: [language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v](language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v)_
 
 This example demonstrates how `os.File` implements `io.Reader` and `io.Writer` interfaces, allowing standard file operations to utilize stream-oriented utilities like `io.cp` and `io.BufferedReader`.
 
@@ -18310,7 +18310,7 @@ fn main() {
 
 ### Io
 
-_File location: [language_updates_and_stdlib/02_standard_library/28_io/io.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/28_io/io.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/28_io/io.v](language_updates_and_stdlib/02_standard_library/28_io/io.v)_
 
 This example demonstrates implementing custom Reader and Writer structs and using the `io.cp` utility to copy data between streams using the `io` module.
 
@@ -18377,7 +18377,7 @@ fn main() {
 
 ### Io Util
 
-_File location: [language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v](language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v)_
 
 This example demonstrates using the `io.util` module for creating, writing to, reading from, and cleaning up temporary files and directories.
 
@@ -18462,7 +18462,7 @@ fn main() {
 
 ### Hash
 
-_File location: [language_updates_and_stdlib/02_standard_library/29_hash/hash.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/29_hash/hash.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/29_hash/hash.v](language_updates_and_stdlib/02_standard_library/29_hash/hash.v)_
 
 This example demonstrates calculating FNV-1a (32-bit and 64-bit) hashes and CRC32 checksums using the `hash` module.
 
@@ -18494,7 +18494,7 @@ fn main() {
 
 ### Bitfield
 
-_File location: [language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v](language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v)_
 
 This example demonstrates creating bitfields, getting/setting individual bits, performing logical operations (AND, OR, XOR, NOT), and converting to string representation using the `bitfield` module.
 
@@ -18540,7 +18540,7 @@ fn main() {
 
 ### Cli
 
-_File location: [language_updates_and_stdlib/02_standard_library/31_cli/cli.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/31_cli/cli.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/31_cli/cli.v](language_updates_and_stdlib/02_standard_library/31_cli/cli.v)_
 
 This example demonstrates building structured CLI applications with commands, subcommands, and option flags in POSIX mode using the `cli` module.
 
@@ -18604,7 +18604,7 @@ fn main() {
 
 ### Veb
 
-_File location: [language_updates_and_stdlib/02_standard_library/32_veb/veb.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/32_veb/veb.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/32_veb/veb.v](language_updates_and_stdlib/02_standard_library/32_veb/veb.v)_
 
 This example demonstrates building a web application with routes, starting it in a background thread, and testing requests using the modern `veb` web framework.
 
@@ -18665,7 +18665,7 @@ fn main() {
 
 ### Readline
 
-_File location: [language_updates_and_stdlib/02_standard_library/33_readline/readline.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/33_readline/readline.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/33_readline/readline.v](language_updates_and_stdlib/02_standard_library/33_readline/readline.v)_
 
 This example demonstrates prompting users for text input from terminal lines in a structured manner using the `readline` module.
 
@@ -18693,7 +18693,7 @@ fn main() {
 
 ### Runtime
 
-_File location: [language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v](language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v)_
 
 This example demonstrates inspecting hardware specifications, processor cores, system endianness, and memory usage statistics using the `runtime` module.
 
@@ -18740,7 +18740,7 @@ fn main() {
 
 ### Strings Lorem
 
-_File location: [language_updates_and_stdlib/02_standard_library/36_strings_lorem/strings_lorem.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/36_strings_lorem/strings_lorem.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/36_strings_lorem/strings_lorem.v](language_updates_and_stdlib/02_standard_library/36_strings_lorem/strings_lorem.v)_
 
 V's standard library `strings.lorem` module provides a pseudo-random text generator based on a Markov chain built from embedded corpora. It produces structured text in the form of paragraphs and sentences, with options to control layouts, select specific corpora, and configure deterministic output.
 
@@ -18912,7 +18912,7 @@ node main.js
 
 #### Programmatic WASM Builder
 
-_File location: [language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v](language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v)_
 
 V provides a built-in `wasm` module in its standard library that allows developers to programmatically build WebAssembly binary (`.wasm`) files directly using instruction-level builder patterns. This is extremely useful for compilers, runtime engines, or dynamic code generation targeting the browser and other WebAssembly runtimes.
 
@@ -19032,7 +19032,7 @@ fn main() {
 
 ### sizeof and \_\_offsetof
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v](language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v)_
 
 ### Lesson: sizeof and \_\_offsetof
 
@@ -19087,7 +19087,7 @@ fn main() {
 
 ### Limited Operator Overloading
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/10_operator_overloading/operator_overloading.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/10_operator_overloading/operator_overloading.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/10_operator_overloading/operator_overloading.v](language_updates_and_stdlib/01_language_basics_updates/10_operator_overloading/operator_overloading.v)_
 
 ### Lesson: Limited Operator Overloading
 
@@ -19153,7 +19153,7 @@ fn main() {
 
 ### Atomics
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/11_atomics/atomics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/11_atomics/atomics.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/11_atomics/atomics.v](language_updates_and_stdlib/01_language_basics_updates/11_atomics/atomics.v)_
 
 ### Lesson: Atomics
 
@@ -19212,7 +19212,7 @@ fn main() {
 
 ### Static Variables
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/12_static_variables/static_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/12_static_variables/static_variables.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/12_static_variables/static_variables.v](language_updates_and_stdlib/01_language_basics_updates/12_static_variables/static_variables.v)_
 
 ### Lesson: Static Variables
 
@@ -19253,7 +19253,7 @@ fn main() {
 
 ### Hot Code Reloading
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/13_hot_code_reloading/hot_code_reloading.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/13_hot_code_reloading/hot_code_reloading.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/13_hot_code_reloading/hot_code_reloading.v](language_updates_and_stdlib/01_language_basics_updates/13_hot_code_reloading/hot_code_reloading.v)_
 
 ### Lesson: Hot Code Reloading
 
@@ -19293,7 +19293,7 @@ fn main() {
 
 ### Compile-Time Reflection
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/14_compile_time_reflection/compile_time_reflection.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/14_compile_time_reflection/compile_time_reflection.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/14_compile_time_reflection/compile_time_reflection.v](language_updates_and_stdlib/01_language_basics_updates/14_compile_time_reflection/compile_time_reflection.v)_
 
 ### Lesson: Compile-Time Reflection
 
@@ -19354,7 +19354,7 @@ fn main() {
 
 ### Compile-Time Pseudo Variables
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/15_compile_time_pseudo_variables/compile_time_pseudo_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/15_compile_time_pseudo_variables/compile_time_pseudo_variables.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/15_compile_time_pseudo_variables/compile_time_pseudo_variables.v](language_updates_and_stdlib/01_language_basics_updates/15_compile_time_pseudo_variables/compile_time_pseudo_variables.v)_
 
 ### Lesson: Compile-Time Pseudo Variables
 
@@ -19488,7 +19488,7 @@ When writing generic code, V provides specialized compile-time type matching ide
 
 ### References & Pointers
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/16_references/references.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/16_references/references.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/16_references/references.v](language_updates_and_stdlib/01_language_basics_updates/16_references/references.v)_
 
 ### Lesson: References & Pointers
 
@@ -19612,7 +19612,7 @@ fn main() {
 
 ### Dumping Expressions at Runtime
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/17_dumping_expressions/dumping_expressions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/17_dumping_expressions/dumping_expressions.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/17_dumping_expressions/dumping_expressions.v](language_updates_and_stdlib/01_language_basics_updates/17_dumping_expressions/dumping_expressions.v)_
 
 ### Lesson: Dumping Expressions at Runtime
 
@@ -19682,7 +19682,7 @@ This chapter provides a collection of production-ready, fully commented boilerpl
 
 ### CLI Command-Line Application Boilerplate
 
-_File location: [boilerplate_templates/01_cli_app/cli_app.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/01_cli_app/cli_app.v)_
+_File location: [boilerplate_templates/01_cli_app/cli_app.v](boilerplate_templates/01_cli_app/cli_app.v)_
 
 ### Lesson: CLI Command-Line Application Boilerplate
 
@@ -19785,7 +19785,7 @@ fn run_app(cfg Config, args []string) {
 
 ### REST API Server Boilerplate
 
-_File location: [boilerplate_templates/02_rest_api/rest_api.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/02_rest_api/rest_api.v)_
+_File location: [boilerplate_templates/02_rest_api/rest_api.v](boilerplate_templates/02_rest_api/rest_api.v)_
 
 ### Lesson: REST API Server Boilerplate
 
@@ -19907,7 +19907,7 @@ fn main() {
 
 ### Worker Pool Concurrency Boilerplate
 
-_File location: [boilerplate_templates/03_worker_pool/worker_pool.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/03_worker_pool/worker_pool.v)_
+_File location: [boilerplate_templates/03_worker_pool/worker_pool.v](boilerplate_templates/03_worker_pool/worker_pool.v)_
 
 ### Lesson: Worker Pool Concurrency Boilerplate
 
@@ -20029,7 +20029,7 @@ fn main() {
 
 ### OS and File Utilities Boilerplate
 
-_File location: [boilerplate_templates/04_file_utilities/file_utilities.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/04_file_utilities/file_utilities.v)_
+_File location: [boilerplate_templates/04_file_utilities/file_utilities.v](boilerplate_templates/04_file_utilities/file_utilities.v)_
 
 ### Lesson: OS and File Utilities Boilerplate
 
@@ -20116,7 +20116,7 @@ fn main() {
 
 ### String Utilities Boilerplate
 
-_File location: [boilerplate_templates/05_string_utilities/string_utilities.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/05_string_utilities/string_utilities.v)_
+_File location: [boilerplate_templates/05_string_utilities/string_utilities.v](boilerplate_templates/05_string_utilities/string_utilities.v)_
 
 ### Lesson: String Utilities Boilerplate
 
@@ -20245,7 +20245,7 @@ fn main() {
 
 ### Math and Statistics Boilerplate
 
-_File location: [boilerplate_templates/06_math_and_stats/math_and_stats.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/06_math_and_stats/math_and_stats.v)_
+_File location: [boilerplate_templates/06_math_and_stats/math_and_stats.v](boilerplate_templates/06_math_and_stats/math_and_stats.v)_
 
 ### Lesson: Math and Statistics Boilerplate
 
@@ -20466,7 +20466,7 @@ fn main() {
 
 ### Array Utilities Boilerplate
 
-_File location: [boilerplate_templates/07_array_utilities/array_utilities.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/07_array_utilities/array_utilities.v)_
+_File location: [boilerplate_templates/07_array_utilities/array_utilities.v](boilerplate_templates/07_array_utilities/array_utilities.v)_
 
 ### Lesson: Array Utilities Boilerplate
 
@@ -20660,7 +20660,7 @@ fn main() {
 
 ### Configuration Management Boilerplate
 
-_File location: [boilerplate_templates/08_config_management/config_management.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/08_config_management/config_management.v)_
+_File location: [boilerplate_templates/08_config_management/config_management.v](boilerplate_templates/08_config_management/config_management.v)_
 
 ### Lesson: Configuration Management Boilerplate
 
@@ -20773,7 +20773,7 @@ fn main() {
 
 ### JSON File Store Boilerplate
 
-_File location: [boilerplate_templates/09_json_file_store/json_file_store.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/09_json_file_store/json_file_store.v)_
+_File location: [boilerplate_templates/09_json_file_store/json_file_store.v](boilerplate_templates/09_json_file_store/json_file_store.v)_
 
 ### Lesson: JSON File Store Boilerplate
 
@@ -20890,7 +20890,7 @@ fn main() {
 
 ### Retry and Backoff Boilerplate
 
-_File location: [boilerplate_templates/10_retry_and_backoff/retry_and_backoff.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/10_retry_and_backoff/retry_and_backoff.v)_
+_File location: [boilerplate_templates/10_retry_and_backoff/retry_and_backoff.v](boilerplate_templates/10_retry_and_backoff/retry_and_backoff.v)_
 
 ### Lesson: Retry and Backoff Boilerplate
 
@@ -21001,7 +21001,7 @@ fn main() {
 
 ### HTTP Client Boilerplate
 
-_File location: [boilerplate_templates/11_http_client/http_client.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/11_http_client/http_client.v)_
+_File location: [boilerplate_templates/11_http_client/http_client.v](boilerplate_templates/11_http_client/http_client.v)_
 
 ### Lesson: HTTP Client Boilerplate
 
@@ -21091,7 +21091,7 @@ fn main() {
 
 ### CSV Processor Boilerplate
 
-_File location: [boilerplate_templates/12_csv_processor/csv_processor.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/12_csv_processor/csv_processor.v)_
+_File location: [boilerplate_templates/12_csv_processor/csv_processor.v](boilerplate_templates/12_csv_processor/csv_processor.v)_
 
 ### Lesson: CSV Processor Boilerplate
 
@@ -21190,7 +21190,7 @@ fn main() {
 
 ### macOS Native GUI Boilerplate
 
-_File location: [boilerplate_templates/13_simplegui/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/13_simplegui/main.v)_
+_File location: [boilerplate_templates/13_simplegui/main.v](boilerplate_templates/13_simplegui/main.v)_
 
 ### Lesson: macOS Native GUI Boilerplate
 
@@ -21226,7 +21226,7 @@ fn on_run_clicked(mut win &simplegui.SimpleWindow) {
 }
 ```
 
-The full project in this repository includes multiple demos and a reusable module implementation in [boilerplate_templates/13_simplegui/simplegui/simplegui.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/13_simplegui/simplegui/simplegui.v), making it an excellent example for learners who want to move from console programs into desktop interfaces.
+The full project in this repository includes multiple demos and a reusable module implementation in [boilerplate_templates/13_simplegui/simplegui/simplegui.v](boilerplate_templates/13_simplegui/simplegui/simplegui.v), making it an excellent example for learners who want to move from console programs into desktop interfaces.
 
 For the complete source, demo list, screenshots, and setup instructions, visit the original GitHub repository: https://github.com/codecaine-zz/vlang_simplegui/tree/master
 
@@ -21236,7 +21236,7 @@ To use the project end to end, open the folder at [boilerplate_templates/13_simp
 
 ### Logging Boilerplate
 
-_File location: [boilerplate_templates/14_logging/logging.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/boilerplate_templates/14_logging/logging.v)_
+_File location: [boilerplate_templates/14_logging/logging.v](boilerplate_templates/14_logging/logging.v)_
 
 ### Lesson: Logging Boilerplate
 

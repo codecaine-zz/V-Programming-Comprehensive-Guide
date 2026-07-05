@@ -21,6 +21,24 @@ function escapeHtml(text) {
         .replace(/'/g, '&#039;');
 }
 
+function getGitHubUrl(rawPath) {
+    const hasExtension = rawPath.includes('.');
+    const prefix = hasExtension ? 'blob' : 'tree';
+    
+    if (rawPath.startsWith('boilerplate_templates/13_simplegui')) {
+        let subPath = rawPath.substring('boilerplate_templates/13_simplegui'.length);
+        if (subPath.startsWith('/')) {
+            subPath = subPath.substring(1);
+        }
+        if (!subPath) {
+            return 'https://github.com/codecaine-zz/vlang_simplegui';
+        }
+        return `https://github.com/codecaine-zz/vlang_simplegui/${prefix}/master/${subPath}`;
+    }
+    
+    return `https://github.com/codecaine-zz/V-Programming-Comprehensive-Guide/${prefix}/master/${rawPath}`;
+}
+
 // Custom Markdown parser optimized for this specific guide
 function parseMarkdownToHtmlAndIndex(md) {
     const lines = md.split(/\r?\n/);
@@ -135,13 +153,33 @@ function parseMarkdownToHtmlAndIndex(md) {
         // Avoid backticks around link text
         let result = escapeHtml(text);
         
-        // Match Markdown links [text](url)
-        result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
-            const isExternal = url.startsWith('http://') || url.startsWith('https://');
-            const targetAttr = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
-            return `<a href="${url}"${targetAttr}>${linkText}</a>`;
+        // 1. Extract inline code blocks so we don't apply formatting inside them.
+        const codeBlocks = [];
+        result = result.replace(/`([^`]+)`/g, (match, code) => {
+            const placeholder = `CODEPLACEHOLDER${codeBlocks.length}XYZ`;
+            codeBlocks.push(code);
+            return placeholder;
         });
 
+        // 2. Extract Markdown links [text](url)
+        const links = [];
+        result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
+            const isExternal = url.startsWith('http://') || url.startsWith('https://');
+            const isAnchor = url.startsWith('#');
+            let href = url;
+            let targetAttr = '';
+            if (!isExternal && !isAnchor) {
+                href = getGitHubUrl(url);
+                targetAttr = ' target="_blank" rel="noopener noreferrer"';
+            } else if (isExternal) {
+                targetAttr = ' target="_blank" rel="noopener noreferrer"';
+            }
+            const placeholder = `LINKPLACEHOLDER${links.length}XYZ`;
+            links.push({ linkText, href, targetAttr });
+            return placeholder;
+        });
+
+        // 3. Apply standard formatting on plain text sections
         // Bold **text**
         result = result.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
         // Bold __text__
@@ -150,8 +188,17 @@ function parseMarkdownToHtmlAndIndex(md) {
         result = result.replace(/\*([^*]+)\*/g, '<em>$1</em>');
         // Italics _text_
         result = result.replace(/_([^_]+)_/g, '<em>$1</em>');
-        // Inline code `code`
-        result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+        // 4. Restore links with proper formatting
+        result = result.replace(/LINKPLACEHOLDER(\d+)XYZ/g, (match, index) => {
+            const { linkText, href, targetAttr } = links[parseInt(index, 10)];
+            return `<a href="${href}"${targetAttr}>${linkText}</a>`;
+        });
+
+        // 5. Restore inline code blocks
+        result = result.replace(/CODEPLACEHOLDER(\d+)XYZ/g, (match, index) => {
+            return `<code>${codeBlocks[parseInt(index, 10)]}</code>`;
+        });
         
         return result;
     }
@@ -474,10 +521,13 @@ function parseMarkdownToHtmlAndIndex(md) {
         const fileLocMatch = line.match(/^_(File location|File Location):\s*\[(.*?)\]\((.*?)\)_/);
         if (fileLocMatch) {
             const relPath = fileLocMatch[2];
-            const absPath = fileLocMatch[3];
+            let absPath = fileLocMatch[3];
+            if (!absPath.startsWith('http') && !absPath.startsWith('file://') && !absPath.startsWith('#')) {
+                absPath = getGitHubUrl(absPath);
+            }
             html += `<div class="file-location">
                 <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                <span>File: </span><a href="${absPath}">${escapeHtml(relPath)}</a>
+                <span>File: </span><a href="${absPath}" target="_blank" rel="noopener noreferrer">${escapeHtml(relPath)}</a>
             </div>\n`;
             if (currentLesson) {
                 currentLesson.content += ` File location: ${relPath}`;
