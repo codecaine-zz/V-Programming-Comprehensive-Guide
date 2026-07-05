@@ -56,8 +56,9 @@ This structure makes it easier to jump straight to the concept you want to study
 - Add a short explanation or README when a topic needs more context.
 - Keep examples runnable and focused on one idea at a time.
 
-### Related project
+### Related projects
 
+- Build macOS desktop apps with V and Cocoa using [vlang_simplegui](https://github.com/codecaine-zz/vlang_simplegui).
 - Build macOS desktop apps with V and Webview using [vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template).
 
 > [!TIP]

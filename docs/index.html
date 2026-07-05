@@ -2642,6 +2642,7 @@
 <li>A number guessing game</li>
 <li>A simple file organizer or text search tool</li>
 <li>A notes app that stores data in JSON or SQLite</li>
+<li>A macOS desktop app with a native Cocoa UI: <a href="https://github.com/codecaine-zz/vlang<em>simplegui" target="</em>blank" rel="noopener noreferrer">vlang_simplegui</a></li>
 <li>A macOS desktop app with a webview-based UI: <a href="https://github.com/codecaine-zz/vlang<em>macos</em>webview<em>app</em>template" target="<em>blank" rel="noopener noreferrer">vlang</em>macos<em>webview</em>app_template</a></li>
 </ul>
 <h2 class="section-title" id="practice-exercises" data-chapter-id="">Practice Exercises</h2>
@@ -33601,7 +33602,7 @@ fn main() {
             <div class="code-header">
                 <span class="code-lang">v</span>
                 <div class="code-actions">
-                    <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCBzaW1wbGVndWkKCmZuIG1haW4oKSB7CgltdXQgZ3VpIDo9IHNpbXBsZWd1aS5uZXdfc2ltcGxlX3dpbmRvdygnViBOYXRpdmUgR1VJIERlbW8nLCA3NjAsIDk1MCkKCWd1aS5zZXRfdGl0bGUoJ1YgTmF0aXZlIEdVSSBEZW1vJykKCWd1aS5hZGRfbGFiZWwoJ2ludHJvJywgJ0NyZWF0ZSBjb250cm9scyB3aXRoIG9uZSBzbWFsbCBjYWxsJykKCWd1aS5hZGRfaW5wdXQoJ25hbWUnLCAnQWRhJykKCWd1aS5hZGRfYnV0dG9uKCdydW4nLCAnUnVuJykKCWd1aS5vbl9jbGljaygncnVuJywgb25fcnVuX2NsaWNrZWQpCglndWkucnVuKCkKfQoKZm4gb25fcnVuX2NsaWNrZWQobXV0IHdpbiBzaW1wbGVndWkuU2ltcGxlV2luZG93KSB7CglwcmludGxuKCdydW4gY2xpY2tlZCcpCgluYW1lIDo9IHdpbi5nZXRfdGV4dCgnbmFtZScpCgl3aW4uYWxlcnQoJ0hlbGxvJywgJ0hlbGxvLCAke25hbWV9IScpCn0%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                    <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmltcG9ydCBzaW1wbGVndWkKCmZuIG1haW4oKSB7CgltdXQgZ3VpIDo9IHNpbXBsZWd1aS5uZXdfc2ltcGxlX3dpbmRvdygnViBOYXRpdmUgR1VJIERlbW8nLCA3NjAsIDk1MCkKCWd1aS5zZXRfdGl0bGUoJ1YgTmF0aXZlIEdVSSBEZW1vJykKCWd1aS5hZGRfbGFiZWwoJ2ludHJvJywgJ0NyZWF0ZSBjb250cm9scyB3aXRoIG9uZSBzbWFsbCBjYWxsJykKCWd1aS5hZGRfaW5wdXQoJ25hbWUnLCAnQWRhJykKCWd1aS5hZGRfYnV0dG9uKCdydW4nLCAnUnVuJykKCWd1aS5vbl9jbGljaygncnVuJywgb25fcnVuX2NsaWNrZWQpCglndWkucnVuKCkKfQoKZm4gb25fcnVuX2NsaWNrZWQobXV0IHdpbiAmc2ltcGxlZ3VpLlNpbXBsZVdpbmRvdykgewoJcHJpbnRsbigncnVuIGNsaWNrZWQnKQoJbmFtZSA6PSB3aW4uZ2V0X3RleHQoJ25hbWUnKQoJd2luLmFsZXJ0KCdIZWxsbycsICdIZWxsbywgJHtuYW1lfSEnKQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                 <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                 Run
             </a>
@@ -33633,7 +33634,7 @@ fn main() {
 	gui.run()
 }
 
-fn on_run_clicked(mut win simplegui.SimpleWindow) {
+fn on_run_clicked(mut win &amp;simplegui.SimpleWindow) {
 	println(&#039;run clicked&#039;)
 	name := win.get_text(&#039;name&#039;)
 	win.alert(&#039;Hello&#039;, &#039;Hello, ${name}!&#039;)

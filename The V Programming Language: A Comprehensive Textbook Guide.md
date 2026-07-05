@@ -127,6 +127,7 @@ These projects will make the guide feel much more practical:
 - A number guessing game
 - A simple file organizer or text search tool
 - A notes app that stores data in JSON or SQLite
+- A macOS desktop app with a native Cocoa UI: [vlang_simplegui](https://github.com/codecaine-zz/vlang_simplegui)
 - A macOS desktop app with a webview-based UI: [vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template)
 
 ## Practice Exercises
@@ -21218,7 +21219,7 @@ fn main() {
 	gui.run()
 }
 
-fn on_run_clicked(mut win simplegui.SimpleWindow) {
+fn on_run_clicked(mut win &simplegui.SimpleWindow) {
 	println('run clicked')
 	name := win.get_text('name')
 	win.alert('Hello', 'Hello, ${name}!')
