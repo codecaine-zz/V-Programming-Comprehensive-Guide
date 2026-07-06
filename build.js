@@ -906,11 +906,14 @@ const template = `<!DOCTYPE html>
             --shadow-premium: 0 16px 36px -10px rgba(76, 201, 255, 0.2), 0 8px 18px -10px rgba(5, 17, 27, 0.35);
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            scroll-behavior: smooth;
         }
 
         body {
@@ -3383,6 +3386,17 @@ const template = `<!DOCTYPE html>
             return matches[0];
         }
 
+        function scrollToPosition(top, behavior) {
+            if (behavior === 'auto') {
+                const originalStyle = document.documentElement.style.scrollBehavior;
+                document.documentElement.style.scrollBehavior = 'auto';
+                window.scrollTo({ top, behavior: 'auto' });
+                document.documentElement.style.scrollBehavior = originalStyle;
+            } else {
+                window.scrollTo({ top, behavior });
+            }
+        }
+
         function scrollToHashTarget(hash, behavior = 'smooth', contextElement = null) {
             if (!hash) return;
             const id = hash.replace(/^#/, '');
@@ -3393,7 +3407,17 @@ const template = `<!DOCTYPE html>
 
             const offset = 100;
             const top = target.getBoundingClientRect().top + window.scrollY - offset;
-            window.scrollTo({ top, behavior });
+            
+            // If behavior is smooth but distance is far, use auto (instant) to match Safari speed and save CPU on Chrome
+            let targetBehavior = behavior;
+            if (behavior === 'smooth') {
+                const distance = Math.abs(window.scrollY - top);
+                if (distance > 2000) {
+                    targetBehavior = 'auto';
+                }
+            }
+
+            scrollToPosition(top, targetBehavior);
         }
 
         document.addEventListener('click', (event) => {
@@ -3730,7 +3754,7 @@ const template = `<!DOCTYPE html>
 
         if (quickJumpBackToTop) {
             quickJumpBackToTop.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                scrollToPosition(0, 'smooth');
                 quickJumpWidget.classList.remove('open');
             });
         }
@@ -3893,7 +3917,7 @@ const template = `<!DOCTYPE html>
             if (target) {
                 setTimeout(() => scrollToHashTarget(saved.hash, 'auto', document.body), 220);
             } else {
-                window.scrollTo({ top: Math.max(0, saved.scrollY), behavior: 'auto' });
+                scrollToPosition(Math.max(0, saved.scrollY), 'auto');
             }
             return true;
         }
@@ -4118,7 +4142,7 @@ const template = `<!DOCTYPE html>
         });
         
         function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            scrollToPosition(0, 'smooth');
         }
 
         function slugifyHeading(text) {
