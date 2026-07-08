@@ -5,6 +5,7 @@ import strings
 fn main() {
 	// 1. Initialize a new Builder with pre-allocated buffer size (e.g. 100 bytes).
 	// Pre-allocation is highly recommended for performance to reduce memory allocations.
+	// A builder is a good choice when you are building a string incrementally in a loop.
 	mut sb := strings.new_builder(100)
 
 	// 2. Write strings and runes to the buffer

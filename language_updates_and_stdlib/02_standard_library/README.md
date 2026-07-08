@@ -10,3 +10,5 @@ The standard library examples are now grouped by use case so they are easier to 
 - [04_networking_and_web](04_networking_and_web) — HTTP, sockets, networking, and web-related modules.
 - [05_cli_and_platform](05_cli_and_platform) — terminal output, command-line parsing, readline, CLI helpers, and runtime/platform topics.
 - [06_security_and_runtime](06_security_and_runtime) — logging, crypto, hashing, bitfields, runtime helpers, and WebAssembly.
+
+A practical comparison of string building approaches is also available in [01_strings_builder/builder_vs_concat.v](01_strings_builder/builder_vs_concat.v) for readers who want a concrete example of when a builder is preferable to repeated concatenation.

@@ -1,6 +1,7 @@
 module main
 
 // Stack[T] represents a generic stack structure.
+// Generics let you write one reusable implementation for many concrete types.
 struct Stack[T] {
 mut:
 	items []T
@@ -21,6 +22,7 @@ fn (mut s Stack[T]) pop() ?T {
 }
 
 // print_val is a generic function that takes any type T and prints it.
+// A single generic function can work with ints, strings, floats, and other types.
 fn print_val[T](val T) {
 	println('Value: ${val}')
 }
