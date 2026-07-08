@@ -1160,9 +1160,9 @@ _File location: [variables_and_constants/01_variables/03_limitations/03_variable
 
 ### Lesson: Variable Shadowing Not Allowed
 
-**Variable shadowing** happens when a variable declared within an inner scope (like a loop or a function block) has the same name as a variable in an outer scope. V strictly forbids variable shadowing to prevent confusion and accidental bugs where a developer modifies the wrong variable.
+**Variable shadowing** happens when a variable declared within an inner scope (like an `if` block, a loop, or a function body) has the same name as a variable in an outer scope. V strictly forbids variable shadowing at the compiler level. Prohibiting shadowing prevents a class of common bugs where a developer accidentally updates a local inner variable instead of the intended outer variable, or vice versa.
 
-This example shows how V rejects shadowed variable declarations.
+This example demonstrates how V rejects shadowed variable declarations.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **variable shadowing not allowed**.
@@ -1171,10 +1171,13 @@ This example demonstrates the concepts of **variable shadowing not allowed**.
 module main
 
 fn scope_demo() {
+	// 'x' is declared in the function's main scope
 	x := 10
 	println(x)
 	if true {
-		x := 20 // throws error as shadowing is not allowed
+		// ERROR: Declaring another variable named 'x' in an inner block is forbidden.
+		// To fix this, you must name the inner variable something else.
+		x := 20 
 		println(x)
 	}
 	println(x)
@@ -1934,7 +1937,9 @@ _File location: [primitive_types/04_rune_type/02_rune_operations_with_strings/02
 
 ### Lesson: Rune Operations With Strings
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Rune Operations With Strings** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+Since strings in V are arrays of UTF-8 encoded bytes, you cannot directly check for a `rune` inside a `string` using string operations unless the rune is first converted to a string. V provides `.str()` on the `rune` type to easily convert a rune to a 1-character string, allowing you to use string methods like `.count()`, `.contains()`, etc.
+
+This example shows how to count occurrences of a Unicode rune in a string.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **rune operations with strings**.
@@ -1942,10 +1947,11 @@ This example demonstrates the concepts of **rune operations with strings**.
 ```v
 fn main() {
 	beverage := 'café'
+	// 's' is a rune representing the Unicode character 'é'
 	s := `é`
-	// declare rune
+	// Since .count() expects a string argument, we convert the rune 's' using .str()
 	println(beverage.count(s.str()))
-	// 1
+	// Outputs: 1
 }
 ```
 
@@ -1957,7 +1963,9 @@ _File location: [primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v]
 
 ### Lesson: Rune Methods
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Rune Methods** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+Runes in V are not just raw numbers; they are full-fledged Unicode characters that support several built-in methods. You can convert their case, check their byte length (which can range from 1 to 4 bytes depending on the character, such as emojis), obtain their byte array representation, or convert them to hexadecimal code points.
+
+This lesson demonstrates common helper methods on the `rune` type.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **rune methods**.
@@ -2039,9 +2047,9 @@ _File location: [primitive_types/03_string_type/01_working_with_strings/01_strin
 
 ### Lesson: String Read Only Array Of Bytes
 
-In V, a string is internally represented as a read-only array of bytes (`u8`). This means you can access individual bytes of a string using array indexing (`str[index]`), but you cannot change them.
+In V, strings are represented internally as read-only arrays of UTF-8 encoded bytes (`u8`). This means you can index into a string using bracket notation (`str[index]`) to extract the raw byte value at that position. The type returned from indexing a string is always `byte` (an alias for `u8` in V), not a string or rune.
 
-This example shows how to read bytes from a string and print their values.
+This example shows how to read raw bytes from a string and prints the byte value and its type name.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string read only array of bytes**.
@@ -2049,10 +2057,13 @@ This example demonstrates the concepts of **string read only array of bytes**.
 ```v
 fn main() {
 	fruit := 'Orange'
+	// Accessing the first byte of the string 'Orange'.
+	// This returns the ASCII value of 'O' (which is 79), and its type is 'byte'.
 	println(typeof(fruit[0]).name)
-	// byte
+	// Outputs: byte
+	
 	println(fruit[0])
-	// 79
+	// Outputs: 79
 }
 ```
 
@@ -2115,7 +2126,7 @@ _File location: [primitive_types/03_string_type/01_working_with_strings/04_canno
 
 ### Lesson: Cannot Mutate String Elements
 
-Even if a string variable is declared with `mut`, you cannot mutate its individual characters or bytes directly via index assignment (e.g., `s[0] = \`a\``). The compiler will throw an error to protect string integrity.
+Although declaring a string variable with `mut` lets you reassign the variable to reference a completely different string, it does NOT let you mutate individual characters or bytes within the existing string (e.g. `s[0] = \`G\``). String data elements are strictly read-only arrays of bytes, and attempting to mutate them will fail compilation.
 
 This program shows that element mutation is strictly forbidden.
 
@@ -2126,7 +2137,9 @@ This example demonstrates the concepts of **cannot mutate string elements**.
 fn main() {
 	mut greet := 'good Day'
 
-	greet[0] = 'G' // this results in error
+	// ERROR: Cannot assign directly to string indices.
+	// Strings in V are read-only byte arrays and their contents cannot be mutated.
+	greet[0] = 'G' 
 }
 ```
 
@@ -2686,7 +2699,9 @@ _File location: [control_flow/02_Match/match_as_switch_case/match_as_switch_case
 
 ### Lesson: Match As Switch Case
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Match As Switch Case** in V, showing how to control execution paths cleanly and safely.
+In V, there is no `switch` statement. Instead, the `match` keyword is used for branching on values. The `match` statement is highly readable and type-safe. Each branch is evaluated in order, and unlike in C/Java/Javascript, there is no "fall-through" behavior—the matching block executes and the statement completes immediately. This eliminates bugs caused by forgetting `break` statements. V also enforces that a `match` must cover all possible cases or provide an `else` block.
+
+This example shows how to use `match` on string values.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **match as switch case**.
@@ -2695,6 +2710,8 @@ This example demonstrates the concepts of **match as switch case**.
 module main
 
 fn breakfast_menu(day string) {
+	// A match block branches on the value of 'day'.
+	// In V, match is an expression and can also return values.
 	match day {
 		'Monday' { println('Bread, Jam, Half boiled Egg') }
 		'Tuesday' { println('Bread, Jam, Juice') }
@@ -2703,7 +2720,7 @@ fn breakfast_menu(day string) {
 		'Friday' { println('Cereals, Bread, Jam, Half boiled Egg') }
 		'Saturday' { println('Milk, Bread, Fruit Bowl') }
 		'Sunday' { println('Cereals, Bread, Jam, Half boiled Egg') }
-		else { println('invalid input') }
+		else { println('invalid input') } // Exhaustive match requirement handled by 'else'
 	}
 }
 
@@ -2747,7 +2764,9 @@ _File location: [control_flow/02_Match/match_with_enum/match_with_enum.v](contro
 
 ### Lesson: Match With Enum
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Match With Enum** in V, showing how to control execution paths cleanly and safely.
+One of V's strongest safety guarantees is **exhaustive enum matching**. When you match on an enum value, V requires you to handle every single enum member. If you miss one, the compiler will refuse to compile the program. This ensures that when new items are added to an enum in the future, the compiler will automatically guide you to update all match expressions across your codebase. Additionally, V supports shorthand syntax where you can write `.member_name` instead of `EnumName.member_name` inside the match arms.
+
+This example illustrates matching over an enum to return a string menu item.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **match with enum**.
@@ -2755,6 +2774,7 @@ This example demonstrates the concepts of **match with enum**.
 ```v
 module main
 
+// Define a Days-of-the-week enum
 enum Day {
 	sunday
 	monday
@@ -2766,12 +2786,14 @@ enum Day {
 }
 
 fn breakfast_menu(day Day) string {
+	// The match statement returns the value of the matching block.
+	// Notice we use the shorthand dot syntax (.monday) since 'day' is known to be of type 'Day'.
 	return match day {
 		.monday {
 			'Bread, Jam, Half boiled Egg'
 		}
 		.tuesday, .thursday {
-			'Bread, Jam, Juice'
+			'Bread, Jam, Juice' // Grouping multiple enum members using comma
 		}
 		.wednesday {
 			'Milk, Bread, Fruit Bowl'
@@ -2782,7 +2804,7 @@ fn breakfast_menu(day Day) string {
 		.saturday {
 			'Milk, Bread, Fruit Bowl'
 		}
-	}
+	} // No else block is needed because all enum members are exhaustively handled.
 }
 
 fn main() {
@@ -2857,7 +2879,9 @@ _File location: [control_flow/03_Iterative_statements/bare_for/bare_for.v](contr
 
 ### Lesson: Bare For
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Bare For** in V, showing how to control execution paths cleanly and safely.
+V simplifies iteration by only offering a single keyword for loops: `for`. There is no `while` keyword in V. A "bare" `for` (a loop declaration without any conditions or loop ranges) represents an **infinite loop**, which behaves exactly like `while true` in other languages. To exit a bare for loop, you must use a `break` statement inside the loop body, or exit the function using `return`.
+
+This example shows how to declare a bare infinite loop.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **bare for**.
@@ -2867,9 +2891,16 @@ module main
 
 fn main() {
 	mut count := 1
+	// Bare for starts an infinite loop.
+	// WARNING: Running this without a break condition will loop forever.
 	for {
 		println('Hi ${count} times')
 		count += 1
+		
+		// To break out, a developer would normally add:
+		if count > 5 {
+			break
+		}
 	}
 }
 ```
@@ -3017,7 +3048,9 @@ _File location: [control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v]
 
 ### Lesson: For On Maps
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For On Maps** in V, showing how to control execution paths cleanly and safely.
+V makes iterating over key-value collections (maps) straightforward. By using the syntax `for key, value in map`, you can access both the key and the value of each entry directly during each iteration. Like arrays, the iteration variables (`key` and `value`) are local to the loop scope and are immutable. Note that iteration order over maps is not guaranteed to be stable or sorted, matching standard hash map behavior in other systems languages.
+
+This example demonstrates how to declare a map and iterate over its key-value pairs.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on maps**.
@@ -3026,12 +3059,14 @@ This example demonstrates the concepts of **for on maps**.
 module main
 
 fn main() {
+	// Initialize a map with string keys and integer values
 	lottery := {
 		'First':       1000
 		'Second':      700
 		'Consolation': 200
 	}
 
+	// Loop over keys (k) and values (v) in the 'lottery' map.
 	for k, v in lottery {
 		println('${k} prize lottery amount: ${v}')
 	}
@@ -4763,21 +4798,26 @@ _File location: [functions/02_understanding_funtion_features/03_function_return_
 
 ### Lesson: Function Return Multiple Values
 
-A function can return more than one value when those values belong together. A common pattern is returning both the main result and a related detail, such as a length or status. Here, `greet_and_message_length` returns both the greeting and its length.
+In V, functions are not limited to returning a single value. A function can return a tuple containing two or more values when they logically belong together. A very common pattern in systems programming is returning both the main result of an operation and a secondary value (such as status flags, byte counts, or errors). Returning multiple values is clean, avoids wrapping results in temporary struct containers, and is assigned using parallel declaration at the call site.
+
+This example shows how a function computes a string greeting and returns both the greeting string and its length as an integer.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function return multiple values**.
 
 ```v
+// The return types are declared within parentheses: (string, int)
 fn greet_and_message_length(name string) (string, int) {
 	mut greeting := 'Hello, ' + name + '!'
+	// Multiple values are returned as a comma-separated list
 	return greeting, greeting.len
 }
 
 fn main() {
+	// Receive multiple return values using parallel assignment
 	i, j := greet_and_message_length('Navule')
-	println(i)
-	println(j)
+	println(i) // Prints: Hello, Navule!
+	println(j) // Prints the length: 14
 }
 ```
 
@@ -5248,7 +5288,9 @@ _File location: [functions/02_understanding_funtion_features/11_functions_with_d
 
 ### Lesson: Function With Defer Block
 
-`defer` is useful when a function needs to clean up something before it exits, such as closing a file or releasing a resource. The deferred block runs automatically at the end of the function.
+The `defer` keyword is a crucial feature for resource safety and cleanups. A `defer` block schedules a block of code to run automatically right before the containing function exits, regardless of which return path is taken. If there are multiple `defer` blocks in a function, they are executed in reverse order of their declaration (Last-In, First-Out). This ensures resources (like file descriptors, database connections, or socket connections) are closed safely without duplicating cleanup code across every return statement.
+
+This example illustrates the execution sequence of statements inside a function containing a `defer` block.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with defer block**.
@@ -5258,12 +5300,14 @@ module main
 
 fn void_func_defer() {
 	println('Hello')
+	
+	// This block is scheduled to execute at the very end of the function scope.
 	defer {
 		println('Hi from defer block')
 	}
+	
 	println('How are you?')
-
-	// the defer block will be executed when the execution control reaches here
+	// The function ends here, triggering the deferred block execution automatically.
 }
 
 fn main() {
@@ -5379,7 +5423,9 @@ _File location: [functions/01_function_types/02_anonymous_functions/anonymous_fu
 
 ### Lesson: Anonymous Functions
 
-Anonymous functions are defined inline and are useful for short, one-off behavior. They are handy when you want a quick callback without creating a named function.
+Anonymous functions (also known as lambda functions or function literals) are functions that are defined inline without a name. In V, functions are first-class citizens, meaning they can be assigned to variables, passed as arguments to other functions, or returned from functions. Anonymous functions are highly useful for short-lived, one-off operations such as custom sort criteria, filter callbacks, or event handlers.
+
+This example shows how to declare an anonymous function, assign it to a variable, and call it.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **anonymous functions**.
@@ -5388,12 +5434,13 @@ This example demonstrates the concepts of **anonymous functions**.
 module main
 
 fn main() {
-	// Create an anonymous function and assign it to a variable.
+	// Define an anonymous function using the 'fn' keyword without a name.
+	// Assign it directly to the local variable 'greet'.
 	greet := fn (name string) {
 		println('Hello, ${name}')
 	}
 
-	// Invoke the function twice with different names.
+	// Invoke the anonymous function by calling the variable as if it were a named function.
 	greet('Pavan')
 	greet('Sahithi')
 }
@@ -5774,9 +5821,9 @@ _File location: [structs/01_introducing_structs/03_heap_structs/01_heap_structs.
 
 ### Lesson: Heap Structs
 
-A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
+By default, V allocates struct instances on the stack, which is fast and manages memory automatically when variables go out of scope. However, for large structures or instances that must survive beyond the current function scope, you should allocate them on the heap. In V, you allocate a struct on the heap by prepending the initialization literal with the reference operator `&` (e.g., `&MyStruct{}`). The type of a heap-allocated struct is a pointer type, represented as `&MyStruct` (read-only reference).
 
-These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
+This example demonstrates declaring a heap-allocated struct instance and printing its type name.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **heap structs**.
@@ -5788,7 +5835,11 @@ struct Note {
 }
 
 fn main() {
+	// Prepending & allocates the Note instance on the heap rather than the stack.
+	// 'n1' holds a reference (pointer) to the heap-allocated note.
 	n1 := &Note{1, 'this note will be allocated on heap'}
+	
+	// Prints the type of n1, which is &Note (pointer/reference type)
 	println(typeof(n1).name) // &Note
 }
 ```
@@ -6244,7 +6295,12 @@ _File location: [structs/04_methods_for_struct/03_printing_custom_types/03_print
 
 ### Lesson: Printing Custom Types
 
-If you want to define a custom print value for your type, simply define a `str()` string method:
+By default, passing a struct instance to functions like `println` will print its fields in a default format (e.g., `Color{r: 255, g: 0, b: 0}`). However, if you want a custom, human-readable string representation of your struct type, you can define a `str() string` method on it. V's runtime automatically checks for this method when converting values to strings or when outputting using printing functions.
+
+This example illustrates defining a `str() string` method on a custom `Color` struct to format it as `{r, g, b}`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **printing custom types**.
 
 ```v
 module main
@@ -6255,6 +6311,7 @@ struct Color {
 	b int
 }
 
+// By defining a method named str() returning a string, we customize how Color is printed.
 pub fn (c Color) str() string {
 	return '{${c.r}, ${c.g}, ${c.b}}'
 }
@@ -6265,6 +6322,7 @@ fn main() {
 		g: 0
 		b: 0
 	}
+	// println automatically detects and calls the custom .str() method on Color
 	println(red)
 }
 ```
@@ -11807,6 +11865,13 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v](language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v)_
 
+### Lesson: Net Urllib
+
+The `net.urllib` standard library module provides utilities for parsing, analyzing, and constructing Uniform Resource Locators (URLs). When working with remote HTTP APIs, you frequently need to break URLs down into constituent components (like schemes, hosts, ports, paths, credentials, and parameters) or perform URL-encoding/decoding on query strings so they are transmitted safely across network interfaces. V uses the option type pattern (`or { ... }`) on methods like `parse` to ensure that malformed URLs are caught cleanly without crashing the program.
+
+This example illustrates parsing URLs, escaping special string characters, and creating encoded query objects.
+
+**Additional Context from Repository docs:**
 This example demonstrates parsing URLs into components, escaping and unescaping query parameters, and encoding query parameters using the `net.urllib` module.
 
 ```v
@@ -11868,6 +11933,13 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v](language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v)_
 
+### Lesson: Net Websocket
+
+The `net.websocket` module provides robust client and server APIs for real-time bidirectional communication over WebSockets. Under the hood, V's WebSocket implementation supports both unencrypted (`ws://`) and encrypted (`wss://`) sockets, complete with connection event handling, payload framing, and callback registers. Since networking functions block execution, WebSocket servers are typically run concurrently (e.g. using V's coroutines/threads via the `go` keyword) to handle incoming messages in the background while keeping the main loop responsive.
+
+This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly.
+
+**Additional Context from Repository docs:**
 This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly using the `net.websocket` module.
 
 ```v
@@ -13739,6 +13811,13 @@ Because UDP does not guarantee packet delivery order, packets can arrive out of 
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v](language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v)_
 
+### Lesson: Net Unix
+
+Unix Domain Sockets (UDS) provide a high-performance inter-process communication (IPC) channel on POSIX systems. Unlike standard TCP/UDP networking sockets which transmit data over the network stack (loopback interface), UDS transmits data directly inside the OS kernel, bypassing the IP protocol stack overhead completely. UDS endpoints are bound to filesystem paths (e.g., `/tmp/mysocket`). V's `net.unix` module provides `listen_stream` and `connect` functions that mimic standard TCP stream sockets, making it easy to build fast local microservices.
+
+This example illustrates cleaning up stale socket files, launching a Unix domain socket listener/server, connecting a client to it, and exchanging messages.
+
+**Additional Context from Repository docs:**
 This example demonstrates Unix domain socket client-server communication using the `net.unix` module.
 
 ```v

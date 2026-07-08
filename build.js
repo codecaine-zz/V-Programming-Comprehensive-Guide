@@ -1,17 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
+// Target paths for the compiler: source Markdown file and destination HTML directory/file
 const srcPath = path.join(__dirname, 'The V Programming Language: A Comprehensive Textbook Guide.md');
 const destDir = path.join(__dirname, 'docs');
 const destPath = path.join(destDir, 'index.html');
 
-// Create dest directory if it doesn't exist
+// Create the destination directory if it doesn't already exist to prevent write errors
 if (!fs.existsSync(destDir)) {
     fs.mkdirSync(destDir, { recursive: true });
 }
 
 const markdown = fs.readFileSync(srcPath, 'utf8');
 
+/**
+ * Escapes special HTML characters in a string to prevent XSS and formatting breakage.
+ * Converts symbols: & to &amp;, < to &lt;, > to &gt;, " to &quot;, and ' to &#039;
+ */
 function escapeHtml(text) {
     return text
         .replace(/&/g, '&amp;')
@@ -21,10 +26,15 @@ function escapeHtml(text) {
         .replace(/'/g, '&#039;');
 }
 
+/**
+ * Resolves standard local file paths inside the repository to their absolute GitHub URLs.
+ * Detects special subdirectories (e.g. simplegui boilerplate) and maps them to external repositories if needed.
+ */
 function getGitHubUrl(rawPath) {
     const hasExtension = rawPath.includes('.');
     const prefix = hasExtension ? 'blob' : 'tree';
     
+    // Resolve simplegui boilerplates to the specific repository where they live
     if (rawPath.startsWith('boilerplate_templates/13_simplegui')) {
         let subPath = rawPath.substring('boilerplate_templates/13_simplegui'.length);
         if (subPath.startsWith('/')) {
@@ -36,10 +46,15 @@ function getGitHubUrl(rawPath) {
         return `https://github.com/codecaine-zz/vlang_simplegui/${prefix}/master/${subPath}`;
     }
     
+    // Default repository mapping for all standard chapter examples
     return `https://github.com/codecaine-zz/V-Programming-Comprehensive-Guide/${prefix}/master/${rawPath}`;
 }
 
-// Custom Markdown parser optimized for this specific guide
+/**
+ * Custom Markdown parser optimized to compile the V Textbook Guide into single-page HTML.
+ * Handles headings, sections, lessons, blockquotes, lists, alert boxes, and interactive code blocks.
+ * Simultaneously generates a search index and structural navigation mapping.
+ */
 function parseMarkdownToHtmlAndIndex(md) {
     const lines = md.split(/\r?\n/);
     let html = '';
@@ -47,20 +62,24 @@ function parseMarkdownToHtmlAndIndex(md) {
     let currentSection = null;
     let currentLesson = null;
     
-    // For search indexing
+    // Search index holds flat document search items (chapter, section, lesson level)
     const searchIndex = [];
     
+    // Code block parser state
     let inCodeBlock = false;
     let codeLanguage = '';
     let codeContent = [];
     
+    // Blockquote & GitHub Alerts state
     let inBlockquote = false;
-    let alertType = null; // 'note', 'tip', 'important', 'warning', 'caution'
+    let alertType = null; // 'note', 'tip', 'important', 'warning', 'caution', 'exercise', 'solution', 'output'
     let blockquoteContent = [];
     
+    // List elements state
     let inList = false;
     let listType = ''; // 'ul', 'ol'
 
+    // Helper to close list tags and reset list state
     function flushList() {
         if (inList) {
             html += `</${listType}>\n`;
@@ -68,6 +87,7 @@ function parseMarkdownToHtmlAndIndex(md) {
         }
     }
 
+    // Helper to close and format blockquote/alert tags and content
     function flushBlockquote() {
         if (inBlockquote) {
             let parsedContent = '';
@@ -75,37 +95,38 @@ function parseMarkdownToHtmlAndIndex(md) {
             let inBlockCode = false;
             let blockCodeLanguage = '';
 
+            // Process lines inside the blockquote/alert block
             for (let j = 0; j < blockquoteContent.length; j++) {
                 const bLine = blockquoteContent[j];
                 const trimmedBLine = bLine.trim();
                 
+                // Allow inner code blocks inside blockquotes (e.g. for showing output)
                 if (trimmedBLine.startsWith('```')) {
                     if (inBlockCode) {
-                        // End code block inside blockquote
                         const codeStr = blockCodeContent.join('\n');
                         parsedContent += generateCodeBlockHtml(blockCodeLanguage, codeStr);
                         inBlockCode = false;
                         blockCodeContent = [];
                     } else {
-                        // Start code block inside blockquote
                         inBlockCode = true;
                         blockCodeLanguage = trimmedBLine.substring(3).trim();
                     }
                 } else if (inBlockCode) {
                     blockCodeContent.push(bLine);
                 } else {
-                    // Regular line, wrap in <p> if not empty
                     if (trimmedBLine !== '') {
                         parsedContent += `<p>${parseInline(bLine)}</p>\n`;
                     }
                 }
             }
 
+            // Flush remaining block code content if not closed
             if (inBlockCode && blockCodeContent.length > 0) {
                 const codeStr = blockCodeContent.join('\n');
                 parsedContent += generateCodeBlockHtml(blockCodeLanguage, codeStr);
             }
 
+            // Generate either a standard blockquote or a colored GitHub-style Alert box
             if (alertType) {
                 html += `<div class="alert alert-${alertType}">
                     <div class="alert-title">
@@ -125,6 +146,7 @@ function parseMarkdownToHtmlAndIndex(md) {
         }
     }
 
+    // SVG icons for GitHub-style Alerts (Note, Tip, Important, Warning, Caution, etc.)
     function getAlertIcon(type) {
         switch (type) {
             case 'note':
@@ -148,12 +170,14 @@ function parseMarkdownToHtmlAndIndex(md) {
         }
     }
 
+    /**
+     * Parses inline Markdown syntax (bold, italics, links, and code blocks) into HTML.
+     * Uses placeholders to prevent nested parsing conflicts (e.g. link inside code block).
+     */
     function parseInline(text) {
-        // Code symbol links format: [ClassName](file:///...) -> ClassName with link
-        // Avoid backticks around link text
         let result = escapeHtml(text);
         
-        // 1. Extract inline code blocks so we don't apply formatting inside them.
+        // 1. Extract inline code blocks `code` so we don't apply formatting inside them.
         const codeBlocks = [];
         result = result.replace(/`([^`]+)`/g, (match, code) => {
             const placeholder = `CODEPLACEHOLDER${codeBlocks.length}XYZ`;
@@ -161,7 +185,7 @@ function parseMarkdownToHtmlAndIndex(md) {
             return placeholder;
         });
 
-        // 2. Extract Markdown links [text](url)
+        // 2. Extract Markdown links [text](url), automatically resolving internal repo links to GitHub
         const links = [];
         result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
             const isExternal = url.startsWith('http://') || url.startsWith('https://');
@@ -180,13 +204,11 @@ function parseMarkdownToHtmlAndIndex(md) {
         });
 
         // 3. Apply standard formatting on plain text sections
-        // Bold **text**
+        // Bold: **text** and __text__
         result = result.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-        // Bold __text__
         result = result.replace(/__([^_]+)__/g, '<strong>$1</strong>');
-        // Italics *text*
+        // Italics: *text* and _text_
         result = result.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-        // Italics _text_
         result = result.replace(/_([^_]+)_/g, '<em>$1</em>');
 
         // 4. Restore links with proper formatting
@@ -203,6 +225,7 @@ function parseMarkdownToHtmlAndIndex(md) {
         return result;
     }
 
+    // Slugifies titles to create clean, URL-safe anchors (e.g. "Chapter 1" -> "chapter-1")
     function slugify(text) {
         return text.toLowerCase()
             .replace(/[^\w\s-]/g, '')
@@ -210,11 +233,18 @@ function parseMarkdownToHtmlAndIndex(md) {
             .replace(/^-+|-+$/g, '');
     }
 
+    // Normalizes language identifier names for syntax highlighting classes
     function normalizeCodeLanguage(language) {
         const normalized = (language || 'text').toLowerCase();
         return normalized === 'vlang' ? 'v' : normalized;
     }
 
+    /**
+     * Generates standard container wrapper for code blocks.
+     * If the language is V, it automatically creates buttons to:
+     * - Open the snippet directly in the official V Playground
+     * - Copy code and trigger an active V Playground session
+     */
     function generateCodeBlockHtml(codeLanguage, codeStr) {
         let codeHtml = escapeHtml(codeStr);
         let playgroundBtn = '';
@@ -251,6 +281,7 @@ function parseMarkdownToHtmlAndIndex(md) {
         </div>\n`;
     }
 
+    // Normalizes section and lesson titles for duplicate matching and comparisons
     function normalizeTitleForComparison(text) {
         return text
             .replace(/^Lesson:\s*/i, '')
@@ -263,45 +294,47 @@ function parseMarkdownToHtmlAndIndex(md) {
 
     const structure = [];
 
+    // Parse the markdown line by line
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
 
-        // Code block check
+        // Check if starting or ending a multi-line code block
         if (line.trim().startsWith('```')) {
             flushList();
             flushBlockquote();
             if (inCodeBlock) {
-                // End code block
+                // Close the active code block and render HTML
                 const codeStr = codeContent.join('\n');
                 html += generateCodeBlockHtml(codeLanguage, codeStr);
 
-                // Add to current lesson content
+                // Index content for search purposes
                 if (currentLesson) {
-                    currentLesson.content += `[CODE:${codeLanguage}]`;
+                    currentLesson.content += ` [CODE:${codeLanguage}]`;
                 }
 
                 inCodeBlock = false;
                 codeContent = [];
             } else {
-                // Start code block
+                // Open a new code block
                 inCodeBlock = true;
                 codeLanguage = line.trim().substring(3).trim();
             }
             continue;
         }
 
+        // Collect content lines if inside a code block
         if (inCodeBlock) {
             codeContent.push(line);
             continue;
         }
 
-        // Blockquote check
+        // Process blockquote and Github alert markup
         if (line.trim().startsWith('>')) {
             flushList();
             inBlockquote = true;
             let cleanLine = line.trim().substring(1).trim();
             
-            // Check for GitHub alerts
+            // Check for GitHub Alerts markers
             if (cleanLine.startsWith('[!NOTE]')) {
                 alertType = 'note';
                 cleanLine = cleanLine.substring(7).trim();
@@ -333,12 +366,10 @@ function parseMarkdownToHtmlAndIndex(md) {
             }
             continue;
         } else if (inBlockquote) {
-            // Blockquotes can span multiple lines if there are consecutive lines with >
-            // Or if we encounter an empty line, we close it
             flushBlockquote();
         }
 
-        // Lists check
+        // Process lists (un-ordered '-' and ordered '1.')
         const ulMatch = line.match(/^(\s*)-\s+(.*)/);
         const olMatch = line.match(/^(\s*)\d+\.\s+(.*)/);
         
@@ -363,22 +394,21 @@ function parseMarkdownToHtmlAndIndex(md) {
             html += `<li>${parseInline(content)}</li>\n`;
             continue;
         } else {
-            // Not a list item, so close the open list
             flushList();
         }
 
-        // Empty lines
+        // Process blank lines (ignore to prevent generating redundant paragraphs)
         if (line.trim() === '') {
             continue;
         }
 
-        // Horizontal Rule
+        // Process Horizontal Rule
         if (line.trim() === '---') {
             html += `<hr />\n`;
             continue;
         }
 
-        // Headings check
+        // Process Headings (h1 to h6)
         const headingMatch = line.match(/^(#{1,6})\s+(.*)/);
         if (headingMatch) {
             const level = headingMatch[1].length;
@@ -386,7 +416,6 @@ function parseMarkdownToHtmlAndIndex(md) {
             const slug = slugify(title);
 
             if (level === 1) {
-                // If it is Chapter X: Title
                 if (title.startsWith('Chapter ')) {
                     const chapMatch = title.match(/^Chapter (\d+):\s*(.*)/);
                     const chapNum = chapMatch ? chapMatch[1] : '';
@@ -412,7 +441,6 @@ function parseMarkdownToHtmlAndIndex(md) {
                         content: title
                     });
                 } else {
-                    // Document title
                     html += `<h1 class="doc-main-title" id="${slug}">${escapeHtml(title)}</h1>\n`;
                     searchIndex.push({
                         id: slug,
@@ -422,10 +450,7 @@ function parseMarkdownToHtmlAndIndex(md) {
                     });
                 }
             } else if (level === 2) {
-                // Section
-                // Skip rendering redundancy index
                 if (title === 'Code Examples Index' || title === 'Table of Contents') {
-                    // We can skip these since our custom sidebar handles navigation
                     continue;
                 }
                 
@@ -449,7 +474,6 @@ function parseMarkdownToHtmlAndIndex(md) {
                     chapter: currentChapter ? currentChapter.title : ''
                 });
             } else if (level === 3) {
-                // Lesson or Subtitle
                 let isLesson = false;
                 let cleanTitle = title;
                 if (title.startsWith('Lesson:')) {
@@ -457,7 +481,7 @@ function parseMarkdownToHtmlAndIndex(md) {
                     cleanTitle = title.substring(7).trim();
                 }
 
-                // Check if this is a duplicate of the last lesson in the current section
+                // Check for duplicates to append lesson sub-sections to the main lesson list
                 let duplicateLesson = null;
                 if (currentSection && currentSection.lessons.length > 0) {
                     const lastLesson = currentSection.lessons[currentSection.lessons.length - 1];
@@ -467,14 +491,11 @@ function parseMarkdownToHtmlAndIndex(md) {
                 }
 
                 if (duplicateLesson) {
-                    // Update duplicate lesson's title if this is a cleaner lesson header (with "Lesson:")
                     if (isLesson) {
                         duplicateLesson.title = cleanTitle;
                     }
-                    // Keep currentLesson pointing to the existing duplicate so content appends to it
                     currentLesson = duplicateLesson;
 
-                    // Render with .lesson-subtitle instead of .lesson-title to keep scroll active highlighting and navigation builder correct
                     const lessonClass = isLesson ? ' lesson-header' : '';
                     html += `<h3 class="lesson-subtitle${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">
                         <span>${escapeHtml(cleanTitle)}</span>
@@ -516,8 +537,7 @@ function parseMarkdownToHtmlAndIndex(md) {
             continue;
         }
 
-        // Check for file location lines
-        // e.g. _File location: [relative/path](file:///absolute/path)_
+        // Process File location paths (maps relative paths in repository to local links)
         const fileLocMatch = line.match(/^_(File location|File Location):\s*\[(.*?)\]\((.*?)\)_/);
         if (fileLocMatch) {
             const relPath = fileLocMatch[2];
@@ -535,7 +555,7 @@ function parseMarkdownToHtmlAndIndex(md) {
             continue;
         }
 
-        // Default Paragraph
+        // Parse regular paragraphs
         const parsedLine = parseInline(line);
         html += `<p>${parsedLine}</p>\n`;
         if (currentLesson) {
@@ -543,7 +563,7 @@ function parseMarkdownToHtmlAndIndex(md) {
         }
     }
 
-    // Close any unclosed sections/divs
+    // Flush any open blocks and finalize HTML output
     flushList();
     flushBlockquote();
     html += `</section>\n`;
