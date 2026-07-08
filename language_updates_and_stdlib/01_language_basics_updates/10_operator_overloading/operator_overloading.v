@@ -1,15 +1,27 @@
 module main
 
+// Operator overloading lets your own types work with familiar operators
+// like +, -, and ==, so math-like code reads naturally:
+//     position + velocity   instead of   position.add(velocity)
+//
+// V keeps overloading deliberately limited to prevent abuse:
+// - Only a fixed set of operators can be overloaded (+, -, *, /, %, <, ==).
+// - Both operands must be the same type.
+// - Overloaded operators must be pure: no mutation, just return a new value.
+// - Bonus: define `+` and V auto-generates `+=` for you (see below).
+
+// A tiny 2D vector — the classic use case for operator overloading.
 struct Vec {
 	x int
 	y int
 }
 
+// Custom str() controls how the type prints in println/interpolation.
 fn (a Vec) str() string {
 	return '{${a.x}, ${a.y}}'
 }
 
-// Overload addition operator (+)
+// Overload addition operator (+): returns a NEW Vec, does not modify a or b.
 fn (a Vec) + (b Vec) Vec {
 	return Vec{a.x + b.x, a.y + b.y}
 }
@@ -19,7 +31,7 @@ fn (a Vec) - (b Vec) Vec {
 	return Vec{a.x - b.x, a.y - b.y}
 }
 
-// Overload equality operator (==)
+// Overload equality operator (==). V also derives != from this automatically.
 fn (a Vec) == (b Vec) bool {
 	return a.x == b.x && a.y == b.y
 }
@@ -29,6 +41,7 @@ fn main() {
 	b := Vec{4, 5}
 	mut c := Vec{1, 2}
 
+	// The overloads make vector math read like normal arithmetic.
 	println('a + b = ${a + b}') // {6, 8}
 	println('a - b = ${a - b}') // {-2, -2}
 
