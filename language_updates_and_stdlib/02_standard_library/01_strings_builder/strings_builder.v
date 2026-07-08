@@ -3,12 +3,13 @@ module main
 import strings
 
 fn main() {
-	// 1. Initialize a new Builder with pre-allocated buffer size (e.g. 100 bytes).
-	// Pre-allocation is highly recommended for performance to reduce memory allocations.
-	// A builder is a good choice when you are building a string incrementally in a loop.
+	// 1. Create a builder with some space reserved up front.
+	// A builder is useful when you assemble a string piece by piece, such as inside a loop.
+	// This avoids repeatedly creating new strings, which can be slower for larger outputs.
 	mut sb := strings.new_builder(100)
 
-	// 2. Write strings and runes to the buffer
+	// 2. Append strings and runes to the buffer.
+	// This pattern is easier to read than writing many `+` operations in a long chain.
 	sb.write_string('Welcome ')
 	sb.write_string('to ')
 	sb.write_string('the V standard library!')
@@ -22,12 +23,12 @@ fn main() {
 		sb.write_rune(`\n`)
 	}
 
-	// 3. Extract the final constructed string
+	// 3. Convert the accumulated content into one final string.
 	result := sb.str()
 	println(result)
 
-	// 4. Reset/Clear the builder to reuse it
-	// In V, `clear()` clears the builder's buffer.
+	// 4. Reuse the builder after clearing it.
+	// This is handy when you need to build several strings in sequence.
 	sb.clear()
 	sb.write_string('New content in builder.')
 	println(sb.str())

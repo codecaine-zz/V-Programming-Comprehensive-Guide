@@ -1,7 +1,7 @@
 module main
 
 // Result type (!T) is used when a function can succeed or fail for a reason that matters.
-// A good rule of thumb is: use Result when the operation can fail and you want to preserve the error.
+// A beginner-friendly rule is: use Result when something can go wrong and you want to keep the error visible.
 fn divide(a f64, b f64) !f64 {
 	if b == 0 {
 		return error('division by zero')
@@ -11,6 +11,7 @@ fn divide(a f64, b f64) !f64 {
 
 // Option type (?T) is used when a value may be missing.
 // This is a better fit than Result when there is no error, just "no value".
+// Beginners often use this pattern for lookups that may not find anything.
 fn find_user(id int) ?string {
 	if id == 1 {
 		return 'Alice'
@@ -19,7 +20,7 @@ fn find_user(id int) ?string {
 }
 
 fn main() {
-	// 1. Handling a Result type with an `or` block
+	// 1. Handling a successful Result with an `or` block.
 	// `or` gives you a fallback path and keeps the error available in the special `err` variable.
 	val1 := divide(10.0, 2.0) or {
 		println('Error: ${err}')
@@ -27,23 +28,25 @@ fn main() {
 	}
 	println('Result 1: ${val1}')
 
-	// 2. Handling a failed Result
+	// 2. Handling a failed Result.
+	// This shows how a function can fail gracefully instead of crashing the program.
 	val2 := divide(10.0, 0.0) or {
 		println('Error: ${err}')
 		0.0
 	}
 	println('Result 2: ${val2}')
 
-	// 3. Handling an Option type with an `or` block
+	// 3. Handling an Option with an `or` block.
 	// For Option types, the value is unwrapped or the fallback value is returned.
-	// This is a common beginner pattern when a lookup may legitimately return no result.
+	// This is a very common beginner pattern for lookups that may legitimately return no result.
 	user1 := find_user(1) or { 'Guest' }
 	println('User 1: ${user1}')
 
 	user2 := find_user(99) or { 'Guest' }
 	println('User 2: ${user2}')
 
-	// 4. Using if-let syntax to check Options
+	// 4. Using if-let style syntax to check whether an Option contains a value.
+	// This is another easy way to read the code when you want to branch on "found" versus "not found".
 	if name := find_user(1) {
 		println('Found user: ${name}')
 	} else {

@@ -3,10 +3,10 @@ module main
 import strings
 
 fn main() {
-	// This example shows a common beginner question:
+	// This example answers a common beginner question:
 	// when should you use strings.Builder instead of repeated string concatenation?
-	// For many small cases, simple concatenation is fine, but builders are better
-	// when you add many pieces inside a loop or when performance matters.
+	// For very small cases, simple concatenation is fine, but builders are more efficient
+	// when you append many pieces inside a loop or build larger outputs step by step.
 
 	mut message := ''
 	for i in 0 .. 5 {
