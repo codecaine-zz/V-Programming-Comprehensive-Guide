@@ -936,13 +936,16 @@ _File location: [variables_and_constants/01_variables/02_variable_features/01_mu
 
 ### Lesson: Declare Immutable Variable
 
-Variables and constants store state in V programs. This lesson on **Declare Immutable Variable** covers declaration rules, default values, scopes, or constant naming conventions.
+In V, variables are immutable by default. This design choice prevents accidental state mutation bugs, making code easier to reason about and safer for concurrency. When you declare a variable using the declaration operator `:=`, you are creating a read-only variable. If you try to reassign this variable later, the compilation will fail. This approach is similar to declaring constants in other languages, but it operates at the local scope level.
+
+This example demonstrates how to declare an immutable variable and print its value.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare immutable variable**.
 
 ```v
 fn main() {
+	// 'msg' is initialized as an immutable string variable using :=
 	msg := 'Hello'
 	println(msg)
 }
@@ -1128,7 +1131,9 @@ _File location: [variables_and_constants/01_variables/03_limitations/02_variable
 
 ### Lesson: Variable Scope For Same Variable Names
 
-Variables and constants store state in V programs. This lesson on **Variable Scope For Same Variable Names** covers declaration rules, default values, scopes, or constant naming conventions.
+In V, variables are strictly scoped to the function or block in which they are declared. This lexical scoping means that two different functions can declare variables with the exact same name (e.g., `msg`) without any collision or interference. The compiler guarantees that these variables occupy separate locations in memory and are completely isolated from one another. This allows developers to use common, context-appropriate names like `temp`, `id`, or `msg` locally inside individual functions without worrying about global or cross-functional namespace pollution.
+
+This program illustrates how `msg` is declared separately in both `method1` and `method2`, showing scope isolation in action.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **variable scope for same variable names**.
@@ -1137,11 +1142,13 @@ This example demonstrates the concepts of **variable scope for same variable nam
 module main
 
 fn method1() {
+	// 'msg' is local only to method1
 	msg := 'Hello from Method1'
 	println(msg)
 }
 
 fn method2() {
+	// 'msg' is local only to method2; does not conflict with method1's 'msg'
 	msg := 'Hello from Method2'
 	println(msg)
 }
@@ -2020,7 +2027,9 @@ _File location: [primitive_types/03_string_type/01_declare_string/01_declare_str
 
 ### Lesson: Declare String
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Declare String** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+In V, strings are representing read-only arrays of bytes, encoded natively in UTF-8. You can declare string variables using single quotes (`'hello'`) or double quotes (`"hello"`), though single quotes are preferred in idiomatic V. The string type in V comes with built-in metadata, such as the `.len` field, which returns the total number of bytes in the string (not necessarily the number of Unicode characters/runes). You can inspect the runtime type of any variable using V's built-in `typeof()` function.
+
+This example illustrates how to declare string variables, concatenate them, check string lengths, and query variable types at runtime.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare string**.
@@ -2029,12 +2038,17 @@ This example demonstrates the concepts of **declare string**.
 module main
 
 fn main() {
+	// Strings can be declared using single quotes
 	greeting := 'hello'
 	name := 'Ada'
+	
+	// String concatenation using the '+' operator
 	message := greeting + ', ' + name + '!'
 
 	println(message)
+	// Access the length (in bytes) of the string using the .len field
 	println('Length: ${message.len}')
+	// Inspect the variable type at runtime using typeof()
 	println('Type: ${typeof(message).name}')
 }
 ```
@@ -2235,7 +2249,9 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 
 ### Lesson: String Concatenation Using Plus Sign
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **String Concatenation Using Plus Sign** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+In V, joining strings together is performed using the `+` operator. Since strings are immutable byte arrays, each concatenation creates a brand-new string in memory and copies the contents of both source strings. While the `+` operator is extremely convenient and clear for joining a few strings, doing this in loops or performance-critical code paths is discouraged because it leads to excessive memory allocations. For high-performance string building, V offers the `strings.Builder` module.
+
+This example illustrates the direct concatenation of two string variables.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string concatenation using plus sign**.
@@ -2246,6 +2262,7 @@ module main
 fn main() {
 	a := 'con'
 	b := 'cat'
+	// Concatenate a and b, creating a new string 'concat' in memory
 	println(a + b)
 	// concat
 }
@@ -2558,7 +2575,9 @@ _File location: [control_flow/01_If_Statement/chaining_else_if/chaining_else_if.
 
 ### Lesson: Chaining Else If
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Chaining Else If** in V, showing how to control execution paths cleanly and safely.
+When your program must choose between multiple mutually exclusive paths, you can chain multiple `else if` blocks together. V evaluates these conditions sequentially from top to bottom. As soon as one condition evaluates to `true`, the corresponding block of code is executed, and all remaining branches (including any final fallback `else` block) are skipped entirely. Like single `if` statements, parentheses are not required around the condition expressions in V.
+
+This example defines a helper function that takes a weekday string and prints a corresponding breakfast menu using a chained conditional statement.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **chaining else if**.
@@ -2568,6 +2587,7 @@ module main
 
 // This helper chooses a meal plan based on the weekday.
 fn breakfast_menu(day string) {
+	// Cascading conditional checks
 	if day == 'Monday' {
 		println('Bread, Jam, Half boiled Egg')
 	} else if day == 'Tuesday' {
@@ -2583,6 +2603,7 @@ fn breakfast_menu(day string) {
 	} else if day == 'Sunday' {
 		println('Cereals, Bread, Jam, Half boiled Egg')
 	} else {
+		// Fallback block executed if no prior conditions match
 		println('invalid input')
 	}
 }
@@ -3024,7 +3045,9 @@ _File location: [control_flow/03_Iterative_statements/for_on_arrays/for_on_array
 
 ### Lesson: For On Arrays
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For On Arrays** in V, showing how to control execution paths cleanly and safely.
+Iterating over arrays is a very common requirement. In V, you can iterate over both the index and value of each element using the `for index, value in array` syntax. During each iteration, the index variable (e.g., `idx`) contains the zero-based array index, and the element variable (e.g., `ele`) contains a read-only copy of the item. Both variables are scoped exclusively to the body of the loop and cannot be mutated. If you only need the element values and not their indices, V allows you to omit the index variable (e.g. `for value in array`).
+
+This example declares a list of fruits and iterates over them, printing each fruit alongside its corresponding index.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on arrays**.
@@ -3034,6 +3057,8 @@ module main
 
 fn main() {
 	fruits := ['apple', 'banana', 'coconut']
+	
+	// Loop over the indices (idx) and elements (ele) of the fruits array
 	for idx, ele in fruits {
 		println('idx: ${idx} \t fruit: ${ele}')
 	}
@@ -5454,7 +5479,9 @@ _File location: [functions/01_function_types/03_higher_order_functions/01_functi
 
 ### Lesson: Functions As Input Arguments
 
-Functions are reusable blocks of logic. This lesson on **Functions As Input Arguments** explains functional syntax, arguments, returns, or functional capabilities in V.
+In V, functions are first-class types. This means that a function signature can be used as a parameter type for another function, allowing you to pass functional logic as an argument (a pattern known as a higher-order function). The type syntax for a function parameter matches its signature, such as `f fn () string`, representing a function `f` that takes no parameters and returns a `string`. You can pass named functions or anonymous functions inline directly.
+
+This example declares multiple greeting helpers and a higher-order function `greet` that takes a greeting function and a name to construct a message.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions as input arguments**.
@@ -5474,17 +5501,22 @@ fn greet_evening() string {
 	return 'Good Evening'
 }
 
+// 'greet' is a higher-order function accepting 'f' (a function returning a string)
 fn greet(f fn () string, name string) string {
+	// Call the passed function 'f' dynamically and interpolate the result
 	return '${f()}, ${name}!'
 }
 
 fn main() {
+	// Pass a named function 'greet_morning' directly
 	mut res := greet(greet_morning, 'Pavan')
 	println(res)
 
+	// Pass another named function 'greet_evening'
 	res = greet(greet_evening, 'Sahithi')
 	println(res)
 
+	// Pass an anonymous function inline directly as the argument
 	res = greet(fn () string {
 		return 'New year greetings to you'
 	}, 'Sahithi')
@@ -5884,9 +5916,9 @@ _File location: [structs/02_updating_fields_of_struct/02_updating_mutable_fields
 
 ### Lesson: Updating Mutable Fields Of Struct
 
-A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
+In V, struct fields are read-only (immutable) by default. To make specific fields mutable, you must group them under the `mut:` access modifier within the struct definition. However, defining a field as mutable only makes it eligible for mutation; to actually modify the field on a struct instance at runtime, the instance itself must be declared as a mutable variable using the `mut` keyword (e.g., `mut my_instance := MyStruct{}`). If the instance is declared as immutable, the compiler will reject any attempt to modify its fields even if they are defined under `mut:`.
 
-These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
+This example defines a `Note` struct with a mutable `message` field, initializes a mutable instance, and updates its value.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating mutable fields of struct**.
@@ -5895,16 +5927,20 @@ This example demonstrates the concepts of **updating mutable fields of struct**.
 module main
 
 struct Note {
+	// 'id' is immutable by default and cannot be updated.
 	id int
 mut:
+	// 'message' is declared mutable, allowing updates if the struct instance is mutable.
 	message string
 }
 
 fn main() {
+	// Declare the struct instance 'n' as mutable using the 'mut' keyword
 	mut n := Note{1, 'a simple struct demo'}
 	println('before update')
 	println(n)
 
+	// Modify the mutable field message
 	n.message = 'a simple struct updated'
 	println('after update')
 	println(n)
@@ -12229,6 +12265,13 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v](language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v)_
 
+### Lesson: Net Html
+
+The standard library `net.html` module provides light-weight parsing and querying APIs for HTML documents. It parses an HTML raw string into a structured hierarchical Document Object Model (DOM) tree of nodes. Developers can query this parsed DOM tree using methods to find tags by element name, filter by specific CSS class names, or read attributes (e.g. `href` inside `<a>` tags). This is extremely useful for building web scrapers, crawler services, or content extractors without needing external dependencies.
+
+This example illustrates parsing an HTML string, navigating node structures, filtering tags by attributes, and printing text values.
+
+**Additional Context from Repository docs:**
 This example demonstrates parsing HTML strings, querying tags by class name and attribute values, and extracting node text and properties using the `net.html` module.
 
 ```v
@@ -12955,6 +12998,13 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v](language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v)_
 
+### Lesson: Net Tcp
+
+The `net` standard library module provides full support for TCP (Transmission Control Protocol) stream networking. TCP is a connection-oriented, reliable transport protocol that guarantees ordered, error-checked delivery of streams of octets between hosts. In V, you construct a TCP server using `net.listen_tcp` which binds to an IP address and port, returning a listener instance. Calling `accept()` on the listener blocks execution until an incoming client initiates a connection. Communication is performed via stream reading and writing operations directly on the connection sockets.
+
+This example illustrates creating a TCP server and client, opening socket connections, sending payload data, and handling connection cleanup blocks.
+
+**Additional Context from Repository docs:**
 This example demonstrates how to create a simple TCP server and client in V. The server listens on a local port, accepts an incoming client connection, receives data, sends a response, and closes the connection.
 
 ```v
@@ -13310,6 +13360,13 @@ Production socket servers must defend against malicious input and network timeou
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v](language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v)_
 
+### Lesson: Net Udp
+
+UDP (User Datagram Protocol) is a connectionless, unreliable transport protocol that sends independent packets (datagrams) without establishing a dedicated channel. Unlike TCP, UDP has no handshakes, retry logic, or packet ordering guarantees, which makes it highly lightweight and perfect for low-latency tasks like real-time gaming, video streams, or DNS queries. In V, you open a UDP socket using `net.listen_udp`. Incoming datagrams are read along with their sender IP/port address (using `read` or `recvfrom`), and replies are routed back using the connectionless `write_to` method.
+
+This example illustrates opening a UDP socket listener, sending datagram packets, extracting sender details, and replying to a dynamic port.
+
+**Additional Context from Repository docs:**
 This example demonstrates sending and receiving connectionless UDP packets. The server binds to a local port and receives a message along with the sender's address, and responds to it using `write_to`.
 
 ```v
