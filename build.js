@@ -3774,7 +3774,7 @@ const template = `<!DOCTYPE html>
 
         if (quickJumpBackToTop) {
             quickJumpBackToTop.addEventListener('click', () => {
-                scrollToPosition(0, 'smooth');
+                scrollToTop();
                 quickJumpWidget.classList.remove('open');
             });
         }
@@ -4162,7 +4162,9 @@ const template = `<!DOCTYPE html>
         });
         
         function scrollToTop() {
-            scrollToPosition(0, 'smooth');
+            const distance = Math.abs(window.scrollY);
+            const targetBehavior = distance > 2000 ? 'auto' : 'smooth';
+            scrollToPosition(0, targetBehavior);
         }
 
         function slugifyHeading(text) {
