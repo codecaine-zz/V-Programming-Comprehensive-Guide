@@ -1850,10 +1850,13 @@
             background: none !important;
         }
 
-        pre code {
-            font-size: 11px;
-            line-height: 1.45;
-            letter-spacing: -0.015em;
+        pre code,
+        pre[class*="language-"],
+        code[class*="language-"] {
+            font-family: var(--font-code) !important;
+            font-size: 13px !important;
+            line-height: 1.5 !important;
+            letter-spacing: -0.01em !important;
         }
 
         .code-zoom-modal {
