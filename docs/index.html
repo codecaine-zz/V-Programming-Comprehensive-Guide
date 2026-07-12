@@ -447,6 +447,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
+            transition: opacity var(--transition-speed);
+        }
+        
+        .logo-area:hover {
+            opacity: 0.85;
         }
 
         .logo-v {
@@ -2350,7 +2356,7 @@
                         <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l2 2"></path></svg>
                     </button>
                 </div>
-                <div class="logo-area">
+                <div class="logo-area" onclick="scrollToTop()" title="Back to Top">
                     <div class="logo-v">V</div>
                     <span class="logo-title">V Language Guide</span>
                 </div>
@@ -37037,8 +37043,9 @@ Result collected: Job 5 output = &quot;ELDERBERRY&quot;</code></pre>
         }
 
         function saveReadingState() {
+            const activeId = getActiveHeadingId();
             const payload = {
-                hash: getActiveHeadingId() ? '#' + getActiveHeadingId() : window.location.hash || '',
+                hash: activeId ? '#' + activeId : '',
                 scrollY: getScrollY()
             };
             try { localStorage.setItem(LAST_READ_KEY, JSON.stringify(payload)); } catch (e) {}
@@ -37100,11 +37107,15 @@ Result collected: Job 5 output = &quot;ELDERBERRY&quot;</code></pre>
 
         function renderBreadcrumbs() {
             if (!breadcrumbBar) return;
+            
+            const activeId = getActiveHeadingId();
+            if (!activeId) {
+                breadcrumbBar.innerHTML = '<span class="breadcrumb-pill current">Welcome</span>';
+                return;
+            }
+
             const headings = Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'));
-            const activeHeading = headings.find(heading => {
-                const rect = heading.getBoundingClientRect();
-                return rect.top < 140;
-            }) || headings[0];
+            const activeHeading = headings.find(heading => heading.id === activeId) || headings[0];
 
             if (!activeHeading) {
                 breadcrumbBar.innerHTML = '';
@@ -37286,7 +37297,20 @@ Result collected: Job 5 output = &quot;ELDERBERRY&quot;</code></pre>
                     currentSectionTitleEl.innerText = currentTitle;
                 }
             } else {
-                // keep the current view without inline lesson navigation
+                // keep the current view without inline lesson navigation, but update heading title and clear highlights to reflect we are at the top
+                if (currentSectionTitleEl) {
+                    currentSectionTitleEl.innerText = 'Welcome';
+                }
+                document.querySelectorAll('.menu-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                document.querySelectorAll('.menu-lesson-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                // Clear the hash in the URL bar to reflect we are back at the top
+                if (window.location.hash) {
+                    history.replaceState(null, document.title, window.location.pathname + window.location.search);
+                }
             }
 
             document.querySelectorAll('.toc-link').forEach(link => {
@@ -37321,6 +37345,11 @@ Result collected: Job 5 output = &quot;ELDERBERRY&quot;</code></pre>
             const distance = Math.abs(getScrollY());
             const targetBehavior = distance > 2000 ? 'auto' : 'smooth';
             scrollToPosition(0, targetBehavior);
+            
+            const sidebarMenu = document.getElementById('sidebarMenu');
+            if (sidebarMenu) {
+                sidebarMenu.scrollTo({ top: 0, behavior: targetBehavior });
+            }
         }
 
         function slugifyHeading(text) {
