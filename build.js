@@ -3841,7 +3841,7 @@ const template = `<!DOCTYPE html>
         function updateBtnTopVisibility() {
             const el = btnTop || document.getElementById('btnTop');
             if (el) {
-                if (getScrollY() > 300) {
+                if (getScrollY() > 0) {
                     el.classList.add('visible');
                 } else {
                     el.classList.remove('visible');
