@@ -4290,6 +4290,43 @@ fn main() {
 }
 ```
 
+### Array Update Syntax
+
+_File location: [arrays_and_maps/01_arrays/09_array_update_syntax/array_update_syntax.v](arrays_and_maps/01_arrays/09_array_update_syntax/array_update_syntax.v)_
+
+### Lesson: Array Update Syntax
+
+V lets you initialise an array by spreading an existing array (using ellipsis spread syntax `...`), optionally followed by additional elements. 
+
+> [!NOTE]
+> In the official V specification, spreading is written as `[...base, 3, 4]`. This creates a copy/modified version of the array without mutating the original variable. In version 0.5.1, you can achieve the equivalent functionality by cloning the array and appending elements.
+
+```v
+module main
+
+fn main() {
+	println('=== Array Update Syntax ===')
+	
+	// NOTE: Array spread update syntax `[...base, 3, 4]` is defined in the V language specification (docs.md)
+	// but is not fully supported in V 0.5.1 parser.
+	// Below is the specification representation:
+	/*
+	base := [1, 2]
+	a := [...base, 3, 4]
+	assert a == [1, 2, 3, 4]
+	*/
+	
+	// Equivalent cloning & appending representation for V 0.5.1:
+	base := [1, 2]
+	mut a := base.clone()
+	a << 3
+	a << 4
+	println('base: ${base}') // [1, 2]
+	println('a: ${a}')       // [1, 2, 3, 4]
+	assert a == [1, 2, 3, 4]
+}
+```
+
 ---
 
 ## Maps
@@ -4668,6 +4705,42 @@ fn main() {
 		return k.to_upper(), v * 10
 	})
 	println('to_map(): ${transformed}')
+}
+```
+
+### Map Update Syntax
+
+_File location: [arrays_and_maps/02_maps/10_map_update_syntax/map_update_syntax.v](arrays_and_maps/02_maps/10_map_update_syntax/map_update_syntax.v)_
+
+### Lesson: Map Update Syntax
+
+Similar to structs, V lets you initialise a new map with updates applied on top of an existing map using the spread syntax `...`. This is functionally equivalent to cloning the map and updating it, except that it avoids declaring a mutable intermediate variable and allows inlining elements.
+
+```v
+module main
+
+fn main() {
+	println('=== Map Update Syntax ===')
+
+	base_map := {
+		'a': 4
+		'b': 5
+	}
+
+	// Create a new map by updating elements of base_map
+	foo := {
+		...base_map
+		'b': 88
+		'c': 99
+	}
+
+	println('base_map: ${base_map}') // {'a': 4, 'b': 5}
+	println('foo: ${foo}')           // {'a': 4, 'b': 88, 'c': 99}
+	
+	assert base_map['b'] == 5
+	assert foo['a'] == 4
+	assert foo['b'] == 88
+	assert foo['c'] == 99
 }
 ```
 
@@ -6022,6 +6095,51 @@ fn main() {
 }
 ```
 
+### Struct Update Syntax
+
+_File location: [structs/02_updating_fields_of_struct/05_struct_update_syntax/struct_update_syntax.v](structs/02_updating_fields_of_struct/05_struct_update_syntax/struct_update_syntax.v)_
+
+### Lesson: Struct Update Syntax
+
+V provides a convenient syntax to create and return a modified copy of a struct instance by spreading the original fields using `...` and overwriting specific ones:
+
+```v
+module main
+
+struct User {
+	name          string
+	age           int
+	is_registered bool
+}
+
+fn register(u User) User {
+	// Returns a modified copy using the struct update syntax
+	return User{
+		...u
+		is_registered: true
+	}
+}
+
+fn main() {
+	println('=== Struct Update Syntax ===')
+
+	user1 := User{
+		name: 'Ada'
+		age:  36
+	}
+
+	user2 := register(user1)
+
+	println('user1: ${user1}') // User{name: 'Ada', age: 36, is_registered: false}
+	println('user2: ${user2}') // User{name: 'Ada', age: 36, is_registered: true}
+
+	assert user1.is_registered == false
+	assert user2.is_registered == true
+	assert user2.name == 'Ada'
+	assert user2.age == 36
+}
+```
+
 ---
 
 ### Struct With Multiple Fields
@@ -6529,6 +6647,50 @@ fn main() {
 }
 ```
 
+### Trailing Struct Literal Arguments
+
+_File location: [structs/06_struct_as_trailing_literal_arguments_to_function/02_trailing_struct_literal_arguments/trailing_struct_literal_arguments.v](structs/06_struct_as_trailing_literal_arguments_to_function/02_trailing_struct_literal_arguments/trailing_struct_literal_arguments.v)_
+
+### Lesson: Trailing Struct Literal Arguments
+
+V does not support default function arguments or named arguments. Instead, you can use trailing struct literal arguments. By tagging a configuration struct with the `@[params]` attribute, V allows you to omit both the struct name and the curly braces when calling the function if it is the final argument.
+
+```v
+module main
+
+@[params]
+struct ButtonConfig {
+	text        string
+	is_disabled bool
+	width       int = 70
+	height      int = 20
+}
+
+struct Button {
+	text   string
+	width  int
+	height int
+}
+
+fn new_button(c ButtonConfig) &Button {
+	return &Button{
+		width:  c.width
+		height: c.height
+		text:   c.text
+	}
+}
+
+fn main() {
+	println('=== Trailing Struct Literal Arguments ===')
+	// Omitting both the struct name and braces
+	button := new_button(text: 'Click me', width: 100)
+	println('button: width=${button.width}, height=${button.height}, text="${button.text}"')
+	assert button.height == 20
+	assert button.width == 100
+	assert button.text == 'Click me'
+}
+```
+
 ---
 
 ### Anonymous Structs
@@ -6734,6 +6896,36 @@ fn main() {
 		println('Union float value: ${d.f}')
 		println('Union int value after float update: ${d.i} (shared memory representation)')
 	}
+}
+```
+
+### Structs with Reference Fields
+
+_File location: [structs/11_structs_with_reference_fields/structs_with_reference_fields.v](structs/11_structs_with_reference_fields/structs_with_reference_fields.v)_
+
+### Lesson: Structs with Reference Fields
+
+Structs can store reference fields/pointers (prefixed with `&`). Reference fields must be initialized to a valid address or explicitly auto-initialized using `= unsafe { nil }` (use with caution, as nil pointer dereferences will crash/panic).
+
+```v
+module main
+
+struct Node {
+	a &Node
+	b &Node = unsafe { nil } // Auto-initialized to nil
+}
+
+fn main() {
+	println('=== Struct Reference Fields ===')
+	foo := Node{
+		a: unsafe { nil }
+	}
+	bar := Node{
+		a: &foo
+	}
+	println('foo: ${foo}')
+	println('bar: ${bar}')
+	assert bar.a == &foo
 }
 ```
 
@@ -8818,6 +9010,114 @@ Using premium templates like this ensures your compiled V webview apps have zero
 
 ---
 
+### Selective Imports
+
+_File location: [modules/ch12_selective_imports/selective_imports.v](modules/ch12_selective_imports/selective_imports.v)_
+
+### Lesson: Selective Imports
+
+V permits you to selectively import specific public functions and types directly from a module by using the syntax `import module_name { symbol1, symbol2 }`. This allows calling those symbols directly without the module prefix. Note that selective imports are not permitted for module constants, which must always be prefixed.
+
+```v
+module main
+
+import os { input, user_os }
+
+fn main() {
+	println('=== Selective Imports ===')
+	// We can use the imported functions directly without os. prefix:
+	name := 'Ada'
+	println('Hello, ${name}!')
+	current_os := user_os()
+	println('Your OS is ${current_os}.')
+	assert current_os.len > 0
+}
+```
+
+---
+
+### Module Hierarchy
+
+_File locations: [modules/ch13_module_hierarchy/abc/file1.v](modules/ch13_module_hierarchy/abc/file1.v), [modules/ch13_module_hierarchy/abc/def/file2.v](modules/ch13_module_hierarchy/abc/def/file2.v), [modules/ch13_module_hierarchy/modulebasics.v](modules/ch13_module_hierarchy/modulebasics.v)_
+
+### Lesson: Module Hierarchy
+
+Modules in V map directly to the directory hierarchy. However, nested directory hierarchies are resolved in a flattened namespace. A submodule located in `abc/def/source.v` is declared with `module def` (not `module abc.def`), but must be imported via `import abc.def` and its public symbols are called using a single prefix: `def.func()`.
+
+#### Module Helper (`abc/file1.v`):
+```v
+module abc
+
+pub fn hello_abc() {
+	println('Hello from abc!')
+}
+```
+
+#### Submodule Helper (`abc/def/file2.v`):
+```v
+module def
+
+pub fn hello_def() {
+	println('Hello from def!')
+}
+```
+
+#### Main Entry (`modulebasics.v`):
+```v
+module main
+
+import abc
+import abc.def
+
+fn main() {
+	println('=== Module Hierarchy ===')
+	abc.hello_abc()
+	def.hello_def() // Call with def, not abc.def
+}
+```
+
+---
+
+### Module Import Aliasing
+
+_File locations: [modules/ch14_module_import_aliasing/mymod/sha256/sha256.v](modules/ch14_module_import_aliasing/mymod/sha256/sha256.v), [modules/ch14_module_import_aliasing/modulebasics.v](modules/ch14_module_import_aliasing/modulebasics.v)_
+
+### Lesson: Module Import Aliasing
+
+When you have module naming conflicts (for example, importing two different modules named `sha256`), you can resolve them by aliasing one or both using the `as` keyword:
+
+#### Custom SHA256 Helper (`mymod/sha256/sha256.v`):
+```v
+module sha256
+
+pub fn sum(data []u8) string {
+	return 'mock_sha256_sum_for_aliasing_demo'
+}
+```
+
+#### Main Entry (`modulebasics.v`):
+```v
+module main
+
+import crypto.sha256
+import mymod.sha256 as mysha256
+
+fn main() {
+	println('=== Module Import Aliasing ===')
+	// Use the standard crypto.sha256:
+	v_hash := sha256.sum('hi'.bytes()).hex()
+	// Use our aliased mymod.sha256:
+	my_hash := mysha256.sum('hi'.bytes())
+	
+	println('Standard hash: ${v_hash}')
+	println('Aliased mymod hash: ${my_hash}')
+	
+	assert my_hash == 'mock_sha256_sum_for_aliasing_demo'
+}
+```
+
+---
+
 # Chapter 10: Writing Tests in V
 
 ## Quick Access
@@ -8867,6 +9167,56 @@ fn main() {
 	println('2nd assert')
 	assert 'apple' == 'orange' // stops execution
 	println('done')
+}
+```
+
+---
+
+### Asserts with an Extra Message
+
+_File location: [testing/01_assert/02_assert_with_message/assert_with_message.v](testing/01_assert/02_assert_with_message/assert_with_message.v)_
+
+### Lesson: Asserts with an Extra Message
+
+V allows appending a custom error message to `assert` statements using a comma: `assert condition, 'custom error message'`. When the assertion fails, this message will be printed to help troubleshoot the failure.
+
+```v
+module main
+
+fn main() {
+	println('=== Assert with Message ===')
+	for i in 0 .. 5 {
+		// This assertion is true for all i < 5, but demonstrates how to supply a message
+		assert i * 2 < 10, 'assertion failed for i: ${i}'
+	}
+	println('All assertions passed!')
+}
+```
+
+---
+
+### Asserts That Do Not Abort Your Program
+
+_File location: [testing/01_assert/03_assert_continues/assert_continues.v](testing/01_assert/03_assert_continues/assert_continues.v)_
+
+### Lesson: Asserts That Do Not Abort Your Program
+
+By default, an assertion failure immediately terminates the running program. If you are prototyping or running tests where you want all assertion failures to be reported without halting execution, you can tag the containing function with the `@[assert_continues]` attribute:
+
+```v
+module main
+
+@[assert_continues]
+fn check_value(ii int) {
+	assert ii == 2
+}
+
+fn main() {
+	println('=== Assert Continues ===')
+	for i in 0 .. 4 {
+		check_value(i)
+	}
+	println('Finished running!')
 }
 ```
 
