@@ -1,588 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-
-// Target paths for the compiler: source Markdown file and destination HTML directory/file
-const srcPath = path.join(__dirname, 'The V Programming Language: A Comprehensive Textbook Guide.md');
-const destDir = path.join(__dirname, 'docs');
-const destPath = path.join(destDir, 'index.html');
-
-// Create the destination directory if it doesn't already exist to prevent write errors
-if (!fs.existsSync(destDir)) {
-    fs.mkdirSync(destDir, { recursive: true });
-}
-
-const markdown = fs.readFileSync(srcPath, 'utf8');
-
-/**
- * Escapes special HTML characters in a string to prevent XSS and formatting breakage.
- * Converts symbols: & to &amp;, < to &lt;, > to &gt;, " to &quot;, and ' to &#039;
- */
-function escapeHtml(text) {
-    return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-}
-
-/**
- * Resolves standard local file paths inside the repository to their absolute GitHub URLs.
- * Detects special subdirectories (e.g. simplegui boilerplate) and maps them to external repositories if needed.
- */
-function getGitHubUrl(rawPath) {
-    const hasExtension = rawPath.includes('.');
-    const prefix = hasExtension ? 'blob' : 'tree';
-    
-    // Resolve simplegui boilerplates to the specific repository where they live
-    if (rawPath.startsWith('boilerplate_templates/13_simplegui')) {
-        let subPath = rawPath.substring('boilerplate_templates/13_simplegui'.length);
-        if (subPath.startsWith('/')) {
-            subPath = subPath.substring(1);
-        }
-        if (!subPath) {
-            return 'https://github.com/codecaine-zz/vlang_simplegui';
-        }
-        return `https://github.com/codecaine-zz/vlang_simplegui/${prefix}/master/${subPath}`;
-    }
-    
-    // Default repository mapping for all standard chapter examples
-    return `https://github.com/codecaine-zz/V-Programming-Comprehensive-Guide/${prefix}/master/${rawPath}`;
-}
-
-/**
- * Custom Markdown parser optimized to compile the V Textbook Guide into single-page HTML.
- * Handles headings, sections, lessons, blockquotes, lists, alert boxes, and interactive code blocks.
- * Simultaneously generates a search index and structural navigation mapping.
- */
-function parseMarkdownToHtmlAndIndex(md) {
-    const lines = md.split(/\r?\n/);
-    let html = '';
-    let currentChapter = null;
-    let currentSection = null;
-    let currentLesson = null;
-    
-    // Search index holds flat document search items (chapter, section, lesson level)
-    const searchIndex = [];
-    
-    // Code block parser state
-    let inCodeBlock = false;
-    let codeLanguage = '';
-    let codeContent = [];
-    
-    // Blockquote & GitHub Alerts state
-    let inBlockquote = false;
-    let alertType = null; // 'note', 'tip', 'important', 'warning', 'caution', 'exercise', 'solution', 'output'
-    let blockquoteContent = [];
-    
-    // List elements state
-    let inList = false;
-    let listType = ''; // 'ul', 'ol'
-
-    // Helper to close list tags and reset list state
-    function flushList() {
-        if (inList) {
-            html += `</${listType}>\n`;
-            inList = false;
-        }
-    }
-
-    // Helper to close and format blockquote/alert tags and content
-    function flushBlockquote() {
-        if (inBlockquote) {
-            let parsedContent = '';
-            let blockCodeContent = [];
-            let inBlockCode = false;
-            let blockCodeLanguage = '';
-
-            // Process lines inside the blockquote/alert block
-            for (let j = 0; j < blockquoteContent.length; j++) {
-                const bLine = blockquoteContent[j];
-                const trimmedBLine = bLine.trim();
-                
-                // Allow inner code blocks inside blockquotes (e.g. for showing output)
-                if (trimmedBLine.startsWith('```')) {
-                    if (inBlockCode) {
-                        const codeStr = blockCodeContent.join('\n');
-                        parsedContent += generateCodeBlockHtml(blockCodeLanguage, codeStr);
-                        inBlockCode = false;
-                        blockCodeContent = [];
-                    } else {
-                        inBlockCode = true;
-                        blockCodeLanguage = trimmedBLine.substring(3).trim();
-                    }
-                } else if (inBlockCode) {
-                    blockCodeContent.push(bLine);
-                } else {
-                    if (trimmedBLine !== '') {
-                        parsedContent += `<p>${parseInline(bLine)}</p>\n`;
-                    }
-                }
-            }
-
-            // Flush remaining block code content if not closed
-            if (inBlockCode && blockCodeContent.length > 0) {
-                const codeStr = blockCodeContent.join('\n');
-                parsedContent += generateCodeBlockHtml(blockCodeLanguage, codeStr);
-            }
-
-            // Generate either a standard blockquote or a colored GitHub-style Alert box
-            if (alertType) {
-                html += `<div class="alert alert-${alertType}">
-                    <div class="alert-title">
-                        <svg class="alert-icon" viewBox="0 0 16 16" width="16" height="16">
-                            ${getAlertIcon(alertType)}
-                        </svg>
-                        <span>${alertType.toUpperCase()}</span>
-                    </div>
-                    <div class="alert-content">${parsedContent}</div>
-                </div>\n`;
-            } else {
-                html += `<blockquote>${parsedContent}</blockquote>\n`;
-            }
-            inBlockquote = false;
-            alertType = null;
-            blockquoteContent = [];
-        }
-    }
-
-    // SVG icons for GitHub-style Alerts (Note, Tip, Important, Warning, Caution, etc.)
-    function getAlertIcon(type) {
-        switch (type) {
-            case 'note':
-                return '<path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a.75.75 0 0 0-.75.75v5.25a.75.75 0 0 0 1.5 0V2.25A.75.75 0 0 0 8 1.5ZM8.75 11a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>';
-            case 'tip':
-                return '<path d="M8 1.5c-2.363 0-4 1.83-4 3.75 0 .885.342 1.684.97 2.31l.01.01c.28.28.483.636.597 1.02a.25.25 0 0 1-.24.32H3.75a.75.75 0 0 0 0 1.5h1.223a.25.25 0 0 1 .24.32c-.114.384-.316.74-.596 1.02l-.01.01c-.628.626-.97 1.425-.97 2.31 0 1.92 1.637 3.75 4 3.75s4-1.83 4-3.75c0-.885-.342-1.684-.97-2.31l-.01-.01a2.915 2.915 0 0 0-.596-1.02.25.25 0 0 1 .24-.32h1.223a.75.75 0 0 0 0-1.5H10.74a.25.25 0 0 1-.24-.32c.114-.384.316-.74.596-1.02l.01-.01c.628-.626.97-1.425.97-2.31 0-1.92-1.637-3.75-4-3.75ZM6.5 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H7a.5.5 0 0 1-.5-.5ZM7 8a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1A.5.5 0 0 1 7 8Z"></path>';
-            case 'important':
-                return '<path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm1.5 0a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm7.25-3.25v3.5a.75.75 0 0 1-1.5 0v-3.5a.75.75 0 0 1 1.5 0ZM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path>';
-            case 'warning':
-                return '<path d="M6.457 1.047c.659-1.14 2.427-1.14 3.086 0l6.03 10.437C16.233 12.624 15.349 14 14.03 14H1.97c-1.319 0-2.204-1.376-1.543-2.516L6.457 1.047ZM8 4c-.552 0-1 .448-1 1v3c0 .552.448 1 1 1s1-.448 1-1V5c0-.552-.448-1-1-1Zm0 6.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path>';
-            case 'caution':
-                return '<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14Zm0 1.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Zm0-9a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 8 7.5ZM8 4.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5Z"></path>';
-            case 'exercise':
-                return '<path d="M8 1.5A6.5 6.5 0 1 0 14.5 8 6.507 6.507 0 0 0 8 1.5Zm.75 3.25a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 1.5 0Zm0 4.5a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"></path>';
-            case 'solution':
-                return '<path d="M13.78 4.22a.75.75 0 0 1 0 1.06L6.56 12.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.97 2.97 6.97-8.97a.75.75 0 0 1 1.06 0Z"></path>';
-            case 'output':
-                return '<path d="M5.75 3a.75.75 0 0 0 0 1.5h4.5A.75.75 0 0 0 10.25 3h-4.5Zm-2.5 4.5A.75.75 0 0 0 3 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5Zm7.5 0A.75.75 0 0 0 10.5 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5ZM8 10.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 10.25Z"></path>';
-            default:
-                return '';
-        }
-    }
-
-    /**
-     * Parses inline Markdown syntax (bold, italics, links, and code blocks) into HTML.
-     * Uses placeholders to prevent nested parsing conflicts (e.g. link inside code block).
-     */
-    function parseInline(text) {
-        let result = escapeHtml(text);
-        
-        // 1. Extract inline code blocks `code` so we don't apply formatting inside them.
-        const codeBlocks = [];
-        result = result.replace(/`([^`]+)`/g, (match, code) => {
-            const placeholder = `CODEPLACEHOLDER${codeBlocks.length}XYZ`;
-            codeBlocks.push(code);
-            return placeholder;
-        });
-
-        // 2. Extract Markdown links [text](url), automatically resolving internal repo links to GitHub
-        const links = [];
-        result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
-            const isExternal = url.startsWith('http://') || url.startsWith('https://');
-            const isAnchor = url.startsWith('#');
-            let href = url;
-            let targetAttr = '';
-            if (!isExternal && !isAnchor) {
-                href = getGitHubUrl(url);
-                targetAttr = ' target="_blank" rel="noopener noreferrer"';
-            } else if (isExternal) {
-                targetAttr = ' target="_blank" rel="noopener noreferrer"';
-            }
-            const placeholder = `LINKPLACEHOLDER${links.length}XYZ`;
-            links.push({ linkText, href, targetAttr });
-            return placeholder;
-        });
-
-        // 3. Apply standard formatting on plain text sections
-        // Bold: **text** and __text__
-        result = result.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-        result = result.replace(/__([^_]+)__/g, '<strong>$1</strong>');
-        // Italics: *text* and _text_
-        result = result.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-        result = result.replace(/_([^_]+)_/g, '<em>$1</em>');
-
-        // 4. Restore links with proper formatting
-        result = result.replace(/LINKPLACEHOLDER(\d+)XYZ/g, (match, index) => {
-            const { linkText, href, targetAttr } = links[parseInt(index, 10)];
-            return `<a href="${href}"${targetAttr}>${linkText}</a>`;
-        });
-
-        // 5. Restore inline code blocks
-        result = result.replace(/CODEPLACEHOLDER(\d+)XYZ/g, (match, index) => {
-            return `<code>${codeBlocks[parseInt(index, 10)]}</code>`;
-        });
-        
-        return result;
-    }
-
-    // Slugifies titles to create clean, URL-safe anchors (e.g. "Chapter 1" -> "chapter-1")
-    function slugify(text) {
-        return text.toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/\s/g, '-')
-            .replace(/^-+|-+$/g, '');
-    }
-
-    // Normalizes language identifier names for syntax highlighting classes
-    function normalizeCodeLanguage(language) {
-        const normalized = (language || 'text').toLowerCase();
-        return normalized === 'vlang' ? 'v' : normalized;
-    }
-
-    /**
-     * Generates standard container wrapper for code blocks.
-     * If the language is V, it automatically creates buttons to:
-     * - Open the snippet directly in the official V Playground
-     * - Copy code and trigger an active V Playground session
-     */
-    function generateCodeBlockHtml(codeLanguage, codeStr) {
-        let codeHtml = escapeHtml(codeStr);
-        let playgroundBtn = '';
-        if (codeLanguage.toLowerCase() === 'v' || codeLanguage.toLowerCase() === 'vlang') {
-            const base64Code = Buffer.from(codeStr).toString('base64');
-            const playgroundUrl = `https://play.vlang.io/?base64=${encodeURIComponent(base64Code)}`;
-            playgroundBtn = `<a href="${playgroundUrl}" target="_blank" class="btn-playground" title="Run in V Playground">
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                Run
-            </a>
-            <button class="btn-playground-copy" onclick="copyAndOpenPlayground(this)" title="Copy Code & Open V Playground">
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                Copy &amp; Open
-            </button>`;
-        }
-
-        const normalizedLanguage = normalizeCodeLanguage(codeLanguage);
-        return `<div class="code-wrapper">
-            <div class="code-header">
-                <span class="code-lang">${codeLanguage || 'text'}</span>
-                <div class="code-actions">
-                    ${playgroundBtn}
-                    <button type="button" class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code" aria-label="Zoom code block">
-                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
-                        Zoom
-                    </button>
-                    <button type="button" class="btn-copy" onclick="copyCode(this)" title="Copy Code" aria-label="Copy code block">
-                        <svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        Copy
-                    </button>
-                </div>
-            </div>
-            <pre><code class="language-${normalizedLanguage}">${codeHtml}</code></pre>
-        </div>\n`;
-    }
-
-    // Normalizes section and lesson titles for duplicate matching and comparisons
-    function normalizeTitleForComparison(text) {
-        return text
-            .replace(/^Lesson:\s*/i, '')
-            .replace(/\s*\([^)]+\)\s*$/, '')
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-    }
-
-    const structure = [];
-
-    // Parse the markdown line by line
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i];
-
-        // Check if starting or ending a multi-line code block
-        if (line.trim().startsWith('```')) {
-            flushList();
-            flushBlockquote();
-            if (inCodeBlock) {
-                // Close the active code block and render HTML
-                const codeStr = codeContent.join('\n');
-                html += generateCodeBlockHtml(codeLanguage, codeStr);
-
-                // Index content for search purposes
-                if (currentLesson) {
-                    currentLesson.content += ` [CODE:${codeLanguage}]`;
-                }
-
-                inCodeBlock = false;
-                codeContent = [];
-            } else {
-                // Open a new code block
-                inCodeBlock = true;
-                codeLanguage = line.trim().substring(3).trim();
-            }
-            continue;
-        }
-
-        // Collect content lines if inside a code block
-        if (inCodeBlock) {
-            codeContent.push(line);
-            continue;
-        }
-
-        // Process blockquote and Github alert markup
-        if (line.trim().startsWith('>')) {
-            flushList();
-            inBlockquote = true;
-            let cleanLine = line.trim().substring(1).trim();
-            
-            // Check for GitHub Alerts markers
-            if (cleanLine.startsWith('[!NOTE]')) {
-                alertType = 'note';
-                cleanLine = cleanLine.substring(7).trim();
-            } else if (cleanLine.startsWith('[!TIP]')) {
-                alertType = 'tip';
-                cleanLine = cleanLine.substring(6).trim();
-            } else if (cleanLine.startsWith('[!IMPORTANT]')) {
-                alertType = 'important';
-                cleanLine = cleanLine.substring(12).trim();
-            } else if (cleanLine.startsWith('[!WARNING]')) {
-                alertType = 'warning';
-                cleanLine = cleanLine.substring(10).trim();
-            } else if (cleanLine.startsWith('[!CAUTION]')) {
-                alertType = 'caution';
-                cleanLine = cleanLine.substring(10).trim();
-            } else if (cleanLine.startsWith('[!EXERCISE]')) {
-                alertType = 'exercise';
-                cleanLine = cleanLine.substring(11).trim();
-            } else if (cleanLine.startsWith('[!SOLUTION]')) {
-                alertType = 'solution';
-                cleanLine = cleanLine.substring(11).trim();
-            } else if (cleanLine.startsWith('[!OUTPUT]')) {
-                alertType = 'output';
-                cleanLine = cleanLine.substring(9).trim();
-            }
-            
-            if (cleanLine) {
-                blockquoteContent.push(cleanLine);
-            }
-            continue;
-        } else if (inBlockquote) {
-            flushBlockquote();
-        }
-
-        // Process lists (un-ordered '-' and ordered '1.')
-        const ulMatch = line.match(/^(\s*)-\s+(.*)/);
-        const olMatch = line.match(/^(\s*)\d+\.\s+(.*)/);
-        
-        if (ulMatch) {
-            const content = ulMatch[2];
-            if (!inList || listType !== 'ul') {
-                flushList();
-                html += `<ul>\n`;
-                inList = true;
-                listType = 'ul';
-            }
-            html += `<li>${parseInline(content)}</li>\n`;
-            continue;
-        } else if (olMatch) {
-            const content = olMatch[2];
-            if (!inList || listType !== 'ol') {
-                flushList();
-                html += `<ol>\n`;
-                inList = true;
-                listType = 'ol';
-            }
-            html += `<li>${parseInline(content)}</li>\n`;
-            continue;
-        } else {
-            flushList();
-        }
-
-        // Process blank lines (ignore to prevent generating redundant paragraphs)
-        if (line.trim() === '') {
-            continue;
-        }
-
-        // Process Horizontal Rule
-        if (line.trim() === '---') {
-            html += `<hr />\n`;
-            continue;
-        }
-
-        // Process Headings (h1 to h6)
-        const headingMatch = line.match(/^(#{1,6})\s+(.*)/);
-        if (headingMatch) {
-            const level = headingMatch[1].length;
-            const title = headingMatch[2].trim();
-            const slug = slugify(title);
-
-            if (level === 1) {
-                if (title.startsWith('Chapter ')) {
-                    const chapMatch = title.match(/^Chapter (\d+):\s*(.*)/);
-                    const chapNum = chapMatch ? chapMatch[1] : '';
-                    const chapName = chapMatch ? chapMatch[2] : title;
-                    
-                    currentChapter = {
-                        id: slug,
-                        number: chapNum,
-                        title: chapName,
-                        sections: []
-                    };
-                    structure.push(currentChapter);
-                    currentSection = null;
-                    currentLesson = null;
-                    
-                    html += `</section>\n<section id="chap-wrapper-${slug}" class="chapter-section" data-chapter-id="${slug}">\n`;
-                    html += `<h1 class="chapter-title" id="${slug}" data-chapter-id="${slug}"><span class="chap-badge">Chapter ${chapNum}</span> ${escapeHtml(chapName)}</h1>\n`;
-                    
-                    searchIndex.push({
-                        id: currentChapter.id,
-                        title: `Chapter ${chapNum}: ${chapName}`,
-                        type: 'chapter',
-                        content: title
-                    });
-                } else {
-                    html += `<h1 class="doc-main-title" id="${slug}">${escapeHtml(title)}</h1>\n`;
-                    searchIndex.push({
-                        id: slug,
-                        title: title,
-                        type: 'title',
-                        content: title
-                    });
-                }
-            } else if (level === 2) {
-                if (title === 'Code Examples Index' || title === 'Table of Contents') {
-                    continue;
-                }
-                
-                currentSection = {
-                    id: slug,
-                    title: title,
-                    lessons: []
-                };
-                if (currentChapter) {
-                    currentChapter.sections.push(currentSection);
-                }
-                currentLesson = null;
-
-                html += `<h2 class="section-title" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">${escapeHtml(title)}</h2>\n`;
-                
-                searchIndex.push({
-                    id: `${slug}`,
-                    title: title,
-                    type: 'section',
-                    content: title,
-                    chapter: currentChapter ? currentChapter.title : ''
-                });
-            } else if (level === 3) {
-                let isLesson = false;
-                let cleanTitle = title;
-                if (title.startsWith('Lesson:')) {
-                    isLesson = true;
-                    cleanTitle = title.substring(7).trim();
-                }
-
-                // Check for duplicates to append lesson sub-sections to the main lesson list
-                let duplicateLesson = null;
-                if (currentSection && currentSection.lessons.length > 0) {
-                    const lastLesson = currentSection.lessons[currentSection.lessons.length - 1];
-                    if (normalizeTitleForComparison(lastLesson.title) === normalizeTitleForComparison(title)) {
-                        duplicateLesson = lastLesson;
-                    }
-                }
-
-                if (duplicateLesson) {
-                    if (isLesson) {
-                        duplicateLesson.title = cleanTitle;
-                    }
-                    currentLesson = duplicateLesson;
-
-                    const lessonClass = isLesson ? ' lesson-header' : '';
-                    html += `<h3 class="lesson-subtitle${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">
-                        <span>${escapeHtml(cleanTitle)}</span>
-                        <button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark('${slug}', '${escapeHtml(cleanTitle).replace(/'/g, "\\'")}')" title="Bookmark lesson">
-                            <svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                        </button>
-                    </h3>\n`;
-                } else {
-                    currentLesson = {
-                        id: slug,
-                        title: cleanTitle,
-                        content: ''
-                    };
-
-                    if (currentSection) {
-                        currentSection.lessons.push(currentLesson);
-                    }
-
-                    const lessonClass = isLesson ? ' lesson-header' : '';
-                    html += `<h3 class="lesson-title${lessonClass}" id="${slug}" data-chapter-id="${currentChapter ? currentChapter.id : ''}">
-                        <span>${escapeHtml(cleanTitle)}</span>
-                        <button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark('${slug}', '${escapeHtml(cleanTitle).replace(/'/g, "\\'")}')" title="Bookmark lesson">
-                            <svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                        </button>
-                    </h3>\n`;
-                    
-                    searchIndex.push({
-                        id: `${slug}`,
-                        title: cleanTitle,
-                        type: 'lesson',
-                        content: cleanTitle,
-                        chapter: currentChapter ? currentChapter.title : '',
-                        section: currentSection ? currentSection.title : ''
-                    });
-                }
-            } else {
-                html += `<h${level} id="${slug}">${escapeHtml(title)}</h${level}>\n`;
-            }
-            continue;
-        }
-
-        // Process File location paths (maps relative paths in repository to local links)
-        const fileLocMatch = line.match(/^_(File location|File Location):\s*\[(.*?)\]\((.*?)\)_/);
-        if (fileLocMatch) {
-            const relPath = fileLocMatch[2];
-            let absPath = fileLocMatch[3];
-            if (!absPath.startsWith('http') && !absPath.startsWith('file://') && !absPath.startsWith('#')) {
-                absPath = getGitHubUrl(absPath);
-            }
-            html += `<div class="file-location">
-                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                <span>File: </span><a href="${absPath}" target="_blank" rel="noopener noreferrer">${escapeHtml(relPath)}</a>
-            </div>\n`;
-            if (currentLesson) {
-                currentLesson.content += ` File location: ${relPath}`;
-            }
-            continue;
-        }
-
-        // Parse regular paragraphs
-        const parsedLine = parseInline(line);
-        html += `<p>${parsedLine}</p>\n`;
-        if (currentLesson) {
-            currentLesson.content += ' ' + line;
-        }
-    }
-
-    // Flush any open blocks and finalize HTML output
-    flushList();
-    flushBlockquote();
-    html += `</section>\n`;
-
-    return {
-        html,
-        structure,
-        searchIndex
-    };
-}
-
-// Generate the beautiful Single Page App
-const { html: contentHtml, structure, searchIndex } = parseMarkdownToHtmlAndIndex(markdown);
-
-// Prepare structural JSON for client search
-const structureJson = JSON.stringify(structure);
-const searchIndexJson = JSON.stringify(searchIndex);
-
-const template = `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -3073,7 +2489,7 @@ const template = `<!DOCTYPE html>
                     </div>
                 </div>
                 <div class="breadcrumb-bar" id="breadcrumbBar"></div>
-                ${contentHtml}
+                <!-- CONTENT_HTML_PLACEHOLDER -->
             </div>
         </main>
     </div>
@@ -3114,8 +2530,8 @@ const template = `<!DOCTYPE html>
     
     <script>
         // Inject structure and search index JSON
-        const bookStructure = ${structureJson};
-        const searchIndex = ${searchIndexJson};
+        const bookStructure = /* STRUCTURE_JSON_PLACEHOLDER */;
+        const searchIndex = /* SEARCH_INDEX_JSON_PLACEHOLDER */;
         
         // Theme Management
         const customThemeStorageKey = 'custom-theme-config';
@@ -3206,7 +2622,7 @@ const template = `<!DOCTYPE html>
 
         function hexToRgba(hex, alpha) {
             const { r, g, b } = hexToRgb(hex);
-            return \`rgba(\${r}, \${g}, \${b}, \${alpha})\`;
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
         }
 
         function getStoredCustomTheme() {
@@ -3280,7 +2696,7 @@ const template = `<!DOCTYPE html>
             const borderHover = blendColors(bgPrimary, accentPrimary, 0.35);
             const codeBg = blendColors(bgPrimary, '#000000', 0.3);
             const glassBg = hexToRgba(bgSecondary, 0.86);
-            const shadowPremium = \`0 10px 25px -5px \${hexToRgba(bgPrimary, 0.28)}, 0 8px 10px -6px \${hexToRgba(bgPrimary, 0.2)}\`;
+            const shadowPremium = `0 10px 25px -5px ${hexToRgba(bgPrimary, 0.28)}, 0 8px 10px -6px ${hexToRgba(bgPrimary, 0.2)}`;
 
             document.documentElement.style.setProperty('--bg-primary', bgPrimary);
             document.documentElement.style.setProperty('--bg-secondary', bgSecondary);
@@ -3290,7 +2706,7 @@ const template = `<!DOCTYPE html>
             document.documentElement.style.setProperty('--text-muted', textMuted);
             document.documentElement.style.setProperty('--accent-primary', accentPrimary);
             document.documentElement.style.setProperty('--accent-glow', accentPrimary);
-            document.documentElement.style.setProperty('--accent-gradient', \`linear-gradient(135deg, \${accentPrimary} 0%, \${blendColors(accentPrimary, '#ffffff', 0.2)} 100%)\`);
+            document.documentElement.style.setProperty('--accent-gradient', `linear-gradient(135deg, ${accentPrimary} 0%, ${blendColors(accentPrimary, '#ffffff', 0.2)} 100%)`);
             document.documentElement.style.setProperty('--border-color', borderColor);
             document.documentElement.style.setProperty('--border-hover', borderHover);
             document.documentElement.style.setProperty('--code-bg', codeBg);
@@ -3557,8 +2973,8 @@ const template = `<!DOCTYPE html>
             
             const heading = document.createElement('div');
             heading.className = 'chapter-heading';
-            heading.innerHTML = \`<span>Chapter \${chap.number || ''}: \${chap.title}</span>
-                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="3" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>\`;
+            heading.innerHTML = `<span>Chapter ${chap.number || ''}: ${chap.title}</span>
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="3" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
             
             const itemsDiv = document.createElement('div');
             itemsDiv.className = 'chapter-items';
@@ -3584,7 +3000,7 @@ const template = `<!DOCTYPE html>
                 link.dataset.target = sec.id;
                 link.dataset.title = sec.title.toLowerCase();
                 link.setAttribute('data-chapter-id', chap.id);
-                link.innerHTML = \`<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>\${sec.title}\`;
+                link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>${sec.title}`;
                 
                 link.addEventListener('click', (e) => {
                     if (window.innerWidth <= 1024) {
@@ -3647,7 +3063,7 @@ const template = `<!DOCTYPE html>
                         lesLink.dataset.target = targetId;
                         lesLink.dataset.title = les.title.toLowerCase();
                         lesLink.setAttribute('data-chapter-id', chap.id);
-                        lesLink.innerHTML = \`<span class="bullet">■</span> \${les.title}\`;
+                        lesLink.innerHTML = `<span class="bullet">■</span> ${les.title}`;
                         
                         lesLink.addEventListener('click', (e) => {
                             if (window.innerWidth <= 1024) {
@@ -3937,7 +3353,7 @@ const template = `<!DOCTYPE html>
 
             const targetId = saved.hash ? saved.hash.replace(/^#/, '') : '';
             const title = getHeadingTextForId(targetId) || 'your last lesson';
-            copy.textContent = \`Resume from “\${title}” and pick up right where you left off.\`;
+            copy.textContent = `Resume from “${title}” and pick up right where you left off.`;
             card.classList.add('visible');
         }
 
@@ -4086,7 +3502,7 @@ const template = `<!DOCTYPE html>
                 const rect = head.getBoundingClientRect();
                 if (rect.top < 120) {
                     activeId = head.id;
-                    currentTitle = head.innerText.replace(/Chapter \\d+:/i, '').replace(/^Lesson:\\s*/i, '').trim();
+                    currentTitle = head.innerText.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
                 }
             });
             
@@ -4595,7 +4011,7 @@ const template = `<!DOCTYPE html>
         });
         
         function escapeRegExp(string) {
-            return string.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\$&');
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
         function closeCodeZoom() {
@@ -4676,7 +4092,7 @@ const template = `<!DOCTYPE html>
             
             navigator.clipboard.writeText(codeBlock.innerText).then(() => {
                 const originalText = btn.innerHTML;
-                btn.innerHTML = \`<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!\`;
+                btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
                 btn.style.color = '#34d399';
                 setTimeout(() => {
                     btn.innerHTML = originalText;
@@ -4692,18 +4108,18 @@ const template = `<!DOCTYPE html>
             const codeText = codeBlock.innerText;
             navigator.clipboard.writeText(codeText).then(() => {
                 const originalText = btn.innerHTML;
-                btn.innerHTML = \`<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!\`;
+                btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
                 btn.style.color = '#34d399';
                 setTimeout(() => {
                     btn.innerHTML = originalText;
                     btn.style.color = '';
                     const base64 = btoa(unescape(encodeURIComponent(codeText)));
-                    window.open(\`https://play.vlang.io/?base64=\${encodeURIComponent(base64)}\`, '_blank');
+                    window.open(`https://play.vlang.io/?base64=${encodeURIComponent(base64)}`, '_blank');
                 }, 800);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
                 const base64 = btoa(unescape(encodeURIComponent(codeText)));
-                window.open(\`https://play.vlang.io/?base64=\${encodeURIComponent(base64)}\`, '_blank');
+                window.open(`https://play.vlang.io/?base64=${encodeURIComponent(base64)}`, '_blank');
             });
         }
 
@@ -4733,19 +4149,19 @@ const template = `<!DOCTYPE html>
                 const nav = document.createElement('div');
                 nav.className = 'lesson-nav';
                 const prevHtml = prevEntry
-                    ? \`<a href="#\${prevEntry.id}"><span class="nav-label">Previous</span><br />\${prevEntry.title}</a>\`
+                    ? `<a href="#${prevEntry.id}"><span class="nav-label">Previous</span><br />${prevEntry.title}</a>`
                     : '<span class="nav-label">Start of guide</span>';
                 const nextHtml = nextEntry
-                    ? \`<a href="#\${nextEntry.id}"><span class="nav-label">Next</span><br />\${nextEntry.title}</a>\`
+                    ? `<a href="#${nextEntry.id}"><span class="nav-label">Next</span><br />${nextEntry.title}</a>`
                     : '<span class="nav-label">End of guide</span>';
-                nav.innerHTML = \`
+                nav.innerHTML = `
                     <div>
-                        \${prevHtml}
+                        ${prevHtml}
                     </div>
                     <div style="text-align:right;">
-                        \${nextHtml}
+                        ${nextHtml}
                     </div>
-                \`;
+                `;
 
                 let insertAfter = heading;
                 let sibling = heading.nextElementSibling;
@@ -4813,7 +4229,7 @@ const template = `<!DOCTYPE html>
                 link.href = '#' + b.id;
                 link.className = 'menu-lesson-link active';
                 link.dataset.target = b.id;
-                link.innerHTML = \`<span class="bullet">🔖</span> \${b.title}\`;
+                link.innerHTML = `<span class="bullet">🔖</span> ${b.title}`;
                 
                 link.addEventListener('click', (e) => {
                     if (window.innerWidth <= 1024) {
@@ -4950,7 +4366,4 @@ const template = `<!DOCTYPE html>
         }, 100);
     </script>
 </body>
-</html>`;
-
-fs.writeFileSync(destPath, template, 'utf8');
-console.log('Build completed successfully! Docs output to docs/index.html');
+</html>

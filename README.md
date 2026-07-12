@@ -129,5 +129,5 @@ The interactive HTML guide integrates directly with the [V Playground](https://p
 If you update `The V Programming Language: A Comprehensive Textbook Guide.md`, you can recompile the interactive HTML version at any time by running:
 
 ```bash
-node build.js
+v run build.vsh
 ```
