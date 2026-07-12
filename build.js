@@ -2428,15 +2428,16 @@ const template = `<!DOCTYPE html>
         }
 
         pre {
-            padding: 16px 20px;
+            padding: 12px 16px;
             overflow-x: auto;
             margin: 0;
             background: none !important;
         }
 
         pre code {
-            font-size: 12px;
-            line-height: 1.5;
+            font-size: 11px;
+            line-height: 1.45;
+            letter-spacing: -0.015em;
         }
 
         .code-zoom-modal {
@@ -3382,6 +3383,10 @@ const template = `<!DOCTYPE html>
         let isClickScrolling = false;
         let clickScrollTimeout = null;
 
+        function getScrollY() {
+            return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        }
+
         function getChapterContext(element) {
             if (!element) return '';
             const directChapterId = element.getAttribute('data-chapter-id');
@@ -3415,6 +3420,9 @@ const template = `<!DOCTYPE html>
             } else {
                 window.scrollTo({ top, behavior });
             }
+            if (typeof updateBtnTopVisibility === 'function') {
+                updateBtnTopVisibility();
+            }
         }
 
         function scrollToHashTarget(hash, behavior = 'smooth', contextElement = null) {
@@ -3426,12 +3434,12 @@ const template = `<!DOCTYPE html>
             if (!target) return;
 
             const offset = 100;
-            const top = target.getBoundingClientRect().top + window.scrollY - offset;
+            const top = target.getBoundingClientRect().top + getScrollY() - offset;
             
             // If behavior is smooth but distance is far, use auto (instant) to match Safari speed and save CPU on Chrome
             let targetBehavior = behavior;
             if (behavior === 'smooth') {
-                const distance = Math.abs(window.scrollY - top);
+                const distance = Math.abs(getScrollY() - top);
                 if (distance > 2000) {
                     targetBehavior = 'auto';
                 }
@@ -3701,6 +3709,9 @@ const template = `<!DOCTYPE html>
         const breadcrumbBar = document.getElementById('breadcrumbBar');
         const tocToggle = document.getElementById('tocToggle');
         const tocPanel = document.getElementById('tocPanel');
+        const quickJumpWidget = document.getElementById('quickJumpWidget');
+        const quickJumpToggle = document.getElementById('quickJumpToggle');
+        const quickJumpPanel = document.getElementById('quickJumpPanel');
 
         let sidebarWidth = parseInt(localStorage.getItem('vguide-sidebar-width') || '320', 10);
 
@@ -3826,6 +3837,18 @@ const template = `<!DOCTYPE html>
         const progress = document.getElementById('readingProgress');
         const btnTop = document.getElementById('btnTop');
         const currentSectionTitleEl = document.getElementById('currentSectionTitle');
+
+        function updateBtnTopVisibility() {
+            const el = btnTop || document.getElementById('btnTop');
+            if (el) {
+                if (getScrollY() > 300) {
+                    el.classList.add('visible');
+                } else {
+                    el.classList.remove('visible');
+                }
+            }
+        }
+        updateBtnTopVisibility();
         const LAST_READ_KEY = 'vguide-last-read';
         const COMPLETED_LESSONS_KEY = 'vguide-completed-lessons';
         const CONTINUE_READING_DISMISS_KEY = 'vguide-continue-reading-dismissed';
@@ -3883,7 +3906,7 @@ const template = `<!DOCTYPE html>
         function saveReadingState() {
             const payload = {
                 hash: getActiveHeadingId() ? '#' + getActiveHeadingId() : window.location.hash || '',
-                scrollY: window.scrollY
+                scrollY: getScrollY()
             };
             try { localStorage.setItem(LAST_READ_KEY, JSON.stringify(payload)); } catch (e) {}
         }
@@ -4142,19 +4165,19 @@ const template = `<!DOCTYPE html>
         }
         
         window.addEventListener('scroll', () => {
+            const scrollTop = getScrollY();
             const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
             if (totalHeight > 0) {
-                const scrolled = (window.scrollY / totalHeight) * 100;
-                progress.style.width = scrolled + '%';
+                const scrolled = (scrollTop / totalHeight) * 100;
+                const progressEl = progress || document.getElementById('readingProgress');
+                if (progressEl) {
+                    progressEl.style.width = scrolled + '%';
+                }
                 const pctEl = document.getElementById('readingPct');
                 if (pctEl) pctEl.textContent = Math.round(scrolled) + '%';
             }
 
-            if (window.scrollY > 300) {
-                btnTop.classList.add('visible');
-            } else {
-                btnTop.classList.remove('visible');
-            }
+            updateBtnTopVisibility();
 
             if (!isClickScrolling) {
                 updateActiveState();
@@ -4162,7 +4185,7 @@ const template = `<!DOCTYPE html>
         });
         
         function scrollToTop() {
-            const distance = Math.abs(window.scrollY);
+            const distance = Math.abs(getScrollY());
             const targetBehavior = distance > 2000 ? 'auto' : 'smooth';
             scrollToPosition(0, targetBehavior);
         }
@@ -4922,6 +4945,7 @@ const template = `<!DOCTYPE html>
             updateSearchClearButton();
             restoreReadingState();
             showContinueReadingCard();
+            updateBtnTopVisibility();
             window.dispatchEvent(new Event('scroll'));
         }, 100);
     </script>
