@@ -1,3 +1,4 @@
+#!/usr/bin/env v
 import os
 import strings
 import regex
