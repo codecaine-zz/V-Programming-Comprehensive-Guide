@@ -5234,7 +5234,7 @@ This example demonstrates the concepts of **function with optional return type e
 ```v
 module main
 
-fn is_teen(age int) ?string {
+fn is_teen(age int) !string {
 	if age < 0 {
 		return error('invalid age provided')
 	} else if age >= 13 && age <= 19 {
@@ -5245,7 +5245,7 @@ fn is_teen(age int) ?string {
 }
 
 fn main() {
-	x := is_teen(-3) or { err.msg }
+	x := is_teen(-3) or { err.msg() }
 	println(x)
 }
 ```

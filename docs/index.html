@@ -11428,7 +11428,7 @@ fn main() {
             <div class="code-header">
                 <span class="code-lang">v</span>
                 <div class="code-actions">
-                    <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmZuIGlzX3RlZW4oYWdlIGludCkgP3N0cmluZyB7CglpZiBhZ2UgPCAwIHsKCQlyZXR1cm4gZXJyb3IoJ2ludmFsaWQgYWdlIHByb3ZpZGVkJykKCX0gZWxzZSBpZiBhZ2UgPj0gMTMgJiYgYWdlIDw9IDE5IHsKCQlyZXR1cm4gJ3RlZW5hZ2VyJwoJfSBlbHNlIHsKCQlyZXR1cm4gJ25vdCB0ZWVuYWdlcicKCX0KfQoKZm4gbWFpbigpIHsKCXggOj0gaXNfdGVlbigtMykgb3IgeyBlcnIubXNnIH0KCXByaW50bG4oeCkKfQ%3D%3D" target="_blank" class="btn-playground" title="Run in V Playground">
+                    <a href="https://play.vlang.io/?base64=bW9kdWxlIG1haW4KCmZuIGlzX3RlZW4oYWdlIGludCkgIXN0cmluZyB7CglpZiBhZ2UgPCAwIHsKCQlyZXR1cm4gZXJyb3IoJ2ludmFsaWQgYWdlIHByb3ZpZGVkJykKCX0gZWxzZSBpZiBhZ2UgPj0gMTMgJiYgYWdlIDw9IDE5IHsKCQlyZXR1cm4gJ3RlZW5hZ2VyJwoJfSBlbHNlIHsKCQlyZXR1cm4gJ25vdCB0ZWVuYWdlcicKCX0KfQoKZm4gbWFpbigpIHsKCXggOj0gaXNfdGVlbigtMykgb3IgeyBlcnIubXNnKCkgfQoJcHJpbnRsbih4KQp9" target="_blank" class="btn-playground" title="Run in V Playground">
                 <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                 Run
             </a>
@@ -11448,7 +11448,7 @@ fn main() {
             </div>
             <pre><code class="language-v">module main
 
-fn is_teen(age int) ?string {
+fn is_teen(age int) !string {
 	if age &lt; 0 {
 		return error(&#039;invalid age provided&#039;)
 	} else if age &gt;= 13 &amp;&amp; age &lt;= 19 {
@@ -11459,7 +11459,7 @@ fn is_teen(age int) ?string {
 }
 
 fn main() {
-	x := is_teen(-3) or { err.msg }
+	x := is_teen(-3) or { err.msg() }
 	println(x)
 }</code></pre>
         </div>
