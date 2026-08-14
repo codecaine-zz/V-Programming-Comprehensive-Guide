@@ -476,6 +476,8 @@ In V, multi-line (or block) comments are enclosed between `/*` and `*/`.
 
 > [!NOTE]
 > **Nested Block Comments:** Unlike languages like C, C++, Java, or JavaScript, V supports **nested block comments**. This is a powerful feature that allows you to easily comment out large blocks of code even if they already contain block comments, without triggering syntax errors.
+>
+> **Code Hints & v-analyzer:** Block comments (`/* ... */`) do **not** appear in code hints or hover tooltips when using `v-analyzer` (or `v doc`). To ensure your comments show up in IDE code hints and documentation, you must use single-line comments (`//`) on each line directly above the function, struct, or declaration.
 
 ```v
 module main
@@ -483,6 +485,9 @@ module main
 /*
 multiply is a function that accepts two integer arguments (x and y).
 It performs multiplication and returns the integer product.
+
+Note: Comments formatted like this (/* ... */) do not show in code hints
+using v-analyzer or `v doc`. You must use `//` for each line to enable IDE hints.
 
 /*
 Note: In V, block comments can be nested.
