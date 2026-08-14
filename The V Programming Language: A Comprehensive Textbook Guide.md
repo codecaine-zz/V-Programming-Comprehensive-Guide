@@ -312,43 +312,56 @@ To get the most from this book:
 ## Table of Contents
 
 - [Chapter 1: Getting Started with V](#chapter-1-getting-started-with-v)
+  - [Under the Hood: The V Compilation Pipeline & Architecture](#under-the-hood-the-v-compilation-pipeline--architecture)
   - [Code Comments](#code-comments)
 - [Chapter 2: Variables and Constants](#chapter-2-variables-and-constants)
+  - [Under the Hood: Immutability, Memory Layout & Constant Inlining](#under-the-hood-immutability-memory-layout--constant-inlining)
   - [Constants](#constants)
   - [Variables](#variables)
 - [Chapter 3: Primitive Data Types](#chapter-3-primitive-data-types)
+  - [Under the Hood: Primitive Data Representation, Strings & UTF-8](#under-the-hood-primitive-data-representation-strings--utf-8)
   - [Primitive Types Demo](#primitive-types-demo)
   - [Boolean Type](#boolean-type)
   - [Numeric Types](#numeric-types)
   - [Rune Type](#rune-type)
   - [String Type](#string-type)
 - [Chapter 4: Control Flow](#chapter-4-control-flow)
+  - [Under the Hood: Control Flow Optimization, Jump Tables & Defer Stack](#under-the-hood-control-flow-optimization-jump-tables--defer-stack)
   - [Control Flow Extras](#control-flow-extras)
 - [Chapter 5: Collections: Arrays and Maps](#chapter-5-collections-arrays-and-maps)
+  - [Under the Hood: Dynamic Arrays, Slicing & Hash Table Mechanics](#under-the-hood-dynamic-arrays-slicing--hash-table-mechanics)
   - [Arrays](#arrays)
   - [Maps](#maps)
 - [Chapter 6: Functions](#chapter-6-functions)
+  - [Under the Hood: Calling Conventions, Multiple Returns & Closures](#under-the-hood-calling-conventions-multiple-returns--closures)
   - [Advanced Function Features](#advanced-function-features)
   - [Function Extras](#function-extras)
 - [Chapter 7: Structs (Custom Types)](#chapter-7-structs-custom-types)
+  - [Under the Hood: Struct Alignment, Method Dispatch & Heap Allocation](#under-the-hood-struct-alignment-method-dispatch--heap-allocation)
   - [Struct Basics & Fields](#struct-basics--fields)
 - [Chapter 8: Error Handling](#chapter-8-error-handling)
+  - [Under the Hood: Option (?T) and Result (!T) Representation](#under-the-hood-option-t-and-result-t-representation)
   - [Option & Result Types](#option--result-types)
 - [Chapter 9: Organizing Code with Modules](#chapter-9-organizing-code-with-modules)
+  - [Under the Hood: Module Resolution, Namespaces & VPM](#under-the-hood-module-resolution-namespaces--vpm)
   - [Modules & Project Structure](#modules--project-structure)
   - [Installing External Packages](#installing-external-packages)
 - [Chapter 10: Writing Tests in V](#chapter-10-writing-tests-in-v)
+  - [Under the Hood: Test Discovery & The Assertion Engine](#under-the-hood-test-discovery--the-assertion-engine)
   - [Assertions & Unit Testing](#assertions--unit-testing)
 - [Chapter 11: Concurrency and Channels](#chapter-11-concurrency-and-channels)
+  - [Under the Hood: V-Routines, Thread Pooling & Channel Ring Buffers](#under-the-hood-v-routines-thread-pooling--channel-ring-buffers)
   - [Channels & Communication](#channels--communication)
   - [V-Routines & Concurrency](#v-routines--concurrency)
 - [Chapter 12: Working with Databases and JSON](#chapter-12-working-with-databases-and-json)
+  - [Under the Hood: Compile-Time Reflection & Type-Safe ORM](#under-the-hood-compile-time-reflection--type-safe-orm)
   - [Case Study: Notes API](#case-study-notes-api)
   - [JSON & ORM](#json--orm)
   - [SQLite Integration](#sqlite-integration)
   - [SQLite CRUD Helper](#sqlite-crud-helper)
   - [Sqlite Raw Crud](#sqlite-raw-crud)
 - [Chapter 13: Standard Library & Advanced Features](#chapter-13-standard-library--advanced-features)
+  - [Under the Hood: Sum Types, Generics, Memory Models & C Interop](#under-the-hood-sum-types-generics-memory-models--c-interop)
   - [Inline Assembly & C Interop](#inline-assembly--c-interop)
   - [Networking (TCP, UDP, SSL, WebSockets)](#networking-tcp-udp-ssl-websockets)
   - [Other Stdlib Updates](#other-stdlib-updates)
@@ -383,6 +396,51 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 This chapter introduces the core design philosophies of V. You will learn how to set up your development environment, compile and run programs, and document your code using comments.
 
+## Under the Hood: The V Compilation Pipeline & Architecture
+
+Understanding how V compiles and executes your code is fundamental to writing high-performance, idiomatic applications. Unlike languages that rely on virtual machines or heavy runtime interpreters, V is a native compiled language with a uniquely fast and transparent pipeline.
+
+### The 5 Stages of the V Compiler Pipeline
+
+1. **Single-Pass Parsing & AST Generation**:
+   The V compiler reads source files in a single pass, constructing a streamlined Abstract Syntax Tree (AST). V deliberately omits complex macro expansion phases or runtime template interpretation, allowing AST construction to finish in milliseconds.
+
+2. **Static Type Checking & Safety Analysis**:
+   The compiler enforces V's core safety invariants: immutability by default, absence of unhandled `null` values, no variable shadowing, and bounds checking on array accesses. Type checking and compile-time reflection are resolved entirely during this pass.
+
+3. **C99 Source Code Emission**:
+   Rather than inventing an unoptimized intermediate machine-code generator, V transforms the AST directly into clean, human-readable **C99** source code. This design grants V immediate compatibility with existing C libraries, debuggers (GDB, LLDB), and CPU architectures.
+
+4. **Native C Compiler Execution**:
+   V invokes a backend C compiler to produce the final machine code:
+   - **TCC (Tiny C Compiler)**: Used by default in development mode. TCC compiles C code in under 0.1 seconds, delivering near-instant `v run` feedback loops.
+   - **Clang / GCC**: Used when building release binaries (`v -prod`). Clang/GCC apply advanced optimization passes, Link-Time Optimization (LTO), and vectorization.
+
+5. **Direct Machine Code Generation (`v -native`)**:
+   In addition to C emission, V contains built-in native backends for x86_64, ARM64, and WebAssembly (`wasm32`). These backends emit raw machine code directly without invoking an external C compiler.
+
+```
++----------------+      +-------------+      +-------------------+      +--------------------+      +---------------+
+|   .v Source    | ---> | Single-Pass | ---> | Static Safety &   | ---> | C99 Emission or    | ---> | Native Binary |
+|   Files        |      | Parser/AST  |      | Type Verification |      | Direct x64/ARM/Wasm|      | (< 1MB size)  |
++----------------+      +-------------+      +-------------------+      +--------------------+      +---------------+
+```
+
+### Essential Compiler Flags Reference
+
+| Flag | Purpose | Description |
+| :--- | :--- | :--- |
+| `v run <file.v>` | Rapid Development | Compiles in memory with TCC and executes immediately. |
+| `v -prod <file.v>` | Production Release | Emits optimized C, applies `-O3` / `-flto`, and strips debug symbols for minimal binary size. |
+| `v -g <file.v>` | Debugging | Generates DWARF debug symbols for use with GDB / LLDB / VSCode debugger. |
+| `v -show-c-output <file.v>` | Inspection | Prints or saves the generated C code so you can inspect compiler output directly. |
+| `v fmt -w <file.v>` | Formatting | Formats the source code according to the official V style guide. |
+| `v -os <target>` | Cross-Compilation | Cross-compiles for `windows`, `linux`, `macos`, or `wasm32-wasi`. |
+
+> [!TIP]
+> **Compiler Inspection Tip:** You can always inspect the exact C code V generates for any program by passing `v -o output.c hello.v`. This is an incredible learning tool for understanding how V's high-level constructs translate to efficient, low-level C instructions.
+
+---
 ## Code Comments
 
 ### Single Line Comments
@@ -392,9 +450,6 @@ _File location: [variables_and_constants/03_code_comments/01_single_line_comment
 ### Lesson: Single Line Comments
 
 Comments are non-executable lines of text in a program that explain what the code does. They are ignored by the compiler but are essential for human developers. This lesson on **Single Line Comments** demonstrates how to write and format comments in V.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **single line comments**.
 
 ```v
 module main
@@ -421,9 +476,6 @@ In V, multi-line (or block) comments are enclosed between `/*` and `*/`.
 
 > [!NOTE]
 > **Nested Block Comments:** Unlike languages like C, C++, Java, or JavaScript, V supports **nested block comments**. This is a powerful feature that allows you to easily comment out large blocks of code even if they already contain block comments, without triggering syntax errors.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **multi line comments**.
 
 ```v
 module main
@@ -457,9 +509,6 @@ _File location: [variables_and_constants/03_code_comments/03_program_commented_a
 ### Lesson: Programm Commented All Places
 
 Comments are non-executable lines of text in a program that explain what the code does. They are ignored by the compiler but are essential for human developers. This lesson on **Programm Commented All Places** demonstrates how to write and format comments in V.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **programm commented all places**.
 
 ```v
 module main
@@ -542,6 +591,50 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 Variables are the basic storage units of any program. In this chapter, we explore how V handles variables with a safety-first mindset: variables are immutable by default, variable shadowing is forbidden, and constants are declared in module scopes. You will learn to manage program data safely and cleanly.
 
+## Under the Hood: Immutability, Memory Layout & Constant Inlining
+
+V approaches variables and constants with a strict safety-first design philosophy. Understanding how memory is laid out and how the compiler optimizes bindings eliminates common debugging traps.
+
+### Memory Representation of Immutable vs Mutable Bindings
+
+* **Immutable Variables (`x := 10`)**:
+  When a variable is declared without `mut`, the V compiler registers it as an immutable binding. In the emitted C code, this translates to a `const` local variable allocated on the CPU stack. The compiler statically rejects any assignment or modification to this memory address.
+* **Mutable Variables (`mut y := 10`)**:
+  Declaring a variable with `mut` creates a standard mutable stack slot. Modifying `y = 20` alters the value stored at that stack offset in-place without heap allocation.
+* **Type Rigidity**:
+  Once a variable is declared, its type is permanently fixed. V prohibits changing the type of a mutable variable (e.g., assigning a string to an integer variable), preventing dynamic type confusion bugs.
+
+```
+Stack Frame:
++-------------------------------+-----------------------------------+
+|  const int x = 10 (Immutable) |  int y = 20 (Mutable Stack Slot)  |
++-------------------------------+-----------------------------------+
+```
+
+### Zero-Cost Compile-Time Constants
+
+Constants declared in `const (...)` blocks possess unique runtime characteristics:
+1. **Compile-Time Folding**: Scalar constants (integers, floats, string literals) are evaluated and folded during compilation. The compiler substitutes the literal value directly at the callsite.
+2. **Global Read-Only Data (`.rodata`)**: Complex constants (structs, arrays) are emitted as static read-only symbols placed in the `.rodata` binary section, incurring **zero initialization runtime cost** when your application boots.
+3. **Module Scoping**: Constants are module-level and cannot be declared inside function bodies. This enforces clean separation between constant domain configuration and local procedural state.
+
+### Why Variable Shadowing is Strictly Prohibited
+
+In many languages (such as JavaScript, Python, C++, and Rust), an inner block scope can redeclare a variable with the same name as an outer scope:
+
+```v
+// FORBIDDEN IN V:
+fn example() {
+    count := 10
+    if true {
+        count := 20 // Compile Error: duplicate variable name `count`
+    }
+}
+```
+
+V treats variable shadowing as a compile-time error. Shadowing is one of the most frequent sources of subtle logic bugs in large codebases (where an engineer intends to update an outer variable but accidentally declares a new local variable). By disallowing shadowing, V guarantees that every identifier within a function refers unambiguously to a single declared memory location.
+
+---
 ## Constants
 
 ### Define Single Constant
@@ -553,9 +646,6 @@ _File location: [variables_and_constants/02_constants/01_define_constant/01_defi
 Constants in V are defined using the `const` block. Constants are values that are known at compile time and never change throughout the execution of the program. By convention, constant names are written in lowercase, unlike many other languages.
 
 This example shows how to define and use a single constant.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **define single constant**.
 
 ```v
 const app_name = 'V on Wheels'
@@ -576,9 +666,6 @@ _File location: [variables_and_constants/02_constants/01_define_constant/02_defi
 You can define multiple constants within a single `const` block. This keeps related constants grouped together and makes the code cleaner.
 
 This example shows how to declare multiple constants (integers, strings, floats) together.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **define multiple constants**.
 
 ```v
 const app_name = 'V on Wheels'
@@ -603,9 +690,6 @@ _File location: [variables_and_constants/02_constants/02_complex_constants/01_de
 ### Lesson: Define Constant Of Type Struct
 
 Variables and constants store state in V programs. This lesson on **Define Constant Of Type Struct** covers declaration rules, default values, scopes, or constant naming conventions.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **define constant of type struct**.
 
 ```v
 module main
@@ -637,9 +721,6 @@ _File location: [variables_and_constants/02_constants/02_complex_constants/02_de
 ### Lesson: Define Constant Of Type Function
 
 Variables and constants store state in V programs. This lesson on **Define Constant Of Type Function** covers declaration rules, default values, scopes, or constant naming conventions.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **define constant of type function**.
 
 ```v
 module main
@@ -676,9 +757,6 @@ _File location: [variables_and_constants/02_constants/03_best_practices/01_defin
 
 Variables and constants store state in V programs. This lesson on **Define Module Level Constants** covers declaration rules, default values, scopes, or constant naming conventions.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **define module level constants**.
-
 ```v
 module main
 
@@ -698,9 +776,6 @@ _File location: [variables_and_constants/02_constants/03_best_practices/02_canno
 ### Lesson: Cannot Define Constants Inside Functions
 
 Variables and constants store state in V programs. This lesson on **Cannot Define Constants Inside Functions** covers declaration rules, default values, scopes, or constant naming conventions.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **cannot define constants inside functions**.
 
 ```v
 module main
@@ -723,9 +798,6 @@ _File location: [variables_and_constants/02_constants/03_best_practices/03_modul
 
 Variables and constants store state in V programs. This lesson on **Main** covers declaration rules, default values, scopes, or constant naming conventions.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **main**.
-
 ```v
 module main
 
@@ -745,9 +817,6 @@ _File location: [variables_and_constants/02_constants/03_best_practices/03_modul
 ### Lesson: Constant Module Prefix - Helper
 
 Variables and constants store state in V programs. This lesson on **File1** covers declaration rules, default values, scopes, or constant naming conventions.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
 
 ```v
 module mod1
@@ -773,9 +842,6 @@ In V, you can declare and initialize multiple variables in a single line. This i
 
 This program demonstrates declaring two variables `a` and `b` at the same time and assigning them initial values. Any attempt to modify `a` or `b` later in the code will cause a compile-time error.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **parallel declaration immutable variables**.
-
 ```v
 fn main() {
 	first_name, last_name, age := 'Ada', 'Lovelace', 36
@@ -795,9 +861,6 @@ _File location: [variables_and_constants/01_variables/01_variable_assignment/01_
 If you want to modify parallelly declared variables later, you must explicitly mark them as mutable using the `mut` keyword. In V, mutability is always explicit to make code safer and easier to reason about.
 
 Here, we declare two mutable variables `a` and `b` at the same time using `mut`. We then reassign their values using the standard assignment operator (`=`).
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **parallel declaration mutable variables**.
 
 ```v
 fn main() {
@@ -819,9 +882,6 @@ _File location: [variables_and_constants/01_variables/01_variable_assignment/01_
 
 Variables and constants store state in V programs. This lesson on **Parallel Declaration Mut And Immutable Vars** covers declaration rules, default values, scopes, or constant naming conventions.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **parallel declaration mut and immutable vars**.
-
 ```v
 fn main() {
 	mut message, count := 'Hello', 32
@@ -841,9 +901,6 @@ _File location: [variables_and_constants/01_variables/01_variable_assignment/02_
 ### Lesson: Augmented Assignment String
 
 Variables and constants store state in V programs. This lesson on **Augmented Assignment String** covers declaration rules, default values, scopes, or constant naming conventions.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **augmented assignment string**.
 
 ```v
 fn main() {
@@ -867,9 +924,6 @@ _File location: [variables_and_constants/01_variables/01_variable_assignment/02_
 ### Lesson: Augmented Assignment Integer
 
 Variables and constants store state in V programs. This lesson on **Augmented Assignment Integer** covers declaration rules, default values, scopes, or constant naming conventions.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **augmented assignment integer**.
 
 ```v
 fn main() {
@@ -896,9 +950,6 @@ By default, all variables in V are **immutable** (their values cannot change). T
 
 This example shows how to declare a mutable variable, change its value, and print the results.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare mutable variable**.
-
 ```v
 fn main() {
 	mut counter := 0
@@ -916,9 +967,6 @@ _File location: [variables_and_constants/01_variables/02_variable_features/01_mu
 ### Lesson: Cannot Update Mutable With Another Type
 
 Variables and constants store state in V programs. This lesson on **Cannot Update Mutable With Another Type** covers declaration rules, default values, scopes, or constant naming conventions.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **cannot update mutable with another type**.
 
 ```v
 fn main() {
@@ -940,9 +988,6 @@ In V, variables are immutable by default. This design choice prevents accidental
 
 This example demonstrates how to declare an immutable variable and print its value.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare immutable variable**.
-
 ```v
 fn main() {
 	// 'msg' is initialized as an immutable string variable using :=
@@ -963,9 +1008,6 @@ One of V's core safety features is **immutability by default**. If you declare a
 
 This example demonstrates what happens when you try to update an immutable variable (expect a compiler error).
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **cannot update immutable variables**.
-
 ```v
 fn main() {
 	msg := 'Hello'
@@ -982,9 +1024,6 @@ _File location: [variables_and_constants/01_variables/02_variable_features/02_de
 ### Lesson: Declared And Assigned
 
 Variables and constants store state in V programs. This lesson on **Declared And Assigned** covers declaration rules, default values, scopes, or constant naming conventions.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declared and assigned**.
 
 ```v
 fn main() {
@@ -1006,9 +1045,6 @@ V does not allow variables to be declared without an initial value. Unlike other
 
 This example illustrates that declaring a variable without an assignment is a compilation error.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declared and not assigned**.
-
 ```v
 fn main() {
 	mut a // throws error
@@ -1026,9 +1062,6 @@ _File location: [variables_and_constants/01_variables/02_variable_features/03_de
 To keep codebases clean and efficient, the V compiler detects if you declare a variable but never use (consume) it. By default, V treats unused variables as a compilation warning/error, encouraging you to clean up dead code.
 
 This example shows a declared variable that is never used.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **unused variables will be warned**.
 
 ```v
 fn main() {
@@ -1050,9 +1083,6 @@ _File location: [variables_and_constants/01_variables/03_limitations/01_global_v
 V does not allow global variables by default. Global state is a major source of bugs, race conditions in multi-threaded applications, and poor code structure. By forbidding globals, V enforces clean, modular code passing state via arguments.
 
 These examples demonstrate that declaring variables outside of the main function or modules is strictly prohibited.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **global variables not allowed**.
 
 ```v
 module main
@@ -1080,9 +1110,6 @@ V does not allow global variables by default. Global state is a major source of 
 
 These examples demonstrate that declaring variables outside of the main function or modules is strictly prohibited.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **global variables not allowed**.
-
 ```v
 module main
 
@@ -1109,9 +1136,6 @@ _File location: [variables_and_constants/01_variables/03_limitations/02_variable
 
 Variables and constants store state in V programs. This lesson on **Variable Redeclaration** covers declaration rules, default values, scopes, or constant naming conventions.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **variable redeclaration**.
-
 ```v
 module main
 
@@ -1134,9 +1158,6 @@ _File location: [variables_and_constants/01_variables/03_limitations/02_variable
 In V, variables are strictly scoped to the function or block in which they are declared. This lexical scoping means that two different functions can declare variables with the exact same name (e.g., `msg`) without any collision or interference. The compiler guarantees that these variables occupy separate locations in memory and are completely isolated from one another. This allows developers to use common, context-appropriate names like `temp`, `id`, or `msg` locally inside individual functions without worrying about global or cross-functional namespace pollution.
 
 This program illustrates how `msg` is declared separately in both `method1` and `method2`, showing scope isolation in action.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **variable scope for same variable names**.
 
 ```v
 module main
@@ -1170,9 +1191,6 @@ _File location: [variables_and_constants/01_variables/03_limitations/03_variable
 **Variable shadowing** happens when a variable declared within an inner scope (like an `if` block, a loop, or a function body) has the same name as a variable in an outer scope. V strictly forbids variable shadowing at the compiler level. Prohibiting shadowing prevents a class of common bugs where a developer accidentally updates a local inner variable instead of the intended outer variable, or vice versa.
 
 This example demonstrates how V rejects shadowed variable declarations.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **variable shadowing not allowed**.
 
 ```v
 module main
@@ -1273,9 +1291,6 @@ This comprehensive example demonstrates every primitive data type in V:
 
 For each type, the example initializes a value and prints its value, type (using `typeof(var).name`), and size in bytes (using `sizeof(var)`).
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **primitive types demo**.
-
 ```v
 module main
 
@@ -1336,6 +1351,56 @@ fn main() {
 
 V is a statically-typed language, meaning every variable has a fixed data type at compile time. In this chapter, you will learn about V's primitive types: booleans for logic, numeric types for numbers, runes for single characters, and strings for text. You will also learn about V's rich set of built-in methods on these types.
 
+## Under the Hood: Primitive Data Representation, Strings & UTF-8
+
+Every primitive type in V is engineered for predictable memory footprint, binary compatibility with C, and strict safety.
+
+### Primitive Memory Map & Sizing
+
+| V Type | C Equivalent | Size (Bytes) | Range / Purpose |
+| :--- | :--- | :--- | :--- |
+| `bool` | `bool` | 1 byte | `true` or `false` |
+| `i8` / `u8` | `int8_t` / `uint8_t` | 1 byte | -128 to 127 / 0 to 255 (byte) |
+| `i16` / `u16` | `int16_t` / `uint16_t` | 2 bytes | 16-bit signed / unsigned integers |
+| `int` / `i32` / `u32` | `int32_t` / `uint32_t` | 4 bytes | Standard 32-bit integer |
+| `i64` / `u64` | `int64_t` / `uint64_t` | 8 bytes | 64-bit signed / unsigned integers |
+| `f32` / `f64` | `float` / `double` | 4 / 8 bytes | IEEE 754 floating-point numbers |
+| `rune` | `uint32_t` | 4 bytes | Unicode code point (`u32`) |
+| `isize` / `usize` | `ptrdiff_t` / `size_t` | 4 or 8 bytes | Pointer-sized integers |
+
+### The Memory Layout of a V `string`
+
+In V, a `string` is a 16-byte structure on 64-bit systems. It is defined internally as:
+
+```v
+struct string {
+pub:
+    str    &u8 // Pointer to raw UTF-8 byte array (null-terminated)
+    len    int // Length of the string in bytes
+    is_lit int // 1 if string literal (static .rodata), 0 if heap-allocated
+}
+```
+
+Key architectural benefits of this design:
+- **Zero-Copy C Interoperability**: Because the underlying `str` byte buffer is guaranteed to be null-terminated (` `), passing a V string to any C library function (`printf`, `sqlite3_open`, `fopen`) requires only `s.str`—with **zero memory allocation or copying**.
+- **Immutability & Safety**: V strings are immutable. Slicing a string (`s[0..5]`) creates a new string header pointing to the same memory segment without deep copying.
+
+### Byte Indexing (`s[i]`) vs Unicode Runes (`s.runes()`)
+
+Because V strings are UTF-8 encoded:
+- `s[i]` accesses the raw byte (`u8`) at byte offset `i` in $O(1)$ constant time.
+- ASCII characters occupy 1 byte, while international characters (e.g. `ñ`, `日`, `🦀`) occupy between 2 to 4 bytes.
+- To iterate over human-readable characters, call `s.runes()`, which decodes UTF-8 bytes into 4-byte `rune` (`u32`) Unicode code points.
+
+### String Interpolation Internals
+
+When you write:
+```v
+greeting := 'Hello, ${name}! You have ${unread_count} new messages.'
+```
+The V compiler does not invoke a slow runtime formatting engine (like `sprintf`). Instead, it analyzes the template at compile time and emits optimized calls to `strings.new_builder(estimated_size)`, appending each component directly into a pre-sized buffer.
+
+---
 ## Boolean Type
 
 ### Logical Operators
@@ -1345,9 +1410,6 @@ _File location: [primitive_types/01_boolean_type/01_logical_operators/01_logical
 ### Lesson: Logical Operators
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Logical Operators** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **logical operators**.
 
 ```v
 module main
@@ -1402,9 +1464,6 @@ _File location: [primitive_types/01_boolean_type/02_relational_operators/01_rela
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Relational Operators** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **relational operators**.
-
 ```v
 module main
 
@@ -1452,9 +1511,6 @@ Booleans in V are simple `true` or `false` values. V provides built-in methods o
 
 This is useful for logging, printing, or interpolating booleans into strings.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **boolean methods**.
-
 ```v
 module main
 
@@ -1482,9 +1538,6 @@ V has several built-in integer types, both signed and unsigned, of various sizes
 
 This example demonstrates how to declare different integer types.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declaring integers**.
-
 ```v
 module main
 
@@ -1511,9 +1564,6 @@ _File location: [primitive_types/02_numeric_types/01_declaring_integers/02_hex_b
 V has several built-in integer types, both signed and unsigned, of various sizes (e.g., `i8`, `i16`, `i32`, `i64` for signed integers, and `u8`, `u16`, `u32`, `u64` for unsigned integers). If you declare an integer using `:=`, V defaults to the standard 32-bit integer (`int`).
 
 This example demonstrates how to declare different integer types.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **hex binary octa notation of declaring integers**.
 
 ```v
 module main
@@ -1546,9 +1596,6 @@ _File location: [primitive_types/02_numeric_types/02_promoting_numeric_types/01_
 V is very strict about types. It does not perform implicit type conversion (coercion) between different numeric types to prevent accidental precision loss or overflow bugs. If you want to perform arithmetic operations on different types, you must explicitly cast them.
 
 This example shows how to cast (promote) smaller integer types to larger ones or to floats.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **promoting numeric types**.
 
 ```v
 module main
@@ -1601,9 +1648,6 @@ _File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Arithmetic Operators** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **arithmetic operators**.
-
 ```v
 module main
 
@@ -1644,9 +1688,6 @@ _File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Bitwise Operators** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **bitwise operators**.
-
 ```v
 module main
 
@@ -1682,9 +1723,6 @@ _File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Shift Operators** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **shift operators**.
-
 ```v
 module main
 
@@ -1714,9 +1752,6 @@ _File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Shift Operator On Range Of Integers** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **shift operator on range of integers**.
-
 ```v
 module main
 
@@ -1743,9 +1778,6 @@ _File location: [primitive_types/02_numeric_types/04_numeric_methods/01_integer_
 ### Lesson: Integer Methods
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Integer Methods** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **integer methods**.
 
 ```v
 module main
@@ -1776,9 +1808,6 @@ _File location: [primitive_types/02_numeric_types/04_numeric_methods/02_float_me
 ### Lesson: Float Methods
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Float Methods** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **float methods**.
 
 ```v
 module main
@@ -1813,9 +1842,6 @@ _File location: [primitive_types/02_numeric_types/04_numeric_methods/03_u8_metho
 ### Lesson: U8 Methods
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **U8 Methods** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **u8 methods**.
 
 ```v
 module main
@@ -1877,9 +1903,6 @@ _File location: [primitive_types/02_numeric_types/04_numeric_methods/04_size_poi
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Size Pointer Methods** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **size and pointer methods**.
-
 ```v
 module main
 
@@ -1924,9 +1947,6 @@ A **rune** in V represents a single Unicode code point. Runes are declared using
 
 This example shows how to declare and print runes.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare rune**.
-
 ```v
 fn main() {
 	// A rune stores a single Unicode character.
@@ -1947,9 +1967,6 @@ _File location: [primitive_types/04_rune_type/02_rune_operations_with_strings/02
 Since strings in V are arrays of UTF-8 encoded bytes, you cannot directly check for a `rune` inside a `string` using string operations unless the rune is first converted to a string. V provides `.str()` on the `rune` type to easily convert a rune to a 1-character string, allowing you to use string methods like `.count()`, `.contains()`, etc.
 
 This example shows how to count occurrences of a Unicode rune in a string.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **rune operations with strings**.
 
 ```v
 fn main() {
@@ -1973,9 +1990,6 @@ _File location: [primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v]
 Runes in V are not just raw numbers; they are full-fledged Unicode characters that support several built-in methods. You can convert their case, check their byte length (which can range from 1 to 4 bytes depending on the character, such as emojis), obtain their byte array representation, or convert them to hexadecimal code points.
 
 This lesson demonstrates common helper methods on the `rune` type.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **rune methods**.
 
 ```v
 module main
@@ -2031,9 +2045,6 @@ In V, strings are representing read-only arrays of bytes, encoded natively in UT
 
 This example illustrates how to declare string variables, concatenate them, check string lengths, and query variable types at runtime.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare string**.
-
 ```v
 module main
 
@@ -2065,9 +2076,6 @@ In V, strings are represented internally as read-only arrays of UTF-8 encoded by
 
 This example shows how to read raw bytes from a string and prints the byte value and its type name.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **string read only array of bytes**.
-
 ```v
 fn main() {
 	fruit := 'Orange'
@@ -2093,9 +2101,6 @@ Strings in V are completely immutable. Once a string is created, its characters 
 
 This example demonstrates that strings are read-only and cannot be changed.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **strings immutable by default**.
-
 ```v
 fn main() {
 	s := 'hello'
@@ -2116,9 +2121,6 @@ _File location: [primitive_types/03_string_type/01_working_with_strings/03_decla
 While strings are immutable, you can declare a mutable string variable using `mut`. This allows the variable to be reassigned to a new string value, or appended to using the `+=` operator.
 
 This example shows how to declare a mutable string and append text to it.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declaring mutable strings**.
 
 ```v
 fn main() {
@@ -2144,9 +2146,6 @@ Although declaring a string variable with `mut` lets you reassign the variable t
 
 This program shows that element mutation is strictly forbidden.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **cannot mutate string elements**.
-
 ```v
 fn main() {
 	mut greet := 'good Day'
@@ -2169,9 +2168,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/01
 
 This example demonstrates how to format strings with variable values.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **string interpolation**.
-
 ```v
 fn main() {
 	a := 'coding'
@@ -2192,9 +2188,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 V strings support standard escape characters (like `\n` for newlines, `\t` for tabs, and `\\` for backslashes) to represent special characters inside a string literal.
 
 This example shows how these escape sequences are rendered in the console.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **escape special characters**.
 
 ```v
 module main
@@ -2229,9 +2222,6 @@ If you want to write a string literal where escape sequences (like `\n`) are tre
 
 This is extremely useful when writing regular expressions or file paths.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare raw strings**.
-
 ```v
 module main
 
@@ -2252,9 +2242,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 In V, joining strings together is performed using the `+` operator. Since strings are immutable byte arrays, each concatenation creates a brand-new string in memory and copies the contents of both source strings. While the `+` operator is extremely convenient and clear for joining a few strings, doing this in loops or performance-critical code paths is discouraged because it leads to excessive memory allocations. For high-performance string building, V offers the `strings.Builder` module.
 
 This example illustrates the direct concatenation of two string variables.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **string concatenation using plus sign**.
 
 ```v
 module main
@@ -2277,9 +2264,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 ### Lesson: String Concatenation Using Interpolation
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **String Concatenation Using Interpolation** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **string concatenation using interpolation**.
 
 ```v
 module main
@@ -2305,9 +2289,6 @@ V provides two main techniques to extract substrings from a string literal or va
 2. **Range Slicing Syntax `[start..end]`**: A clean and idiomatic syntax (similar to Go and Rust) where you specify range offsets. If the starting index is omitted (e.g. `[..end]`), it defaults to `0`. If the ending index is omitted (e.g. `[start..]`), it defaults to the length of the string.
 
 Both techniques are demonstrated in the example below.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **extract substring from string literal**.
 
 ```v
 module main
@@ -2347,9 +2328,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Split String** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **split string**.
-
 ```v
 module main
 
@@ -2374,9 +2352,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **String To Runes Array** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **string to runes array**.
-
 ```v
 module main
 
@@ -2397,9 +2372,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 ### Lesson: Count Sub String Occurences
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Count Sub String Occurences** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **count sub string occurences**.
 
 ```v
 module main
@@ -2427,9 +2399,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Check String Contains Substring** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **check string contains substring**.
-
 ```v
 module main
 
@@ -2454,9 +2423,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **String Contains Is Case Sensitive** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **string contains is case sensitive**.
-
 ```v
 module main
 
@@ -2480,9 +2446,6 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 ### Lesson: Common String Methods
 
 In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Common String Methods** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **common string methods**.
 
 ```v
 module main
@@ -2567,6 +2530,44 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 Control flow determines the execution path of your code. In this chapter, we cover conditionals (`if-else`), pattern matching (`match`), and the versatile `for` loop. V simplifies control flow by using fewer keywords, making code highly readable.
 
+## Under the Hood: Control Flow Optimization, Jump Tables & Defer Stack
+
+V provides clean, expressive control flow constructs that compile down to highly optimized machine code instructions.
+
+### `if` as an Expression
+
+In V, `if-else` blocks can be used as expressions that evaluate to a value:
+```v
+status := if score >= 50 { 'Pass' } else { 'Fail' }
+```
+Under the hood, the V compiler transforms this into a C ternary operator (`score >= 50 ? "Pass" : "Fail"`) or a direct conditional assignment on the stack. There is zero runtime overhead, no temporary object creation, and the compiler statically verifies that all branches return identical types.
+
+### `match` Compilation & Jump Tables
+
+V's `match` statement replaces complex `switch` or cascading `if-else` chains:
+* **Exhaustiveness Guarantee**: When matching on an enum or boolean, the compiler verifies that every single variant is handled. If a new enum variant is added in the future, the compiler will refuse to build until all `match` statements handle it.
+* **$O(1)$ Jump Table Optimization**: When matching on contiguous integers or enums, the C backend compiles the `match` block into a hardware jump table. Dispatching to the target branch executes in $O(1)$ constant time regardless of how many branches exist.
+* **No Fallthrough**: Unlike C/C++, V `match` branches do not fall through to the next case. Each branch is strictly isolated, completely eliminating the need for `break` statements.
+
+### The `defer` LIFO Execution Stack
+
+The `defer` statement schedules a cleanup expression to execute right before the enclosing function exits:
+
+```v
+fn process_file(path string) ! {
+    mut file := os.open(path)!
+    defer { file.close() } // Guaranteed to execute whenever process_file returns
+
+    // Perform operations...
+}
+```
+
+Under the hood:
+1. The compiler maintains a Last-In, First-Out (LIFO) stack of deferred expressions recorded within the function scope.
+2. At **every possible exit point** (including early `return`, `panic`, or error propagation `!`), the compiler automatically injects the deferred cleanup code in reverse order.
+3. This is achieved with **zero runtime stack unwinding penalty**—the injected calls are compiled directly into the function's epilogue.
+
+---
 ## Control Flow Extras
 
 ### Chaining Else If
@@ -2578,9 +2579,6 @@ _File location: [control_flow/01_If_Statement/chaining_else_if/chaining_else_if.
 When your program must choose between multiple mutually exclusive paths, you can chain multiple `else if` blocks together. V evaluates these conditions sequentially from top to bottom. As soon as one condition evaluates to `true`, the corresponding block of code is executed, and all remaining branches (including any final fallback `else` block) are skipped entirely. Like single `if` statements, parentheses are not required around the condition expressions in V.
 
 This example defines a helper function that takes a weekday string and prints a corresponding breakfast menu using a chained conditional statement.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **chaining else if**.
 
 ```v
 module main
@@ -2624,9 +2622,6 @@ _File location: [control_flow/01_If_Statement/if_with_goto/if_with_goto.v](contr
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **If With Goto** in V, showing how to control execution paths cleanly and safely.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **if with goto**.
-
 ```v
 module main
 
@@ -2667,9 +2662,6 @@ _File location: [control_flow/02_Match/cascade_match_conditions/cascade_match_co
 ### Lesson: Cascade Match Conditions
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Cascade Match Conditions** in V, showing how to control execution paths cleanly and safely.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **cascade match conditions**.
 
 ```v
 module main
@@ -2724,9 +2716,6 @@ In V, there is no `switch` statement. Instead, the `match` keyword is used for b
 
 This example shows how to use `match` on string values.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **match as switch case**.
-
 ```v
 module main
 
@@ -2760,9 +2749,6 @@ _File location: [control_flow/02_Match/match_pattern_matching/match_pattern_matc
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Match Pattern Matching** in V, showing how to control execution paths cleanly and safely.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **match pattern matching**.
-
 ```v
 module main
 
@@ -2788,9 +2774,6 @@ _File location: [control_flow/02_Match/match_with_enum/match_with_enum.v](contro
 One of V's strongest safety guarantees is **exhaustive enum matching**. When you match on an enum value, V requires you to handle every single enum member. If you miss one, the compiler will refuse to compile the program. This ensures that when new items are added to an enum in the future, the compiler will automatically guide you to update all match expressions across your codebase. Additionally, V supports shorthand syntax where you can write `.member_name` instead of `EnumName.member_name` inside the match arms.
 
 This example illustrates matching over an enum to return a string menu item.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **match with enum**.
 
 ```v
 module main
@@ -2853,9 +2836,6 @@ _File location: [control_flow/02_Match/match_with_enum_and_else/match_with_enum_
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Match With Enum And Else** in V, showing how to control execution paths cleanly and safely.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **match with enum and else**.
-
 ```v
 module main
 
@@ -2904,9 +2884,6 @@ V simplifies iteration by only offering a single keyword for loops: `for`. There
 
 This example shows how to declare a bare infinite loop.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **bare for**.
-
 ```v
 module main
 
@@ -2935,9 +2912,6 @@ _File location: [control_flow/03_Iterative_statements/break_for/break_for.v](con
 ### Lesson: Break For
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Break For** in V, showing how to control execution paths cleanly and safely.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **break for**.
 
 ```v
 module main
@@ -2969,9 +2943,6 @@ _File location: [control_flow/03_Iterative_statements/continue_for/continue_for.
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Continue For** in V, showing how to control execution paths cleanly and safely.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **continue for**.
-
 ```v
 module main
 
@@ -2995,9 +2966,6 @@ _File location: [control_flow/03_Iterative_statements/for_c_style/for_c_style.v]
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For C Style** in V, showing how to control execution paths cleanly and safely.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **for c style**.
-
 ```v
 module main
 
@@ -3018,9 +2986,6 @@ _File location: [control_flow/03_Iterative_statements/for_on_array_without_index
 ### Lesson: For On Array Without Index
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For On Array Without Index** in V, showing how to control execution paths cleanly and safely.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **for on array without index**.
 
 ```v
 module main
@@ -3049,9 +3014,6 @@ Iterating over arrays is a very common requirement. In V, you can iterate over b
 
 This example declares a list of fruits and iterates over them, printing each fruit alongside its corresponding index.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **for on arrays**.
-
 ```v
 module main
 
@@ -3076,9 +3038,6 @@ _File location: [control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v]
 V makes iterating over key-value collections (maps) straightforward. By using the syntax `for key, value in map`, you can access both the key and the value of each entry directly during each iteration. Like arrays, the iteration variables (`key` and `value`) are local to the loop scope and are immutable. Note that iteration order over maps is not guaranteed to be stable or sorted, matching standard hash map behavior in other systems languages.
 
 This example demonstrates how to declare a map and iterate over its key-value pairs.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **for on maps**.
 
 ```v
 module main
@@ -3108,9 +3067,6 @@ _File location: [control_flow/03_Iterative_statements/for_on_maps_ignore_key/for
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For On Maps Ignore Key** in V, showing how to control execution paths cleanly and safely.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **for on maps ignore key**.
-
 ```v
 module main
 
@@ -3138,9 +3094,6 @@ _File location: [control_flow/03_Iterative_statements/for_on_range/for_on_range.
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For On Range** in V, showing how to control execution paths cleanly and safely.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **for on range**.
-
 ```v
 module main
 
@@ -3160,9 +3113,6 @@ _File location: [control_flow/03_Iterative_statements/for_with_continue_break_an
 ### Lesson: For With Continue Break And Labels
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For With Continue Break And Labels** in V, showing how to control execution paths cleanly and safely.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **for with continue break and labels**.
 
 ```v
 module main
@@ -3198,9 +3148,6 @@ _File location: [control_flow/03_Iterative_statements/reverse_for/reverse_for.v]
 ### Lesson: Reverse For
 
 Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Reverse For** in V, showing how to control execution paths cleanly and safely.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **reverse for**.
 
 ```v
 module main
@@ -3268,6 +3215,54 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 Collections allow you to group multiple data items together. V provides two primary built-in collection types: **arrays** (ordered lists of elements) and **maps** (key-value dictionaries). This chapter covers creating, accessing, and manipulating these collections using modern functional patterns like `map` and `filter`.
 
+## Under the Hood: Dynamic Arrays, Slicing & Hash Table Mechanics
+
+Arrays and maps form the backbone of data manipulation in V. Both are built for cache efficiency, fast iteration, and predictable memory growth.
+
+### Dynamic Array Architecture
+
+Dynamic arrays in V are managed by a compact 24-byte control structure:
+
+```v
+struct Array {
+    data         voidptr // Pointer to continuous heap-allocated memory block
+    offset       int     // Slicing offset
+    len          int     // Number of active elements currently in array
+    cap          int     // Total capacity allocated in memory
+    element_size int     // Size in bytes of each element (e.g., 4 for int)
+}
+```
+
+```
+Array Header: [ data* | offset: 0 | len: 3 | cap: 4 | element_size: 4 ]
+                      |
+                      v
+Heap Buffer:   [ 10 ][ 20 ][ 30 ][ <unallocated> ]
+```
+
+### Amortized 2x Capacity Growth Strategy
+
+When you append an item to an array using the `<<` operator:
+1. If `len < cap`, the element is written directly to `data[len]` and `len` is incremented ($O(1)$ operation).
+2. If `len == cap`, V allocates a new memory block with double the previous capacity (`cap * 2`), copies the existing elements with `memcpy`, frees the old buffer, and inserts the new item.
+3. **Pre-Allocation Best Practice**: When the final count of items is known in advance, initialize the array with `[]int{cap: count}` to allocate the exact memory buffer once, eliminating intermediate reallocation copies.
+
+### Slice Semantics: Shared Memory vs `.clone()`
+
+When you create a slice using range syntax `sub := arr[1..3]`:
+* The slice `sub` points directly to the memory buffer of the parent array `arr`.
+* Creating a slice is an $O(1)$ operation with zero memory allocation.
+* **Caution**: Modifying an element inside a mutable slice mutates the underlying data in the original array. If you need an isolated, independent copy, call `arr[1..3].clone()`.
+
+### Map Architecture & The Wyhash Algorithm
+
+V's built-in `map[Key]Value` is an open-addressing hash table:
+* **Hashing Engine**: Uses **Wyhash**, one of the fastest hashing algorithms in existence, producing uniform hash distributions and high resilience against hash collision attacks.
+* **Cache Locality**: Keys and values are stored in dense contiguous memory buckets, maximizing CPU L1/L2 cache hit rates during lookups.
+* **Lookup Cost**: Key retrieval, insertion, and deletion operate in $O(1)$ average time complexity.
+* **Zero-Value Returns**: Querying a missing key (`m['absent']`) returns the default zero-value of the value type (e.g. `0`, `""`, `false`), or you can use `key in m` to check for explicit presence.
+
+---
 ## Arrays
 
 ### Declare And Initialize
@@ -3279,9 +3274,6 @@ _File location: [arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_i
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare and initialize**.
 
 ```v
 fn main() {
@@ -3301,9 +3293,6 @@ _File location: [arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare empty array**.
 
 ```v
 fn main() {
@@ -3329,9 +3318,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare array with len**.
-
 ```v
 fn main() {
 	mut i := []int{len: 3}
@@ -3350,9 +3336,6 @@ _File location: [arrays_and_maps/01_arrays/01_array_declaration/04_declare_array
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare array with init and len**.
 
 ```v
 fn main() {
@@ -3373,9 +3356,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declare array with cap**.
-
 ```v
 fn main() {
 	mut k := []int{cap: 2}
@@ -3394,9 +3374,6 @@ _File location: [arrays_and_maps/01_arrays/02_array_properties/01_working_with_a
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **working with array properties**.
 
 ```v
 fn main() {
@@ -3431,9 +3408,6 @@ _File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/01_access
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **access array elements using index**.
 
 ```v
 fn main() {
@@ -3473,9 +3447,6 @@ V does not support negative indices natively in slices (e.g., `sports[-2..]` wil
 > - Modifying any element inside a slice **will modify the original array**.
 > - Assigning a slice to a variable is considered unsafe/restricted unless you wrap it in an `unsafe` block (`mut sl := unsafe { arr[1..4] }`) or clone it explicitly.
 > - To get a separate array slice by value (so modifications do not affect the original array), append `.clone()` to the end of the slice expression (`mut sl_copy := arr[1..4].clone()`).
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **access array elements using slices**, including positive slicing, `.len`-based negative slicing, reference mutation via `unsafe` blocks, and copying by value with `.clone()`.
 
 ```v
 fn main() {
@@ -3528,9 +3499,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **in operator with array**.
-
 ```v
 fn main() {
 	odd := [1, 3, 5, 7]
@@ -3553,9 +3521,6 @@ _File location: [arrays_and_maps/01_arrays/04_array_operators/02_append_array/02
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **append array**.
 
 ```v
 fn main() {
@@ -3581,9 +3546,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **define fixed size array**.
-
 ```v
 fn main() {
 	mut fix := [4]int{}
@@ -3603,9 +3565,6 @@ _File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **update fixed size array elements**.
 
 ```v
 fn main() {
@@ -3628,9 +3587,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **determining type of fixed array**.
-
 ```v
 fn main() {
 	mut fix := [4]int{}
@@ -3649,9 +3605,6 @@ _File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **slicing fixed size array results in ordinary array**.
 
 ```v
 fn main() {
@@ -3676,9 +3629,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **declaring multi dimensional arrays**.
-
 ```v
 fn main() {
 	mut coordinates_2d := [][]int{len: 4, init: []int{len: 2}}
@@ -3700,9 +3650,6 @@ _File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updati
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **updating multi dimensional arrays**.
 
 ```v
 fn main() {
@@ -3734,9 +3681,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **updating multi dimensional arrays**.
-
 ```v
 fn main() {
 	mut coordinates_2d := [][]int{len: 4, init: []int{len: 2}}
@@ -3763,9 +3707,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **clone array**.
-
 ```v
 fn main() {
 	r := [1, 2, 3, 4]
@@ -3786,9 +3727,6 @@ _File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **copy array**.
 
 ```v
 fn main() {
@@ -3812,9 +3750,6 @@ _File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sort integer array**.
 
 ```v
 fn main() {
@@ -3840,9 +3775,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sort string array**.
-
 ```v
 fn main() {
 	mut fruits := ['Apples', 'avocado', 'banana', 'Orange']
@@ -3867,9 +3799,6 @@ _File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sor
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sort struct array**.
 
 ```v
 module main
@@ -3937,9 +3866,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **filter array**.
-
 ```v
 fn main() {
 	f := [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -3960,9 +3886,6 @@ _File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/0
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **filter with anonymous funcs on array**.
 
 ```v
 fn main() {
@@ -3988,9 +3911,6 @@ An **array** is a collection of elements of the same type. In V, arrays are decl
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **map array items**.
-
 ```v
 fn main() {
 	visitor := ['Tom', 'Ram', 'Rao']
@@ -4010,9 +3930,6 @@ _File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_m
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **map using anonymous funcs on array**.
 
 ```v
 fn main() {
@@ -4037,9 +3954,6 @@ _File location: [arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_
 An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
 
 These examples show how to initialize, append, clone, copy, and manipulate arrays.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **array methods**.
 
 ```v
 module main
@@ -4341,9 +4255,6 @@ A **map** is an unordered collection of key-value pairs, also known as a diction
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **explicit map initialization**.
-
 ```v
 fn main() {
 	mut books := map[string]int{}
@@ -4365,9 +4276,6 @@ _File location: [arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/0
 A **map** is an unordered collection of key-value pairs, also known as a dictionary or associative array. In V, map keys must be strings or integer types, and values can be of any type. Maps are declared using curly braces with colon separators.
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **short syntax initialization of map**.
 
 ```v
 fn main() {
@@ -4392,9 +4300,6 @@ _File location: [arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_coun
 A **map** is an unordered collection of key-value pairs, also known as a dictionary or associative array. In V, map keys must be strings or integer types, and values can be of any type. Maps are declared using curly braces with colon separators.
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **count key value pairs in map**.
 
 ```v
 fn main() {
@@ -4421,9 +4326,6 @@ A **map** is an unordered collection of key-value pairs, also known as a diction
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **value given key of map**.
-
 ```v
 fn main() {
 	mut student_1 := {
@@ -4449,9 +4351,6 @@ A **map** is an unordered collection of key-value pairs, also known as a diction
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **value given non existent key of map**.
-
 ```v
 fn main() {
 	mut student_1 := {
@@ -4476,9 +4375,6 @@ _File location: [arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_hand
 A **map** is an unordered collection of key-value pairs, also known as a dictionary or associative array. In V, map keys must be strings or integer types, and values can be of any type. Maps are declared using curly braces with colon separators.
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **handling missing keys in map**.
 
 ```v
 fn main() {
@@ -4506,9 +4402,6 @@ A **map** is an unordered collection of key-value pairs, also known as a diction
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **update value given a key in map**.
-
 ```v
 fn main() {
 	mut student_1 := {
@@ -4533,9 +4426,6 @@ _File location: [arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_de
 A **map** is an unordered collection of key-value pairs, also known as a dictionary or associative array. In V, map keys must be strings or integer types, and values can be of any type. Maps are declared using curly braces with colon separators.
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **delete key value pair from map**.
 
 ```v
 fn main() {
@@ -4563,9 +4453,6 @@ _File location: [arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_me
 A **map** is an unordered collection of key-value pairs, also known as a dictionary or associative array. In V, map keys must be strings or integer types, and values can be of any type. Maps are declared using curly braces with colon separators.
 
 These examples cover how to initialize maps, look up keys, add or delete entries, and check if a key exists.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **map methods**.
 
 ```v
 module main
@@ -4636,9 +4523,6 @@ _File location: [arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/0
 ### Lesson: Import Maps Helpers
 
 The `maps` module provides higher-level helpers for filtering, transforming, inverting, merging, and converting between maps and arrays. These helpers are useful when you want to work with map data in a functional style without manually writing the loops yourself.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **import maps helpers**.
 
 ```v
 module main
@@ -4790,6 +4674,50 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 Functions let you turn repeated or complex logic into small, named building blocks. A useful mental model is: define the task, give it inputs if needed, do the work, and return a useful result. This chapter starts with simple functions and then introduces multiple returns, optional results, higher-order functions, and cleanup with `defer`.
 
+## Under the Hood: Calling Conventions, Multiple Returns & Closures
+
+Functions in V are designed for clarity, zero runtime overhead, and seamless integration with native C calling conventions.
+
+### Multiple Return Values Without Heap Allocation
+
+In many languages, returning multiple values requires allocating a tuple or object on the heap. In V:
+```v
+fn divide(a int, b int) (int, int) {
+    return a / b, a % b
+}
+```
+Under the hood, the compiler creates an anonymous C struct on the caller's stack frame:
+```c
+typedef struct { int arg0; int arg1; } MultiReturn_int_int;
+```
+The return values are written directly into this stack structure or returned via CPU registers, resulting in **zero heap allocation** and optimal performance.
+
+### Parameter Passing Conventions
+
+* **Pass-by-Value (Default)**: Primitive types (`int`, `f64`, `bool`) and small structs are passed by value (copied onto the stack or passed directly in CPU registers).
+* **Pass-by-Reference (`mut`)**: When a parameter is declared with `mut` (e.g. `fn update(mut user User)`), V passes a pointer to the caller's instance (`User*`), allowing in-place modifications.
+* **Immutable Parameters**: Function parameters are immutable by default. You cannot reassign or modify a parameter unless explicitly marked `mut`.
+
+### Closures & Environment Capture
+
+When an anonymous function references variables from its enclosing scope:
+```v
+multiplier := 3
+triple := fn [multiplier] (x int) int {
+    return x * multiplier
+}
+```
+The V compiler generates a hidden environment closure struct that captures the referenced variable (`multiplier`), ensuring safe access across scope boundaries.
+
+### Function Attributes
+
+| Attribute | Purpose | Description |
+| :--- | :--- | :--- |
+| `@[inline]` | Performance | Instructs the backend C compiler to inline the function body directly at callsites, eliminating function call overhead in performance-critical loops. |
+| `@[params]` | Clean API Design | Enables the struct options pattern, allowing callers to pass named arguments or omit optional parameters cleanly. |
+| `@[deprecated: 'Use new_fn()']` | Maintainability | Emits a compiler warning whenever the marked function is called. |
+
+---
 ## Advanced Function Features
 
 ### Function Returns Value Example 1
@@ -4799,9 +4727,6 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 ### Lesson: Function Returns Value Example 1
 
 A simple function is a small helper that turns inputs into a useful result. The basic pattern is: define the function, pass in values, do some work, and return the answer. In this example, `add` takes two integers and returns their sum.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **function returns value example 1**.
 
 ```v
 fn add(a int, b int) int {
@@ -4822,9 +4747,6 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 ### Lesson: Function Returns Value Example 2
 
 A function does not need to print anything itself. It can build a value and hand it back to the caller. Here, `say_hello` returns a greeting string, and `main` decides how to display it.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **function returns value example 2**.
 
 ```v
 fn say_hello() string {
@@ -4849,9 +4771,6 @@ _File location: [functions/02_understanding_funtion_features/01_functions_return
 
 Some functions are used for actions rather than calculations. They may print output, write files, or update state. In that case, you can leave out the return type and focus on the side effect.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **funtions without return type**.
-
 ```v
 fn console_greeter() {
 	println('Hello!')
@@ -4872,9 +4791,6 @@ _File location: [functions/02_understanding_funtion_features/02_function_and_inp
 ### Lesson: Function With Input Arguments
 
 Functions become much more useful when they accept inputs. This example uses two numbers as arguments and returns their sum, showing the classic input → process → output flow.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **function with input arguments**.
 
 ```v
 fn add(a int, b int) int {
@@ -4899,9 +4815,6 @@ _File location: [functions/02_understanding_funtion_features/03_function_return_
 In V, functions are not limited to returning a single value. A function can return a tuple containing two or more values when they logically belong together. A very common pattern in systems programming is returning both the main result of an operation and a secondary value (such as status flags, byte counts, or errors). Returning multiple values is clean, avoids wrapping results in temporary struct containers, and is assigned using parallel declaration at the call site.
 
 This example shows how a function computes a string greeting and returns both the greeting string and its length as an integer.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **function return multiple values**.
 
 ```v
 // The return types are declared within parentheses: (string, int)
@@ -4929,9 +4842,6 @@ _File location: [functions/02_understanding_funtion_features/04_ignore_function_
 
 Sometimes you only care about one returned value. V lets you ignore the rest with `_`, which keeps the code readable when you are only interested in part of the result.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **ignore function return value**.
-
 ```v
 fn greet_and_message_length(name string) (string, int) {
 	mut greeting := 'Hello, ' + name + '!'
@@ -4953,9 +4863,6 @@ _File location: [functions/02_understanding_funtion_features/05_function_calls_o
 ### Lesson: Function Calls Other Function
 
 Functions can call other functions to split a bigger problem into smaller steps. This makes the code easier to understand and easier to reuse later.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **function calls other function**.
 
 ```v
 fn greet(p string) string {
@@ -4992,9 +4899,6 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **example 1**.
-
 ```v
 fn increment_array_items(arr []int, inc int) []int {
 	mut tmp := arr.clone()
@@ -5030,9 +4934,6 @@ V functions support several advanced features:
 - **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
 
 These examples illustrate these powerful concepts.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **example 2**.
 
 ```v
 fn increment_array_items(mut arr []int, inc int) {
@@ -5128,9 +5029,6 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **main**.
-
 ```v
 // file: main.v
 module main
@@ -5160,9 +5058,6 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **mymod**.
-
 ```v
 // file: mymod/mymod.v
 module mymod
@@ -5188,9 +5083,6 @@ V functions support several advanced features:
 - **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
 
 These examples illustrate these powerful concepts.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **functions with optional return types example 1**.
 
 ```v
 module main
@@ -5228,9 +5120,6 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **function with optional return type example 2**.
-
 ```v
 module main
 
@@ -5267,9 +5156,6 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **mod1**.
-
 ```v
 // file: mod1/mod1.v
 module mod1
@@ -5305,9 +5191,6 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **public function demo1**.
-
 ```v
 // file: public_function_demo1.v
 import mod1
@@ -5334,9 +5217,6 @@ V functions support several advanced features:
 - **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
 
 These examples illustrate these powerful concepts.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **public function demo2**.
 
 ```v
 // file: public_function_demo2.v
@@ -5365,9 +5245,6 @@ V functions support several advanced features:
 
 These examples illustrate these powerful concepts.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **public function demo3**.
-
 ```v
 // file: public_function_demo3.v
 import mod1
@@ -5389,9 +5266,6 @@ _File location: [functions/02_understanding_funtion_features/11_functions_with_d
 The `defer` keyword is a crucial feature for resource safety and cleanups. A `defer` block schedules a block of code to run automatically right before the containing function exits, regardless of which return path is taken. If there are multiple `defer` blocks in a function, they are executed in reverse order of their declaration (Last-In, First-Out). This ensures resources (like file descriptors, database connections, or socket connections) are closed safely without duplicating cleanup code across every return statement.
 
 This example illustrates the execution sequence of statements inside a function containing a `defer` block.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **function with defer block**.
 
 ```v
 module main
@@ -5422,9 +5296,6 @@ _File location: [functions/02_understanding_funtion_features/12_functions_as_ele
 ### Lesson: Functions As Elements Of Array Or Map
 
 Functions can be stored in arrays and maps just like other values. This allows you to choose an operation dynamically at runtime, which is helpful in flexible programs.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **functions as elements of array or map**.
 
 ```v
 module main
@@ -5476,9 +5347,6 @@ _File location: [functions/01_function_types/00_main_function/hello.v](functions
 
 Every V program starts with `main()`. It is the entry point where execution begins, so it is the first function most beginners learn.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **hello**.
-
 ```v
 module main
 
@@ -5496,9 +5364,6 @@ _File location: [functions/01_function_types/01_basic_functions/basic_functions.
 ### Lesson: Basic Functions
 
 A basic function packages a task so you can call it later instead of repeating the same code. This example shows a function that prints a message when invoked.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **basic functions**.
 
 ```v
 // Define a simple function that prints a greeting.
@@ -5524,9 +5389,6 @@ _File location: [functions/01_function_types/02_anonymous_functions/anonymous_fu
 Anonymous functions (also known as lambda functions or function literals) are functions that are defined inline without a name. In V, functions are first-class citizens, meaning they can be assigned to variables, passed as arguments to other functions, or returned from functions. Anonymous functions are highly useful for short-lived, one-off operations such as custom sort criteria, filter callbacks, or event handlers.
 
 This example shows how to declare an anonymous function, assign it to a variable, and call it.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **anonymous functions**.
 
 ```v
 module main
@@ -5555,9 +5417,6 @@ _File location: [functions/01_function_types/03_higher_order_functions/01_functi
 In V, functions are first-class types. This means that a function signature can be used as a parameter type for another function, allowing you to pass functional logic as an argument (a pattern known as a higher-order function). The type syntax for a function parameter matches its signature, such as `f fn () string`, representing a function `f` that takes no parameters and returns a `string`. You can pass named functions or anonymous functions inline directly.
 
 This example declares multiple greeting helpers and a higher-order function `greet` that takes a greeting function and a name to construct a message.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **functions as input arguments**.
 
 ```v
 module main
@@ -5606,9 +5465,6 @@ _File location: [functions/01_function_types/03_higher_order_functions/02_functi
 ### Lesson: Functions That Return Other Functions
 
 Functions are reusable blocks of logic. This lesson on **Functions That Return Other Functions** explains functional syntax, arguments, returns, or functional capabilities in V.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **functions that return other functions**.
 
 ```v
 module main
@@ -5685,9 +5541,6 @@ Key architectural characteristics:
 - **Filtering (`doubled.filter(|x| x > 20)`)**:
   The `.filter()` method checks a predicate. The lambda `|x| x > 20` checks each element and retains only those returning `true`.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **lambda expressions**.
-
 ```v
 module main
 
@@ -5729,9 +5582,6 @@ Unlike languages where variable capture is automatic and hidden, V implements **
 - **`new_counter` Function**: Returns a closure `fn () int`.
 - **State Preservation (`[mut count]`)**: The closure captures the local variable `count` from `new_counter` as `mut`. This allows `count` to survive after `new_counter` returns and update its state across multiple invocation calls (e.g. `counter()`).
 - **Value Capture (`[factor]`)**: The closure `multiplier` captures the `factor` variable as read-only. Calling `multiplier(5)` evaluates to `5 * 10` (50).
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **closures**.
 
 ```v
 module main
@@ -5799,6 +5649,59 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 Structs are user-defined data structures that allow you to group related fields together. This chapter explains how to define structs, set default values, make fields required, attach methods to structs, and embed structs inside other structures.
 
+## Under the Hood: Struct Alignment, Method Dispatch & Heap Allocation
+
+Structs are V's primary tool for domain modeling and data abstraction. V avoids object-oriented complexity (no classes, no inheritance) while providing powerful composition and method dispatch.
+
+### Memory Layout, Alignment & Padding
+
+The V compiler lays out struct fields in sequential memory order, adhering to natural CPU word alignment rules (4 bytes on 32-bit, 8 bytes on 64-bit systems):
+
+```v
+struct Example {
+    a i64  // 8 bytes (offset 0)
+    b i16  // 2 bytes (offset 8)
+    // 6 bytes of padding inserted here
+    c &u8  // 8 bytes (offset 16)
+}
+```
+
+> [!TIP]
+> **Optimization Tip:** Grouping larger fields (`i64`, pointers) before smaller fields (`i16`, `bool`) minimizes padding bytes inserted by the compiler, reducing overall struct memory footprint.
+
+### Method Receiver Dispatch Mechanics
+
+Methods in V are defined with a receiver argument:
+```v
+fn (u User) full_name() string { ... }
+fn (mut u User) set_age(age int) { ... }
+```
+Under the hood, V compiles methods into standard C functions where the receiver is passed as the first argument:
+* `User.full_name()` compiles to `string main__User_full_name(User u)`.
+* `User.set_age()` compiles to `void main__User_set_age(User* u, int age)`.
+Because method dispatch is static, there is **zero virtual table (vtable) lookup overhead**—method calls execute as fast as direct C function invocations.
+
+### Struct Embedding (Composition vs Inheritance)
+
+V does not support class inheritance. Instead, V uses struct embedding:
+```v
+struct User {
+    name string
+    email string
+}
+
+struct Admin {
+    User // Embedded struct
+    role string
+}
+```
+All fields and methods of `User` are automatically promoted to `Admin`. Under the hood, `Admin` simply contains `User` as its first contiguous field, ensuring clean composition with zero indirection overhead.
+
+### The `@[heap]` Attribute
+
+For structs that represent large buffers or deeply nested data structures, applying `@[heap]` instructs the compiler to enforce that instances are always created on the heap via references (`&MyStruct{...}`), preventing stack overflows.
+
+---
 ## Struct Basics & Fields
 
 ### Defining Struct
@@ -5810,9 +5713,6 @@ _File location: [structs/01_introducing_structs/01_defining_struct/01_defining_s
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **defining struct**.
 
 ```v
 struct Note {
@@ -5842,9 +5742,6 @@ A **struct** is a user-defined custom type that groups related variables (called
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **initialize struct example 1**.
-
 ```v
 struct Note {
 	id      int
@@ -5870,9 +5767,6 @@ _File location: [structs/01_introducing_structs/01_defining_struct/03_initialize
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **initialize struct example 2**.
 
 ```v
 struct Note {
@@ -5903,9 +5797,6 @@ A **struct** is a user-defined custom type that groups related variables (called
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **access struct fields**.
-
 ```v
 struct Note {
 	id      int
@@ -5929,9 +5820,6 @@ _File location: [structs/01_introducing_structs/03_heap_structs/01_heap_structs.
 By default, V allocates struct instances on the stack, which is fast and manages memory automatically when variables go out of scope. However, for large structures or instances that must survive beyond the current function scope, you should allocate them on the heap. In V, you allocate a struct on the heap by prepending the initialization literal with the reference operator `&` (e.g., `&MyStruct{}`). The type of a heap-allocated struct is a pointer type, represented as `&MyStruct` (read-only reference).
 
 This example demonstrates declaring a heap-allocated struct instance and printing its type name.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **heap structs**.
 
 ```v
 struct Note {
@@ -5961,9 +5849,6 @@ A **struct** is a user-defined custom type that groups related variables (called
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **updating immutable struct variable throws error**.
-
 ```v
 module main
 
@@ -5992,9 +5877,6 @@ _File location: [structs/02_updating_fields_of_struct/02_updating_mutable_fields
 In V, struct fields are read-only (immutable) by default. To make specific fields mutable, you must group them under the `mut:` access modifier within the struct definition. However, defining a field as mutable only makes it eligible for mutation; to actually modify the field on a struct instance at runtime, the instance itself must be declared as a mutable variable using the `mut` keyword (e.g., `mut my_instance := MyStruct{}`). If the instance is declared as immutable, the compiler will reject any attempt to modify its fields even if they are defined under `mut:`.
 
 This example defines a `Note` struct with a mutable `message` field, initializes a mutable instance, and updates its value.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **updating mutable fields of struct**.
 
 ```v
 module main
@@ -6032,9 +5914,6 @@ A **struct** is a user-defined custom type that groups related variables (called
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **updating immutable fields throws error**.
-
 ```v
 module main
 
@@ -6061,9 +5940,6 @@ _File location: [structs/02_updating_fields_of_struct/04_updating_struct_with_un
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **updating struct with unspecified fields are zeroed**.
 
 ```v
 module main
@@ -6152,9 +6028,6 @@ A **struct** is a user-defined custom type that groups related variables (called
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **struct with multiple fields**.
-
 ```v
 struct Note {
 	id int
@@ -6178,9 +6051,6 @@ _File location: [structs/03_approaches_defining_struct_fields/02_grouping_struct
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **grouping struct fields based on access modifiers**.
 
 ```v
 pub struct Note {
@@ -6206,9 +6076,6 @@ _File location: [structs/03_approaches_defining_struct_fields/03_required_fields
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **required fields example 01**.
 
 ```v
 pub struct Note {
@@ -6240,9 +6107,6 @@ _File location: [structs/03_approaches_defining_struct_fields/03_required_fields
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **required fields example 02**.
 
 ```v
 module main
@@ -6277,9 +6141,6 @@ A **struct** is a user-defined custom type that groups related variables (called
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **struct fields with default values**.
-
 ```v
 import time
 
@@ -6313,9 +6174,6 @@ _File location: [structs/04_methods_for_struct/01_methods_for_struct/01_methods_
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 This lesson demonstrates defining structs, updating fields, required fields, default values, and value receiver methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **methods for struct**.
 
 ```v
 module main
@@ -6384,9 +6242,6 @@ By default, struct methods in V receive a read-only copy of the struct instance 
 
 Additionally, the struct instance variable must be declared with `mut` at the call site to allow mutable method invocations.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **mutable methods for struct**.
-
 ```v
 module main
 
@@ -6453,9 +6308,6 @@ By default, passing a struct instance to functions like `println` will print its
 
 This example illustrates defining a `str() string` method on a custom `Color` struct to format it as `{r, g, b}`.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **printing custom types**.
-
 ```v
 module main
 
@@ -6492,9 +6344,6 @@ _File location: [structs/05_struct_as_struct_field/01_adding_struct_as_struct_fi
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **adding struct as struct field**.
 
 ```v
 import time
@@ -6538,9 +6387,6 @@ _File location: [structs/05_struct_as_struct_field/02_updating_fields_of_type_st
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **updating fields of type struct**.
 
 ```v
 module main
@@ -6594,9 +6440,6 @@ _File location: [structs/06_struct_as_trailing_literal_arguments_to_function/01_
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **struct as trailing literal arguments to function**.
 
 ```v
 module main
@@ -6710,9 +6553,6 @@ V supports **Anonymous Structs** which are inline struct declarations without se
 - **Field Access**:
   Nested fields are accessed sequentially using dot notation: `book.author.name` and `book.author.age`.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **anonymous structs**.
-
 ```v
 module main
 
@@ -6760,9 +6600,6 @@ V supports **Static Type Methods** (e.g. `User.new()`). These are defined on a s
   The static method `User.default_user()` calls `User.new('Guest', 18)` to construct a user with default values, acting as a clean factory builder.
 - **Invocation Syntax**:
   Inside `main()`, static methods are invoked using the struct name prefix: `User.new(...)` and `User.default_user()`. This prevents global namespace pollution and groups constructor-like logic cleanly.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **static type methods**.
 
 ```v
 module main
@@ -6813,9 +6650,6 @@ V supports `[noinit]` structs which are structs that cannot be initialized direc
   We provide a public factory function `pub fn new_config(port int, host string) Config` inside the `noinit_config` module, which is authorized to initialize and return the struct.
 - **Compiler Enforcement**:
   In the main module (`noinit_structs.v`), creating `noinit_config.new_config(...)` compiles and runs successfully. Attempting to directly write `noinit_config.Config{port: 8080}` would cause a compilation error.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **noinit structs**.
 
 ```v
 module noinit_config
@@ -6868,9 +6702,6 @@ A **Union** is a special type of struct that allows storing different data types
   Inside `unsafe { ... }`, when we assign `d.f = 5.5`, the float value overwrites the shared memory. Reading `d.i` subsequently returns a garbled integer representing the binary layout of the float `5.5`, demonstrating the shared storage layout.
 - **Safety Restriction**:
   Accessing any field of a union (`d.i` or `d.f`) is blocked by the compiler unless wrapped in an `unsafe` block, protecting developers from accidental memory misinterpretation.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **unions**.
 
 ```v
 module main
@@ -6945,6 +6776,60 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 V has no exceptions. Instead, it handles errors using **Option** and **Result** types, which are checked at compile time. This chapter teaches you how to write robust, error-free programs using V's clean error handling syntax.
 
+## Under the Hood: Option (`?T`) and Result (`!T`) Representation
+
+V completely eliminates traditional exception handling (`try / catch / throw`). Instead, error handling is explicit, statically typed, and verified at compile time.
+
+### Zero-Exception Overhead
+
+In languages with exceptions (C++, Java, Python), throwing an exception triggers expensive stack unwinding, symbol resolution, and runtime handler table traversal.
+
+In V, `?T` (Option) and `!T` (Result) types are implemented as compact C tagged unions:
+```c
+struct _Result_int {
+    bool is_error;
+    union {
+        int data;
+        IError* err;
+    };
+};
+```
+When a function succeeds, returning a value incurs **zero heap allocation**—the value is passed directly in registers or stack memory with `is_error = false`.
+
+### Option (`?T`) vs Result (`!T`)
+
+| Type | Syntax | Purpose | Unwrapped Failure State |
+| :--- | :--- | :--- | :--- |
+| **Option Type** | `?T` | Represents **presence or absence** of a value (e.g. searching a key, cache lookup). | `none` (missing value without an error message) |
+| **Result Type** | `!T` | Represents **success or operational failure** (e.g. file I/O, network requests, database queries). | `IError` (custom error struct or error message) |
+
+### The `or { ... }` Block Compilation
+
+Calling a function that returns `!T` or `?T` mandates handling the failure case with an `or { ... }` block:
+
+```v
+content := os.read_file('config.json') or {
+    eprintln('Failed to read config: ${err}')
+    return
+}
+```
+
+Under the hood:
+1. The compiler checks the `is_error` discriminant tag.
+2. If successful, the payload is unwrapped directly into `content`.
+3. If an error occurred, the compiler exposes the special `err` variable inside the `or` block scope and **statically requires control flow to diverge** (using `return`, `panic()`, `exit()`, `break`, `continue`, or evaluating to a fallback default value).
+
+### Error Propagation (`!`)
+
+To propagate an error upward to the calling function without handling it locally, append `!`:
+```v
+fn load_user_data(path string) !UserData {
+    raw := os.read_file(path)! // Propagates error immediately if read_file fails
+    return json.decode(UserData, raw)!
+}
+```
+
+---
 ## Option & Result Types
 
 ### Error Handling
@@ -7272,6 +7157,54 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 Modules help organize larger codebases. In this chapter, you will learn how to create modules, import them, manage member visibility using `pub`, and understand module initialization lifecycle.
 
+## Under the Hood: Module Resolution, Namespaces & VPM
+
+V uses a clean, folder-based module system that eliminates header files, forward declarations, and complex build scripts.
+
+### Single Module Per Directory Rule
+
+In V:
+* Every `.v` file located inside a single directory belongs to the same module namespace.
+* All functions, structs, and constants defined across different `.v` files in that same directory are automatically visible to each other **without importing or header declarations**.
+* This enables splitting large modules across multiple concise files cleanly.
+
+```
+src/
+├── auth/
+│   ├── auth.v       (module auth)
+│   ├── token.v      (module auth - shares private symbols with auth.v)
+│   └── user.v       (module auth - shares private symbols with auth.v)
+└── main.v           (module main - imports auth)
+```
+
+### Public (`pub`) vs Module-Private Visibility
+
+* By default, every function, struct, field, and constant in a module is **module-private**.
+* Prepending `pub` (e.g. `pub fn hash_password(...)`) exports the symbol, making it accessible to external modules that import it.
+* Struct fields follow granular visibility modifiers: `pub:`, `mut:`, `pub mut:`, or `__global:`.
+
+### Module Resolution Hierarchy
+
+When an `import mymodule` statement is compiled, V searches for the module in the following order:
+1. Local project subdirectories relative to the importing file.
+2. Standard library modules located in the V installation directory (`vlib/`).
+3. Third-party modules installed in the global V module cache (`~/.vmodules/`).
+
+### The `v.mod` Manifest & VPM (V Package Manager)
+
+Every published module or reusable project includes a `v.mod` file at its root:
+```v
+Module {
+    name: 'myproject'
+    description: 'High performance data pipeline'
+    version: '1.0.0'
+    license: 'MIT'
+    dependencies: ['net', 'sqlite']
+}
+```
+You can install packages from the VPM ecosystem with `v install <package_name>` or remove them with `v remove <package_name>`.
+
+---
 ## Modules & Project Structure
 
 ### Creating a Simple V Project - Main (modulebasics.v)
@@ -7451,9 +7384,6 @@ _File location: [modules/ch05_working_with_multiple_files_in_module/after/module
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
-
 ```v
 module main
 
@@ -7475,9 +7405,6 @@ _File location: [modules/ch05_working_with_multiple_files_in_module/before/modul
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
-
 ```v
 module mod1
 
@@ -7495,9 +7422,6 @@ _File location: [modules/ch05_working_with_multiple_files_in_module/before/modul
 ### Lesson: Multiple Files (Before Refactoring) - Helper 2
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file2**.
 
 ```v
 fn hello2() {
@@ -7517,9 +7441,6 @@ _File location: [modules/ch05_working_with_multiple_files_in_module/before/modul
 ### Lesson: Multiple Files (Before Refactoring) - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
 
 ```v
 module main
@@ -7562,9 +7483,6 @@ _File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/fil
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file2**.
-
 ```v
 module mod1
 
@@ -7582,9 +7500,6 @@ _File location: [modules/ch06_member_scope_in_module/after/modulebasics/moduleba
 ### Lesson: Member Scope (After Refactoring) - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
 
 ```v
 module main
@@ -7606,9 +7521,6 @@ _File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/fi
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
-
 ```v
 module mod1
 
@@ -7627,9 +7539,6 @@ _File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/fi
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file2**.
-
 ```v
 module mod1
 
@@ -7647,9 +7556,6 @@ _File location: [modules/ch06_member_scope_in_module/before/modulebasics/moduleb
 ### Lesson: Member Scope (Before Refactoring) - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
 
 ```v
 module main
@@ -7694,9 +7600,6 @@ _File location: [modules/ch07_cyclic_imports/modulebasics/m2/file1.v](modules/ch
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
-
 ```v
 module m2
 
@@ -7718,9 +7621,6 @@ _File location: [modules/ch07_cyclic_imports/modulebasics/modulebasics.v](module
 ### Lesson: Cyclic Imports - Main Entry
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
 
 ```v
 module main
@@ -7864,9 +7764,6 @@ _File location: [modules/ch09_accessing_constants_of_module/modulebasics/moduleb
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
-
 ```v
 module main
 
@@ -7888,9 +7785,6 @@ _File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/m
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
 
 ```v
 module mod1
@@ -7927,9 +7821,6 @@ _File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/m
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
 These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
 
 ```v
 module main
@@ -8790,9 +8681,6 @@ _File location: [modules/ch11_install_external_packages_and_webview/webview_demo
 
 Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Webview Demo** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **installing external packages and webview bindings**.
-
 ```v
 module main
 
@@ -9142,6 +9030,54 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 V has testing built directly into the compiler. This chapter explains how to write test files, use assertions, set up test suites with setup/teardown methods, and run test suites.
 
+## Under the Hood: Test Discovery & The Assertion Engine
+
+V comes with a built-in, zero-configuration testing harness that makes test-driven development seamless.
+
+### Zero-Configuration Test Discovery
+
+When you execute `v test .` or `v test path/to/module`:
+1. The compiler traverses the directory tree and detects every file ending with `_test.v`.
+2. For each test file, V compiles a dedicated test executable containing all functions prefixed with `test_` (e.g., `fn test_addition()`).
+3. Each test function is executed in isolation. If all assertions pass, the test runner outputs a green confirmation banner with timing metrics.
+
+### Compile-Time Assertion Inspection
+
+In standard C or other languages, assertions are simple runtime checks that print an opaque error when false.
+
+In V, `assert` is an advanced compile-time feature:
+```v
+assert user.age == 25
+```
+When compiling this statement:
+* The compiler captures the Abstract Syntax Tree (AST) of the left-hand expression (`user.age`) and right-hand expression (`25`).
+* If the assertion fails at runtime, V intercepts the failure and prints an informative, colorized terminal diff:
+  ```
+  Assertion failed:
+    File: user_test.v:18
+    Expected: user.age == 25
+    Left value:  user.age = 24
+    Right value: 25
+  ```
+
+### Test Harness Setup and Teardown (`test_main`)
+
+For integration tests requiring database initialization or temporary file creation, you can define a `test_main()` function in your `_test.v` file:
+
+```v
+fn test_main() {
+    // Global setup: connect to test database
+    setup_test_db()
+
+    // Run all test_* functions in this file
+    test_run_all()
+
+    // Global teardown: clean up test database
+    teardown_test_db()
+}
+```
+
+---
 ## Assertions & Unit Testing
 
 ### Assert Demo
@@ -9153,9 +9089,6 @@ _File location: [testing/01_assert/assert_demo.v](testing/01_assert/assert_demo.
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **assert demo**.
 
 ```v
 module main
@@ -9232,9 +9165,6 @@ V has built-in testing support. Any file ending with `_test.v` is considered a t
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **demo test**.
-
 ```v
 fn test_first() {
 	assert 2 != 2
@@ -9253,9 +9183,6 @@ V has built-in testing support. Any file ending with `_test.v` is considered a t
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **demo test**.
-
 ```v
 fn test_first() {
 	assert 2 == 2
@@ -9273,9 +9200,6 @@ _File location: [testing/04_testsuite/testsuite_demo_test.v](testing/04_testsuit
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **testsuite demo test**.
 
 ```v
 import os
@@ -9317,9 +9241,6 @@ V has built-in testing support. Any file ending with `_test.v` is considered a t
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **demo test**.
-
 ```v
 fn greet(name string) !string {
 	if name != '' {
@@ -9356,9 +9277,6 @@ V has built-in testing support. Any file ending with `_test.v` is considered a t
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **greet**.
-
 ```v
 module main
 
@@ -9383,9 +9301,6 @@ _File location: [testing/06_testing_program_file/greet_test.v](testing/06_testin
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **greet test**.
 
 ```v
 module main
@@ -9415,9 +9330,6 @@ _File location: [testing/07_testing_program_with_modules/modulebasics/main_test.
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **main test**.
 
 ```v
 module main
@@ -9449,9 +9361,6 @@ V has built-in testing support. Any file ending with `_test.v` is considered a t
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
-
 ```v
 module mod1
 
@@ -9471,9 +9380,6 @@ _File location: [testing/07_testing_program_with_modules/modulebasics/mod1/mod1_
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **mod1 test**.
 
 ```v
 module mod1
@@ -9501,9 +9407,6 @@ _File location: [testing/07_testing_program_with_modules/modulebasics/modulebasi
 V has built-in testing support. Any file ending with `_test.v` is considered a test file. Inside test files, you write functions starting with `test_` and use `assert` statements to check if conditions are true. You can run all tests in a folder using the `v test .` command.
 
 These examples cover writing simple assertions, test suites, and testing functions that return options or errors.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
 
 ```v
 module main
@@ -9565,6 +9468,78 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 V makes concurrent programming easy and safe. This chapter covers spawning threads using `spawn`, communicating safely between threads using channels, and sharing state safely using `shared` and `lock` primitives.
 
+## Under the Hood: V-Routines, Thread Pooling & Channel Ring Buffers
+
+V provides modern concurrency primitives designed for high throughput, safe data exchange, and lock-free execution patterns where possible.
+
+### The `spawn` Keyword & Task Scheduling
+
+To run a function concurrently, use the `spawn` keyword:
+```v
+handle := spawn fetch_data(endpoint)
+```
+Under the hood:
+1. `spawn` schedules the function call onto an internal worker thread pool.
+2. It returns a `thread T` handle (where `T` is the return type of the spawned function).
+3. Calling `result := handle.wait()` synchronizes with the concurrent task and retrieves its return value, blocking only until the task completes.
+
+### Channel (`chan T`) Ring Buffer Architecture
+
+Channels provide safe, synchronized communication between concurrent tasks:
+
+```
+Sender ---> [ Ring Buffer Slot 0 | Slot 1 | Slot 2 | ... ] ---> Receiver
+                       ^                     ^
+                 Write Pointer          Read Pointer
+```
+
+* **Unbuffered Channels (`chan int{cap: 0}`)**: Synchronous rendezvous. A send operation blocks until a receiver is ready to read, and a read operation blocks until a sender transmits.
+* **Buffered Channels (`chan int{cap: 100}`)**: Circular ring buffer allocated in memory. Senders write without blocking until the buffer reaches capacity; receivers read without blocking until the buffer is empty.
+* **Thread Safety**: Channel operations are synchronized using internal atomic locks and condition variables, preventing race conditions.
+
+### Multiplexing with `select`
+
+The `select` statement enables non-blocking or multi-channel synchronization:
+```v
+select {
+    msg := <-ch1 {
+        println('Received from ch1: ${msg}')
+    }
+    msg := <-ch2 {
+        println('Received from ch2: ${msg}')
+    }
+    > 500 * time.millisecond {
+        println('Timeout waiting for channels')
+    }
+    else {
+        println('No channel ready, continuing without blocking')
+    }
+}
+```
+
+### Shared Memory Concurrency & `lock` Blocks
+
+When multiple concurrent tasks need to share mutable data, declare the struct with `shared`:
+```v
+struct State {
+mut:
+    counter int
+}
+
+mut state := shared State{ counter: 0 }
+
+// In concurrent task:
+lock state {
+    state.counter++ // Exclusive write lock
+}
+
+rlock state {
+    println('Current count: ${state.counter}') // Shared read lock
+}
+```
+Under the hood, `shared` variables are paired with a POSIX read-write lock (`pthread_rwlock_t`), guaranteeing thread safety without manual mutex lifecycle management.
+
+---
 ## Channels & Communication
 
 ### Unbuffered Channel
@@ -9574,9 +9549,6 @@ _File location: [channels/01_define_channels/01_unbuffered_channel.v](channels/0
 ### Lesson: Unbuffered Channel
 
 Unbuffered channels in V have a capacity of 0. Sending data into an unbuffered channel blocks the sender thread until a receiver thread is ready to pop the data. This provides a strong synchronization point between execution threads.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **unbuffered channel**.
 
 ```v
 module main
@@ -9609,9 +9581,6 @@ _File location: [channels/01_define_channels/02_buffered_channel.v](channels/01_
 
 Buffered channels in V are initialized with a specific capacity. The sender thread can push elements into the channel without blocking as long as the buffer is not completely full. Once the buffer is full, subsequent send operations will block until elements are read by another thread.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **buffered channel**.
-
 ```v
 module main
 
@@ -9643,9 +9612,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **push buffered**.
-
 ```v
 fn main() {
 	ch := chan int{cap: 1}
@@ -9666,9 +9632,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **push unbuffered**.
-
 ```v
 fn main() {
 	ch := chan int{}
@@ -9688,9 +9651,6 @@ _File location: [channels/02_channel_operations/03_pop.v](channels/02_channel_op
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **pop**.
 
 ```v
 fn main() {
@@ -9735,9 +9695,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **channel properties**.
-
 ```v
 fn main() {
 	b := chan string{cap: 2}
@@ -9760,9 +9717,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **try push unbuffered**.
-
 ```v
 fn main() {
 	v := 'hi'
@@ -9783,9 +9737,6 @@ _File location: [channels/04_channel_methods/01_try_push/02_try_push_buffered.v]
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **try push buffered**.
 
 ```v
 fn main() {
@@ -9815,9 +9766,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **try pop**.
-
 ```v
 fn main() {
 	ch := chan int{cap: 1}
@@ -9841,9 +9789,6 @@ _File location: [channels/04_channel_methods/03_close/01_close/01_close.v](chann
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **close**.
 
 ```v
 module main
@@ -9878,9 +9823,6 @@ _File location: [channels/04_channel_methods/03_close/02_defer_close/01_defer_cl
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **defer close**.
 
 ```v
 module main
@@ -9918,9 +9860,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **blocking channels**.
-
 ```v
 module main
 
@@ -9947,9 +9886,6 @@ _File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_bl
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **dealing before**.
 
 ```v
 module main
@@ -9981,9 +9917,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **dealing after**.
-
 ```v
 module main
 
@@ -10014,9 +9947,6 @@ _File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_d
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sync before**.
 
 ```v
 module main
@@ -10057,9 +9987,6 @@ _File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_d
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sync after**.
 
 ```v
 module main
@@ -10103,9 +10030,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **buffered channel**.
-
 ```v
 module main
 
@@ -10132,9 +10056,6 @@ _File location: [channels/06_working_with_buffered_channels/02_establish_communi
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **coroutines communication**.
 
 ```v
 module main
@@ -10174,9 +10095,6 @@ _File location: [channels/06_working_with_buffered_channels/03_synchronizing_dat
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sync before**.
 
 ```v
 module main
@@ -10218,9 +10136,6 @@ _File location: [channels/06_working_with_buffered_channels/03_synchronizing_dat
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sync after**.
 
 ```v
 module main
@@ -10264,9 +10179,6 @@ _File location: [channels/07_channel_select/01_before/01_channel_select_before.v
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **channel select before**.
 
 ```v
 module main
@@ -10316,9 +10228,6 @@ _File location: [channels/07_channel_select/02_after/01_channel_select.v](channe
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **channel select**.
 
 ```v
 module main
@@ -10409,9 +10318,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **stopwatch demo**.
-
 ```v
 module main
 
@@ -10439,9 +10345,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **spawn void function**.
-
 ```v
 module main
 
@@ -10466,9 +10369,6 @@ _File location: [concurrency/02_spawn_void_function/02_waiting_on_concurrent_thr
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **waiting on concurrent thread**.
 
 ```v
 module main
@@ -10495,9 +10395,6 @@ _File location: [concurrency/03_concurrency_real_life_scenario/01_running_multip
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **running multiple tasks in sequence**.
 
 ```v
 module main
@@ -10542,9 +10439,6 @@ _File location: [concurrency/03_concurrency_real_life_scenario/02_spawning_multi
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **spawning multiple tasks concurrently**.
 
 ```v
 module main
@@ -10591,9 +10485,6 @@ _File location: [concurrency/04_implement concurrent programs/01_functions_with_
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **functions with return values**.
 
 ```v
 module main
@@ -10649,9 +10540,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **spawn anonymous funcs without input args**.
-
 ```v
 module main
 
@@ -10676,9 +10564,6 @@ _File location: [concurrency/04_implement concurrent programs/02_anonymous_funct
 V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **spawn anonymous funcs with input args**.
 
 ```v
 module main
@@ -10706,9 +10591,6 @@ _File location: [concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharin
 ### Lesson: Sharing Data Main And Concurrent Tasks
 
 In addition to channels, V supports shared-memory concurrency using the `shared` keyword. Multiple threads can safely read and write to the same struct using `lock` (exclusive write lock) and `rlock` (shared read lock) blocks. This prevents race conditions and ensures synchronization without manual mutex management.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sharing data main and concurrent tasks**.
 
 ```v
 module main
@@ -10861,6 +10743,38 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 Most applications need to work with databases or API payloads. This chapter teaches you how to serialize and deserialize JSON data, use V's built-in ORM with SQLite, and covers a complete Notes REST API case study.
 
+## Under the Hood: Compile-Time Reflection & Type-Safe ORM
+
+Working with external data formats (JSON) and databases (SQLite, PostgreSQL, MySQL) in V is uniquely fast and safe thanks to compile-time code generation.
+
+### Zero Runtime Reflection in JSON Serialization
+
+In languages like Go, Java, or Python, JSON decoding relies on runtime reflection (`reflect`). Dynamic type inspection on every incoming request consumes significant CPU cycles and degrades API throughput.
+
+In V:
+```v
+user := json.decode(User, payload)!
+```
+* **Compile-Time Generation**: During compilation, the V compiler inspects the definition of `User` and generates a dedicated, custom C parsing function tailored specifically to that struct.
+* **Zero Reflection Overhead**: When `json.decode` executes at runtime, it calls this pre-compiled C parser directly, resulting in speeds comparable to handcrafted low-level serializers.
+* **Struct Attributes**: `@[json: 'custom_name']` customizes JSON field names, while `@[skip]` excludes sensitive fields from serialization.
+
+### Compile-Time Type-Safe V ORM (`sql db { ... }`)
+
+V includes a native Object-Relational Mapping (ORM) engine embedded directly into the compiler syntax:
+
+```v
+users := sql db {
+    select from User where age >= 18 && status == 'active' order by name limit 10
+}
+```
+
+Under the hood:
+1. **Compile-Time Validation**: The V compiler parses the SQL query block and verifies table names, column names, and comparison types against the `User` struct definition. A typo in a column name produces a **compile-time error**, not a runtime crash!
+2. **Automatic Parameterization**: The compiler transforms V variables (e.g. `'active'`) into parameterized SQL prepared statement placeholders (`?`), completely eliminating SQL injection vulnerabilities.
+3. **Automatic Hydration**: Results returned from the database driver are mapped directly into instances of `User` without manual column-by-column unpacking.
+
+---
 ## Case Study: Notes API
 
 ### Notes API Case Study - Main (main.v)
@@ -10870,9 +10784,6 @@ _File location: [notes_api/notes_api/main.v](notes_api/notes_api/main.v)_
 ### Lesson: Notes API Case Study - Main
 
 This is a complete, real-world case study of a REST API built using the V web framework (`veb`). It includes routing, JSON requests/responses, and persistence using SQLite. It is a great example of how all the pieces of V fit together to build a production-grade application.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **main**.
 
 ```v
 module main
@@ -10915,9 +10826,6 @@ _File location: [notes_api/notes_api/note.v](notes_api/notes_api/note.v)_
 ### Lesson: Note
 
 This is a complete, real-world case study of a REST API built using the V web framework (`veb`). It includes routing, JSON requests/responses, and persistence using SQLite. It is a great example of how all the pieces of V fit together to build a production-grade application.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **note**.
 
 ```v
 module main
@@ -11085,9 +10993,6 @@ _File location: [notes_api/notes_api/util.v](notes_api/notes_api/util.v)_
 
 This is a complete, real-world case study of a REST API built using the V web framework (`veb`). It includes routing, JSON requests/responses, and persistence using SQLite. It is a great example of how all the pieces of V fit together to build a production-grade application.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **util**.
-
 ```v
 module main
 
@@ -11124,9 +11029,6 @@ _File location: [json_and_orm/01_json/01_decode/decode.v](json_and_orm/01_json/0
 
 Databases and JSON handling are essential parts of backend development. This lesson on **Decode** details V's built-in JSON utilities or its built-in database ORM.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **decode**.
-
 ```v
 import json
 
@@ -11157,9 +11059,6 @@ _File location: [json_and_orm/01_json/02_encode/encode.v](json_and_orm/01_json/0
 ### Lesson: Encode
 
 Databases and JSON handling are essential parts of backend development. This lesson on **Encode** details V's built-in JSON utilities or its built-in database ORM.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **encode**.
 
 ```v
 import json
@@ -11498,9 +11397,6 @@ _File location: [json_and_orm/02_orm/orm_demo.v](json_and_orm/02_orm/orm_demo.v)
 ### Lesson: Orm Demo
 
 Databases and JSON handling are essential parts of backend development. This lesson on **Orm Demo** details V's built-in JSON utilities or its built-in database ORM.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **orm demo**.
 
 ```v
 module main
@@ -12086,6 +11982,49 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 This chapter highlights the power of V's standard library and advanced integration features, including low-level socket networking, inline assembly, compilation to WebAssembly, and V's unique memory management models.
 
+## Under the Hood: Sum Types, Generics, Memory Models & C Interop
+
+Chapter 13 explores advanced systems capabilities that make V capable of everything from low-level operating system programming to high-level web infrastructure.
+
+### Sum Types (Tagged Unions) & Smart Casting
+
+A Sum Type allows a value to hold one of several distinct types:
+```v
+type Shape = Circle | Rectangle | Point
+```
+Under the hood:
+* V implements sum types as a C tagged union containing an integer type ID and a shared memory union for the variant payload.
+* Matching on a sum type (`match shape { Circle { ... } }`) or using `if shape is Circle` performs a type check and **smart-casts** the variable to `Circle` within that scope with zero runtime conversion penalty.
+
+### Generics via Compile-Time Monomorphization
+
+Generics allow writing type-agnostic data structures and algorithms:
+```v
+fn find_first[T](items []T, predicate fn(T) bool) ?T {
+    for item in items {
+        if predicate(item) { return item }
+    }
+    return none
+}
+```
+Under the hood, V implements generics through **monomorphization**. When the compiler sees `find_first[int]` and `find_first[string]`, it generates two specialized C functions (`find_first_int` and `find_first_string`). This guarantees peak CPU performance with zero virtual dispatch, dynamic boxing, or memory indirection.
+
+### V's Pluggable Memory Management Strategies
+
+| Memory Mode | Compiler Flag | Mechanism | Ideal Use Case |
+| :--- | :--- | :--- | :--- |
+| **Boehm GC (Default)** | `v -gc boehm` | Conservative, multi-threaded tracing garbage collector. | General application development, CLI tools, REST APIs. |
+| **Autofree** | `v -autofree` | Static lifetime analysis engine injects `free()` calls automatically at compile time. | High-performance services requiring deterministic memory cleanup with zero GC pauses. |
+| **Manual / Low-Level** | `unsafe { ... }` | Manual allocation via `malloc` / `free` with raw pointers. | Embedded systems, OS kernels, high-frequency trading engines. |
+
+### Zero-Overhead C Interoperability & Inline Assembly
+
+V was designed from day one for 100% transparent C interoperability:
+* **Direct C Header Inclusion**: Use `#include <sqlite3.h>` and `#flag -lsqlite3` to link native C libraries directly into your V project.
+* **Direct C API Invocations**: Call C functions directly using the `C.` prefix (e.g. `C.sqlite3_open(...)`) without any Foreign Function Interface (FFI) bindings or marshaling overhead.
+* **Inline Assembly (`#asm`)**: Embed raw machine assembly instructions directly inside V functions for ultra-specialized hardware control.
+
+---
 ## Inline Assembly & C Interop
 
 ### Inline Assembly
@@ -12257,7 +12196,6 @@ The `net.urllib` standard library module provides utilities for parsing, analyzi
 
 This example illustrates parsing URLs, escaping special string characters, and creating encoded query objects.
 
-**Additional Context from Repository docs:**
 This example demonstrates parsing URLs into components, escaping and unescaping query parameters, and encoding query parameters using the `net.urllib` module.
 
 ```v
@@ -12325,7 +12263,6 @@ The `net.websocket` module provides robust client and server APIs for real-time 
 
 This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly.
 
-**Additional Context from Repository docs:**
 This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly using the `net.websocket` module.
 
 ```v
@@ -12621,7 +12558,6 @@ The standard library `net.html` module provides light-weight parsing and queryin
 
 This example illustrates parsing an HTML string, navigating node structures, filtering tags by attributes, and printing text values.
 
-**Additional Context from Repository docs:**
 This example demonstrates parsing HTML strings, querying tags by class name and attribute values, and extracting node text and properties using the `net.html` module.
 
 ```v
@@ -13354,7 +13290,6 @@ The `net` standard library module provides full support for TCP (Transmission Co
 
 This example illustrates creating a TCP server and client, opening socket connections, sending payload data, and handling connection cleanup blocks.
 
-**Additional Context from Repository docs:**
 This example demonstrates how to create a simple TCP server and client in V. The server listens on a local port, accepts an incoming client connection, receives data, sends a response, and closes the connection.
 
 ```v
@@ -13716,7 +13651,6 @@ UDP (User Datagram Protocol) is a connectionless, unreliable transport protocol 
 
 This example illustrates opening a UDP socket listener, sending datagram packets, extracting sender details, and replying to a dynamic port.
 
-**Additional Context from Repository docs:**
 This example demonstrates sending and receiving connectionless UDP packets. The server binds to a local port and receives a message along with the sender's address, and responds to it using `write_to`.
 
 ```v
@@ -14224,7 +14158,6 @@ Unix Domain Sockets (UDS) provide a high-performance inter-process communication
 
 This example illustrates cleaning up stale socket files, launching a Unix domain socket listener/server, connecting a client to it, and exchanging messages.
 
-**Additional Context from Repository docs:**
 This example demonstrates Unix domain socket client-server communication using the `net.unix` module.
 
 ```v
@@ -14648,9 +14581,6 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/01_optio
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Options And Results** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **options and results**.
-
 ```v
 module main
 
@@ -14713,9 +14643,6 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/02_gener
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Generics** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **generics**.
-
 ```v
 module main
 
@@ -14775,9 +14702,6 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/03_inter
 ### Lesson: Interfaces
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Interfaces** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **interfaces**.
 
 ```v
 module main
@@ -14840,9 +14764,6 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/04_sum_t
 ### Lesson: Sum Types
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Sum Types** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sum types**.
 
 ```v
 module main
@@ -14923,9 +14844,6 @@ _File location: [language_updates_and_stdlib/01_language_basics_updates/05_attri
 ### Lesson: Attributes
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Attributes** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **attributes**.
 
 ```v
 module main
@@ -15187,9 +15105,6 @@ _File location: [language_updates_and_stdlib/02_standard_library/01_strings_buil
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Strings Builder** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **strings builder**.
-
 ```v
 module main
 
@@ -15411,9 +15326,6 @@ V's standard library provides a rich set of cross-platform functions for interac
 - **Real-world example:** Storing files matching `log_*.txt` and deleting them in a batch.
 
 ---
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **OS operations**.
 
 ```v
 module main
@@ -15961,9 +15873,6 @@ V's standard library provides a robust and precise set of utilities for time ret
 
 ---
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **time and stopwatch**.
-
 ```v
 module main
 
@@ -16119,9 +16028,6 @@ _File location: [language_updates_and_stdlib/02_standard_library/04_http_client/
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Http Client** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **http client**.
-
 ```v
 module main
 
@@ -16163,9 +16069,6 @@ _File location: [language_updates_and_stdlib/02_standard_library/05_regex_matchi
 ### Lesson: Regex Matching
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Regex Matching** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **regex matching**.
 
 ```v
 module main
@@ -16246,9 +16149,6 @@ _File location: [language_updates_and_stdlib/02_standard_library/06_command_line
 ### Lesson: Command Line Flags
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Command Line Flags** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **command line flags**.
 
 ```v
 module main
@@ -16366,9 +16266,6 @@ V's standard library provides a rich set of built-in collections and data struct
 - **Real-world example:** A music playlist. A regular linked list only lets you hit "Next". A doubly linked list lets you hit "Next" and "Previous".
 
 ---
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **datatypes collections**.
 
 ```v
 module main
@@ -16665,9 +16562,6 @@ _File location: [language_updates_and_stdlib/02_standard_library/08_gg_graphics/
 ### Lesson: Gg Graphics
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Gg Graphics** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **gg graphics** using V's simple graphics module. It shows how to initialize a window, define an application state struct, draw various 2D shapes (rectangles, circles, triangles, polygons, lines), render formatted text, and intercept keyboard and mouse event inputs.
 
 ```v
 module main
@@ -17544,9 +17438,6 @@ _File location: [language_updates_and_stdlib/02_standard_library/11_log_and_cryp
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Log And Crypto** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **log and crypto**.
-
 ```v
 module main
 
@@ -17595,9 +17486,6 @@ V supports lightweight concurrency using **v-routines** via the `spawn` keyword 
 
 These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sync concurrency**.
-
 ```v
 module main
 
@@ -17644,9 +17532,6 @@ _File location: [language_updates_and_stdlib/02_standard_library/13_encoding_for
 ### Lesson: Encoding Formats
 
 V has a very rich and growing standard library and is actively updated. This lesson on **Encoding Formats** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **encoding formats**.
 
 ```v
 module main
@@ -18079,9 +17964,6 @@ V's standard library provides a direct, cross-platform module named `term` for q
 
 ---
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **term**.
-
 ```v
 module main
 
@@ -18214,9 +18096,6 @@ V's standard library provides the `term.ui` (or `tui`) module for building full-
   - Window resize details: `width`, `height` passed on `.resized` events (and auto-updated in `window_width`/`window_height`).
 
 ---
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **term.ui**.
 
 ```v
 module main
@@ -20428,9 +20307,6 @@ V provides two built-in operators for determining sizes and memory offsets:
   - `__offsetof(Foo, b)` yields `4` because it starts right after `a` (4 bytes).
   - `__offsetof(Foo, c)` yields `8` because it aligns on the next 4-byte boundary due to padding after `b`.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **sizeof and \_\_offsetof**.
-
 ```v
 module main
 
@@ -20477,9 +20353,6 @@ Operator overloading is supported for a limited set of binary operators (`+, -, 
   We define `==` to verify element-by-element equality: `a.x == b.x && a.y == b.y`.
 - **Automatic Assignment Generation**:
   When we overload `+`, V autogenerates the compound assignment operator `+=`. Executing `c += a` resolves to `c = c + a`, compiling and modifying `c` automatically.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **limited operator overloading**.
 
 ```v
 module main
@@ -20546,9 +20419,6 @@ V does not have direct keyword support for atomic operations but integrates stan
 - **CAS (Compare-And-Swap)**:
   Inside `unsafe { ... }`, we call `C.atomic_compare_exchange_strong_u32(&atom, &expected, 23)`. If the value at `&atom` matches `expected` (17), it replaces it with `23` and returns `true`. If not, it loads the actual current value into `expected` and returns `false`.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **atomics**.
-
 ```v
 module main
 
@@ -20603,9 +20473,6 @@ V supports **Static Variables** within functions. They behave like namespaced gl
 - **Access Rules**:
   Because static variables represent shared mutable state, `counter()` is marked with `@[unsafe]` and called within `unsafe` blocks in `main()`.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **static variables**.
-
 ```v
 module main
 
@@ -20641,9 +20508,6 @@ V supports **Hot Code Reloading** using the `@[live]` attribute. By compiling a 
   The function `print_message()` is marked with the `@[live]` attribute. This instructs the compiler to generate it as a hot-reloadable hook loading from a shared library.
 - **Main loop execution**:
   The loop in `main()` runs continuously. If you modify the message in the string print inside `print_message()` and save the file, V's monitoring thread detects the change, rebuilds the code, and subsequent calls in the loop print the updated message instantly.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **hot code reloading**.
 
 ```v
 module main
@@ -20687,9 +20551,6 @@ V supports **Compile-Time Reflection** using the `$` prefix to perform type oper
   Inspects attributes attached to the struct, such as `@[COLOR]` (prints `COLOR`).
 - **Comptime Method Invocation (`user.$method()`)**:
   Inside `$for m in User.methods`, we check if the method returns a `string`. If so, we execute the method dynamically using the `$method()` comptime syntax, calling `greet()` on the `user` instance and printing `Hello Alice`.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **compile-time reflection**.
 
 ```v
 module main
@@ -20773,7 +20634,6 @@ V provides a set of pseudo-variables starting with `@` that are evaluated and su
   - `@BACKEND` -> Replaced with the current language backend (e.g. `'c'`, `'js'`).
   - `@PLATFORM` -> Replaced with the CPU architecture type (e.g. `'arm64'`, `'amd64'`).
 
-**Additional Context from Repository docs:**
 This example demonstrates the usage and output of all the available compile-time pseudo variables in V.
 
 ```v
