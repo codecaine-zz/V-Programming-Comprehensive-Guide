@@ -60,6 +60,7 @@ This structure makes it easier to jump straight to the concept you want to study
 
 - Build macOS desktop apps with V and Cocoa using [vlang_simplegui](https://github.com/codecaine-zz/vlang_simplegui).
 - Build macOS desktop apps with V and Webview using [vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template).
+- Build 2D graphics and desktop apps using [simple_gg](https://github.com/codecaine-zz/simple_gg).
 
 > [!TIP]
 > **Interactive Viewer**: Read this guide and other tutorials as a responsive HTML site on the [Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/) (source code available in the [GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).
