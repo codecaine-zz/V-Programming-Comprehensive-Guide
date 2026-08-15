@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import ttytm.webview
 import xiusin.vredis
 
@@ -58,76 +58,76 @@ fn redis_connect_status(e &webview.Event) !string {
 			status:     'connected'
 			host:       '127.0.0.1'
 			port:       6379
-			version:    'Unknown'
+			version:    'Redis (Unknown)'
 			keys_count: count
 		}
 		return json.encode(status_info)
 	}
-	if info.bytestr().len > 0 {
-		lines := info.bytestr().split('\n')
-		for line in lines {
-			if line.starts_with('redis_version:') {
-				parts := line.split(':')
-				if parts.len >= 2 {
-					version = parts[1].trim_space()
-				}
-				break
-			}
+
+	for line in info.split_into_lines() {
+		if line.starts_with('redis_version:') {
+			version = line.all_after('redis_version:').trim_space()
+			break
 		}
 	}
 
 	count := client.dbsize() or { 0 }
-
 	status_info := ConnectStatus{
 		status:     'connected'
 		host:       '127.0.0.1'
 		port:       6379
-		version:    version
+		version:    'Redis ${version}'
 		keys_count: count
 	}
 	return json.encode(status_info)
 }
 
-fn redis_get_keys(e &webview.Event) !string {
+fn redis_list_keys(e &webview.Event) !string {
+	pattern := e.get_arg[string](0) or { '*' }
+	filter_pattern := if pattern == '' { '*' } else { pattern }
+
 	mut client := connect_redis()!
 	defer {
 		client.close() or {}
 	}
 
-	keys := client.keys('*') or { []string{} }
+	keys := client.keys(filter_pattern) or { []string{} }
 	mut items := []KeyInfo{}
+
 	for key in keys {
-		t := client.@type(key) or { 'unknown' }
+		typ := client.key_type(key) or { 'unknown' }
 		ttl := client.ttl(key) or { -1 }
 		items << KeyInfo{
 			name:  key
-			@type: t
+			@type: typ
 			ttl:   ttl
 		}
 	}
+
 	return json.encode(items)
 }
 
 fn redis_get_key_detail(e &webview.Event) !string {
+	key := e.get_arg[string](0)!
+
 	mut client := connect_redis()!
 	defer {
 		client.close() or {}
 	}
 
-	key := e.get_arg[string](0)!
-	t := client.@type(key)!
-	ttl := client.ttl(key)!
+	typ := client.key_type(key) or { 'none' }
+	ttl := client.ttl(key) or { -1 }
 
 	mut detail := KeyDetail{
 		name:     key
-		@type:    t
+		@type:    typ
 		ttl:      ttl
 		value:    ''
 		list_val: []string{}
 		hash_val: map[string]string{}
 	}
 
-	match t {
+	match typ {
 		'string' {
 			detail.value = client.get(key) or { '' }
 		}
@@ -138,12 +138,14 @@ fn redis_get_key_detail(e &webview.Event) !string {
 			detail.list_val = client.smembers(key) or { []string{} }
 		}
 		'hash' {
-			detail.hash_val = client.hgetall(key) or {
-				map[string]string{}
-			}
+			detail.hash_val = client.hgetall(key) or { map[string]string{} }
+		}
+		'zset' {
+			detail.list_val = client.zrange(key, 0, -1) or { []string{} }
 		}
 		else {}
 	}
+
 	return json.encode(detail)
 }
 
@@ -176,7 +178,7 @@ fn redis_set_list(e &webview.Event) !string {
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	vals := json.decode([]string, vals_json)!
+	vals := json.decode[[]string](vals_json)!
 	client.del(key) or {}
 	for val in vals {
 		client.rpush(key, val)!
@@ -199,7 +201,7 @@ fn redis_set_hash(e &webview.Event) !string {
 	hash_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	fvs := json.decode(map[string]string, hash_json)!
+	fvs := json.decode[map[string]string](hash_json)!
 	client.del(key) or {}
 	for field, val in fvs {
 		client.hset(key, field, val)!
@@ -222,7 +224,7 @@ fn redis_set_set(e &webview.Event) !string {
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	vals := json.decode([]string, vals_json)!
+	vals := json.decode[[]string](vals_json)!
 	client.del(key) or {}
 	for val in vals {
 		client.sadd(key, val)!

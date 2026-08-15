@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import veb
 
 @[table: 'Notes']
@@ -17,7 +17,7 @@ fn (n Note) to_json() string {
 @['/notes'; post]
 fn (mut app App) create(mut ctx Context) veb.Result {
 	// malformed json
-	n := json.decode(Note, ctx.req.data) or {
+	n := json.decode[Note](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(error_response(400, invalid_json))
 	}
@@ -90,7 +90,7 @@ fn (mut app App) read_all(mut ctx Context) veb.Result {
 @['/notes/:id'; put]
 fn (mut app App) update(mut ctx Context, id int) veb.Result {
 	// malformed json
-	n := json.decode(Note, ctx.req.data) or {
+	n := json.decode[Note](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(error_response(400, invalid_json))
 	}

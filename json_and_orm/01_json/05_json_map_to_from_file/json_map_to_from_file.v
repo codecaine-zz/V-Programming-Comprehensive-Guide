@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import os
 
 fn main() {
@@ -34,7 +34,7 @@ fn main() {
 
 	// 4. Decode JSON string back to map[string]int
 	println('Decoding JSON back to map...')
-	decoded_scores := json.decode(map[string]int, content) or {
+	decoded_scores := json.decode[map[string]int](content) or {
 		eprintln('Failed to decode map JSON: ${err}')
 		return
 	}

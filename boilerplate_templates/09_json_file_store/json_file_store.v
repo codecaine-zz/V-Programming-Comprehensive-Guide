@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import os
 
 struct TodoItem {
@@ -25,7 +25,7 @@ fn load_store(path string) TodoStore {
 		return TodoStore{}
 	}
 
-	decoded := json.decode(TodoStore, raw) or {
+	decoded := json.decode[TodoStore](raw) or {
 		eprintln('Could not decode store: ${err}')
 		return TodoStore{}
 	}

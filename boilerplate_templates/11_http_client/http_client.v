@@ -1,7 +1,7 @@
 module main
 
 import net.http
-import json
+import x.json2 as json
 
 struct PostPayload {
 	title   string @[json: 'title']
@@ -39,7 +39,7 @@ fn post_json(url string, payload PostPayload) !PostResponse {
 	if resp.status_code >= 400 {
 		return error('Request failed with status ${resp.status_code}')
 	}
-	return json.decode(PostResponse, resp.body) or { return error('Invalid JSON response') }
+	return json.decode[PostResponse](resp.body) or { return error('Invalid JSON response') }
 }
 
 fn main() {

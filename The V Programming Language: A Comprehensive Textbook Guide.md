@@ -6561,7 +6561,7 @@ V supports **Anonymous Structs** which are inline struct declarations without se
 ```v
 module main
 
-import json
+import x.json2 as json
 
 struct Book {
 	title string
@@ -6830,7 +6830,7 @@ To propagate an error upward to the calling function without handling it locally
 ```v
 fn load_user_data(path string) !UserData {
     raw := os.read_file(path)! // Propagates error immediately if read_file fails
-    return json.decode(UserData, raw)!
+    return json.decode[UserData](raw)!
 }
 ```
 
@@ -8396,7 +8396,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 ```v
 module main
 
-import json
+import x.json2 as json
 import ttytm.webview
 import xiusin.vredis
 
@@ -8572,7 +8572,7 @@ fn redis_set_list(e &webview.Event) !string {
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	vals := json.decode([]string, vals_json)!
+	vals := json.decode[[]string](vals_json)!
 	client.del(key) or {}
 	for val in vals {
 		client.rpush(key, val)!
@@ -8595,7 +8595,7 @@ fn redis_set_hash(e &webview.Event) !string {
 	hash_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	fvs := json.decode(map[string]string, hash_json)!
+	fvs := json.decode[map[string]string](hash_json)!
 	client.del(key) or {}
 	for field, val in fvs {
 		client.hset(key, field, val)!
@@ -8618,7 +8618,7 @@ fn redis_set_set(e &webview.Event) !string {
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	vals := json.decode([]string, vals_json)!
+	vals := json.decode[[]string](vals_json)!
 	client.del(key) or {}
 	for val in vals {
 		client.sadd(key, val)!
@@ -10758,7 +10758,7 @@ In languages like Go, Java, or Python, JSON decoding relies on runtime reflectio
 
 In V:
 ```v
-user := json.decode(User, payload)!
+user := json.decode[User](payload)!
 ```
 * **Compile-Time Generation**: During compilation, the V compiler inspects the definition of `User` and generates a dedicated, custom C parsing function tailored specifically to that struct.
 * **Zero Reflection Overhead**: When `json.decode` executes at runtime, it calls this pre-compiled C parser directly, resulting in speeds comparable to handcrafted low-level serializers.
@@ -10835,7 +10835,7 @@ This is a complete, real-world case study of a REST API built using the V web fr
 ```v
 module main
 
-import json
+import x.json2 as json
 import veb
 
 @[table: 'Notes']
@@ -10852,7 +10852,7 @@ fn (n Note) to_json() string {
 @['/notes'; post]
 fn (mut app App) create(mut ctx Context) veb.Result {
 	// malformed json
-	n := json.decode(Note, ctx.req.data) or {
+	n := json.decode[Note](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(error_response(400, invalid_json))
 	}
@@ -10925,7 +10925,7 @@ fn (mut app App) read_all(mut ctx Context) veb.Result {
 @['/notes/:id'; put]
 fn (mut app App) update(mut ctx Context, id int) veb.Result {
 	// malformed json
-	n := json.decode(Note, ctx.req.data) or {
+	n := json.decode[Note](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(error_response(400, invalid_json))
 	}
@@ -11001,7 +11001,7 @@ This is a complete, real-world case study of a REST API built using the V web fr
 ```v
 module main
 
-import json
+import x.json2 as json
 
 struct NotesResponse {
 	status  int
@@ -11035,7 +11035,7 @@ _File location: [json_and_orm/01_json/01_decode/decode.v](json_and_orm/01_json/0
 Databases and JSON handling are essential parts of backend development. This lesson on **Decode** details V's built-in JSON utilities or its built-in database ORM.
 
 ```v
-import json
+import x.json2 as json
 
 struct Note {
 	id      int
@@ -11045,7 +11045,7 @@ struct Note {
 
 fn main() {
 	// Decode a JSON payload into a struct instance.
-	n := json.decode(Note, '{"id":1,"message":"Plan a holiday","status":false}') or {
+	n := json.decode[Note]('{"id":1,"message":"Plan a holiday","status":false}') or {
 		panic('invalid json data')
 	}
 
@@ -11066,7 +11066,7 @@ _File location: [json_and_orm/01_json/02_encode/encode.v](json_and_orm/01_json/0
 Databases and JSON handling are essential parts of backend development. This lesson on **Encode** details V's built-in JSON utilities or its built-in database ORM.
 
 ```v
-import json
+import x.json2 as json
 
 struct Note {
 	id      int
@@ -11087,7 +11087,7 @@ fn main() {
 	println(j)
 
 	// Encode the same object with pretty formatting for readability.
-	j = json.encode_pretty(m)
+	j = json.encode(m, prettify: true)
 	println(j)
 }
 ```
@@ -11100,10 +11100,10 @@ Unlike many languages that rely on slow, runtime reflection to inspect structure
 
 #### 2. Decoding JSON (`json.decode`)
 
-- To decode a JSON string, invoke `json.decode(StructName, json_string)`.
+- To decode a JSON string, invoke `json.decode[StructName](json_string)` (using `x.json2`).
 - **Result Type Return**: Since incoming JSON strings can be malformed, `json.decode` returns a Result type (`!StructName`). You **must** unwrap it with an `or` block:
   ```v
-  user := json.decode(User, raw_json) or {
+  user := json.decode[User](raw_json) or {
       println('Failed to parse user JSON: ${err}')
       return
   }
@@ -11133,7 +11133,7 @@ This example demonstrates how to encode an object to JSON, write it to a file, r
 ```v
 module main
 
-import json
+import x.json2 as json
 import os
 
 struct Book {
@@ -11173,7 +11173,7 @@ fn main() {
 
 	// 4. Decode JSON string back to Book object
 	println('Decoding JSON back to object...')
-	decoded_book := json.decode(Book, content) or {
+	decoded_book := json.decode[Book](content) or {
 		eprintln('Failed to decode JSON: ${err}')
 		return
 	}
@@ -11196,7 +11196,7 @@ This example demonstrates how to serialize and deserialize an array of objects (
 ```v
 module main
 
-import json
+import x.json2 as json
 import os
 
 struct Task {
@@ -11243,7 +11243,7 @@ fn main() {
 
 	// 4. Decode JSON string back to an array of Task objects
 	println('Decoding JSON back to array of objects...')
-	decoded_tasks := json.decode([]Task, content) or {
+	decoded_tasks := json.decode[[]Task](content) or {
 		eprintln('Failed to decode JSON: ${err}')
 		return
 	}
@@ -11269,7 +11269,7 @@ This example demonstrates how to serialize a map structure (`map[string]int`) in
 ```v
 module main
 
-import json
+import x.json2 as json
 import os
 
 fn main() {
@@ -11303,7 +11303,7 @@ fn main() {
 
 	// 4. Decode JSON string back to map[string]int
 	println('Decoding JSON back to map...')
-	decoded_scores := json.decode(map[string]int, content) or {
+	decoded_scores := json.decode[map[string]int](content) or {
 		eprintln('Failed to decode map JSON: ${err}')
 		return
 	}
@@ -11332,7 +11332,7 @@ This example demonstrates two different methods for reading and writing arrays t
 ```v
 module main
 
-import json
+import x.json2 as json
 import os
 
 fn main() {
@@ -11360,7 +11360,7 @@ fn main() {
 		return
 	}
 
-	decoded_numbers := json.decode([]int, json_content) or {
+	decoded_numbers := json.decode[[]int](json_content) or {
 		eprintln('Failed to decode array JSON: ${err}')
 		return
 	}
@@ -12368,7 +12368,7 @@ module main
 
 import net.websocket
 import time
-import json
+import x.json2 as json
 
 // WsMessage represents a structured application-level WebSocket message.
 struct WsMessage {
@@ -12411,7 +12411,7 @@ fn main() {
 			}
 
 			// Decode the JSON protocol message
-			ws_msg := json.decode(WsMessage, payload) or {
+			ws_msg := json.decode[WsMessage](payload) or {
 				println('Server: Invalid JSON protocol: ${err}')
 				err_resp := json.encode(WsMessage{ action: 'error', data: 'invalid json' })
 				ws.write_string(err_resp) or {}
@@ -12468,7 +12468,7 @@ fn main() {
 	ws_client1.on_message(fn [mut state1] (mut c websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			ws_msg := json.decode(WsMessage, payload) or { return }
+			ws_msg := json.decode[WsMessage](payload) or { return }
 			println('Client 1 received response action "${ws_msg.action}" with data: "${ws_msg.data}"')
 
 			if ws_msg.action == 'pong' {
@@ -14853,7 +14853,7 @@ V has a very rich and growing standard library and is actively updated. This les
 ```v
 module main
 
-import json
+import x.json2 as json
 
 // User uses attributes to control JSON field names and to hide a field from encoding.
 struct User {
@@ -14904,7 +14904,7 @@ fn main() {
 	println('Encoded JSON: ${encoded}')
 
 	// Decode a JSON payload that uses the custom field names from the attributes.
-	decoded := json.decode(User, '{"username":"Alice","user_age":25}') or {
+	decoded := json.decode[User]('{"username":"Alice","user_age":25}') or {
 		println('JSON error: ${err}')
 		User{}
 	}
@@ -19602,7 +19602,7 @@ This example demonstrates building a full-featured REST API with full CRUD opera
 ```v
 module main
 
-import json
+import x.json2 as json
 import net.http
 import os
 import sync
@@ -19649,11 +19649,11 @@ fn (mut db Database) load() ! {
 		db.tasks = []Task{}
 		return
 	}
-	db.tasks = json.decode([]Task, content)!
+	db.tasks = json.decode[[]Task](content)!
 }
 
 fn (mut db Database) save() ! {
-	encoded := json.encode_pretty(db.tasks)
+	encoded := json.encode(db.tasks, prettify: true)
 	os.write_file(db.file_path, encoded)!
 }
 
@@ -19738,7 +19738,7 @@ fn parse_and_validate_task(mut ctx Context) !Task {
 	if ctx.req.data.trim_space() == '' {
 		return error('Request body cannot be empty')
 	}
-	task := json.decode(Task, ctx.req.data) or {
+	task := json.decode[Task](ctx.req.data) or {
 		return error('Invalid JSON payload structure')
 	}
 	task.validate()!
@@ -21042,7 +21042,7 @@ Key concepts illustrated:
 ```v
 module main
 
-import json
+import x.json2 as json
 import os
 import sync
 import veb
@@ -21096,7 +21096,7 @@ fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
 // 4. POST /api/items - Decodes JSON request body and adds a new item
 @['/api/items'; post]
 fn (mut app App) create_item(mut ctx Context) veb.Result {
-	new_item := json.decode(Item, ctx.req.data) or {
+	new_item := json.decode[Item](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json('{"error": "Invalid JSON format"}')
 	}
@@ -21917,7 +21917,7 @@ Key concepts illustrated:
 ```v
 module main
 
-import json
+import x.json2 as json
 import os
 
 struct AppConfig {
@@ -21947,7 +21947,7 @@ fn load_config(path string) AppConfig {
 			''
 		}
 		if raw != '' {
-			cfg = json.decode(AppConfig, raw) or {
+			cfg = json.decode[AppConfig](raw) or {
 				eprintln('Warning: could not decode config file: ${err}')
 				cfg
 			}
@@ -22030,7 +22030,7 @@ Key concepts illustrated:
 ```v
 module main
 
-import json
+import x.json2 as json
 import os
 
 struct TodoItem {
@@ -22055,7 +22055,7 @@ fn load_store(path string) TodoStore {
 		return TodoStore{}
 	}
 
-	decoded := json.decode(TodoStore, raw) or {
+	decoded := json.decode[TodoStore](raw) or {
 		eprintln('Could not decode store: ${err}')
 		return TodoStore{}
 	}
@@ -22260,7 +22260,7 @@ Key concepts illustrated:
 module main
 
 import net.http
-import json
+import x.json2 as json
 
 struct PostPayload {
 	title   string @[json: 'title']
@@ -22298,7 +22298,7 @@ fn post_json(url string, payload PostPayload) !PostResponse {
 	if resp.status_code >= 400 {
 		return error('Request failed with status ${resp.status_code}')
 	}
-	return json.decode(PostResponse, resp.body) or { return error('Invalid JSON response') }
+	return json.decode[PostResponse](resp.body) or { return error('Invalid JSON response') }
 }
 
 fn main() {
@@ -23116,7 +23116,7 @@ This exercise covers Chapter 12: Working with Databases and JSON.
 > ```v
 > module main
 >
-> import json
+> import x.json2 as json
 >
 > struct Task {
 > 	id        int
@@ -23131,7 +23131,7 @@ This exercise covers Chapter 12: Working with Databases and JSON.
 > 		{"id": 3, "title": "Compile textbook HTML", "completed": false}
 > 	]'
 >
-> 	tasks := json.decode([]Task, raw_json) or {
+> 	tasks := json.decode[[]Task](raw_json) or {
 > 		println('Failed to parse JSON: ${err}')
 > 		return
 > 	}

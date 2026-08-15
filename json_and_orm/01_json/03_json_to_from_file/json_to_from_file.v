@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import os
 
 struct Book {
@@ -40,7 +40,7 @@ fn main() {
 
 	// 4. Decode JSON string back to Book object
 	println('Decoding JSON back to object...')
-	decoded_book := json.decode(Book, content) or {
+	decoded_book := json.decode[Book](content) or {
 		eprintln('Failed to decode JSON: ${err}')
 		return
 	}

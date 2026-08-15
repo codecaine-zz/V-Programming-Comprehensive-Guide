@@ -2,7 +2,7 @@
 import os
 import strings
 import regex
-import json
+import x.json2 as json
 import net.urllib
 import encoding.base64
 

@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import os
 
 struct AppConfig {
@@ -30,7 +30,7 @@ fn load_config(path string) AppConfig {
 			''
 		}
 		if raw != '' {
-			cfg = json.decode(AppConfig, raw) or {
+			cfg = json.decode[AppConfig](raw) or {
 				eprintln('Warning: could not decode config file: ${err}')
 				cfg
 			}

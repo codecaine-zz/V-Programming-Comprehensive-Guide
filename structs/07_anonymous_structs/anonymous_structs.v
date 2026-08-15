@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 
 struct Book {
 	title string

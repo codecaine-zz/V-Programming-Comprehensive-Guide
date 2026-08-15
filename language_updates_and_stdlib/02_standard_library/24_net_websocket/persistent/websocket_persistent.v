@@ -2,7 +2,7 @@ module main
 
 import net.websocket
 import time
-import json
+import x.json2 as json
 
 // WsMessage represents a structured application-level WebSocket message.
 struct WsMessage {
@@ -45,7 +45,7 @@ fn main() {
 			}
 
 			// Decode the JSON protocol message
-			ws_msg := json.decode(WsMessage, payload) or {
+			ws_msg := json.decode[WsMessage](payload) or {
 				println('Server: Invalid JSON protocol: ${err}')
 				err_resp := json.encode(WsMessage{ action: 'error', data: 'invalid json' })
 				ws.write_string(err_resp) or {}
@@ -64,7 +64,7 @@ fn main() {
 					resp := json.encode(WsMessage{ action: 'goodbye_ack', data: 'Goodbye!' })
 					ws.write_string(resp)!
 					// Clean close from server side
-					ws.close(1000, 'done') or {}
+					ws.close(1000, 'Normal Closure') or {}
 				}
 				else {
 					println('Server: Unknown action: ${ws_msg.action}')
@@ -73,20 +73,19 @@ fn main() {
 		}
 	})
 
-	// Start the server listen loop in a background thread
-	spawn fn [mut ws_server] () {
-		ws_server.listen() or { println('Server error: ${err}') }
-	}()
+	ws_server.on_close(fn (mut ws websocket.Client, code int, reason string) ! {
+		println('Server: Client disconnected (code: ${code}, reason: "${reason}")')
+	})
 
-	// Allow the server a moment to start
-	time.sleep(100 * time.millisecond)
+	// Start server listening in background thread
+	go ws_server.listen() or { println('Server error: ${err}') }
 
-	// 2. RUN CLIENT CONNECTION 1: Clean ping-pong and goodbye handshake
-	println('\n--- Connection 1: Standard Chat / Ping-Pong ---')
-	mut ws_client1 := websocket.new_client(uri) or {
-		println('Client 1 init failed: ${err}')
-		return
-	}
+	// Allow server time to bind and listen
+	time.sleep(200 * time.millisecond)
+
+	// 2. Client 1: Demonstrates persistent conversational ping-pong loop
+	println('\n--- Starting Client 1 (Conversational Loop) ---')
+	mut ws_client1 := websocket.new_client(uri)!
 
 	mut state1 := &ClientState{
 		count: 0
@@ -102,7 +101,7 @@ fn main() {
 	ws_client1.on_message(fn [mut state1] (mut c websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			ws_msg := json.decode(WsMessage, payload) or { return }
+			ws_msg := json.decode[WsMessage](payload) or { return }
 			println('Client 1 received response action "${ws_msg.action}" with data: "${ws_msg.data}"')
 
 			if ws_msg.action == 'pong' {

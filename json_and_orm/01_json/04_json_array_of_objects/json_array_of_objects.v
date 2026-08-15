@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import os
 
 struct Task {
@@ -47,7 +47,7 @@ fn main() {
 
 	// 4. Decode JSON string back to an array of Task objects
 	println('Decoding JSON back to array of objects...')
-	decoded_tasks := json.decode([]Task, content) or {
+	decoded_tasks := json.decode[[]Task](content) or {
 		eprintln('Failed to decode JSON: ${err}')
 		return
 	}

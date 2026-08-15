@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import os
 
 fn main() {
@@ -28,7 +28,7 @@ fn main() {
 		return
 	}
 
-	decoded_numbers := json.decode([]int, json_content) or {
+	decoded_numbers := json.decode[[]int](json_content) or {
 		eprintln('Failed to decode array JSON: ${err}')
 		return
 	}

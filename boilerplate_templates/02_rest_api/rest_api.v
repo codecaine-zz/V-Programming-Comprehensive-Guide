@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import os
 import sync
 import veb
@@ -54,7 +54,7 @@ fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
 // 4. POST /api/items - Decodes JSON request body and adds a new item
 @['/api/items'; post]
 fn (mut app App) create_item(mut ctx Context) veb.Result {
-	new_item := json.decode(Item, ctx.req.data) or {
+	new_item := json.decode[Item](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json('{"error": "Invalid JSON format"}')
 	}

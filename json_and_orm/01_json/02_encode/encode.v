@@ -1,4 +1,4 @@
-import json
+import x.json2 as json
 
 struct Note {
 	id      int
@@ -19,6 +19,6 @@ fn main() {
 	println(j)
 
 	// Encode the same object with pretty formatting for readability.
-	j = json.encode_pretty(m)
+	j = json.encode(m, prettify: true)
 	println(j)
 }

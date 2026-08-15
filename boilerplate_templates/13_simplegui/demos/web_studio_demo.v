@@ -1,7 +1,7 @@
 module main
 
 import simplegui
-import json
+import x.json2 as json
 
 // -----------------------------------------------------------------------------
 // Production-Ready Native+Web Dashboard & Metric KPI Center (Fintech Analytics)

@@ -1,6 +1,6 @@
 module main
 
-import json
+import x.json2 as json
 import net.http
 import os
 import sync
@@ -47,11 +47,11 @@ fn (mut db Database) load() ! {
 		db.tasks = []Task{}
 		return
 	}
-	db.tasks = json.decode([]Task, content)!
+	db.tasks = json.decode[[]Task](content)!
 }
 
 fn (mut db Database) save() ! {
-	encoded := json.encode_pretty(db.tasks)
+	encoded := json.encode(db.tasks, prettify: true)
 	os.write_file(db.file_path, encoded)!
 }
 
@@ -136,7 +136,7 @@ fn parse_and_validate_task(mut ctx Context) !Task {
 	if ctx.req.data.trim_space() == '' {
 		return error('Request body cannot be empty')
 	}
-	task := json.decode(Task, ctx.req.data) or {
+	task := json.decode[Task](ctx.req.data) or {
 		return error('Invalid JSON payload structure')
 	}
 	task.validate()!
