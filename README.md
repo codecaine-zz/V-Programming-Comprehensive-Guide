@@ -90,13 +90,43 @@ V is a statically typed, compiled programming language designed for building mai
 
 ## Prerequisites & Environment Setup
 
-This tutorial and all code examples have been updated and tested for **V version 0.5.1**.
+### 1. Compiling V from Source (Official Method)
 
-### V-Analyzer Setup for ARM Mac OS (Homebrew)
+> [!IMPORTANT]
+> **Do not install V using package managers like Homebrew.** Homebrew is not officially supported by the creators of V and frequently distributes outdated builds or non-standard directory structures that break tooling. Always compile V directly from source.
 
-If you are using an ARM-based Mac (Apple Silicon) and installed V via Homebrew, you may encounter standard library resolution issues when using the `v-analyzer` extension in VSCode or the Antigravity IDE. To fix this, you need to point the analyzer to the correct V root directory.
+To compile and install V from source:
 
-Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings) to set the `custom_vroot` to the Homebrew installation path (e.g., `/opt/homebrew/Cellar/vlang/0.5.1/libexec/v` or `/opt/homebrew/opt/vlang/libexec/v`). This ensures the analyzer correctly locates the `vlib` standard library.
+```bash
+# 1. Clone the official V repository
+git clone https://github.com/vlang/v
+cd v
+
+# 2. Compile V (takes under 30 seconds)
+make
+```
+
+### 2. Make V Available Globally (Symlink)
+
+To make `v` available globally from any terminal directory:
+
+```bash
+# Create a global symlink (e.g. /usr/local/bin/v)
+sudo ./v symlink
+```
+
+Verify your installation:
+
+```bash
+v version
+```
+
+### 3. V-Analyzer Setup for IDEs (VSCode / Antigravity IDE)
+
+To get instant autocomplete, hover documentation, and diagnostics in your IDE:
+
+1. Install the `v-analyzer` extension.
+2. In your `v-analyzer` settings (or `config.toml`), set `custom_vroot` to the absolute path of your compiled V repository (e.g., `/Users/yourusername/v` or `~/v`). This ensures `v-analyzer` accurately indexes the `vlib` standard library and language modules.
 
 ---
 

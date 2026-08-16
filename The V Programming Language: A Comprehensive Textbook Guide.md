@@ -34,8 +34,34 @@ When adding a new lesson, keep it in the most relevant topic folder and use a nu
 
 If you are new to programming, the fastest way to learn V is to start small and build something real. Follow this sequence:
 
-1. Install V and confirm it works with `v --version`.
-2. Create a file named `hello.v` with a tiny program:
+### 1. Compile V from Source (Official Method)
+
+> [!IMPORTANT]
+> **Always compile V directly from source.** Installing V via third-party package managers like Homebrew is **not officially supported** by the creators of V and frequently causes outdated builds and broken standard library resolution. Compiling from source is fast and guarantees you have the latest stable features.
+
+```bash
+# Clone the repository
+git clone https://github.com/vlang/v
+cd v
+
+# Compile V compiler
+make
+
+# Create a global symlink so `v` is available system-wide
+sudo ./v symlink
+```
+
+Verify your installation:
+```bash
+v version
+```
+
+> [!TIP]
+> **v-analyzer Configuration:** If you use VSCode or the Antigravity IDE with the `v-analyzer` language server, set `custom_vroot` in your settings to your cloned V repository path (e.g. `~/v` or `/path/to/v`). This allows `v-analyzer` to properly index the `vlib` standard library and provide code completion and hover documentation.
+
+### 2. Create Your First Program
+
+Create a file named `hello.v`:
 
 ```v
 fn main() {
@@ -43,8 +69,10 @@ fn main() {
 }
 ```
 
-3. Run it with `v run hello.v`.
-4. Build an executable with `v -o hello hello.v`.
+### 3. Run and Build
+
+- Run immediately: `v run hello.v`
+- Build a native binary: `v -o hello hello.v`
 
 V has a few ideas that are worth remembering early:
 
