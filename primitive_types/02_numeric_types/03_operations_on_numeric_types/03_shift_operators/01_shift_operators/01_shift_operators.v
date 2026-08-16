@@ -8,7 +8,7 @@ fn main() {
 	println('a is ${sizeof(a)} byte(s)') // a is 1 byte(s)
 
 	// declare 8-bit unsigned integer to shift by 1 position
-	pos := byte(1)
+	pos := u8(1)
 
 	// Shift left the value 3 by 1 position
 	a_left_shift := a << pos

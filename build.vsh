@@ -1,4 +1,5 @@
 #!/usr/bin/env v
+
 import os
 import strings
 import regex
@@ -8,23 +9,23 @@ import encoding.base64
 
 // Structs for search index and structure JSON
 struct Lesson {
-	id    string
+	id string
 mut:
 	title   string
 	content string
 }
 
 struct Section {
-	id      string
-	title   string
+	id    string
+	title string
 mut:
 	lessons []Lesson
 }
 
 struct Chapter {
-	id       string
-	number   string
-	title    string
+	id     string
+	number string
+	title  string
 mut:
 	sections []Section
 }
@@ -52,7 +53,7 @@ fn escape_html(text string) string {
 fn get_github_url(raw_path string) string {
 	has_extension := raw_path.contains('.')
 	prefix := if has_extension { 'blob' } else { 'tree' }
-	
+
 	if raw_path.starts_with('boilerplate_templates/13_simplegui') {
 		mut sub_path := raw_path['boilerplate_templates/13_simplegui'.len..]
 		if sub_path.starts_with('/') {
@@ -63,7 +64,7 @@ fn get_github_url(raw_path string) string {
 		}
 		return 'https://github.com/codecaine-zz/vlang_simplegui/${prefix}/master/${sub_path}'
 	}
-	
+
 	return 'https://github.com/codecaine-zz/V-Programming-Comprehensive-Guide/${prefix}/master/${raw_path}'
 }
 
@@ -76,9 +77,9 @@ fn slugify(text string) string {
 			filtered.write_u8(c)
 		}
 	}
-	
+
 	replaced := filtered.str().replace(' ', '-')
-	
+
 	mut start := 0
 	for start < replaced.len && replaced[start] == `-` {
 		start++
@@ -87,7 +88,7 @@ fn slugify(text string) string {
 	for end > start && replaced[end - 1] == `-` {
 		end--
 	}
-	
+
 	return replaced[start..end]
 }
 
@@ -109,33 +110,33 @@ fn generate_code_block_html(code_language string, code_str string) string {
 		base64_code := base64.encode_str(code_str)
 		playground_url := 'https://play.vlang.io/?base64=' + urllib.query_escape(base64_code)
 		playground_btn = '<a href="${playground_url}" target="_blank" class="btn-playground" title="Run in V Playground">
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                Run
-            </a>
-            <button class="btn-playground-copy" onclick="copyAndOpenPlayground(this)" title="Copy Code & Open V Playground">
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                Copy &amp; Open
-            </button>'
+				<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+				Run
+			</a>
+			<button class="btn-playground-copy" onclick="copyAndOpenPlayground(this)" title="Copy Code & Open V Playground">
+				<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+				Copy &amp; Open
+			</button>'
 	}
-	
+
 	normalized_language := normalize_code_language(code_language)
 	return '<div class="code-wrapper">
-            <div class="code-header">
-                <span class="code-lang">${code_language}</span>
-                <div class="code-actions">
-                    ${playground_btn}
-                    <button type="button" class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code" aria-label="Zoom code block">
-                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
-                        Zoom
-                    </button>
-                    <button type="button" class="btn-copy" onclick="copyCode(this)" title="Copy Code" aria-label="Copy code block">
-                        <svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        Copy
-                    </button>
-                </div>
-            </div>
-            <pre><code class="language-${normalized_language}">${code_html}</code></pre>
-        </div>\n'
+			<div class="code-header">
+				<span class="code-lang">${code_language}</span>
+				<div class="code-actions">
+					${playground_btn}
+					<button type="button" class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code" aria-label="Zoom code block">
+						<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
+						Zoom
+					</button>
+					<button type="button" class="btn-copy" onclick="copyCode(this)" title="Copy Code" aria-label="Copy code block">
+						<svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+						Copy
+					</button>
+				</div>
+			</div>
+			<pre><code class="language-${normalized_language}">${code_html}</code></pre>
+		</div>\n'
 }
 
 fn normalize_title_for_comparison(text string) string {
@@ -147,7 +148,7 @@ fn normalize_title_for_comparison(text string) string {
 		idx := res.index('(') or { res.len }
 		res = res[..idx].trim_space()
 	}
-	
+
 	mut clean := strings.new_builder(res.len)
 	lower := res.to_lower()
 	for i in 0 .. lower.len {
@@ -156,7 +157,7 @@ fn normalize_title_for_comparison(text string) string {
 			clean.write_u8(c)
 		}
 	}
-	
+
 	mut final_builder := strings.new_builder(clean.len)
 	clean_str := clean.str()
 	mut last_was_space := false
@@ -172,7 +173,7 @@ fn normalize_title_for_comparison(text string) string {
 			last_was_space = false
 		}
 	}
-	
+
 	return final_builder.str().trim_space()
 }
 
@@ -184,7 +185,7 @@ struct LinkInfo {
 
 fn parse_inline(text string) string {
 	mut result := escape_html(text)
-	
+
 	// 1. Extract inline code blocks `code`
 	mut code_blocks := []string{}
 	mut re_code := regex.regex_opt(r'`([^`]+)`') or { panic(err) }
@@ -198,7 +199,7 @@ fn parse_inline(text string) string {
 		code_blocks << code
 		result = result[..start] + placeholder + result[end..]
 	}
-	
+
 	// 2. Extract Markdown links [text](url)
 	mut links := []LinkInfo{}
 	mut re_link := regex.regex_opt(r'\[([^\]]+)\]\(([^)]+)\)') or { panic(err) }
@@ -209,7 +210,7 @@ fn parse_inline(text string) string {
 		}
 		link_text := re_link.get_group_by_id(result, 0)
 		url := re_link.get_group_by_id(result, 1)
-		
+
 		is_external := url.starts_with('http://') || url.starts_with('https://')
 		is_anchor := url.starts_with('#')
 		mut href := url
@@ -220,16 +221,16 @@ fn parse_inline(text string) string {
 		} else if is_external {
 			target_attr = ' target="_blank" rel="noopener noreferrer"'
 		}
-		
+
 		placeholder := 'LINKPLACEHOLDER${links.len}XYZ'
 		links << LinkInfo{
-			link_text: link_text
-			href: href
+			link_text:   link_text
+			href:        href
 			target_attr: target_attr
 		}
 		result = result[..start] + placeholder + result[end..]
 	}
-	
+
 	// 3. Apply standard formatting
 	// Bold: **text**
 	mut re_bold1 := regex.regex_opt(r'\*\*([^\*]+)\*\*') or { panic(err) }
@@ -241,7 +242,7 @@ fn parse_inline(text string) string {
 		val := re_bold1.get_group_by_id(result, 0)
 		result = result[..start] + '<strong>' + val + '</strong>' + result[end..]
 	}
-	
+
 	// Bold: __text__
 	mut re_bold2 := regex.regex_opt(r'__([^_]+)__') or { panic(err) }
 	for {
@@ -252,7 +253,7 @@ fn parse_inline(text string) string {
 		val := re_bold2.get_group_by_id(result, 0)
 		result = result[..start] + '<strong>' + val + '</strong>' + result[end..]
 	}
-	
+
 	// Italics: *text*
 	mut re_ital1 := regex.regex_opt(r'\*([^\*]+)\*') or { panic(err) }
 	for {
@@ -263,7 +264,7 @@ fn parse_inline(text string) string {
 		val := re_ital1.get_group_by_id(result, 0)
 		result = result[..start] + '<em>' + val + '</em>' + result[end..]
 	}
-	
+
 	// Italics: _text_
 	mut re_ital2 := regex.regex_opt(r'_([^_]+)_') or { panic(err) }
 	for {
@@ -274,7 +275,7 @@ fn parse_inline(text string) string {
 		val := re_ital2.get_group_by_id(result, 0)
 		result = result[..start] + '<em>' + val + '</em>' + result[end..]
 	}
-	
+
 	// 4. Restore links
 	mut re_restore_link := regex.regex_opt(r'LINKPLACEHOLDER(\d+)XYZ') or { panic(err) }
 	for {
@@ -292,7 +293,7 @@ fn parse_inline(text string) string {
 			break
 		}
 	}
-	
+
 	// 5. Restore inline code blocks
 	mut re_restore_code := regex.regex_opt(r'CODEPLACEHOLDER(\d+)XYZ') or { panic(err) }
 	for {
@@ -310,7 +311,7 @@ fn parse_inline(text string) string {
 			break
 		}
 	}
-	
+
 	return result
 }
 
@@ -330,24 +331,24 @@ fn get_alert_icon(typ string) string {
 
 struct Parser {
 mut:
-	html               strings.Builder
-	curr_chap_idx      int = -1
-	curr_sec_idx       int = -1
-	curr_less_idx      int = -1
-	
-	search_index       []SearchIndexEntry
-	structure          []Chapter
-	
-	in_code_block      bool
-	code_language      string
-	code_content       []string
-	
+	html          strings.Builder
+	curr_chap_idx int = -1
+	curr_sec_idx  int = -1
+	curr_less_idx int = -1
+
+	search_index []SearchIndexEntry
+	structure    []Chapter
+
+	in_code_block bool
+	code_language string
+	code_content  []string
+
 	in_blockquote      bool
 	alert_type         string
 	blockquote_content []string
-	
-	in_list            bool
-	list_type          string
+
+	in_list   bool
+	list_type string
 }
 
 fn (mut p Parser) flush_list() {
@@ -363,10 +364,10 @@ fn (mut p Parser) flush_blockquote() {
 		mut block_code_content := []string{}
 		mut in_block_code := false
 		mut block_code_language := ''
-		
+
 		for b_line in p.blockquote_content {
 			trimmed_b_line := b_line.trim_space()
-			
+
 			if trimmed_b_line.starts_with('```') {
 				if in_block_code {
 					code_str := block_code_content.join('\n')
@@ -385,26 +386,26 @@ fn (mut p Parser) flush_blockquote() {
 				}
 			}
 		}
-		
+
 		if in_block_code && block_code_content.len > 0 {
 			code_str := block_code_content.join('\n')
 			parsed_content += generate_code_block_html(block_code_language, code_str)
 		}
-		
+
 		if p.alert_type != '' {
 			p.html.write_string('<div class="alert alert-${p.alert_type}">
-                    <div class="alert-title">
-                        <svg class="alert-icon" viewBox="0 0 16 16" width="16" height="16">
-                            ${get_alert_icon(p.alert_type)}
-                        </svg>
-                        <span>${p.alert_type.to_upper()}</span>
-                    </div>
-                    <div class="alert-content">${parsed_content}</div>
-                </div>\n')
+					<div class="alert-title">
+						<svg class="alert-icon" viewBox="0 0 16 16" width="16" height="16">
+							${get_alert_icon(p.alert_type)}
+						</svg>
+						<span>${p.alert_type.to_upper()}</span>
+					</div>
+					<div class="alert-content">${parsed_content}</div>
+				</div>\n')
 		} else {
 			p.html.write_string('<blockquote>${parsed_content}</blockquote>\n')
 		}
-		
+
 		p.in_blockquote = false
 		p.alert_type = ''
 		p.blockquote_content.clear()
@@ -416,14 +417,14 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 	mut p := Parser{
 		html: strings.new_builder(md.len)
 	}
-	
+
 	mut re_ul := regex.regex_opt(r'^\s*-\s+(.*)') or { panic(err) }
 	mut re_ol := regex.regex_opt(r'^\s*\d+\.\s+(.*)') or { panic(err) }
 	mut re_h := regex.regex_opt(r'^(#{1,6})\s+(.*)') or { panic(err) }
-	
+
 	for line in lines {
 		trimmed := line.trim_space()
-		
+
 		// Code blocks
 		if trimmed.starts_with('```') {
 			p.flush_list()
@@ -431,7 +432,7 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 			if p.in_code_block {
 				code_str := p.code_content.join('\n')
 				p.html.write_string(generate_code_block_html(p.code_language, code_str))
-				
+
 				if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 && p.curr_less_idx >= 0 {
 					p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[p.curr_less_idx].content += ' [CODE:${p.code_language}]'
 				}
@@ -443,18 +444,18 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 			}
 			continue
 		}
-		
+
 		if p.in_code_block {
 			p.code_content << line
 			continue
 		}
-		
+
 		// Blockquotes & GitHub Alerts
 		if trimmed.starts_with('>') {
 			p.flush_list()
 			p.in_blockquote = true
 			mut clean_line := trimmed[1..].trim_space()
-			
+
 			if clean_line.starts_with('[!NOTE]') {
 				p.alert_type = 'note'
 				clean_line = clean_line[7..].trim_space()
@@ -480,7 +481,7 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 				p.alert_type = 'output'
 				clean_line = clean_line[9..].trim_space()
 			}
-			
+
 			if clean_line != '' {
 				p.blockquote_content << clean_line
 			}
@@ -488,11 +489,11 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 		} else if p.in_blockquote {
 			p.flush_blockquote()
 		}
-		
+
 		// Lists
 		s_ul, _ := re_ul.find(line)
 		s_ol, _ := re_ol.find(line)
-		
+
 		if s_ul == 0 {
 			content := re_ul.get_group_by_id(line, 0)
 			if !p.in_list || p.list_type != 'ul' {
@@ -516,16 +517,16 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 		} else {
 			p.flush_list()
 		}
-		
+
 		if trimmed == '' {
 			continue
 		}
-		
+
 		if trimmed == '---' {
 			p.html.write_string('<hr />\n')
 			continue
 		}
-		
+
 		// Headings
 		s_h, _ := re_h.find(line)
 		if s_h == 0 {
@@ -533,42 +534,42 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 			title := re_h.get_group_by_id(line, 1).trim_space()
 			slug := slugify(title)
 			level := h.len
-			
+
 			if level == 1 {
 				if title.starts_with('Chapter ') && title.contains(':') {
 					mut chap_num := ''
 					mut chap_name := title
 					colon_idx := title.index(':') or { -1 }
 					if colon_idx > 'Chapter '.len {
-						chap_num = title['Chapter '.len .. colon_idx].trim_space()
-						chap_name = title[colon_idx + 1 ..].trim_space()
+						chap_num = title['Chapter '.len..colon_idx].trim_space()
+						chap_name = title[colon_idx + 1..].trim_space()
 					}
-					
+
 					p.structure << Chapter{
-						id: slug
-						number: chap_num
-						title: chap_name
+						id:       slug
+						number:   chap_num
+						title:    chap_name
 						sections: []
 					}
 					p.curr_chap_idx = p.structure.len - 1
 					p.curr_sec_idx = -1
 					p.curr_less_idx = -1
-					
+
 					p.html.write_string('</section>\n<section id="chap-wrapper-${slug}" class="chapter-section" data-chapter-id="${slug}">\n')
 					p.html.write_string('<h1 class="chapter-title" id="${slug}" data-chapter-id="${slug}"><span class="chap-badge">Chapter ${chap_num}</span> ${escape_html(chap_name)}</h1>\n')
-					
+
 					p.search_index << SearchIndexEntry{
-						id: slug
-						title: 'Chapter ${chap_num}: ${chap_name}'
-						typ: 'chapter'
+						id:      slug
+						title:   'Chapter ${chap_num}: ${chap_name}'
+						typ:     'chapter'
 						content: title
 					}
 				} else {
 					p.html.write_string('<h1 class="doc-main-title" id="${slug}">${escape_html(title)}</h1>\n')
 					p.search_index << SearchIndexEntry{
-						id: slug
-						title: title
-						typ: 'title'
+						id:      slug
+						title:   title
+						typ:     'title'
 						content: title
 					}
 				}
@@ -576,26 +577,30 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 				if title == 'Code Examples Index' || title == 'Table of Contents' {
 					continue
 				}
-				
+
 				mut current_chapter_title := ''
 				if p.curr_chap_idx >= 0 {
 					current_chapter_title = p.structure[p.curr_chap_idx].title
-					
+
 					p.structure[p.curr_chap_idx].sections << Section{
-						id: slug
-						title: title
+						id:      slug
+						title:   title
 						lessons: []
 					}
 					p.curr_sec_idx = p.structure[p.curr_chap_idx].sections.len - 1
 					p.curr_less_idx = -1
 				}
-				
-				p.html.write_string('<h2 class="section-title" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 { p.structure[p.curr_chap_idx].id } else { "" }}">${escape_html(title)}</h2>\n')
-				
+
+				p.html.write_string('<h2 class="section-title" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 {
+					p.structure[p.curr_chap_idx].id
+				} else {
+					''
+				}}">${escape_html(title)}</h2>\n')
+
 				p.search_index << SearchIndexEntry{
-					id: slug
-					title: title
-					typ: 'section'
+					id:      slug
+					title:   title
+					typ:     'section'
 					content: title
 					chapter: current_chapter_title
 				}
@@ -606,7 +611,7 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 					is_lesson = true
 					clean_title = title[7..].trim_space()
 				}
-				
+
 				mut duplicate_idx := -1
 				if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 {
 					lessons := p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons
@@ -617,7 +622,7 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 						}
 					}
 				}
-				
+
 				mut current_chapter_title := ''
 				mut current_section_title := ''
 				if p.curr_chap_idx >= 0 {
@@ -626,43 +631,53 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 						current_section_title = p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].title
 					}
 				}
-				
+
 				if duplicate_idx >= 0 {
 					if is_lesson {
 						p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[duplicate_idx].title = clean_title
 					}
 					p.curr_less_idx = duplicate_idx
-					
+
 					lesson_class := if is_lesson { ' lesson-header' } else { '' }
-					p.html.write_string('<h3 class="lesson-subtitle${lesson_class}" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 { p.structure[p.curr_chap_idx].id } else { "" }}">
-                        <span>${escape_html(clean_title)}</span>
-                        <button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark(\'${slug}\', \'${escape_html(clean_title).replace("\'", "\\\'")}\')" title="Bookmark lesson">
-                            <svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                        </button>
-                    </h3>\n')
+					p.html.write_string('<h3 class="lesson-subtitle${lesson_class}" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 {
+						p.structure[p.curr_chap_idx].id
+					} else {
+						''
+					}}">
+						<span>${escape_html(clean_title)}</span>
+						<button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark(\'${slug}\', \'${escape_html(clean_title).replace("'",
+						"\\'")}\')" title="Bookmark lesson">
+							<svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+						</button>
+					</h3>\n')
 				} else {
 					lesson := Lesson{
-						id: slug
-						title: clean_title
+						id:      slug
+						title:   clean_title
 						content: ''
 					}
 					if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 {
 						p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons << lesson
 						p.curr_less_idx = p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons.len - 1
 					}
-					
+
 					lesson_class := if is_lesson { ' lesson-header' } else { '' }
-					p.html.write_string('<h3 class="lesson-title${lesson_class}" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 { p.structure[p.curr_chap_idx].id } else { "" }}">
-                        <span>${escape_html(clean_title)}</span>
-                        <button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark(\'${slug}\', \'${escape_html(clean_title).replace("\'", "\\\'")}\')" title="Bookmark lesson">
-                            <svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                        </button>
-                    </h3>\n')
-					
+					p.html.write_string('<h3 class="lesson-title${lesson_class}" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 {
+						p.structure[p.curr_chap_idx].id
+					} else {
+						''
+					}}">
+						<span>${escape_html(clean_title)}</span>
+						<button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark(\'${slug}\', \'${escape_html(clean_title).replace("'",
+						"\\'")}\')" title="Bookmark lesson">
+							<svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+						</button>
+					</h3>\n')
+
 					p.search_index << SearchIndexEntry{
-						id: slug
-						title: clean_title
-						typ: 'lesson'
+						id:      slug
+						title:   clean_title
+						typ:     'lesson'
 						content: clean_title
 						chapter: current_chapter_title
 						section: current_section_title
@@ -673,43 +688,48 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 			}
 			continue
 		}
-		
+
 		// File locations
-		if (trimmed.starts_with('_File location:') || trimmed.starts_with('_File Location:')) && trimmed.ends_with('_') {
+		if (trimmed.starts_with('_File location:')
+			|| trimmed.starts_with('_File Location:')) && trimmed.ends_with('_') {
 			idx_start_bracket := line.index('[') or { -1 }
 			idx_end_bracket := line.index(']') or { -1 }
 			idx_start_paren := line.index('(') or { -1 }
 			idx_end_paren := line.index(')') or { -1 }
-			
-			if idx_start_bracket > 0 && idx_end_bracket > idx_start_bracket && idx_start_paren > idx_end_bracket && idx_end_paren > idx_start_paren {
-				rel_path := line[idx_start_bracket + 1 .. idx_end_bracket]
-				mut abs_path := line[idx_start_paren + 1 .. idx_end_paren]
-				if !abs_path.starts_with('http') && !abs_path.starts_with('file://') && !abs_path.starts_with('#') {
+
+			if idx_start_bracket > 0 && idx_end_bracket > idx_start_bracket
+				&& idx_start_paren > idx_end_bracket && idx_end_paren > idx_start_paren {
+				rel_path := line[idx_start_bracket + 1..idx_end_bracket]
+				mut abs_path := line[idx_start_paren + 1..idx_end_paren]
+				if !abs_path.starts_with('http') && !abs_path.starts_with('file://')
+					&& !abs_path.starts_with('#') {
 					abs_path = get_github_url(abs_path)
 				}
 				p.html.write_string('<div class="file-location">
-                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                <span>File: </span><a href="${abs_path}" target="_blank" rel="noopener noreferrer">${escape_html(rel_path)}</a>
-            </div>\n')
+				<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+				<span>File: </span><a href="${abs_path}" target="_blank" rel="noopener noreferrer">${escape_html(rel_path)}</a>
+			</div>\n')
 				if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 && p.curr_less_idx >= 0 {
-					p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[p.curr_less_idx].content += ' File location: ' + rel_path
+					p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[p.curr_less_idx].content +=
+						' File location: ' + rel_path
 				}
 				continue
 			}
 		}
-		
+
 		// Regular Paragraphs
 		parsed_line := parse_inline(line)
 		p.html.write_string('<p>${parsed_line}</p>\n')
 		if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 && p.curr_less_idx >= 0 {
-			p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[p.curr_less_idx].content += ' ' + line
+			p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[p.curr_less_idx].content +=
+				' ' + line
 		}
 	}
-	
+
 	p.flush_list()
 	p.flush_blockquote()
 	p.html.write_string('</section>\n')
-	
+
 	return p.html.str(), p.structure, p.search_index
 }
 
@@ -718,41 +738,41 @@ fn main() {
 	dest_dir := os.join_path(@DIR, 'docs')
 	dest_path := os.join_path(dest_dir, 'index.html')
 	template_path := os.join_path(@DIR, 'template.html')
-	
+
 	if !os.exists(dest_dir) {
 		os.mkdir_all(dest_dir) or {
 			eprintln('Failed to create destination directory: ${err}')
 			exit(1)
 		}
 	}
-	
+
 	markdown := os.read_file(src_path) or {
 		eprintln('Failed to read source markdown: ${err}')
 		exit(1)
 	}
-	
+
 	template := os.read_file(template_path) or {
 		eprintln('Failed to read template.html: ${err}')
 		exit(1)
 	}
-	
+
 	println('Parsing markdown...')
 	content_html, structure, search_index := parse_markdown_to_html_and_index(markdown)
-	
+
 	println('Generating search index...')
 	structure_json := json2.encode(structure)
 	search_index_json := json2.encode(search_index)
-	
+
 	println('Building final HTML...')
 	mut output := template
 	output = output.replace('<!-- CONTENT_HTML_PLACEHOLDER -->', content_html)
 	output = output.replace('/* STRUCTURE_JSON_PLACEHOLDER */', structure_json)
 	output = output.replace('/* SEARCH_INDEX_JSON_PLACEHOLDER */', search_index_json)
-	
+
 	os.write_file(dest_path, output) or {
 		eprintln('Failed to write output HTML: ${err}')
 		exit(1)
 	}
-	
+
 	println('Build completed successfully! Docs output to docs/index.html')
 }

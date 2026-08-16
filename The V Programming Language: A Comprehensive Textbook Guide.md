@@ -1290,7 +1290,7 @@ This comprehensive example demonstrates every primitive data type in V:
 - **String**: `string` (representing an immutable array of bytes).
 - **Rune**: `rune` (representing a single Unicode code point, alias for `u32`).
 - **Signed Integers**: `i8` (8-bit), `i16` (16-bit), `int` (32-bit), `i64` (64-bit).
-- **Unsigned Integers**: `u8` (8-bit, alias `byte`), `u16` (16-bit), `u32` (32-bit), `u64` (64-bit).
+- **Unsigned Integers**: `u8` (8-bit), `u16` (16-bit), `u32` (32-bit), `u64` (64-bit).
 - **Platform-dependent sizes**: `isize` (signed size of a pointer), `usize` (unsigned size of a pointer).
 - **Floating Point Numbers**: `f32` (32-bit single-precision), `f64` (64-bit double-precision).
 
@@ -1739,7 +1739,7 @@ fn main() {
 	println('a is ${sizeof(a)} byte(s)') // a is 1 byte(s)
 
 	// declare 8-bit unsigned integer to shift by 1 position
-	pos := byte(1)
+	pos := u8(1)
 
 	// Shift left the value 3 by 1 position
 	a_left_shift := a << pos
@@ -1769,7 +1769,7 @@ fn main() {
 
 	for i in 0 .. bits {
 		after_shift := val << i
-		println('$val << $i = $after_shift \/\/ type after shift operation: ${typeof(after_shift).name}')
+		println('${val} << ${i} = ${after_shift} // type after shift operation: ${typeof(after_shift).name}')
 	}
 }
 ```
@@ -2077,7 +2077,7 @@ _File location: [primitive_types/03_string_type/01_working_with_strings/01_strin
 
 ### Lesson: String Read Only Array Of Bytes
 
-In V, strings are represented internally as read-only arrays of UTF-8 encoded bytes (`u8`). This means you can index into a string using bracket notation (`str[index]`) to extract the raw byte value at that position. The type returned from indexing a string is always `byte` (an alias for `u8` in V), not a string or rune.
+In V, strings are represented internally as read-only arrays of UTF-8 encoded bytes (`u8`). This means you can index into a string using bracket notation (`str[index]`) to extract the raw byte value at that position. The type returned from indexing a string is `u8` (8-bit unsigned integer), not a string or rune.
 
 This example shows how to read raw bytes from a string and prints the byte value and its type name.
 
@@ -2085,9 +2085,9 @@ This example shows how to read raw bytes from a string and prints the byte value
 fn main() {
 	fruit := 'Orange'
 	// Accessing the first byte of the string 'Orange'.
-	// This returns the ASCII value of 'O' (which is 79), and its type is 'byte'.
+	// This returns the ASCII value of 'O' (which is 79), and its type is 'u8'.
 	println(typeof(fruit[0]).name)
-	// Outputs: byte
+	// Outputs: u8
 	
 	println(fruit[0])
 	// Outputs: 79
@@ -4218,30 +4218,21 @@ _File location: [arrays_and_maps/01_arrays/09_array_update_syntax/array_update_s
 V lets you initialise an array by spreading an existing array (using ellipsis spread syntax `...`), optionally followed by additional elements. 
 
 > [!NOTE]
-> In the official V specification, spreading is written as `[...base, 3, 4]`. This creates a copy/modified version of the array without mutating the original variable. In version 0.5.1, you can achieve the equivalent functionality by cloning the array and appending elements.
+> Spreading is written as `[...base, 3, 4]`. This creates a new modified version of the array without mutating the original variable.
 
 ```v
 module main
 
 fn main() {
 	println('=== Array Update Syntax ===')
-	
-	// NOTE: Array spread update syntax `[...base, 3, 4]` is defined in the V language specification (docs.md)
-	// but is not fully supported in V 0.5.1 parser.
-	// Below is the specification representation:
-	/*
+
 	base := [1, 2]
 	a := [...base, 3, 4]
-	assert a == [1, 2, 3, 4]
-	*/
-	
-	// Equivalent cloning & appending representation for V 0.5.1:
-	base := [1, 2]
-	mut a := base.clone()
-	a << 3
-	a << 4
+
 	println('base: ${base}') // [1, 2]
 	println('a: ${a}')       // [1, 2, 3, 4]
+
+	assert base == [1, 2]
 	assert a == [1, 2, 3, 4]
 }
 ```
