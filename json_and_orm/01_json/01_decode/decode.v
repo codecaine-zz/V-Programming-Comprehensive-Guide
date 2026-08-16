@@ -1,4 +1,4 @@
-import x.json2 as json
+import json2
 
 struct Note {
 	id      int
@@ -8,7 +8,7 @@ struct Note {
 
 fn main() {
 	// Decode a JSON payload into a struct instance.
-	n := json.decode[Note]('{"id":1,"message":"Plan a holiday","status":false}') or {
+	n := json2.decode[Note]('{"id":1,"message":"Plan a holiday","status":false}') or {
 		panic('invalid json data')
 	}
 

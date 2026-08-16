@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 import os
 import sync
 import veb
@@ -34,7 +34,7 @@ fn (mut app App) index(mut ctx Context) veb.Result {
 fn (mut app App) get_items(mut ctx Context) veb.Result {
 	app.lock.@rlock()
 	defer { app.lock.runlock() }
-	return ctx.json(json.encode(app.items))
+	return ctx.json(json2.encode(app.items))
 }
 
 // 3. GET /api/items/:id - Returns a single item by id, or 404
@@ -44,7 +44,7 @@ fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
 	defer { app.lock.runlock() }
 	for item in app.items {
 		if item.id == id {
-			return ctx.json(json.encode(item))
+			return ctx.json(json2.encode(item))
 		}
 	}
 	ctx.res.set_status(.not_found)
@@ -54,7 +54,7 @@ fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
 // 4. POST /api/items - Decodes JSON request body and adds a new item
 @['/api/items'; post]
 fn (mut app App) create_item(mut ctx Context) veb.Result {
-	new_item := json.decode[Item](ctx.req.data) or {
+	new_item := json2.decode[Item](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json('{"error": "Invalid JSON format"}')
 	}
@@ -71,7 +71,7 @@ fn (mut app App) create_item(mut ctx Context) veb.Result {
 
 	app.items << item_to_add
 	ctx.res.set_status(.created)
-	return ctx.json(json.encode(item_to_add))
+	return ctx.json(json2.encode(item_to_add))
 }
 
 fn main() {

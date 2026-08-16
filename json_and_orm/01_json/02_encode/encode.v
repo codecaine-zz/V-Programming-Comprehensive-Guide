@@ -1,4 +1,4 @@
-import x.json2 as json
+import json2
 
 struct Note {
 	id      int
@@ -15,10 +15,10 @@ fn main() {
 	}
 
 	// Encode the struct to a compact JSON string.
-	mut j := json.encode(m)
+	mut j := json2.encode(m)
 	println(j)
 
 	// Encode the same object with pretty formatting for readability.
-	j = json.encode(m, prettify: true)
+	j = json2.encode(m, prettify: true)
 	println(j)
 }

@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 import os
 
 struct AppConfig {
@@ -30,7 +30,7 @@ fn load_config(path string) AppConfig {
 			''
 		}
 		if raw != '' {
-			cfg = json.decode[AppConfig](raw) or {
+			cfg = json2.decode[AppConfig](raw) or {
 				eprintln('Warning: could not decode config file: ${err}')
 				cfg
 			}
@@ -61,7 +61,7 @@ fn load_config(path string) AppConfig {
 }
 
 fn save_config(path string, cfg AppConfig) {
-	data := json.encode(cfg)
+	data := json2.encode(cfg)
 	os.write_file(path, data) or { eprint('Failed to save config file: ${err}') }
 }
 

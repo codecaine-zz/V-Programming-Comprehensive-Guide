@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 import os
 
 fn main() {
@@ -15,7 +15,7 @@ fn main() {
 
 	// 1. Encode map to JSON string
 	println('Encoding map to JSON...')
-	json_str := json.encode(scores)
+	json_str := json2.encode(scores)
 	println('JSON string: ${json_str}')
 
 	// 2. Write JSON string to file
@@ -34,7 +34,7 @@ fn main() {
 
 	// 4. Decode JSON string back to map[string]int
 	println('Decoding JSON back to map...')
-	decoded_scores := json.decode[map[string]int](content) or {
+	decoded_scores := json2.decode[map[string]int](content) or {
 		eprintln('Failed to decode map JSON: ${err}')
 		return
 	}

@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 
 struct Book {
 	title string
@@ -22,5 +22,5 @@ fn main() {
 	}
 	book.author.age = 25
 	println('${book.title} by ${book.author.name} (${book.author.age})')
-	println(json.encode(book))
+	println(json2.encode(book))
 }

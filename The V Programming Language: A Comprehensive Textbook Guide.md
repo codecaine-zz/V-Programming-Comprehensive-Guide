@@ -6561,7 +6561,7 @@ V supports **Anonymous Structs** which are inline struct declarations without se
 ```v
 module main
 
-import x.json2 as json
+import json2
 
 struct Book {
 	title string
@@ -6583,7 +6583,7 @@ fn main() {
 	}
 	book.author.age = 25
 	println('${book.title} by ${book.author.name} (${book.author.age})')
-	println(json.encode(book))
+	println(json2.encode(book))
 }
 ```
 
@@ -6830,7 +6830,7 @@ To propagate an error upward to the calling function without handling it locally
 ```v
 fn load_user_data(path string) !UserData {
     raw := os.read_file(path)! // Propagates error immediately if read_file fails
-    return json.decode[UserData](raw)!
+    return json2.decode[UserData](raw)!
 }
 ```
 
@@ -8396,7 +8396,7 @@ Modules help modularize V projects, managing imports and symbol visibility. This
 ```v
 module main
 
-import x.json2 as json
+import json2
 import ttytm.webview
 import xiusin.vredis
 
@@ -8441,7 +8441,7 @@ fn redis_connect_status(e &webview.Event) !string {
 			version:    ''
 			keys_count: 0
 		}
-		return json.encode(status_info)
+		return json2.encode(status_info)
 	}
 	defer {
 		client.close() or {}
@@ -8454,76 +8454,76 @@ fn redis_connect_status(e &webview.Event) !string {
 			status:     'connected'
 			host:       '127.0.0.1'
 			port:       6379
-			version:    'Unknown'
+			version:    'Redis (Unknown)'
 			keys_count: count
 		}
-		return json.encode(status_info)
+		return json2.encode(status_info)
 	}
-	if info.bytestr().len > 0 {
-		lines := info.bytestr().split('\n')
-		for line in lines {
-			if line.starts_with('redis_version:') {
-				parts := line.split(':')
-				if parts.len >= 2 {
-					version = parts[1].trim_space()
-				}
-				break
-			}
+
+	for line in info.split_into_lines() {
+		if line.starts_with('redis_version:') {
+			version = line.all_after('redis_version:').trim_space()
+			break
 		}
 	}
 
 	count := client.dbsize() or { 0 }
-
 	status_info := ConnectStatus{
 		status:     'connected'
 		host:       '127.0.0.1'
 		port:       6379
-		version:    version
+		version:    'Redis ${version}'
 		keys_count: count
 	}
-	return json.encode(status_info)
+	return json2.encode(status_info)
 }
 
-fn redis_get_keys(e &webview.Event) !string {
+fn redis_list_keys(e &webview.Event) !string {
+	pattern := e.get_arg[string](0) or { '*' }
+	filter_pattern := if pattern == '' { '*' } else { pattern }
+
 	mut client := connect_redis()!
 	defer {
 		client.close() or {}
 	}
 
-	keys := client.keys('*') or { []string{} }
+	keys := client.keys(filter_pattern) or { []string{} }
 	mut items := []KeyInfo{}
+
 	for key in keys {
-		t := client.@type(key) or { 'unknown' }
+		typ := client.key_type(key) or { 'unknown' }
 		ttl := client.ttl(key) or { -1 }
 		items << KeyInfo{
 			name:  key
-			@type: t
+			@type: typ
 			ttl:   ttl
 		}
 	}
-	return json.encode(items)
+
+	return json2.encode(items)
 }
 
 fn redis_get_key_detail(e &webview.Event) !string {
+	key := e.get_arg[string](0)!
+
 	mut client := connect_redis()!
 	defer {
 		client.close() or {}
 	}
 
-	key := e.get_arg[string](0)!
-	t := client.@type(key)!
-	ttl := client.ttl(key)!
+	typ := client.key_type(key) or { 'none' }
+	ttl := client.ttl(key) or { -1 }
 
 	mut detail := KeyDetail{
 		name:     key
-		@type:    t
+		@type:    typ
 		ttl:      ttl
 		value:    ''
 		list_val: []string{}
 		hash_val: map[string]string{}
 	}
 
-	match t {
+	match typ {
 		'string' {
 			detail.value = client.get(key) or { '' }
 		}
@@ -8534,13 +8534,15 @@ fn redis_get_key_detail(e &webview.Event) !string {
 			detail.list_val = client.smembers(key) or { []string{} }
 		}
 		'hash' {
-			detail.hash_val = client.hgetall(key) or {
-				map[string]string{}
-			}
+			detail.hash_val = client.hgetall(key) or { map[string]string{} }
+		}
+		'zset' {
+			detail.list_val = client.zrange(key, 0, -1) or { []string{} }
 		}
 		else {}
 	}
-	return json.encode(detail)
+
+	return json2.encode(detail)
 }
 
 fn redis_set_string(e &webview.Event) !string {
@@ -8572,7 +8574,7 @@ fn redis_set_list(e &webview.Event) !string {
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	vals := json.decode[[]string](vals_json)!
+	vals := json2.decode[[]string](vals_json)!
 	client.del(key) or {}
 	for val in vals {
 		client.rpush(key, val)!
@@ -8595,7 +8597,7 @@ fn redis_set_hash(e &webview.Event) !string {
 	hash_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	fvs := json.decode[map[string]string](hash_json)!
+	fvs := json2.decode[map[string]string](hash_json)!
 	client.del(key) or {}
 	for field, val in fvs {
 		client.hset(key, field, val)!
@@ -8618,7 +8620,7 @@ fn redis_set_set(e &webview.Event) !string {
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	vals := json.decode[[]string](vals_json)!
+	vals := json2.decode[[]string](vals_json)!
 	client.del(key) or {}
 	for val in vals {
 		client.sadd(key, val)!
@@ -10758,10 +10760,10 @@ In languages like Go, Java, or Python, JSON decoding relies on runtime reflectio
 
 In V:
 ```v
-user := json.decode[User](payload)!
+user := json2.decode[User](payload)!
 ```
 * **Compile-Time Generation**: During compilation, the V compiler inspects the definition of `User` and generates a dedicated, custom C parsing function tailored specifically to that struct.
-* **Zero Reflection Overhead**: When `json.decode` executes at runtime, it calls this pre-compiled C parser directly, resulting in speeds comparable to handcrafted low-level serializers.
+* **Zero Reflection Overhead**: When `json2.decode` executes at runtime, it calls this pre-compiled C parser directly, resulting in speeds comparable to handcrafted low-level serializers.
 * **Struct Attributes**: `@[json: 'custom_name']` customizes JSON field names, while `@[skip]` excludes sensitive fields from serialization.
 
 ### Compile-Time Type-Safe V ORM (`sql db { ... }`)
@@ -10835,7 +10837,7 @@ This is a complete, real-world case study of a REST API built using the V web fr
 ```v
 module main
 
-import x.json2 as json
+import json2
 import veb
 
 @[table: 'Notes']
@@ -10845,14 +10847,10 @@ struct Note {
 	status  bool
 }
 
-fn (n Note) to_json() string {
-	return json.encode(n)
-}
-
 @['/notes'; post]
 fn (mut app App) create(mut ctx Context) veb.Result {
 	// malformed json
-	n := json.decode[Note](ctx.req.data) or {
+	n := json2.decode[Note](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(error_response(400, invalid_json))
 	}
@@ -10884,7 +10882,7 @@ fn (mut app App) create(mut ctx Context) veb.Result {
 	note_created := Note{new_id, n.message, n.status}
 	ctx.res.set_status(.created)
 	ctx.res.header.add(.content_location, '/notes/${new_id}')
-	return ctx.json(note_created.to_json())
+	return ctx.json(json2.encode(note_created))
 }
 
 @['/notes/:id'; get]
@@ -10903,7 +10901,7 @@ fn (mut app App) read(mut ctx Context, id int) veb.Result {
 	}
 
 	// found note, return it
-	ret := json.encode(n[0])
+	ret := json2.encode(n[0])
 	ctx.res.set_status(.ok)
 	return ctx.json(ret)
 }
@@ -10917,7 +10915,7 @@ fn (mut app App) read_all(mut ctx Context) veb.Result {
 		return ctx.json(error_response(500, err.msg()))
 	}
 
-	ret := json.encode(n)
+	ret := json2.encode(n)
 	ctx.res.set_status(.ok)
 	return ctx.json(ret)
 }
@@ -10925,7 +10923,7 @@ fn (mut app App) read_all(mut ctx Context) veb.Result {
 @['/notes/:id'; put]
 fn (mut app App) update(mut ctx Context, id int) veb.Result {
 	// malformed json
-	n := json.decode[Note](ctx.req.data) or {
+	n := json2.decode[Note](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(error_response(400, invalid_json))
 	}
@@ -10970,7 +10968,7 @@ fn (mut app App) update(mut ctx Context, id int) veb.Result {
 	// instead of making one more db call
 	updated_note := Note{id, n.message, n.status}
 
-	ret := json.encode(updated_note)
+	ret := json2.encode(updated_note)
 	ctx.res.set_status(.ok)
 	return ctx.json(ret)
 }
@@ -11001,15 +10999,11 @@ This is a complete, real-world case study of a REST API built using the V web fr
 ```v
 module main
 
-import x.json2 as json
+import json2
 
 struct NotesResponse {
 	status  int
 	message string
-}
-
-fn (c NotesResponse) to_json() string {
-	return json.encode(c)
 }
 
 const invalid_json = 'Invalid JSON Payload'
@@ -11018,7 +11012,7 @@ const unique_message = 'Please provide a unique message for Note'
 
 fn error_response(status int, message string) string {
 	er := NotesResponse{status, message}
-	return er.to_json()
+	return json2.encode(er)
 }
 ```
 
@@ -11035,7 +11029,7 @@ _File location: [json_and_orm/01_json/01_decode/decode.v](json_and_orm/01_json/0
 Databases and JSON handling are essential parts of backend development. This lesson on **Decode** details V's built-in JSON utilities or its built-in database ORM.
 
 ```v
-import x.json2 as json
+import json2
 
 struct Note {
 	id      int
@@ -11045,7 +11039,7 @@ struct Note {
 
 fn main() {
 	// Decode a JSON payload into a struct instance.
-	n := json.decode[Note]('{"id":1,"message":"Plan a holiday","status":false}') or {
+	n := json2.decode[Note]('{"id":1,"message":"Plan a holiday","status":false}') or {
 		panic('invalid json data')
 	}
 
@@ -11066,7 +11060,7 @@ _File location: [json_and_orm/01_json/02_encode/encode.v](json_and_orm/01_json/0
 Databases and JSON handling are essential parts of backend development. This lesson on **Encode** details V's built-in JSON utilities or its built-in database ORM.
 
 ```v
-import x.json2 as json
+import json2
 
 struct Note {
 	id      int
@@ -11083,11 +11077,11 @@ fn main() {
 	}
 
 	// Encode the struct to a compact JSON string.
-	mut j := json.encode(m)
+	mut j := json2.encode(m)
 	println(j)
 
 	// Encode the same object with pretty formatting for readability.
-	j = json.encode(m, prettify: true)
+	j = json2.encode(m, prettify: true)
 	println(j)
 }
 ```
@@ -11098,20 +11092,20 @@ fn main() {
 
 Unlike many languages that rely on slow, runtime reflection to inspect structures, V's compiler generates encoding and decoding code statically at compile time. This ensures extremely fast performance and safety.
 
-#### 2. Decoding JSON (`json.decode`)
+#### 2. Decoding JSON (`json2.decode`)
 
-- To decode a JSON string, invoke `json.decode[StructName](json_string)` (using `x.json2`).
-- **Result Type Return**: Since incoming JSON strings can be malformed, `json.decode` returns a Result type (`!StructName`). You **must** unwrap it with an `or` block:
+- To decode a JSON string, invoke `json2.decode[StructName](json_string)`.
+- **Result Type Return**: Since incoming JSON strings can be malformed, `json2.decode` returns a Result type (`!StructName`). You **must** unwrap it with an `or` block:
   ```v
-  user := json.decode[User](raw_json) or {
+  user := json2.decode[User](raw_json) or {
       println('Failed to parse user JSON: ${err}')
       return
   }
   ```
 
-#### 3. Encoding to JSON (`json.encode`)
+#### 3. Encoding to JSON (`json2.encode`)
 
-- To serialize a V struct instance into a JSON string, invoke `json.encode(instance)`.
+- To serialize a V struct instance into a JSON string, invoke `json2.encode(instance)`.
 - This operation is guaranteed to succeed and returns a standard `string` directly (no `or` block required).
 
 #### 4. Struct JSON Attribute Tags
@@ -11133,7 +11127,7 @@ This example demonstrates how to encode an object to JSON, write it to a file, r
 ```v
 module main
 
-import x.json2 as json
+import json2
 import os
 
 struct Book {
@@ -11154,7 +11148,7 @@ fn main() {
 
 	// 1. Encode object to JSON string
 	println('Encoding object to JSON...')
-	json_str := json.encode(book)
+	json_str := json2.encode(book)
 	println('JSON string: ${json_str}')
 
 	// 2. Write JSON string to file
@@ -11173,7 +11167,7 @@ fn main() {
 
 	// 4. Decode JSON string back to Book object
 	println('Decoding JSON back to object...')
-	decoded_book := json.decode[Book](content) or {
+	decoded_book := json2.decode[Book](content) or {
 		eprintln('Failed to decode JSON: ${err}')
 		return
 	}
@@ -11196,7 +11190,7 @@ This example demonstrates how to serialize and deserialize an array of objects (
 ```v
 module main
 
-import x.json2 as json
+import json2
 import os
 
 struct Task {
@@ -11224,7 +11218,7 @@ fn main() {
 
 	// 1. Encode array of objects to JSON string
 	println('Encoding array of objects to JSON...')
-	json_str := json.encode(tasks)
+	json_str := json2.encode(tasks)
 	println('JSON string:\n${json_str}')
 
 	// 2. Write JSON string to file
@@ -11243,7 +11237,7 @@ fn main() {
 
 	// 4. Decode JSON string back to an array of Task objects
 	println('Decoding JSON back to array of objects...')
-	decoded_tasks := json.decode[[]Task](content) or {
+	decoded_tasks := json2.decode[[]Task](content) or {
 		eprintln('Failed to decode JSON: ${err}')
 		return
 	}
@@ -11269,7 +11263,7 @@ This example demonstrates how to serialize a map structure (`map[string]int`) in
 ```v
 module main
 
-import x.json2 as json
+import json2
 import os
 
 fn main() {
@@ -11284,7 +11278,7 @@ fn main() {
 
 	// 1. Encode map to JSON string
 	println('Encoding map to JSON...')
-	json_str := json.encode(scores)
+	json_str := json2.encode(scores)
 	println('JSON string: ${json_str}')
 
 	// 2. Write JSON string to file
@@ -11303,7 +11297,7 @@ fn main() {
 
 	// 4. Decode JSON string back to map[string]int
 	println('Decoding JSON back to map...')
-	decoded_scores := json.decode[map[string]int](content) or {
+	decoded_scores := json2.decode[map[string]int](content) or {
 		eprintln('Failed to decode map JSON: ${err}')
 		return
 	}
@@ -11332,7 +11326,7 @@ This example demonstrates two different methods for reading and writing arrays t
 ```v
 module main
 
-import x.json2 as json
+import json2
 import os
 
 fn main() {
@@ -11346,7 +11340,7 @@ fn main() {
 	numbers := [10, 20, 30, 40, 50]
 
 	println('Encoding array to JSON...')
-	json_str := json.encode(numbers)
+	json_str := json2.encode(numbers)
 	println('JSON string: ${json_str}')
 
 	println('Writing JSON to file "${json_file_path}"...')
@@ -11360,7 +11354,7 @@ fn main() {
 		return
 	}
 
-	decoded_numbers := json.decode[[]int](json_content) or {
+	decoded_numbers := json2.decode[[]int](json_content) or {
 		eprintln('Failed to decode array JSON: ${err}')
 		return
 	}
@@ -12368,7 +12362,7 @@ module main
 
 import net.websocket
 import time
-import x.json2 as json
+import json2
 
 // WsMessage represents a structured application-level WebSocket message.
 struct WsMessage {
@@ -12411,9 +12405,9 @@ fn main() {
 			}
 
 			// Decode the JSON protocol message
-			ws_msg := json.decode[WsMessage](payload) or {
+			ws_msg := json2.decode[WsMessage](payload) or {
 				println('Server: Invalid JSON protocol: ${err}')
-				err_resp := json.encode(WsMessage{ action: 'error', data: 'invalid json' })
+				err_resp := json2.encode(WsMessage{ action: 'error', data: 'invalid json' })
 				ws.write_string(err_resp) or {}
 				return
 			}
@@ -12422,15 +12416,15 @@ fn main() {
 
 			match ws_msg.action {
 				'ping' {
-					resp := json.encode(WsMessage{ action: 'pong', data: ws_msg.data })
+					resp := json2.encode(WsMessage{ action: 'pong', data: ws_msg.data })
 					ws.write_string(resp)!
 				}
 				'goodbye' {
 					println('Server received goodbye action. Replying and closing...')
-					resp := json.encode(WsMessage{ action: 'goodbye_ack', data: 'Goodbye!' })
+					resp := json2.encode(WsMessage{ action: 'goodbye_ack', data: 'Goodbye!' })
 					ws.write_string(resp)!
 					// Clean close from server side
-					ws.close(1000, 'done') or {}
+					ws.close(1000, 'Normal Closure') or {}
 				}
 				else {
 					println('Server: Unknown action: ${ws_msg.action}')
@@ -12439,20 +12433,19 @@ fn main() {
 		}
 	})
 
-	// Start the server listen loop in a background thread
-	spawn fn [mut ws_server] () {
-		ws_server.listen() or { println('Server error: ${err}') }
-	}()
+	ws_server.on_close(fn (mut ws websocket.Client, code int, reason string) ! {
+		println('Server: Client disconnected (code: ${code}, reason: "${reason}")')
+	})
 
-	// Allow the server a moment to start
-	time.sleep(100 * time.millisecond)
+	// Start server listening in background thread
+	spawn ws_server.listen()
 
-	// 2. RUN CLIENT CONNECTION 1: Clean ping-pong and goodbye handshake
-	println('\n--- Connection 1: Standard Chat / Ping-Pong ---')
-	mut ws_client1 := websocket.new_client(uri) or {
-		println('Client 1 init failed: ${err}')
-		return
-	}
+	// Allow server time to bind and listen
+	time.sleep(200 * time.millisecond)
+
+	// 2. Client 1: Demonstrates persistent conversational ping-pong loop
+	println('\n--- Starting Client 1 (Conversational Loop) ---')
+	mut ws_client1 := websocket.new_client(uri)!
 
 	mut state1 := &ClientState{
 		count: 0
@@ -12461,24 +12454,24 @@ fn main() {
 	ws_client1.on_open(fn (mut c websocket.Client) ! {
 		println('Client 1: Connection opened!')
 		// Initiate the first Ping message
-		ping_msg := json.encode(WsMessage{ action: 'ping', data: '1' })
+		ping_msg := json2.encode(WsMessage{ action: 'ping', data: '1' })
 		c.write_string(ping_msg)!
 	})
 
 	ws_client1.on_message(fn [mut state1] (mut c websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			ws_msg := json.decode[WsMessage](payload) or { return }
+			ws_msg := json2.decode[WsMessage](payload) or { return }
 			println('Client 1 received response action "${ws_msg.action}" with data: "${ws_msg.data}"')
 
 			if ws_msg.action == 'pong' {
 				state1.count++
 				if state1.count < 3 {
-					next_ping := json.encode(WsMessage{ action: 'ping', data: '${state1.count + 1}' })
+					next_ping := json2.encode(WsMessage{ action: 'ping', data: '${state1.count + 1}' })
 					println('Client 1 sending: "${next_ping}"')
 					c.write_string(next_ping)!
 				} else {
-					goodbye := json.encode(WsMessage{ action: 'goodbye', data: 'Goodbye' })
+					goodbye := json2.encode(WsMessage{ action: 'goodbye', data: 'Goodbye' })
 					println('Client 1 sending goodbye: "${goodbye}"')
 					c.write_string(goodbye)!
 				}
@@ -12517,7 +12510,7 @@ fn main() {
 		println('Client 2: Connection opened!')
 		// Send oversized data (3000 bytes, exceeding server 2048-byte limit)
 		large_payload := 'A'.repeat(3000)
-		large_msg := json.encode(WsMessage{ action: 'ping', data: large_payload })
+		large_msg := json2.encode(WsMessage{ action: 'ping', data: large_payload })
 		println('Client 2 sending oversized payload (size: ${large_msg.len} bytes)...')
 		c.write_string(large_msg)!
 	})
@@ -14853,7 +14846,7 @@ V has a very rich and growing standard library and is actively updated. This les
 ```v
 module main
 
-import x.json2 as json
+import json2
 
 // User uses attributes to control JSON field names and to hide a field from encoding.
 struct User {
@@ -14900,11 +14893,11 @@ fn main() {
 		age:    30
 		secret: 'hidden'
 	}
-	encoded := json.encode(u)
+	encoded := json2.encode(u)
 	println('Encoded JSON: ${encoded}')
 
 	// Decode a JSON payload that uses the custom field names from the attributes.
-	decoded := json.decode[User]('{"username":"Alice","user_age":25}') or {
+	decoded := json2.decode[User]('{"username":"Alice","user_age":25}') or {
 		println('JSON error: ${err}')
 		User{}
 	}
@@ -19602,7 +19595,7 @@ This example demonstrates building a full-featured REST API with full CRUD opera
 ```v
 module main
 
-import x.json2 as json
+import json2
 import net.http
 import os
 import sync
@@ -19649,11 +19642,11 @@ fn (mut db Database) load() ! {
 		db.tasks = []Task{}
 		return
 	}
-	db.tasks = json.decode[[]Task](content)!
+	db.tasks = json2.decode[[]Task](content)!
 }
 
 fn (mut db Database) save() ! {
-	encoded := json.encode(db.tasks, prettify: true)
+	encoded := json2.encode(db.tasks, prettify: true)
 	os.write_file(db.file_path, encoded)!
 }
 
@@ -19738,7 +19731,7 @@ fn parse_and_validate_task(mut ctx Context) !Task {
 	if ctx.req.data.trim_space() == '' {
 		return error('Request body cannot be empty')
 	}
-	task := json.decode[Task](ctx.req.data) or {
+	task := json2.decode[Task](ctx.req.data) or {
 		return error('Invalid JSON payload structure')
 	}
 	task.validate()!
@@ -19748,7 +19741,7 @@ fn parse_and_validate_task(mut ctx Context) !Task {
 // send_json encodes data as JSON and sets the HTTP status code.
 fn send_json[T](mut ctx Context, data T, status http.Status) veb.Result {
 	ctx.res.set_status(status)
-	return ctx.json(json.encode(data))
+	return ctx.json(json2.encode(data))
 }
 
 // send_error sets an HTTP error status code and returns a JSON error response.
@@ -21036,13 +21029,13 @@ Key concepts illustrated:
 
 - **Routing Attributes**: Tagging methods with route paths and HTTP verbs (e.g. `@['/api/items'; get]`).
 - **Path Parameters**: Defining routes with dynamic segments like `@['/api/items/:id'; get]` which map directly to method arguments.
-- **JSON Serialization/Deserialization**: Using `json.encode` and `json.decode` to work with HTTP requests and responses.
+- **JSON Serialization/Deserialization**: Using `json2.encode` and `json2.decode` to work with HTTP requests and responses.
 - **State Management & Thread Safety**: Using fields in the global `App` struct to share resources, protected by a `sync.RwMutex` to ensure thread-safe concurrent access.
 
 ```v
 module main
 
-import x.json2 as json
+import json2
 import os
 import sync
 import veb
@@ -21076,7 +21069,7 @@ fn (mut app App) index(mut ctx Context) veb.Result {
 fn (mut app App) get_items(mut ctx Context) veb.Result {
 	app.lock.@rlock()
 	defer { app.lock.runlock() }
-	return ctx.json(json.encode(app.items))
+	return ctx.json(json2.encode(app.items))
 }
 
 // 3. GET /api/items/:id - Returns a single item by id, or 404
@@ -21086,7 +21079,7 @@ fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
 	defer { app.lock.runlock() }
 	for item in app.items {
 		if item.id == id {
-			return ctx.json(json.encode(item))
+			return ctx.json(json2.encode(item))
 		}
 	}
 	ctx.res.set_status(.not_found)
@@ -21096,7 +21089,7 @@ fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
 // 4. POST /api/items - Decodes JSON request body and adds a new item
 @['/api/items'; post]
 fn (mut app App) create_item(mut ctx Context) veb.Result {
-	new_item := json.decode[Item](ctx.req.data) or {
+	new_item := json2.decode[Item](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json('{"error": "Invalid JSON format"}')
 	}
@@ -21113,7 +21106,7 @@ fn (mut app App) create_item(mut ctx Context) veb.Result {
 
 	app.items << item_to_add
 	ctx.res.set_status(.created)
-	return ctx.json(json.encode(item_to_add))
+	return ctx.json(json2.encode(item_to_add))
 }
 
 fn main() {
@@ -21911,13 +21904,13 @@ Key concepts illustrated:
 
 - **Default Configuration**: Establishing a safe baseline before reading external settings.
 - **Environment Variable Overrides**: Adapting the app without changing source files.
-- **JSON Persistence**: Reading and writing structured config files with `json.decode` and `json.encode`.
+- **JSON Persistence**: Reading and writing structured config files with `json2.decode` and `json2.encode`.
 - **Practical Separation of Concerns**: Keeping parsing and application logic in dedicated functions.
 
 ```v
 module main
 
-import x.json2 as json
+import json2
 import os
 
 struct AppConfig {
@@ -21947,7 +21940,7 @@ fn load_config(path string) AppConfig {
 			''
 		}
 		if raw != '' {
-			cfg = json.decode[AppConfig](raw) or {
+			cfg = json2.decode[AppConfig](raw) or {
 				eprintln('Warning: could not decode config file: ${err}')
 				cfg
 			}
@@ -21978,7 +21971,7 @@ fn load_config(path string) AppConfig {
 }
 
 fn save_config(path string, cfg AppConfig) {
-	data := json.encode(cfg)
+	data := json2.encode(cfg)
 	os.write_file(path, data) or { eprint('Failed to save config file: ${err}') }
 }
 
@@ -22025,12 +22018,12 @@ Key concepts illustrated:
 - **Persistent Data**: Keeping application state across runs with a simple file-backed format.
 - **Structured Records**: Storing typed data in a `TodoItem` model.
 - **CRUD Style Helpers**: Adding, updating, and listing records without introducing a database dependency.
-- **Safe Serialization**: Using `json.encode` and `json.decode` for portability.
+- **Safe Serialization**: Using `json2.encode` and `json2.decode` for portability.
 
 ```v
 module main
 
-import x.json2 as json
+import json2
 import os
 
 struct TodoItem {
@@ -22055,7 +22048,7 @@ fn load_store(path string) TodoStore {
 		return TodoStore{}
 	}
 
-	decoded := json.decode[TodoStore](raw) or {
+	decoded := json2.decode[TodoStore](raw) or {
 		eprintln('Could not decode store: ${err}')
 		return TodoStore{}
 	}
@@ -22064,7 +22057,7 @@ fn load_store(path string) TodoStore {
 }
 
 fn save_store(path string, store TodoStore) {
-	data := json.encode(store)
+	data := json2.encode(store)
 	os.write_file(path, data) or { eprintln('Could not save store: ${err}') }
 }
 
@@ -22260,7 +22253,7 @@ Key concepts illustrated:
 module main
 
 import net.http
-import x.json2 as json
+import json2
 
 struct PostPayload {
 	title   string @[json: 'title']
@@ -22284,7 +22277,7 @@ fn fetch_json(url string) !string {
 }
 
 fn post_json(url string, payload PostPayload) !PostResponse {
-	body := json.encode(payload)
+	body := json2.encode(payload)
 
 	// Set Content-Type explicitly for compliance with strict JSON APIs
 	mut req := http.Request{
@@ -22298,7 +22291,7 @@ fn post_json(url string, payload PostPayload) !PostResponse {
 	if resp.status_code >= 400 {
 		return error('Request failed with status ${resp.status_code}')
 	}
-	return json.decode[PostResponse](resp.body) or { return error('Invalid JSON response') }
+	return json2.decode[PostResponse](resp.body) or { return error('Invalid JSON response') }
 }
 
 fn main() {
@@ -23116,7 +23109,7 @@ This exercise covers Chapter 12: Working with Databases and JSON.
 > ```v
 > module main
 >
-> import x.json2 as json
+> import json2
 >
 > struct Task {
 > 	id        int
@@ -23131,7 +23124,7 @@ This exercise covers Chapter 12: Working with Databases and JSON.
 > 		{"id": 3, "title": "Compile textbook HTML", "completed": false}
 > 	]'
 >
-> 	tasks := json.decode[[]Task](raw_json) or {
+> 	tasks := json2.decode[[]Task](raw_json) or {
 > 		println('Failed to parse JSON: ${err}')
 > 		return
 > 	}

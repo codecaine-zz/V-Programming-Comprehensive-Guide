@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 import veb
 
 @[table: 'Notes']
@@ -10,14 +10,10 @@ struct Note {
 	status  bool
 }
 
-fn (n Note) to_json() string {
-	return json.encode(n)
-}
-
 @['/notes'; post]
 fn (mut app App) create(mut ctx Context) veb.Result {
 	// malformed json
-	n := json.decode[Note](ctx.req.data) or {
+	n := json2.decode[Note](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(error_response(400, invalid_json))
 	}
@@ -49,7 +45,7 @@ fn (mut app App) create(mut ctx Context) veb.Result {
 	note_created := Note{new_id, n.message, n.status}
 	ctx.res.set_status(.created)
 	ctx.res.header.add(.content_location, '/notes/${new_id}')
-	return ctx.json(note_created.to_json())
+	return ctx.json(json2.encode(note_created))
 }
 
 @['/notes/:id'; get]
@@ -68,7 +64,7 @@ fn (mut app App) read(mut ctx Context, id int) veb.Result {
 	}
 
 	// found note, return it
-	ret := json.encode(n[0])
+	ret := json2.encode(n[0])
 	ctx.res.set_status(.ok)
 	return ctx.json(ret)
 }
@@ -82,7 +78,7 @@ fn (mut app App) read_all(mut ctx Context) veb.Result {
 		return ctx.json(error_response(500, err.msg()))
 	}
 
-	ret := json.encode(n)
+	ret := json2.encode(n)
 	ctx.res.set_status(.ok)
 	return ctx.json(ret)
 }
@@ -90,7 +86,7 @@ fn (mut app App) read_all(mut ctx Context) veb.Result {
 @['/notes/:id'; put]
 fn (mut app App) update(mut ctx Context, id int) veb.Result {
 	// malformed json
-	n := json.decode[Note](ctx.req.data) or {
+	n := json2.decode[Note](ctx.req.data) or {
 		ctx.res.set_status(.bad_request)
 		return ctx.json(error_response(400, invalid_json))
 	}
@@ -135,7 +131,7 @@ fn (mut app App) update(mut ctx Context, id int) veb.Result {
 	// instead of making one more db call
 	updated_note := Note{id, n.message, n.status}
 
-	ret := json.encode(updated_note)
+	ret := json2.encode(updated_note)
 	ctx.res.set_status(.ok)
 	return ctx.json(ret)
 }

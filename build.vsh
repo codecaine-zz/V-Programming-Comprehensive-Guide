@@ -2,7 +2,7 @@
 import os
 import strings
 import regex
-import x.json2 as json
+import json2
 import net.urllib
 import encoding.base64
 
@@ -740,8 +740,8 @@ fn main() {
 	content_html, structure, search_index := parse_markdown_to_html_and_index(markdown)
 	
 	println('Generating search index...')
-	structure_json := json.encode(structure)
-	search_index_json := json.encode(search_index)
+	structure_json := json2.encode(structure)
+	search_index_json := json2.encode(search_index)
 	
 	println('Building final HTML...')
 	mut output := template

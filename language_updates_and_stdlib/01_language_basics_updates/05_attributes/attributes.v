@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 
 // User uses attributes to control JSON field names and to hide a field from encoding.
 struct User {
@@ -47,11 +47,11 @@ fn main() {
 		age:    30
 		secret: 'hidden'
 	}
-	encoded := json.encode(u)
+	encoded := json2.encode(u)
 	println('Encoded JSON: ${encoded}')
 
 	// Decode a JSON payload that uses the custom field names from the attributes.
-	decoded := json.decode[User]('{"username":"Alice","user_age":25}') or {
+	decoded := json2.decode[User]('{"username":"Alice","user_age":25}') or {
 		println('JSON error: ${err}')
 		User{}
 	}

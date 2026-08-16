@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 import net.http
 import os
 import sync
@@ -47,11 +47,11 @@ fn (mut db Database) load() ! {
 		db.tasks = []Task{}
 		return
 	}
-	db.tasks = json.decode[[]Task](content)!
+	db.tasks = json2.decode[[]Task](content)!
 }
 
 fn (mut db Database) save() ! {
-	encoded := json.encode(db.tasks, prettify: true)
+	encoded := json2.encode(db.tasks, prettify: true)
 	os.write_file(db.file_path, encoded)!
 }
 
@@ -136,7 +136,7 @@ fn parse_and_validate_task(mut ctx Context) !Task {
 	if ctx.req.data.trim_space() == '' {
 		return error('Request body cannot be empty')
 	}
-	task := json.decode[Task](ctx.req.data) or {
+	task := json2.decode[Task](ctx.req.data) or {
 		return error('Invalid JSON payload structure')
 	}
 	task.validate()!
@@ -146,7 +146,7 @@ fn parse_and_validate_task(mut ctx Context) !Task {
 // send_json encodes data as JSON and sets the HTTP status code.
 fn send_json[T](mut ctx Context, data T, status http.Status) veb.Result {
 	ctx.res.set_status(status)
-	return ctx.json(json.encode(data))
+	return ctx.json(json2.encode(data))
 }
 
 // send_error sets an HTTP error status code and returns a JSON error response.

@@ -1,14 +1,10 @@
 module main
 
-import x.json2 as json
+import json2
 
 struct NotesResponse {
 	status  int
 	message string
-}
-
-fn (c NotesResponse) to_json() string {
-	return json.encode(c)
 }
 
 const invalid_json = 'Invalid JSON Payload'
@@ -17,5 +13,5 @@ const unique_message = 'Please provide a unique message for Note'
 
 fn error_response(status int, message string) string {
 	er := NotesResponse{status, message}
-	return er.to_json()
+	return json2.encode(er)
 }

@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 import ttytm.webview
 import xiusin.vredis
 
@@ -45,7 +45,7 @@ fn redis_connect_status(e &webview.Event) !string {
 			version:    ''
 			keys_count: 0
 		}
-		return json.encode(status_info)
+		return json2.encode(status_info)
 	}
 	defer {
 		client.close() or {}
@@ -61,7 +61,7 @@ fn redis_connect_status(e &webview.Event) !string {
 			version:    'Redis (Unknown)'
 			keys_count: count
 		}
-		return json.encode(status_info)
+		return json2.encode(status_info)
 	}
 
 	for line in info.split_into_lines() {
@@ -79,7 +79,7 @@ fn redis_connect_status(e &webview.Event) !string {
 		version:    'Redis ${version}'
 		keys_count: count
 	}
-	return json.encode(status_info)
+	return json2.encode(status_info)
 }
 
 fn redis_list_keys(e &webview.Event) !string {
@@ -104,7 +104,7 @@ fn redis_list_keys(e &webview.Event) !string {
 		}
 	}
 
-	return json.encode(items)
+	return json2.encode(items)
 }
 
 fn redis_get_key_detail(e &webview.Event) !string {
@@ -146,7 +146,7 @@ fn redis_get_key_detail(e &webview.Event) !string {
 		else {}
 	}
 
-	return json.encode(detail)
+	return json2.encode(detail)
 }
 
 fn redis_set_string(e &webview.Event) !string {
@@ -178,7 +178,7 @@ fn redis_set_list(e &webview.Event) !string {
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	vals := json.decode[[]string](vals_json)!
+	vals := json2.decode[[]string](vals_json)!
 	client.del(key) or {}
 	for val in vals {
 		client.rpush(key, val)!
@@ -201,7 +201,7 @@ fn redis_set_hash(e &webview.Event) !string {
 	hash_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	fvs := json.decode[map[string]string](hash_json)!
+	fvs := json2.decode[map[string]string](hash_json)!
 	client.del(key) or {}
 	for field, val in fvs {
 		client.hset(key, field, val)!
@@ -224,7 +224,7 @@ fn redis_set_set(e &webview.Event) !string {
 	vals_json := e.get_arg[string](1)!
 	ttl := e.get_arg[int](2)!
 
-	vals := json.decode[[]string](vals_json)!
+	vals := json2.decode[[]string](vals_json)!
 	client.del(key) or {}
 	for val in vals {
 		client.sadd(key, val)!

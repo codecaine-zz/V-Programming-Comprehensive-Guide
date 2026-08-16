@@ -2,7 +2,7 @@ module main
 
 import net.websocket
 import time
-import x.json2 as json
+import json2
 
 // WsMessage represents a structured application-level WebSocket message.
 struct WsMessage {
@@ -45,9 +45,9 @@ fn main() {
 			}
 
 			// Decode the JSON protocol message
-			ws_msg := json.decode[WsMessage](payload) or {
+			ws_msg := json2.decode[WsMessage](payload) or {
 				println('Server: Invalid JSON protocol: ${err}')
-				err_resp := json.encode(WsMessage{ action: 'error', data: 'invalid json' })
+				err_resp := json2.encode(WsMessage{ action: 'error', data: 'invalid json' })
 				ws.write_string(err_resp) or {}
 				return
 			}
@@ -56,12 +56,12 @@ fn main() {
 
 			match ws_msg.action {
 				'ping' {
-					resp := json.encode(WsMessage{ action: 'pong', data: ws_msg.data })
+					resp := json2.encode(WsMessage{ action: 'pong', data: ws_msg.data })
 					ws.write_string(resp)!
 				}
 				'goodbye' {
 					println('Server received goodbye action. Replying and closing...')
-					resp := json.encode(WsMessage{ action: 'goodbye_ack', data: 'Goodbye!' })
+					resp := json2.encode(WsMessage{ action: 'goodbye_ack', data: 'Goodbye!' })
 					ws.write_string(resp)!
 					// Clean close from server side
 					ws.close(1000, 'Normal Closure') or {}
@@ -78,7 +78,7 @@ fn main() {
 	})
 
 	// Start server listening in background thread
-	go ws_server.listen() or { println('Server error: ${err}') }
+	spawn ws_server.listen()
 
 	// Allow server time to bind and listen
 	time.sleep(200 * time.millisecond)
@@ -94,24 +94,24 @@ fn main() {
 	ws_client1.on_open(fn (mut c websocket.Client) ! {
 		println('Client 1: Connection opened!')
 		// Initiate the first Ping message
-		ping_msg := json.encode(WsMessage{ action: 'ping', data: '1' })
+		ping_msg := json2.encode(WsMessage{ action: 'ping', data: '1' })
 		c.write_string(ping_msg)!
 	})
 
 	ws_client1.on_message(fn [mut state1] (mut c websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			ws_msg := json.decode[WsMessage](payload) or { return }
+			ws_msg := json2.decode[WsMessage](payload) or { return }
 			println('Client 1 received response action "${ws_msg.action}" with data: "${ws_msg.data}"')
 
 			if ws_msg.action == 'pong' {
 				state1.count++
 				if state1.count < 3 {
-					next_ping := json.encode(WsMessage{ action: 'ping', data: '${state1.count + 1}' })
+					next_ping := json2.encode(WsMessage{ action: 'ping', data: '${state1.count + 1}' })
 					println('Client 1 sending: "${next_ping}"')
 					c.write_string(next_ping)!
 				} else {
-					goodbye := json.encode(WsMessage{ action: 'goodbye', data: 'Goodbye' })
+					goodbye := json2.encode(WsMessage{ action: 'goodbye', data: 'Goodbye' })
 					println('Client 1 sending goodbye: "${goodbye}"')
 					c.write_string(goodbye)!
 				}
@@ -150,7 +150,7 @@ fn main() {
 		println('Client 2: Connection opened!')
 		// Send oversized data (3000 bytes, exceeding server 2048-byte limit)
 		large_payload := 'A'.repeat(3000)
-		large_msg := json.encode(WsMessage{ action: 'ping', data: large_payload })
+		large_msg := json2.encode(WsMessage{ action: 'ping', data: large_payload })
 		println('Client 2 sending oversized payload (size: ${large_msg.len} bytes)...')
 		c.write_string(large_msg)!
 	})

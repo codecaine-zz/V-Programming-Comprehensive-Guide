@@ -1,7 +1,7 @@
 module main
 
 import simplegui
-import x.json2 as json
+import json2
 
 // -----------------------------------------------------------------------------
 // Production-Ready Native+Web Dashboard & Metric KPI Center (Fintech Analytics)
@@ -178,7 +178,7 @@ fn on_export_clicked(mut win &simplegui.SimpleWindow) {
 		customer_count:  cust
 	}
 
-	encoded_spec := json.encode(spec)
+	encoded_spec := json2.encode(spec)
 	win.alert('Enterprise Spec Exported', 'KPI specs serialized successfully to JSON!\n\nPayload:\n' + encoded_spec + '\n\nThis payload can be published directly to enterprise analytics APIs.')
 	win.toast('JSON Specs Compiled')
 }

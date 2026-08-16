@@ -1,7 +1,7 @@
 module main
 
 import net.http
-import x.json2 as json
+import json2
 
 struct PostPayload {
 	title   string @[json: 'title']
@@ -25,7 +25,7 @@ fn fetch_json(url string) !string {
 }
 
 fn post_json(url string, payload PostPayload) !PostResponse {
-	body := json.encode(payload)
+	body := json2.encode(payload)
 
 	// Set Content-Type explicitly for compliance with strict JSON APIs
 	mut req := http.Request{
@@ -39,7 +39,7 @@ fn post_json(url string, payload PostPayload) !PostResponse {
 	if resp.status_code >= 400 {
 		return error('Request failed with status ${resp.status_code}')
 	}
-	return json.decode[PostResponse](resp.body) or { return error('Invalid JSON response') }
+	return json2.decode[PostResponse](resp.body) or { return error('Invalid JSON response') }
 }
 
 fn main() {

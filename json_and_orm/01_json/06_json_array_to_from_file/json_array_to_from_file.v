@@ -1,6 +1,6 @@
 module main
 
-import x.json2 as json
+import json2
 import os
 
 fn main() {
@@ -14,7 +14,7 @@ fn main() {
 	numbers := [10, 20, 30, 40, 50]
 
 	println('Encoding array to JSON...')
-	json_str := json.encode(numbers)
+	json_str := json2.encode(numbers)
 	println('JSON string: ${json_str}')
 
 	println('Writing JSON to file "${json_file_path}"...')
@@ -28,7 +28,7 @@ fn main() {
 		return
 	}
 
-	decoded_numbers := json.decode[[]int](json_content) or {
+	decoded_numbers := json2.decode[[]int](json_content) or {
 		eprintln('Failed to decode array JSON: ${err}')
 		return
 	}
