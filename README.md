@@ -6,27 +6,24 @@ Welcome to the complete Zero-to-Hero tutorial for Vlang! This guide covers every
 
 ## What this website can do
 
-The interactive guide turns the V tutorial into a full learning experience with a rich set of built-in tools:
+The interactive guide turns the V tutorial into a complete, beginner-friendly learning experience that runs smoothly even on older or low-resource devices:
 
-- Browse lessons through a collapsible sidebar with chapter, section, and nested subtopic navigation.
-- Expand or collapse topic trees quickly, focus the current learning path, and keep track of your position with a sidebar context bar.
-- Search lessons, topics, and syntax instantly using the built-in search overlay.
-- Bookmark important sections so they are easy to return to later.
-- Resume reading from your last position with automatic reading-state saving.
-- Track lesson completion and see progress for each chapter.
-- Switch between light, dark, cyberpunk, and custom color themes.
-- Enter focus mode to hide distractions and concentrate on the current lesson.
-- Adjust the reading font size and use quick-jump controls to move through the guide faster.
-- Copy section links to share a specific lesson or topic.
-- Copy code examples or open them directly in the V Playground.
-- Use keyboard shortcuts for search and focus mode.
-- Read comfortably on desktop and mobile thanks to the responsive layout.
+- **Plain-English Explanations Everywhere**: Every chapter, lesson, and "Under the Hood" section begins with a simple, everyday explanation and real-world analogy so even people who have never programmed before can learn easily.
+- **Built-in Plain-English Dictionary & Cheat Sheet (`D` shortcut)**: Instant reference popup explaining programming words in everyday language alongside a `"How Do I...?"` copy-paste V cheat sheet.
+- **Smart Everyday-Word Search (`/` or `Ctrl+K`)**: Type everyday words like `"change"`, `"list"`, `"text"`, `"mistake"`, `"window"`, or `"game"` and automatically find the matching V concepts (`mut`, `arrays`, `strings`, `options/results`, `GUI`, `SDL`), plus filter by **All**, **Chapters**, **Lessons**, **Exercises**, or **Dictionary** and click quick-topic chips.
+- **Low-Resource & Lite Mode (`L` shortcut)**: Uses modern `content-visibility: auto` off-screen rendering, SVG sprite deduplication, and on-demand syntax highlighting so the page opens fast and uses minimal RAM and CPU. **Lite Mode** automatically turns on for low-resource devices (or with one click) to disable heavy blurs and animations.
+- **Collapsible Navigation & Deep Dives**: Browse lessons through a collapsible sidebar with chapter, section, and subtopic navigation, plus collapsible **Quick Access**, **Under the Hood**, and **Exercise Solution** panels that remain searchable with browser Find-in-Page (`Ctrl+F` / `Cmd+F`).
+- **Bookmarks, Progress Tracking & Auto-Resume**: Bookmark important lessons, check off completed lessons with chapter progress bars, and automatically resume from where you left off.
+- **Themes & Reading Comfort**: Switch between Dark, Light, Cyberpunk, and custom color themes, adjust font size, or enter **Focus Mode** (`F`) to hide distractions.
+- **Interactive V Playground Integration**: Copy code examples or launch them directly in the [V Playground](https://play.vlang.io/).
 
 ### Keyboard shortcuts
 
-- / or Ctrl+K: focus the search box
-- F: toggle focus mode
-- Esc: exit focus mode
+- `/` or `Ctrl+K` (`Cmd+K`): Open instant search & topic filter
+- `D`: Open the Plain-English Dictionary & `"How Do I...?"` Cheat Sheet
+- `F`: Toggle distraction-free Focus Mode
+- `L`: Toggle Lite Mode (low-CPU / low-RAM performance mode)
+- `Esc`: Close any open dialog or exit Focus Mode
 
 ### How the site is built
 
@@ -56,11 +53,18 @@ This structure makes it easier to jump straight to the concept you want to study
 - Add a short explanation or README when a topic needs more context.
 - Keep examples runnable and focused on one idea at a time.
 
-### Related projects
+## Real-World V Projects & Ecosystem Showcase
 
-- Build macOS desktop apps with V and Cocoa using [vlang_simplegui](https://github.com/codecaine-zz/vlang_simplegui).
-- Build macOS desktop apps with V and Webview using [vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template).
-- Build 2D graphics and desktop apps using [simple_gg](https://github.com/codecaine-zz/simple_gg).
+Want to see what you can build once you learn V? Check out these complete desktop GUI toolkits, visual app builders, and arcade game suites built in V:
+
+| Project | What You Can Build With It | Highlights |
+| :--- | :--- | :--- |
+| **[simple_gg](https://github.com/codecaine-zz/simple_gg)** | Cross-platform GPU-accelerated desktop apps & games (macOS, Linux, Windows) | Built on V's `gg` & Sokol GPU. Features 260+ themes, custom GPU shaders, 47 studio apps, and 45 `vlang_utils` helper modules. |
+| **[vlang_simplegui](https://github.com/codecaine-zz/vlang_simplegui)** | Native macOS Cocoa desktop apps & visual tools | 115+ native controls, 50+ themes, 140+ demos, and a built-in Delphi/VB-style drag-and-drop **Visual UI Designer**. |
+| **[vlang_webview_rad_studio](https://github.com/codecaine-zz/vlang_webview_rad_studio)** | Cross-platform visual desktop apps with HTML/CSS/JS UI & native V backend | Visual Rapid Application Development (RAD) Studio & enterprise desktop suite with 70+ components and 76 themes across macOS, Windows, and Linux. |
+| **[vlang_sdl2_games](https://github.com/codecaine-zz/vlang_sdl2_games)** | 88+ playable 2D & 3D arcade games (Sprite & Real Audio Edition) | Built with `vlang/sdl`. Includes PNG sprite sheets, 16-bit WAV sound & background music synthesizers, and instant F5/F9 save states. |
+| **[sdl_games](https://github.com/codecaine-zz/sdl_games)** | 88 playable 2D & 3D arcade games (Zero-Asset Procedural Edition) | 100% self-contained single-file games—every graphic, font, and sound effect is generated in pure V math with zero external image or audio files! |
+| **[vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template)** | Lightweight macOS desktop app starter | Clean starter template for pairing a native V backend with a macOS Webview window. |
 
 > [!TIP]
 > **Interactive Viewer**: Read this guide and other tutorials as a responsive HTML site on the [Markdown Tutorials Live App](https://codefreelance.net/apps/markdown_tutorials/) (source code available in the [GitHub Repository](https://github.com/codecaine-zz/markdown_tutorials)).

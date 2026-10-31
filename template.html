@@ -358,7 +358,7 @@
             color: var(--text-primary);
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow-x: clip;
             transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
@@ -818,7 +818,6 @@
             flex-direction: column;
             position: relative;
             background-color: var(--bg-primary);
-            overflow-x: hidden;
             transition: margin var(--transition-speed) ease;
         }
 
@@ -2045,7 +2044,6 @@
             box-shadow: var(--shadow-premium);
             overflow: visible;
             transition: box-shadow var(--transition-speed);
-            position: relative;
         }
 
         .font-size-widget:hover {
@@ -2094,7 +2092,8 @@
         .toc-panel {
             position: absolute;
             right: 0;
-            top: calc(100% + 8px);
+            bottom: calc(100% + 8px);
+            top: auto;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
@@ -2328,9 +2327,444 @@
                 widows: 3;
             }
         }
+
+        /* Off-screen rendering & containment for low-resource devices */
+        .chapter-section:nth-of-type(n+2) {
+            content-visibility: auto;
+            contain-intrinsic-size: auto none auto 2200px;
+        }
+        aside.sidebar, header.nav-header {
+            contain: layout style;
+        }
+
+        /* Lite Mode (Low-Resource / Battery Saver) */
+        html[data-lite="true"] {
+            --transition-speed: 0s !important;
+            --glass-backdrop: none !important;
+            --shadow-premium: none !important;
+            scroll-behavior: auto !important;
+        }
+        html[data-lite="true"] *,
+        html[data-lite="true"] *::before,
+        html[data-lite="true"] *::after {
+            transition: none !important;
+            animation: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        html[data-lite="true"] header.nav-header,
+        html[data-lite="true"] .breadcrumb-bar {
+            background-color: var(--bg-secondary) !important;
+        }
+        .focus-mode-btn.active-lite {
+            border-color: #34d399;
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.12);
+        }
+
+        /* SVG icon utility */
+        svg.icon {
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        /* Sub-headings inside Intro / Under the Hood / Deep Dive */
+        h3.sub-heading {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            scroll-margin-top: 90px;
+        }
+
+        /* Markdown Tables */
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            margin: 16px 0 24px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+        }
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        .doc-table th,
+        .doc-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            line-height: 1.55;
+            vertical-align: top;
+        }
+        .doc-table th {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: var(--font-heading);
+            white-space: nowrap;
+        }
+        .doc-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .doc-table tbody tr:hover td {
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Collapsible Quick Access, Under the Hood & Exercise Solutions */
+        .quick-access-details,
+        .under-the-hood-details {
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            margin: 16px 0 24px;
+            overflow: hidden;
+        }
+        .quick-access-summary,
+        .under-the-hood-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+            background-color: var(--bg-tertiary);
+            list-style: none;
+            user-select: none;
+        }
+        .quick-access-summary::-webkit-details-marker,
+        .under-the-hood-summary::-webkit-details-marker,
+        .solution-details > summary::-webkit-details-marker {
+            display: none;
+        }
+        .quick-access-summary span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+        .quick-access-summary::after,
+        .under-the-hood-summary::after,
+        .solution-details > summary::after {
+            content: '▾';
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: transform 0.2s ease;
+        }
+        .quick-access-details[open] > .quick-access-summary::after,
+        .under-the-hood-details[open] > .under-the-hood-summary::after,
+        .solution-details[open] > summary::after {
+            transform: rotate(180deg);
+        }
+        .quick-access-body,
+        .under-the-hood-body {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        .under-the-hood-summary .section-title {
+            margin: 0;
+            font-size: 19px;
+            padding-right: 0;
+        }
+        .uth-badge {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-glow);
+            background: rgba(99, 102, 241, 0.14);
+            padding: 4px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .solution-details > summary.alert-title {
+            cursor: pointer;
+            margin-bottom: 0;
+            justify-content: space-between;
+            user-select: none;
+        }
+        .solution-details[open] > summary.alert-title {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Quick Topic Bar (Beginner-Friendly Finder) */
+        .quick-finder-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 14px 16px;
+            margin: 0 0 22px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+        }
+        .quick-finder-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .quick-finder-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .quick-topics-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .topic-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .topic-chip:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-glow);
+            background: rgba(99, 102, 241, 0.12);
+        }
+        .topic-chip.highlight {
+            background: var(--accent-gradient);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        /* Search Filters & Synonym Hint */
+        .search-controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .search-filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .search-filter-tab {
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .search-filter-tab.active,
+        .search-filter-tab:hover {
+            background: var(--accent-primary);
+            color: #fff;
+            border-color: var(--accent-primary);
+        }
+        .search-synonym-hint {
+            font-size: 13px;
+            color: var(--color-tip);
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.28);
+            padding: 8px 14px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .search-synonym-hint.visible {
+            display: block;
+        }
+
+        /* Native <dialog> Modals */
+        dialog.app-dialog {
+            margin: auto;
+            width: min(860px, 94vw);
+            max-height: 86vh;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 0;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+        }
+        dialog.app-dialog[open] {
+            display: flex;
+            flex-direction: column;
+        }
+        dialog.app-dialog::backdrop {
+            background: rgba(2, 6, 23, 0.72);
+        }
+        .dialog-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .dialog-title {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .dialog-close-btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .dialog-close-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-glow);
+        }
+        .dialog-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .dict-search-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 16px;
+            outline: none;
+        }
+        .dict-search-input:focus {
+            border-color: var(--accent-primary);
+        }
+        .project-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
+            margin-top: 12px;
+        }
+        .project-card {
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .project-card h4 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            color: var(--text-primary);
+            overflow-wrap: anywhere;
+        }
+        .project-card p {
+            font-size: 13.5px;
+            margin-bottom: 4px;
+            flex: 1;
+        }
+        .project-card-tag {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--accent-glow);
+            background: rgba(99, 102, 241, 0.14);
+            padding: 3px 8px;
+            border-radius: 999px;
+            width: fit-content;
+        }
     </style>
 </head>
 <body>
+    <!-- Shared SVG Sprite Sheet (eliminates 3,000+ duplicate inline SVGs) -->
+    <svg style="display:none" aria-hidden="true">
+        <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </symbol>
+        <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+        </symbol>
+        <symbol id="i-zoom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 21l-4.35-4.35"></path>
+            <circle cx="11" cy="11" r="6"></circle>
+            <path d="M11 8v6"></path>
+            <path d="M8 11h6"></path>
+        </symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </symbol>
+        <symbol id="i-bookmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </symbol>
+        <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+            <polyline points="13 2 13 9 20 9"></polyline>
+        </symbol>
+        <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+        </symbol>
+        <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        </symbol>
+        <symbol id="i-alert-note" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a.75.75 0 0 0-.75.75v5.25a.75.75 0 0 0 1.5 0V2.25A.75.75 0 0 0 8 1.5ZM8.75 11a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+        </symbol>
+        <symbol id="i-alert-tip" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 1.5c-2.363 0-4 1.83-4 3.75 0 .885.342 1.684.97 2.31l.01.01c.28.28.483.636.597 1.02a.25.25 0 0 1-.24.32H3.75a.75.75 0 0 0 0 1.5h1.223a.25.25 0 0 1 .24.32c-.114.384-.316.74-.596 1.02l-.01.01c-.628.626-.97 1.425-.97 2.31 0 1.92 1.637 3.75 4 3.75s4-1.83 4-3.75c0-.885-.342-1.684-.97-2.31l-.01-.01a2.915 2.915 0 0 0-.596-1.02.25.25 0 0 1 .24-.32h1.223a.75.75 0 0 0 0-1.5H10.74a.25.25 0 0 1-.24-.32c.114-.384.316-.74.596-1.02l.01-.01c.628-.626.97-1.425.97-2.31 0-1.92-1.637-3.75-4-3.75ZM6.5 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H7a.5.5 0 0 1-.5-.5ZM7 8a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1A.5.5 0 0 1 7 8Z"></path>
+        </symbol>
+        <symbol id="i-alert-important" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm1.5 0a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm7.25-3.25v3.5a.75.75 0 0 1-1.5 0v-3.5a.75.75 0 0 1 1.5 0ZM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path>
+        </symbol>
+        <symbol id="i-alert-warning" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M6.457 1.047c.659-1.14 2.427-1.14 3.086 0l6.03 10.437C16.233 12.624 15.349 14 14.03 14H1.97c-1.319 0-2.204-1.376-1.543-2.516L6.457 1.047ZM8 4c-.552 0-1 .448-1 1v3c0 .552.448 1 1 1s1-.448 1-1V5c0-.552-.448-1-1-1Zm0 6.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path>
+        </symbol>
+        <symbol id="i-alert-caution" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14Zm0 1.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Zm0-9a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 8 7.5ZM8 4.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5Z"></path>
+        </symbol>
+        <symbol id="i-alert-exercise" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 1.5A6.5 6.5 0 1 0 14.5 8 6.507 6.507 0 0 0 8 1.5Zm.75 3.25a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 1.5 0Zm0 4.5a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"></path>
+        </symbol>
+        <symbol id="i-alert-solution" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M13.78 4.22a.75.75 0 0 1 0 1.06L6.56 12.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.97 2.97 6.97-8.97a.75.75 0 0 1 1.06 0Z"></path>
+        </symbol>
+        <symbol id="i-alert-output" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M5.75 3a.75.75 0 0 0 0 1.5h4.5A.75.75 0 0 0 10.25 3h-4.5Zm-2.5 4.5A.75.75 0 0 0 3 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5Zm7.5 0A.75.75 0 0 0 10.5 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5ZM8 10.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 10.25Z"></path>
+        </symbol>
+    </svg>
     <div class="progress-container">
         <div class="progress-bar" id="readingProgress"></div>
     </div>
@@ -2453,18 +2887,23 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="nav-header">
-                <button class="btn-toggle-sidebar" id="toggleSidebarBtn">
+                <button class="btn-toggle-sidebar" id="toggleSidebarBtn" aria-label="Toggle sidebar">
                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
                 <div class="header-title-info" id="currentSectionTitle">Welcome</div>
                 <div class="header-actions" id="headerActions">
+                    <button class="focus-mode-btn" id="dictionaryBtn" type="button" title="Plain-English Dictionary &amp; V Cheat Sheet (Press D)">📖 Dictionary</button>
+                    <button class="focus-mode-btn" id="projectsBtn" type="button" title="Real-World V Projects &amp; Game Suites">🚀 V Projects</button>
+                    <button class="focus-mode-btn" id="liteModeBtn" type="button" title="Toggle low-resource Lite Mode (Press L)">⚡ Lite</button>
                     <button class="focus-mode-btn" id="commandPaletteBtn" type="button" title="Quick navigate (Ctrl+P)">⌘ Navigate</button>
-                    <button class="focus-mode-btn" id="focusModeBtn" type="button" title="Toggle focus mode">Focus mode</button>
+                    <button class="focus-mode-btn" id="focusModeBtn" type="button" title="Toggle focus mode (Press F)">Focus mode</button>
                     <div style="position:relative;">
                         <button class="shortcuts-toggle" id="shortcutsToggle" type="button" title="Keyboard shortcuts">⌨ Shortcuts</button>
                         <div class="shortcuts-panel" id="shortcutsPanel">
                             <div class="shortcut-item"><strong>Search</strong><span>/ or Ctrl+K</span></div>
+                            <div class="shortcut-item"><strong>Plain-English Dictionary</strong><span>D</span></div>
                             <div class="shortcut-item"><strong>Quick navigate</strong><span>Ctrl+P</span></div>
+                            <div class="shortcut-item"><strong>Lite Mode (Low CPU)</strong><span>L</span></div>
                             <div class="shortcut-item"><strong>Focus mode</strong><span>F / Esc</span></div>
                             <div class="shortcut-item"><strong>Share section</strong><span>Click the link icon</span></div>
                         </div>
@@ -2482,7 +2921,17 @@
 
             <!-- Global Search Overlay -->
             <div class="search-results-overlay" id="searchResultsOverlay">
-                <div class="search-results-title" id="resultsSummary">Search Results</div>
+                <div class="search-controls-row">
+                    <div class="search-results-title" id="resultsSummary" style="margin-bottom:0;">Search Results</div>
+                    <div class="search-filter-tabs" id="searchFilterTabs" role="tablist" aria-label="Filter search results">
+                        <button type="button" class="search-filter-tab active" data-filter="all">All</button>
+                        <button type="button" class="search-filter-tab" data-filter="chapter">Chapters</button>
+                        <button type="button" class="search-filter-tab" data-filter="lesson">Lessons</button>
+                        <button type="button" class="search-filter-tab" data-filter="exercise">Exercises</button>
+                        <button type="button" class="search-filter-tab" data-filter="dictionary">Dictionary</button>
+                    </div>
+                </div>
+                <div class="search-synonym-hint" id="searchSynonymHint"></div>
                 <div id="resultsList"></div>
             </div>
             
@@ -2498,10 +2947,114 @@
                     </div>
                 </div>
                 <div class="breadcrumb-bar" id="breadcrumbBar"></div>
+                <div class="quick-finder-bar" aria-label="Quick Topic Finder">
+                    <div class="quick-finder-header">
+                        <span class="quick-finder-label">✨ Quick Finder — Jump to a Beginner Topic or Search by Everyday Words</span>
+                    </div>
+                    <div class="quick-topics-row">
+                        <a href="#never-programmed-before-start-here-in-plain-english" class="topic-chip highlight">👋 New to Coding? Start Here</a>
+                        <button type="button" class="topic-chip" onclick="openDictionaryModal()">📖 Plain-English Dictionary &amp; Cheat Sheet</button>
+                        <button type="button" class="topic-chip" onclick="openProjectsModal()">🚀 5 Real-World V Projects (GUI &amp; 88+ Games)</button>
+                        <a href="#chapter-2-variables-and-constants" class="topic-chip">📦 Variables (mut)</a>
+                        <a href="#chapter-3-primitive-data-types" class="topic-chip">🔤 Numbers &amp; Text (Strings)</a>
+                        <a href="#chapter-5-collections-arrays-and-maps" class="topic-chip">📋 Lists &amp; Dictionaries</a>
+                        <a href="#chapter-4-control-flow" class="topic-chip">🔀 Decisions &amp; Loops</a>
+                        <a href="#chapter-6-functions" class="topic-chip">⚙️ Functions (fn)</a>
+                        <a href="#chapter-7-structs-custom-types" class="topic-chip">🪪 Data Cards (struct)</a>
+                        <a href="#chapter-8-error-handling" class="topic-chip">🛡️ Mistakes (! / ?)</a>
+                        <a href="#chapter-11-concurrency-and-channels" class="topic-chip">⚡ Multitasking (spawn)</a>
+                        <a href="#chapter-12-working-with-databases-and-json" class="topic-chip">🌐 Databases &amp; JSON</a>
+                        <a href="#featured-real-world-v-applications-gui-frameworks--game-suites" class="topic-chip">🎮 Desktop GUI &amp; Games</a>
+                        <a href="#chapter-15-comprehensive-practice-exercises" class="topic-chip">🏋️ Practice Exercises</a>
+                    </div>
+                </div>
                 <!-- CONTENT_HTML_PLACEHOLDER -->
             </div>
         </main>
     </div>
+
+    <!-- Plain-English Dictionary & Cheat Sheet Modal (<dialog closedby="any">) -->
+    <dialog class="app-dialog" id="dictionaryDialog" closedby="any" aria-labelledby="dictDialogTitle">
+        <div class="dialog-header">
+            <div class="dialog-title" id="dictDialogTitle">📖 Plain-English Programming Dictionary &amp; V Cheat Sheet</div>
+            <div style="display:flex; gap:8px;">
+                <a href="#quick-glossary-plain-english-dictionary--cheat-sheet" class="dialog-close-btn" onclick="closeDictionaryModal()">Full Glossary Section</a>
+                <button type="button" class="dialog-close-btn" onclick="closeDictionaryModal()">✕ Close (Esc)</button>
+            </div>
+        </div>
+        <div class="dialog-body">
+            <input type="text" class="dict-search-input" id="dictSearchInput" placeholder="Filter terms or 'How do I...' tasks (e.g., change, list, loop, mistake, file, window)..." autocomplete="off">
+            <div id="dictModalContent"></div>
+        </div>
+    </dialog>
+
+    <!-- Real-World V Projects Showcase Modal (<dialog closedby="any">) -->
+    <dialog class="app-dialog" id="projectsDialog" closedby="any" aria-labelledby="projDialogTitle">
+        <div class="dialog-header">
+            <div class="dialog-title" id="projDialogTitle">🚀 Real-World V Projects, GUI Studios &amp; Arcade Game Suites</div>
+            <div style="display:flex; gap:8px;">
+                <a href="#featured-real-world-v-applications-gui-frameworks--game-suites" class="dialog-close-btn" onclick="closeProjectsModal()">Read Chapter 14 Deep Dive</a>
+                <button type="button" class="dialog-close-btn" onclick="closeProjectsModal()">✕ Close (Esc)</button>
+            </div>
+        </div>
+        <div class="dialog-body">
+            <p style="margin-bottom:12px;">Explore what you can build in V with these complete open-source GUI frameworks, visual app builders, and 88-game arcade collections created by the author:</p>
+            <div class="project-cards-grid">
+                <div class="project-card">
+                    <span class="project-card-tag">Cross-Platform GPU GUI</span>
+                    <h4>simple_gg</h4>
+                    <p>Built on V's <code>gg</code> &amp; Sokol GPU across macOS, Linux, and Windows. Features 260+ themes, custom GPU shaders, 47 studio apps, and 45 <code>vlang_utils</code> modules.</p>
+                    <a href="https://github.com/codecaine-zz/simple_gg" target="_blank" rel="noopener noreferrer" class="btn-playground" style="width:fit-content;">View simple_gg on GitHub ↗</a>
+                </div>
+                <div class="project-card">
+                    <span class="project-card-tag">Native macOS Cocoa GUI</span>
+                    <h4>vlang_simplegui</h4>
+                    <p>Native macOS Cocoa desktop apps in V with 115+ controls, 50+ themes, 140+ demos, and a built-in Delphi/VB-inspired drag-and-drop <strong>Visual UI Designer</strong>.</p>
+                    <a href="https://github.com/codecaine-zz/vlang_simplegui" target="_blank" rel="noopener noreferrer" class="btn-playground" style="width:fit-content;">View vlang_simplegui on GitHub ↗</a>
+                </div>
+                <div class="project-card">
+                    <span class="project-card-tag">Visual RAD Studio &amp; Webview</span>
+                    <h4>vlang_webview_rad_studio</h4>
+                    <p>Cross-Platform Visual Rapid Application Development Studio &amp; Enterprise Desktop Suite powered by V and native Webview (macOS, Windows, Linux) with 70+ components &amp; 76 themes.</p>
+                    <a href="https://github.com/codecaine-zz/vlang_webview_rad_studio" target="_blank" rel="noopener noreferrer" class="btn-playground" style="width:fit-content;">View RAD Studio on GitHub ↗</a>
+                </div>
+                <div class="project-card">
+                    <span class="project-card-tag">88+ Games · Sprites &amp; WAV Audio</span>
+                    <h4>vlang_sdl2_games</h4>
+                    <p>88+ playable 2D and 3D arcade games in V using <code>vlang/sdl</code> — Sprite &amp; Real Audio Edition with PNG sprite sheets, 16-bit WAV audio/BGM synthesizers, and F5/F9 save states.</p>
+                    <a href="https://github.com/codecaine-zz/vlang_sdl2_games" target="_blank" rel="noopener noreferrer" class="btn-playground" style="width:fit-content;">View vlang_sdl2_games on GitHub ↗</a>
+                </div>
+                <div class="project-card">
+                    <span class="project-card-tag">88 Games · 100% Procedural</span>
+                    <h4>sdl_games</h4>
+                    <p>88 playable 2D and 3D arcade games in V using <code>vlang/sdl</code> — Zero-Asset Procedural Edition! Every graphic, font, and sound effect is generated in pure V math with zero external files.</p>
+                    <a href="https://github.com/codecaine-zz/sdl_games" target="_blank" rel="noopener noreferrer" class="btn-playground" style="width:fit-content;">View sdl_games on GitHub ↗</a>
+                </div>
+                <div class="project-card">
+                    <span class="project-card-tag">macOS Webview Starter</span>
+                    <h4>vlang_macos_webview_app_template</h4>
+                    <p>Clean starter template for pairing a fast native V backend with a lightweight macOS Webview desktop window.</p>
+                    <a href="https://github.com/codecaine-zz/vlang_macos_webview_app_template" target="_blank" rel="noopener noreferrer" class="btn-playground" style="width:fit-content;">View Template on GitHub ↗</a>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Code Zoom Modal (<dialog closedby="any">) -->
+    <dialog class="app-dialog" id="codeZoomDialog" closedby="any" aria-label="Zoomed code view" style="width:min(1100px, 95vw);">
+        <div class="dialog-header">
+            <span class="code-lang" id="codeZoomLang">V</span>
+            <div class="code-actions">
+                <button type="button" class="btn-copy" id="codeZoomCopyBtn">
+                    <svg class="icon copy-icon" width="14" height="14"><use href="#i-copy"></use></svg> Copy
+                </button>
+                <button type="button" class="dialog-close-btn" onclick="closeCodeZoom()">✕ Close</button>
+            </div>
+        </div>
+        <div class="dialog-body" style="background:var(--code-bg); padding:0;">
+            <pre style="margin:0; padding:18px;"><code id="codeZoomCode" class="language-v"></code></pre>
+        </div>
+    </dialog>
     
     <button class="btn-top" id="btnTop" onclick="scrollToTop()" title="Back to Top">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
@@ -2532,10 +3085,11 @@
         <div class="toc-panel" id="tocPanel"></div>
     </div>
     
-    <!-- Prism Syntax Highlighting -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-v.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <!-- Prism Syntax Highlighting (Manual + Deferred so startup never blocks the main thread) -->
+    <script>window.Prism = window.Prism || {}; window.Prism.manual = true;</script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-v.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     
     <script>
         // Inject structure and search index JSON
@@ -2805,6 +3359,116 @@
         const savedTheme = localStorage.getItem('theme') || 'dark';
         setTheme(savedTheme);
 
+        // Lite Mode (Low-Resource / Battery Saver) Management
+        const LITE_MODE_KEY = 'vguide-lite-mode';
+        const liteModeBtn = document.getElementById('liteModeBtn');
+
+        function detectLowResourceDevice() {
+            const lowRam = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
+            const lowCores = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
+            const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            return lowRam || lowCores || reducedMotion;
+        }
+
+        function setLiteMode(enabled, notify = false) {
+            document.documentElement.setAttribute('data-lite', enabled ? 'true' : 'false');
+            if (liteModeBtn) {
+                liteModeBtn.classList.toggle('active-lite', enabled);
+                liteModeBtn.textContent = enabled ? '⚡ Lite: ON' : '⚡ Lite';
+                liteModeBtn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+            }
+            if (notify) {
+                showToast(enabled ? 'Lite Mode enabled (Low CPU/RAM)' : 'Lite Mode disabled');
+            }
+        }
+
+        function toggleLiteMode() {
+            const current = document.documentElement.getAttribute('data-lite') === 'true';
+            const next = !current;
+            try { localStorage.setItem(LITE_MODE_KEY, next ? '1' : '0'); } catch (e) {}
+            setLiteMode(next, true);
+        }
+
+        (function initLiteMode() {
+            const stored = localStorage.getItem(LITE_MODE_KEY);
+            const initial = stored !== null ? stored === '1' : detectLowResourceDevice();
+            setLiteMode(initial, false);
+            if (liteModeBtn) {
+                liteModeBtn.addEventListener('click', toggleLiteMode);
+            }
+        })();
+
+        // Native <dialog closedby="any"> Light-Dismiss Fallback & Modal Controls
+        function enableDialogLightDismiss(dialog) {
+            if (!dialog || ('closedBy' in HTMLDialogElement.prototype)) return;
+            dialog.addEventListener('click', (e) => {
+                const rect = dialog.getBoundingClientRect();
+                const inDialog = rect.top <= e.clientY && e.clientY <= rect.bottom &&
+                                 rect.left <= e.clientX && e.clientX <= rect.right;
+                if (!inDialog) dialog.close();
+            });
+        }
+
+        const dictionaryDialog = document.getElementById('dictionaryDialog');
+        const projectsDialog = document.getElementById('projectsDialog');
+        const codeZoomDialog = document.getElementById('codeZoomDialog');
+        [dictionaryDialog, projectsDialog, codeZoomDialog].forEach(enableDialogLightDismiss);
+
+        function populateDictionaryModal(filterText = '') {
+            const container = document.getElementById('dictModalContent');
+            if (!container) return;
+            const glossaryHeading = document.getElementById('quick-glossary-plain-english-dictionary--cheat-sheet');
+            if (!glossaryHeading) {
+                container.innerHTML = '<p>Jump to the <a href="#quick-glossary-plain-english-dictionary--cheat-sheet">Glossary section</a>.</p>';
+                return;
+            }
+            if (!container.dataset.loaded) {
+                let html = '';
+                let el = glossaryHeading.nextElementSibling;
+                while (el && el.tagName !== 'H1' && el.tagName !== 'H2' && el.tagName !== 'HR') {
+                    html += el.outerHTML;
+                    el = el.nextElementSibling;
+                }
+                container.innerHTML = html;
+                container.dataset.loaded = 'true';
+            }
+            const q = (filterText || '').toLowerCase().trim();
+            container.querySelectorAll('tbody tr').forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = (!q || text.includes(q)) ? '' : 'none';
+            });
+        }
+
+        function openDictionaryModal() {
+            populateDictionaryModal('');
+            const input = document.getElementById('dictSearchInput');
+            if (input) input.value = '';
+            if (dictionaryDialog && typeof dictionaryDialog.showModal === 'function') {
+                dictionaryDialog.showModal();
+                setTimeout(() => input?.focus(), 20);
+            }
+        }
+
+        function closeDictionaryModal() {
+            if (dictionaryDialog && dictionaryDialog.open) dictionaryDialog.close();
+        }
+
+        function openProjectsModal() {
+            if (projectsDialog && typeof projectsDialog.showModal === 'function') {
+                projectsDialog.showModal();
+            }
+        }
+
+        function closeProjectsModal() {
+            if (projectsDialog && projectsDialog.open) projectsDialog.close();
+        }
+
+        document.getElementById('dictionaryBtn')?.addEventListener('click', openDictionaryModal);
+        document.getElementById('projectsBtn')?.addEventListener('click', openProjectsModal);
+        document.getElementById('dictSearchInput')?.addEventListener('input', (e) => {
+            populateDictionaryModal(e.target.value);
+        });
+
         let isClickScrolling = false;
         let clickScrollTimeout = null;
 
@@ -2822,7 +3486,9 @@
 
         function resolveHashTarget(id, contextElement = null) {
             if (!id) return null;
-            const matches = Array.from(document.querySelectorAll('[id="' + id + '"]'));
+            const direct = document.getElementById(id);
+            if (direct) return direct;
+            const matches = Array.from(document.querySelectorAll('[id="' + CSS.escape(id) + '"]'));
             if (matches.length <= 1) return matches[0] || null;
 
             const contextChapter = getChapterContext(contextElement);
@@ -2836,14 +3502,26 @@
             return matches[0];
         }
 
+        function expandAncestorDetails(element) {
+            if (!element) return;
+            if (element.tagName === 'DETAILS') element.open = true;
+            let parentDetails = element.closest('details');
+            while (parentDetails) {
+                parentDetails.open = true;
+                parentDetails = parentDetails.parentElement ? parentDetails.parentElement.closest('details') : null;
+            }
+        }
+
         function scrollToPosition(top, behavior) {
-            if (behavior === 'auto') {
+            const isLite = document.documentElement.getAttribute('data-lite') === 'true';
+            const actualBehavior = isLite ? 'auto' : behavior;
+            if (actualBehavior === 'auto') {
                 const originalStyle = document.documentElement.style.scrollBehavior;
                 document.documentElement.style.scrollBehavior = 'auto';
                 window.scrollTo({ top, behavior: 'auto' });
                 document.documentElement.style.scrollBehavior = originalStyle;
             } else {
-                window.scrollTo({ top, behavior });
+                window.scrollTo({ top, behavior: actualBehavior });
             }
             if (typeof updateBtnTopVisibility === 'function') {
                 updateBtnTopVisibility();
@@ -2858,10 +3536,11 @@
             const target = resolveHashTarget(id, contextElement);
             if (!target) return;
 
+            expandAncestorDetails(target);
+
             const offset = 100;
             const top = target.getBoundingClientRect().top + getScrollY() - offset;
             
-            // If behavior is smooth but distance is far, use auto (instant) to match Safari speed and save CPU on Chrome
             let targetBehavior = behavior;
             if (behavior === 'smooth') {
                 const distance = Math.abs(getScrollY() - top);
@@ -2871,6 +3550,7 @@
             }
 
             scrollToPosition(top, targetBehavior);
+            setActiveHeadingById(target.id);
         }
 
         document.addEventListener('click', (event) => {
@@ -2899,7 +3579,7 @@
             }
         });
         
-        // Populate Sidebar menu
+        // Populate Sidebar menu using a DocumentFragment for minimal DOM reflow
         const menuEl = document.getElementById('sidebarMenu');
         const collapseAllSectionsBtn = document.getElementById('collapseAllSectionsBtn');
         const expandAllSectionsBtn = document.getElementById('expandAllSectionsBtn');
@@ -2934,23 +3614,15 @@
             const chapterItems = wrapper?.closest('.menu-chapter')?.querySelector('.chapter-items');
             const chapterHeading = chapterItems?.previousElementSibling;
 
-            if (chapterItems) {
-                chapterItems.classList.remove('collapsed');
-            }
-            if (chapterHeading) {
-                chapterHeading.classList.remove('collapsed');
-            }
-            if (lessonsDiv) {
-                lessonsDiv.classList.remove('collapsed');
-            }
+            if (chapterItems) chapterItems.classList.remove('collapsed');
+            if (chapterHeading) chapterHeading.classList.remove('collapsed');
+            if (lessonsDiv) lessonsDiv.classList.remove('collapsed');
             if (wrapper) {
                 const sectionLink = wrapper.querySelector('.menu-link');
-                if (sectionLink) {
-                    sectionLink.classList.add('active');
-                }
+                if (sectionLink) sectionLink.classList.add('active');
             }
             if (activeLink) {
-                activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                activeLink.scrollIntoView({ block: 'nearest', behavior: 'auto' });
             }
         }
 
@@ -2975,28 +3647,27 @@
             });
         }
 
-        bookStructure.forEach(chap => {
+        const sidebarFragment = document.createDocumentFragment();
+        const sidebarLinkMap = new Map();
+
+        bookStructure.forEach((chap, chapIdx) => {
             const chapDiv = document.createElement('div');
             chapDiv.className = 'menu-chapter';
             chapDiv.dataset.title = chap.title.toLowerCase();
             
+            const isInitiallyCollapsed = chapIdx > 1;
             const heading = document.createElement('div');
-            heading.className = 'chapter-heading';
-            heading.innerHTML = `<span>Chapter ${chap.number || ''}: ${chap.title}</span>
+            heading.className = 'chapter-heading' + (isInitiallyCollapsed ? ' collapsed' : '');
+            const chapLabel = chap.number === '0' ? `🚀 ${chap.title}` : `Chapter ${chap.number || ''}: ${chap.title}`;
+            heading.innerHTML = `<span>${chapLabel}</span>
                 <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="3" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
             
             const itemsDiv = document.createElement('div');
-            itemsDiv.className = 'chapter-items';
+            itemsDiv.className = 'chapter-items' + (isInitiallyCollapsed ? ' collapsed' : '');
             
-            // Toggle collapse
             heading.addEventListener('click', () => {
                 const isCollapsed = itemsDiv.classList.toggle('collapsed');
                 heading.classList.toggle('collapsed', isCollapsed);
-                if (!isCollapsed) {
-                    setTimeout(() => {
-                        heading.scrollIntoView({ block: 'start', behavior: 'smooth' });
-                    }, 50);
-                }
             });
             
             chap.sections.forEach(sec => {
@@ -3009,46 +3680,19 @@
                 link.dataset.target = sec.id;
                 link.dataset.title = sec.title.toLowerCase();
                 link.setAttribute('data-chapter-id', chap.id);
-                link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>${sec.title}`;
+                link.textContent = sec.title;
+                sidebarLinkMap.set(sec.id, link);
                 
-                link.addEventListener('click', (e) => {
+                link.addEventListener('click', () => {
                     if (window.innerWidth <= 1024) {
                         document.getElementById('sidebar').classList.remove('open');
                     }
-
                     isClickScrolling = true;
                     clearTimeout(clickScrollTimeout);
                     clickScrollTimeout = setTimeout(() => {
                         isClickScrolling = false;
-                        updateActiveState();
-                    }, 800);
-
-                    // Expand parent chapter if collapsed
-                    if (itemsDiv.classList.contains('collapsed')) {
-                        itemsDiv.classList.remove('collapsed');
-                        heading.classList.remove('collapsed');
-                    }
-
-                    // Expand this section's lessons, collapse others in this chapter
-                    const lessonsDiv = secWrapper.querySelector('.section-lessons');
-                    if (lessonsDiv && lessonsDiv.classList.contains('collapsed')) {
-                        lessonsDiv.classList.remove('collapsed');
-                    }
-                    chapDiv.querySelectorAll('.section-lessons').forEach(div => {
-                        if (div !== lessonsDiv) {
-                            div.classList.add('collapsed');
-                        }
-                    });
-
-                    // Set active state immediately
-                    document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-                    document.querySelectorAll('.menu-lesson-link').forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-
-                    // Scroll this item to the top of the sidebar menu
-                    setTimeout(() => {
-                        link.scrollIntoView({ block: 'start', behavior: 'smooth' });
-                    }, 50);
+                    }, 600);
+                    setActiveHeadingById(sec.id);
                 });
                 
                 secWrapper.appendChild(link);
@@ -3059,13 +3703,10 @@
                     
                     const renderedTitles = new Set();
                     sec.lessons.forEach(les => {
-                        if (renderedTitles.has(les.title)) {
-                            return;
-                        }
+                        if (renderedTitles.has(les.title)) return;
                         renderedTitles.add(les.title);
                         
                         const targetId = les.id;
-                        
                         const lesLink = document.createElement('a');
                         lesLink.href = '#' + targetId;
                         lesLink.className = 'menu-lesson-link';
@@ -3073,39 +3714,18 @@
                         lesLink.dataset.title = les.title.toLowerCase();
                         lesLink.setAttribute('data-chapter-id', chap.id);
                         lesLink.innerHTML = `<span class="bullet">■</span> ${les.title}`;
+                        sidebarLinkMap.set(targetId, lesLink);
                         
-                        lesLink.addEventListener('click', (e) => {
+                        lesLink.addEventListener('click', () => {
                             if (window.innerWidth <= 1024) {
                                 document.getElementById('sidebar').classList.remove('open');
                             }
-
                             isClickScrolling = true;
                             clearTimeout(clickScrollTimeout);
                             clickScrollTimeout = setTimeout(() => {
                                 isClickScrolling = false;
-                                updateActiveState();
-                            }, 800);
-
-                            // Expand parent chapter if collapsed
-                            if (itemsDiv.classList.contains('collapsed')) {
-                                itemsDiv.classList.remove('collapsed');
-                                heading.classList.remove('collapsed');
-                            }
-
-                            // Expand parent section lessons if collapsed
-                            if (lessonsDiv && lessonsDiv.classList.contains('collapsed')) {
-                                lessonsDiv.classList.remove('collapsed');
-                            }
-
-                            // Set active state immediately
-                            document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-                            document.querySelectorAll('.menu-lesson-link').forEach(l => l.classList.remove('active'));
-                            lesLink.classList.add('active');
-
-                            // Scroll this item into view (nearest/center)
-                            setTimeout(() => {
-                                lesLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-                            }, 50);
+                            }, 600);
+                            setActiveHeadingById(targetId);
                         });
                         lessonsDiv.appendChild(lesLink);
                     });
@@ -3118,8 +3738,9 @@
             
             chapDiv.appendChild(heading);
             chapDiv.appendChild(itemsDiv);
-            menuEl.appendChild(chapDiv);
+            sidebarFragment.appendChild(chapDiv);
         });
+        menuEl.appendChild(sidebarFragment);
         
         // Mobile & Desktop Sidebar toggler
         const sidebar = document.getElementById('sidebar');
@@ -3165,13 +3786,8 @@
             }
         });
 
-        if (sidebarCloseBtn) {
-            sidebarCloseBtn.addEventListener('click', () => setSidebarOpen(false));
-        }
-
-        if (sidebarBackdrop) {
-            sidebarBackdrop.addEventListener('click', () => setSidebarOpen(false));
-        }
+        if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', () => setSidebarOpen(false));
+        if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', () => setSidebarOpen(false));
 
         if (sidebarResizer) {
             sidebarResizer.addEventListener('mousedown', (event) => {
@@ -3258,7 +3874,7 @@
             focusModeBtn.addEventListener('click', () => toggleFocusMode());
         }
         
-        // Scroll / Reading progress & Sidebar active link highlight
+        // Scroll / Reading progress & Zero-Reflow Active Heading Tracking
         const progress = document.getElementById('readingProgress');
         const btnTop = document.getElementById('btnTop');
         const currentSectionTitleEl = document.getElementById('currentSectionTitle');
@@ -3266,14 +3882,11 @@
         function updateBtnTopVisibility() {
             const el = btnTop || document.getElementById('btnTop');
             if (el) {
-                if (getScrollY() > 0) {
-                    el.classList.add('visible');
-                } else {
-                    el.classList.remove('visible');
-                }
+                el.classList.toggle('visible', getScrollY() > 100);
             }
         }
         updateBtnTopVisibility();
+
         const LAST_READ_KEY = 'vguide-last-read';
         const COMPLETED_LESSONS_KEY = 'vguide-completed-lessons';
         const CONTINUE_READING_DISMISS_KEY = 'vguide-continue-reading-dismissed';
@@ -3281,18 +3894,12 @@
             completedLessons: []
         };
         let lessonEntries = [];
-        let saveReadingStateTimer = null;
+        let currentActiveHeadingId = '';
+        let prevActiveSidebarLink = null;
+        let prevActiveSectionWrapper = null;
 
         function getActiveHeadingId() {
-            const headings = Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'));
-            let activeId = '';
-            headings.forEach(head => {
-                const rect = head.getBoundingClientRect();
-                if (rect.top < 140) {
-                    activeId = head.id;
-                }
-            });
-            return activeId;
+            return currentActiveHeadingId;
         }
 
         function loadCompletedLessons() {
@@ -3323,8 +3930,9 @@
         function updateLessonCompletionButtons() {
             document.querySelectorAll('.lesson-complete-btn').forEach(btn => {
                 const lessonId = btn.getAttribute('data-lesson-id');
-                btn.classList.toggle('active', progressState.completedLessons.includes(lessonId));
-                btn.innerHTML = progressState.completedLessons.includes(lessonId) ? '✓ Completed' : '○ Mark done';
+                const isDone = progressState.completedLessons.includes(lessonId);
+                btn.classList.toggle('active', isDone);
+                btn.textContent = isDone ? '✓ Completed' : '○ Mark done';
             });
         }
 
@@ -3348,7 +3956,9 @@
         function getHeadingTextForId(targetId) {
             const target = targetId ? document.getElementById(targetId) : null;
             if (!target) return '';
-            return target.textContent.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
+            const span = target.querySelector('span:not(.chap-badge):not(.reading-time)');
+            const raw = span ? span.textContent : target.textContent;
+            return raw.replace(/Chapter \d+/i, '').replace(/✓ Completed|○ Mark done/g, '').replace(/\d+\s*min read/i, '').trim();
         }
 
         function showContinueReadingCard(saved = getSavedReadingState()) {
@@ -3356,7 +3966,7 @@
             const copy = document.getElementById('continueReadingCopy');
             if (!card || !copy) return;
 
-            if (!saved || typeof saved.scrollY !== 'number' || window.location.hash || localStorage.getItem(CONTINUE_READING_DISMISS_KEY) === '1') {
+            if (!saved || typeof saved.scrollY !== 'number' || saved.scrollY < 200 || window.location.hash || localStorage.getItem(CONTINUE_READING_DISMISS_KEY) === '1') {
                 card.classList.remove('visible');
                 return;
             }
@@ -3372,11 +3982,6 @@
             if (card) card.classList.remove('visible');
         }
 
-        function scheduleSaveReadingState() {
-            clearTimeout(saveReadingStateTimer);
-            saveReadingStateTimer = setTimeout(saveReadingState, 180);
-        }
-
         function restoreReadingState(force = false) {
             if (!force && window.location.hash) return false;
             const saved = getSavedReadingState();
@@ -3384,101 +3989,177 @@
             const targetId = saved.hash ? saved.hash.replace(/^#/, '') : '';
             const target = targetId ? document.getElementById(targetId) : null;
             if (target) {
-                setTimeout(() => scrollToHashTarget(saved.hash, 'auto', document.body), 220);
+                setTimeout(() => scrollToHashTarget(saved.hash, 'auto', document.body), 120);
             } else {
                 scrollToPosition(Math.max(0, saved.scrollY), 'auto');
             }
             return true;
         }
 
-        function renderBreadcrumbs() {
+        function setActiveHeadingById(activeId) {
+            if (!activeId || activeId === currentActiveHeadingId) return;
+            currentActiveHeadingId = activeId;
+
+            const activeHeading = document.getElementById(activeId);
+            if (!activeHeading) return;
+
+            const cleanTitle = getHeadingTextForId(activeId) || 'Welcome';
+            if (currentSectionTitleEl) {
+                currentSectionTitleEl.textContent = cleanTitle;
+            }
+
+            // O(1) sidebar highlight update instead of querying all 400+ links
+            if (prevActiveSidebarLink) {
+                prevActiveSidebarLink.classList.remove('active');
+            }
+            if (prevActiveSectionWrapper) {
+                const prevSecLink = prevActiveSectionWrapper.querySelector('.menu-link');
+                if (prevSecLink) prevSecLink.classList.remove('active');
+            }
+
+            const matchedLink = sidebarLinkMap.get(activeId);
+            if (matchedLink) {
+                matchedLink.classList.add('active');
+                prevActiveSidebarLink = matchedLink;
+
+                const wrapper = matchedLink.closest('.menu-section-wrapper');
+                prevActiveSectionWrapper = wrapper;
+                if (wrapper) {
+                    const secLink = wrapper.querySelector('.menu-link');
+                    if (secLink) secLink.classList.add('active');
+                    const lessonsDiv = wrapper.querySelector('.section-lessons');
+                    if (lessonsDiv) lessonsDiv.classList.remove('collapsed');
+                }
+                const parentItems = matchedLink.closest('.chapter-items');
+                if (parentItems && parentItems.classList.contains('collapsed')) {
+                    parentItems.classList.remove('collapsed');
+                    const chHeading = parentItems.previousElementSibling;
+                    if (chHeading) chHeading.classList.remove('collapsed');
+                }
+            }
+
+            renderBreadcrumbs(activeHeading);
+        }
+
+        function renderBreadcrumbs(activeHeading = null) {
             if (!breadcrumbBar) return;
-            
-            const activeId = getActiveHeadingId();
-            if (!activeId) {
+            const target = activeHeading || (currentActiveHeadingId ? document.getElementById(currentActiveHeadingId) : null);
+            if (!target) {
                 breadcrumbBar.innerHTML = '<span class="breadcrumb-pill current">Welcome</span>';
                 return;
             }
 
-            const headings = Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'));
-            const activeHeading = headings.find(heading => heading.id === activeId) || headings[0];
-
-            if (!activeHeading) {
-                breadcrumbBar.innerHTML = '';
-                return;
+            const chapSection = target.closest('.chapter-section');
+            const chapter = chapSection?.querySelector('h1.chapter-title, h1.doc-main-title') || null;
+            const crumbs = [];
+            if (chapter) {
+                crumbs.push({ label: getHeadingTextForId(chapter.id), current: chapter.id === target.id });
+            }
+            if (target.tagName === 'H2' || target.tagName === 'H3') {
+                crumbs.push({ label: getHeadingTextForId(target.id), current: true });
             }
 
-            const chapter = activeHeading.closest('.chapter-section')?.querySelector('h1.chapter-title') || null;
-            const section = activeHeading.tagName === 'H2' || activeHeading.tagName === 'H3' ? activeHeading : null;
-            const crumbs = [];
-            if (chapter) crumbs.push({ label: chapter.textContent.replace(/Chapter \d+:/i, '').trim(), current: chapter.id === activeHeading.id });
-            if (section) crumbs.push({ label: section.textContent.trim(), current: section.id === activeHeading.id });
-            if (activeHeading.tagName === 'H3') crumbs.push({ label: activeHeading.textContent.trim(), current: true });
+            breadcrumbBar.innerHTML = crumbs.map((crumb, idx) => {
+                const pill = `<span class="breadcrumb-pill${crumb.current ? ' current' : ''}">${crumb.label}</span>`;
+                return idx < crumbs.length - 1 ? pill + '<span>›</span>' : pill;
+            }).join('');
+        }
 
-            breadcrumbBar.innerHTML = '';
-            crumbs.forEach((crumb, index) => {
-                const pill = document.createElement('span');
-                pill.className = 'breadcrumb-pill' + (crumb.current ? ' current' : '');
-                pill.textContent = crumb.label;
-                breadcrumbBar.appendChild(pill);
-                if (index < crumbs.length - 1) {
-                    const sep = document.createElement('span');
-                    sep.textContent = '›';
-                    breadcrumbBar.appendChild(sep);
+        // Observe headings with IntersectionObserver (zero forced synchronous layout during scroll)
+        function initHeadingObserver() {
+            if (!('IntersectionObserver' in window)) return;
+            const observer = new IntersectionObserver((entries) => {
+                if (isClickScrolling) return;
+                for (const entry of entries) {
+                    if (entry.isIntersecting && entry.target.id) {
+                        setActiveHeadingById(entry.target.id);
+                        break;
+                    }
                 }
+            }, { rootMargin: '-75px 0px -72% 0px', threshold: 0 });
+
+            document.querySelectorAll('h1.doc-main-title, h1.chapter-title, h2.section-title, h3.lesson-title').forEach(h => {
+                observer.observe(h);
             });
         }
 
+        // Scroll progress bar with rAF throttling + scrollend post-scroll work (defer-work-until-scroll-ends)
+        let scrollRafPending = false;
+        window.addEventListener('scroll', () => {
+            if (scrollRafPending) return;
+            scrollRafPending = true;
+            requestAnimationFrame(() => {
+                scrollRafPending = false;
+                const scrollTop = getScrollY();
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (totalHeight > 0) {
+                    const scrolled = (scrollTop / totalHeight) * 100;
+                    if (progress) progress.style.width = scrolled + '%';
+                    const pctEl = document.getElementById('readingPct');
+                    if (pctEl) pctEl.textContent = Math.round(scrolled) + '%';
+                }
+                updateBtnTopVisibility();
+            });
+        }, { passive: true });
+
+        if (!('onscrollend' in window)) {
+            let scrollEndTimer;
+            window.addEventListener('scroll', () => {
+                clearTimeout(scrollEndTimer);
+                scrollEndTimer = setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('scrollend'));
+                }, 150);
+            }, { passive: true });
+        }
+
+        window.addEventListener('scrollend', () => {
+            saveReadingState();
+            if (prevActiveSidebarLink && !document.body.classList.contains('sidebar-collapsed')) {
+                prevActiveSidebarLink.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+            }
+        });
+
         function renderChapterProgress() {
-            const chapterSections = Array.from(document.querySelectorAll('.chapter-section'));
+            const chapterSections = Array.from(document.querySelectorAll('.chapter-section:not(.intro-section)'));
             chapterSections.forEach(section => {
                 const heading = section.querySelector('h1.chapter-title');
                 if (!heading) return;
                 const existing = section.querySelector('.chapter-progress-wrap');
                 if (existing) existing.remove();
 
+                const lessons = Array.from(section.querySelectorAll('h3.lesson-title'));
+                if (!lessons.length) return;
+
+                const completedCount = lessons.filter(lesson => progressState.completedLessons.includes(lesson.id)).length;
+                const percent = Math.round((completedCount / lessons.length) * 100);
+
                 const wrap = document.createElement('div');
                 wrap.className = 'chapter-progress-wrap';
-
-                const progressBar = document.createElement('div');
-                progressBar.className = 'chapter-progress-bar';
-                const fill = document.createElement('div');
-                fill.className = 'chapter-progress-fill';
-                progressBar.appendChild(fill);
-
-                const label = document.createElement('div');
-                label.className = 'chapter-progress-label';
-
-                const lessons = Array.from(section.querySelectorAll('h3.lesson-title'));
-                const completedCount = lessons.filter(lesson => progressState.completedLessons.includes(lesson.id)).length;
-                const percent = lessons.length ? Math.round((completedCount / lessons.length) * 100) : 0;
-                fill.style.width = percent + '%';
-                label.textContent = completedCount + ' of ' + lessons.length + ' lessons completed';
-
-                wrap.appendChild(progressBar);
-                wrap.appendChild(label);
+                wrap.innerHTML = `<div class="chapter-progress-bar"><div class="chapter-progress-fill" style="width:${percent}%"></div></div><div class="chapter-progress-label">${completedCount} of ${lessons.length} lessons completed (${percent}%)</div>`;
                 heading.insertAdjacentElement('afterend', wrap);
             });
         }
 
         function renderTableOfContents() {
             if (!tocPanel) return;
-            const headings = Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'));
-            tocPanel.innerHTML = '';
+            const headings = Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title'));
+            const frag = document.createDocumentFragment();
             headings.forEach(heading => {
                 if (!heading.id) return;
                 const link = document.createElement('a');
                 link.className = 'toc-link';
                 link.href = '#' + heading.id;
-                link.textContent = heading.textContent.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
+                link.textContent = getHeadingTextForId(heading.id);
                 link.addEventListener('click', (event) => {
                     event.preventDefault();
                     history.pushState(null, '', '#' + heading.id);
                     scrollToHashTarget('#' + heading.id, 'smooth', heading);
                     tocWidget.classList.remove('open');
                 });
-                tocPanel.appendChild(link);
+                frag.appendChild(link);
             });
+            tocPanel.innerHTML = '';
+            tocPanel.appendChild(frag);
         }
 
         function renderQuickJump() {
@@ -3486,16 +4167,14 @@
             const chapters = Array.from(document.querySelectorAll('.chapter-section'));
             const actions = quickJumpPanel.querySelector('.quick-jump-actions');
             quickJumpPanel.innerHTML = '';
-            if (actions) {
-                quickJumpPanel.appendChild(actions);
-            }
+            if (actions) quickJumpPanel.appendChild(actions);
             chapters.forEach(chapter => {
-                const heading = chapter.querySelector('h1.chapter-title');
+                const heading = chapter.querySelector('h1.chapter-title, h1.doc-main-title');
                 if (!heading || !heading.id) return;
                 const link = document.createElement('a');
                 link.className = 'quick-jump-link';
                 link.href = '#' + heading.id;
-                link.textContent = heading.textContent.replace(/Chapter \d+:/i, '').trim();
+                link.textContent = getHeadingTextForId(heading.id);
                 link.addEventListener('click', (event) => {
                     event.preventDefault();
                     history.pushState(null, '', '#' + heading.id);
@@ -3506,136 +4185,12 @@
             });
         }
         
-        function updateActiveState() {
-            // Highlight active navigation section or lesson
-            const headings = document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title');
-            let activeId = '';
-            let currentTitle = 'Welcome';
-            
-            headings.forEach(head => {
-                const rect = head.getBoundingClientRect();
-                if (rect.top < 120) {
-                    activeId = head.id;
-                    currentTitle = head.innerText.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
-                }
-            });
-            
-            if (activeId) {
-                // Highlight section links
-                const targetId = activeId;
-
-                document.querySelectorAll('.menu-link').forEach(link => {
-                    const isDirectActive = (link.dataset.target === targetId || link.getAttribute('href') === '#' + targetId);
-                    
-                    // Check if targetId is a lesson inside this section's wrapper
-                    const wrapper = link.closest('.menu-section-wrapper');
-                    const hasActiveLessonInside = wrapper && wrapper.querySelector('.menu-lesson-link[data-target="' + targetId + '"]');
-                    
-                    if (isDirectActive) {
-                        link.classList.add('active');
-                    } else {
-                        link.classList.remove('active');
-                    }
-
-                    // Handle lessons expansion for this section
-                    if (wrapper) {
-                        const lessonsDiv = wrapper.querySelector('.section-lessons');
-                        if (lessonsDiv) {
-                            if (isDirectActive || hasActiveLessonInside) {
-                                lessonsDiv.classList.remove('collapsed');
-                            } else {
-                                lessonsDiv.classList.add('collapsed');
-                            }
-                        }
-                    }
-                });
-
-                // Highlight lesson links
-                document.querySelectorAll('.menu-lesson-link').forEach(link => {
-                    const isDirectActive = (link.dataset.target === targetId || link.getAttribute('href') === '#' + targetId);
-                    
-                    if (isDirectActive) {
-                        link.classList.add('active');
-                        
-                        // Automatically expand parent chapter items
-                        const parentItems = link.closest('.chapter-items');
-                        if (parentItems && parentItems.classList.contains('collapsed')) {
-                            parentItems.classList.remove('collapsed');
-                            const heading = parentItems.previousElementSibling;
-                            if (heading) heading.classList.remove('collapsed');
-                        }
-                    } else {
-                        link.classList.remove('active');
-                    }
-                });
-
-                // Also make sure chapter items are expanded for active section
-                document.querySelectorAll('.menu-link.active').forEach(link => {
-                    const parentItems = link.closest('.chapter-items');
-                    if (parentItems && parentItems.classList.contains('collapsed')) {
-                        parentItems.classList.remove('collapsed');
-                        const heading = parentItems.previousElementSibling;
-                        if (heading) heading.classList.remove('collapsed');
-                    }
-                });
-
-                if (currentSectionTitleEl) {
-                    currentSectionTitleEl.innerText = currentTitle;
-                }
-            } else {
-                // keep the current view without inline lesson navigation, but update heading title and clear highlights to reflect we are at the top
-                if (currentSectionTitleEl) {
-                    currentSectionTitleEl.innerText = 'Welcome';
-                }
-                document.querySelectorAll('.menu-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                document.querySelectorAll('.menu-lesson-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                // Clear the hash in the URL bar to reflect we are back at the top
-                if (window.location.hash) {
-                    history.replaceState(null, document.title, window.location.pathname + window.location.search);
-                }
-            }
-
-            document.querySelectorAll('.toc-link').forEach(link => {
-                link.classList.toggle('active', link.getAttribute('href') === '#' + activeId);
-            });
-
-            renderBreadcrumbs();
-            scheduleSaveReadingState();
-        }
-        
-        window.addEventListener('scroll', () => {
-            const scrollTop = getScrollY();
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-            if (totalHeight > 0) {
-                const scrolled = (scrollTop / totalHeight) * 100;
-                const progressEl = progress || document.getElementById('readingProgress');
-                if (progressEl) {
-                    progressEl.style.width = scrolled + '%';
-                }
-                const pctEl = document.getElementById('readingPct');
-                if (pctEl) pctEl.textContent = Math.round(scrolled) + '%';
-            }
-
-            updateBtnTopVisibility();
-
-            if (!isClickScrolling) {
-                updateActiveState();
-            }
-        });
-        
         function scrollToTop() {
             const distance = Math.abs(getScrollY());
             const targetBehavior = distance > 2000 ? 'auto' : 'smooth';
             scrollToPosition(0, targetBehavior);
-            
             const sidebarMenu = document.getElementById('sidebarMenu');
-            if (sidebarMenu) {
-                sidebarMenu.scrollTo({ top: 0, behavior: targetBehavior });
-            }
+            if (sidebarMenu) sidebarMenu.scrollTo({ top: 0, behavior: targetBehavior });
         }
 
         function slugifyHeading(text) {
@@ -3657,7 +4212,6 @@
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 return navigator.clipboard.writeText(url).then(() => true).catch(() => false);
             }
-
             const textarea = document.createElement('textarea');
             textarea.value = url;
             textarea.setAttribute('readonly', '');
@@ -3670,8 +4224,34 @@
             return Promise.resolve(copied);
         }
 
+        // Event delegation for heading copy-link and mark-done buttons
+        document.getElementById('contentBody')?.addEventListener('click', async (event) => {
+            const linkBtn = event.target.closest('.heading-action-btn');
+            if (linkBtn) {
+                event.preventDefault();
+                event.stopPropagation();
+                const heading = linkBtn.closest('h1, h2, h3, h4');
+                if (heading && heading.id) {
+                    const url = window.location.href.split('#')[0] + '#' + heading.id;
+                    const copied = await copyLinkToClipboard(url);
+                    showToast(copied ? 'Link copied to clipboard' : 'Unable to copy link');
+                }
+                return;
+            }
+            const doneBtn = event.target.closest('.lesson-complete-btn');
+            if (doneBtn) {
+                event.preventDefault();
+                event.stopPropagation();
+                const lessonId = doneBtn.getAttribute('data-lesson-id');
+                if (lessonId) {
+                    markLessonComplete(lessonId);
+                    showToast(progressState.completedLessons.includes(lessonId) ? 'Lesson marked complete' : 'Lesson marked incomplete');
+                }
+            }
+        });
+
         function attachHeadingActions() {
-            document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title, h4.lesson-subtitle').forEach(heading => {
+            document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title').forEach(heading => {
                 if (!heading.id) {
                     heading.id = slugifyHeading(heading.textContent);
                 }
@@ -3682,14 +4262,7 @@
                     actionBtn.className = 'heading-action-btn';
                     actionBtn.title = 'Copy link to this section';
                     actionBtn.setAttribute('aria-label', 'Copy link to this section');
-                    actionBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>';
-                    actionBtn.addEventListener('click', async (event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        const url = window.location.href.split('#')[0] + '#' + heading.id;
-                        const copied = await copyLinkToClipboard(url);
-                        showToast(copied ? 'Link copied to clipboard' : 'Unable to copy link');
-                    });
+                    actionBtn.innerHTML = '<svg class="icon" width="14" height="14"><use href="#i-link"></use></svg>';
                     heading.appendChild(actionBtn);
                 }
 
@@ -3700,12 +4273,6 @@
                     completeBtn.setAttribute('data-lesson-id', heading.id);
                     completeBtn.title = 'Mark lesson complete';
                     completeBtn.setAttribute('aria-label', 'Mark lesson complete');
-                    completeBtn.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        markLessonComplete(heading.id);
-                        showToast(progressState.completedLessons.includes(heading.id) ? 'Lesson marked complete' : 'Lesson marked incomplete');
-                    });
                     heading.appendChild(completeBtn);
                 }
             });
@@ -3739,31 +4306,13 @@
             return (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
         }
 
-        function getNavigationEntries() {
-            return Array.from(document.querySelectorAll('h1.chapter-title, h2.section-title, h3.lesson-title'))
-                .map(heading => {
-                    const chapterTitle = heading.closest('.chapter-section')?.querySelector('h1.chapter-title')?.textContent || '';
-                    const sectionTitle = heading.tagName === 'H3' ? heading.closest('.chapter-section')?.querySelector('h2.section-title')?.textContent || '' : '';
-                    const displayTitle = heading.textContent.replace(/Chapter \d+:/i, '').replace(/^Lesson:\s*/i, '').trim();
-                    const type = heading.tagName === 'H1' ? 'Chapter' : heading.tagName === 'H2' ? 'Section' : 'Lesson';
-                    const path = heading.tagName === 'H3' ? chapterTitle.replace(/Chapter \d+:/i, '').trim() + ' › ' + sectionTitle.replace(/Chapter \d+:/i, '').trim() : chapterTitle.replace(/Chapter \d+:/i, '').trim();
-                    return {
-                        id: heading.id,
-                        title: displayTitle,
-                        type,
-                        path: path || 'Guide'
-                    };
-                })
-                .filter(entry => entry.id && entry.title);
-        }
-
         function renderCommandPaletteResults(query = '') {
             if (!commandPaletteResults) return;
             const normalizedQuery = normalizePaletteText(query);
-            const entries = getNavigationEntries().filter(entry => {
-                const haystack = normalizePaletteText(entry.title + ' ' + entry.path + ' ' + entry.type);
+            const entries = searchIndex.filter(entry => {
+                const haystack = normalizePaletteText(entry.title + ' ' + (entry.chapter || '') + ' ' + (entry.section || '') + ' ' + entry.type);
                 return !normalizedQuery || haystack.includes(normalizedQuery);
-            }).slice(0, 8);
+            }).slice(0, 10);
 
             commandPaletteIndex = 0;
             commandPaletteResults.innerHTML = '';
@@ -3780,7 +4329,8 @@
                 const item = document.createElement('button');
                 item.type = 'button';
                 item.className = 'command-palette-item' + (index === 0 ? ' active' : '');
-                item.innerHTML = '<div class="command-palette-title">' + entry.title + '</div><div class="command-palette-meta">' + entry.type + ' · ' + entry.path + '</div>';
+                const path = [entry.chapter, entry.section].filter(Boolean).join(' › ') || 'Guide';
+                item.innerHTML = '<div class="command-palette-title">' + entry.title + '</div><div class="command-palette-meta">' + entry.type.toUpperCase() + ' · ' + path + '</div>';
                 item.addEventListener('click', () => {
                     const target = document.getElementById(entry.id);
                     if (target) {
@@ -3816,9 +4366,7 @@
 
         if (commandPaletteOverlay) {
             commandPaletteOverlay.addEventListener('click', (event) => {
-                if (event.target === commandPaletteOverlay) {
-                    closeCommandPalette();
-                }
+                if (event.target === commandPaletteOverlay) closeCommandPalette();
             });
         }
 
@@ -3850,42 +4398,100 @@
             });
         }
 
-        // Search functionality
+        // Smart Everyday-Word Synonym Search + Filter Tabs
         const searchInput = document.getElementById('searchInput');
         const searchClearBtn = document.getElementById('searchClearBtn');
         const overlay = document.getElementById('searchResultsOverlay');
         const resultsList = document.getElementById('resultsList');
         const resultsSummary = document.getElementById('resultsSummary');
+        const searchSynonymHint = document.getElementById('searchSynonymHint');
+        const searchFilterTabs = document.getElementById('searchFilterTabs');
+        let activeSearchFilter = 'all';
+
+        const SYNONYM_MAP = {
+            change: ['mut', 'mutable', 'variables'],
+            edit: ['mut', 'mutable'],
+            modify: ['mut', 'mutable'],
+            update: ['mut', 'mutable'],
+            box: ['variable', 'variables', 'const'],
+            text: ['string', 'strings', 'interpolation'],
+            word: ['string', 'strings'],
+            sentence: ['string', 'strings'],
+            list: ['array', 'arrays', 'slice'],
+            items: ['array', 'arrays'],
+            collection: ['array', 'map'],
+            dictionary: ['map', 'maps', 'glossary'],
+            lookup: ['map', 'maps'],
+            phonebook: ['map', 'maps'],
+            decision: ['if', 'match', 'conditional'],
+            choose: ['if', 'match'],
+            branch: ['if', 'match'],
+            repeat: ['for', 'loop'],
+            again: ['for', 'loop'],
+            recipe: ['fn', 'function', 'functions'],
+            command: ['fn', 'cli', 'flag'],
+            card: ['struct', 'structs'],
+            record: ['struct', 'structs'],
+            object: ['struct', 'interface'],
+            mistake: ['error', 'option', 'result', 'or'],
+            crash: ['error', 'option', 'result', 'panic'],
+            fail: ['error', 'result', 'option'],
+            missing: ['option', 'none'],
+            multitask: ['spawn', 'concurrency', 'channel'],
+            background: ['spawn', 'concurrency', 'thread'],
+            parallel: ['spawn', 'concurrency'],
+            window: ['gui', 'gg', 'simplegui', 'webview'],
+            desktop: ['gui', 'gg', 'simplegui', 'webview'],
+            button: ['gui', 'simplegui', 'webview'],
+            game: ['sdl', 'games', 'gg'],
+            arcade: ['sdl', 'games'],
+            sound: ['sdl', 'audio', 'wav'],
+            music: ['sdl', 'audio'],
+            save: ['os', 'write_file', 'file'],
+            folder: ['os', 'dir', 'path'],
+            website: ['veb', 'http', 'net', 'json'],
+            internet: ['http', 'net', 'json']
+        };
 
         function normalizeSearchText(text) {
             return (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
         }
 
-        function textMatchesQuery(text, query) {
-            const normalizedText = normalizeSearchText(text);
-            if (!query || !normalizedText) return false;
+        function getExpandedTermGroups(query) {
             const terms = query.split(/\s+/).filter(Boolean);
-            return terms.every(term => normalizedText.includes(term));
+            const matchedSynonyms = new Set();
+            const groups = terms.map(term => {
+                const group = [term];
+                if (SYNONYM_MAP[term]) {
+                    SYNONYM_MAP[term].forEach(syn => {
+                        group.push(syn);
+                        matchedSynonyms.add(syn);
+                    });
+                }
+                return group;
+            });
+            return { groups, matchedSynonyms: Array.from(matchedSynonyms) };
+        }
+
+        function textMatchesExpandedGroups(text, groups) {
+            const normalizedText = normalizeSearchText(text);
+            if (!groups.length || !normalizedText) return false;
+            return groups.every(group => group.some(variant => normalizedText.includes(variant)));
         }
 
         function resetSidebarSearchState() {
-            document.querySelectorAll('.menu-chapter').forEach(chapDiv => {
+            document.querySelectorAll('.menu-chapter').forEach((chapDiv, idx) => {
                 chapDiv.style.display = '';
                 const heading = chapDiv.querySelector('.chapter-heading');
                 const itemsDiv = chapDiv.querySelector('.chapter-items');
-                if (heading) heading.classList.remove('collapsed');
-                if (itemsDiv) itemsDiv.classList.remove('collapsed');
+                const collapsed = idx > 1;
+                if (heading) heading.classList.toggle('collapsed', collapsed);
+                if (itemsDiv) itemsDiv.classList.toggle('collapsed', collapsed);
 
                 chapDiv.querySelectorAll('.menu-section-wrapper').forEach(w => w.style.display = '');
-                chapDiv.querySelectorAll('.menu-link').forEach(link => {
-                    link.style.display = '';
-                });
-                chapDiv.querySelectorAll('.menu-lesson-link').forEach(link => {
-                    link.style.display = '';
-                });
-                chapDiv.querySelectorAll('.section-lessons').forEach(div => {
-                    div.classList.add('collapsed');
-                });
+                chapDiv.querySelectorAll('.menu-link').forEach(link => link.style.display = '');
+                chapDiv.querySelectorAll('.menu-lesson-link').forEach(link => link.style.display = '');
+                chapDiv.querySelectorAll('.section-lessons').forEach(div => div.classList.add('collapsed'));
             });
         }
         
@@ -3899,6 +4505,7 @@
             updateSearchClearButton();
             resetSidebarSearchState();
             overlay.style.display = 'none';
+            if (searchSynonymHint) searchSynonymHint.classList.remove('visible');
             resultsSummary.innerText = 'Search Results';
             resultsList.innerHTML = '';
             searchInput.focus();
@@ -3912,14 +4519,35 @@
             });
         }
 
-        searchInput.addEventListener('input', (e) => {
-            const query = normalizeSearchText(e.target.value);
+        if (searchFilterTabs) {
+            searchFilterTabs.addEventListener('click', (event) => {
+                const tab = event.target.closest('.search-filter-tab');
+                if (!tab) return;
+                activeSearchFilter = tab.dataset.filter || 'all';
+                searchFilterTabs.querySelectorAll('.search-filter-tab').forEach(t => t.classList.toggle('active', t === tab));
+                runSearchQuery();
+            });
+        }
+
+        function runSearchQuery() {
+            const query = normalizeSearchText(searchInput.value);
             updateSearchClearButton();
 
             if (query.length === 0) {
                 resetSidebarSearchState();
                 overlay.style.display = 'none';
+                if (searchSynonymHint) searchSynonymHint.classList.remove('visible');
                 return;
+            }
+
+            const { groups, matchedSynonyms } = getExpandedTermGroups(query);
+            if (searchSynonymHint) {
+                if (matchedSynonyms.length > 0) {
+                    searchSynonymHint.textContent = `💡 Everyday-word search active! Also matching V terms: ${matchedSynonyms.join(', ')}`;
+                    searchSynonymHint.classList.add('visible');
+                } else {
+                    searchSynonymHint.classList.remove('visible');
+                }
             }
             
             document.querySelectorAll('.menu-chapter').forEach(chapDiv => {
@@ -3936,7 +4564,7 @@
                     wrapper.querySelectorAll('.menu-lesson-link').forEach(lessonLink => {
                         const lessonTitle = lessonLink.dataset.title || '';
                         const combinedLessonText = chapTitle + ' ' + sectionTitle + ' ' + lessonTitle;
-                        if (textMatchesQuery(combinedLessonText, query)) {
+                        if (textMatchesExpandedGroups(combinedLessonText, groups)) {
                             lessonLink.style.display = '';
                             hasVisibleLesson = true;
                         } else {
@@ -3946,15 +4574,11 @@
                     
                     const lessonsDiv = wrapper.querySelector('.section-lessons');
                     if (lessonsDiv) {
-                        if (hasVisibleLesson) {
-                            lessonsDiv.classList.remove('collapsed');
-                        } else {
-                            lessonsDiv.classList.add('collapsed');
-                        }
+                        lessonsDiv.classList.toggle('collapsed', !hasVisibleLesson);
                     }
 
                     const combinedSectionText = chapTitle + ' ' + sectionTitle;
-                    if (textMatchesQuery(combinedSectionText, query) || hasVisibleLesson) {
+                    if (textMatchesExpandedGroups(combinedSectionText, groups) || hasVisibleLesson) {
                         wrapper.style.display = '';
                         if (sectionLink) sectionLink.style.display = '';
                         hasVisibleSectionOrLesson = true;
@@ -3963,7 +4587,7 @@
                     }
                 });
                 
-                if (hasVisibleSectionOrLesson || textMatchesQuery(chapTitle, query)) {
+                if (hasVisibleSectionOrLesson || textMatchesExpandedGroups(chapTitle, groups)) {
                     chapDiv.style.display = '';
                     if (itemsDiv) itemsDiv.classList.remove('collapsed');
                     if (heading) heading.classList.remove('collapsed');
@@ -3974,56 +4598,60 @@
             
             overlay.style.display = 'block';
             const hits = [];
+            const allMatchTerms = [query, ...matchedSynonyms];
             
             searchIndex.forEach(item => {
+                if (activeSearchFilter !== 'all' && item.type !== activeSearchFilter) {
+                    return;
+                }
                 const combinedText = [item.title, item.content, item.chapter || '', item.section || ''].join(' ');
-                if (!textMatchesQuery(combinedText, query)) {
+                if (!textMatchesExpandedGroups(combinedText, groups)) {
                     return;
                 }
 
                 const titleText = normalizeSearchText(item.title);
                 const contentText = normalizeSearchText(item.content);
-                const titleIndex = titleText.indexOf(query);
+                const directTitleMatch = titleText.includes(query);
+                const synTitleMatch = allMatchTerms.some(t => titleText.includes(t));
                 const contentIndex = contentText.indexOf(query);
                 
                 let snippet = '';
                 if (contentIndex !== -1) {
-                    const start = Math.max(0, contentIndex - 40);
-                    const end = Math.min(item.content.length, contentIndex + 100);
+                    const start = Math.max(0, contentIndex - 30);
+                    const end = Math.min(item.content.length, contentIndex + 120);
                     snippet = item.content.substring(start, end);
-                    
                     const regex = new RegExp('(' + escapeRegExp(query) + ')', 'gi');
                     snippet = snippet.replace(regex, '<mark>$1</mark>');
-                    
                     if (start > 0) snippet = '...' + snippet;
                     if (end < item.content.length) snippet = snippet + '...';
                 } else {
-                    snippet = item.content.substring(0, 100) + '...';
+                    snippet = item.content.substring(0, 140) + (item.content.length > 140 ? '...' : '');
                 }
                 
                 hits.push({
                     ...item,
                     snippet,
-                    score: titleIndex !== -1 ? 10 : 1
+                    score: directTitleMatch ? 20 : (synTitleMatch ? 12 : 4)
                 });
             });
             
             hits.sort((a, b) => b.score - a.score);
             
-            resultsSummary.innerText = 'Search Results (' + hits.length + ' found)';
+            resultsSummary.innerText = `Search Results (${hits.length} found)`;
             resultsList.innerHTML = '';
             
             if (hits.length === 0) {
-                resultsList.innerHTML = '<div class="no-results">No matches found. Try searching another term like "variables", "struct", or "channel".</div>';
+                resultsList.innerHTML = '<div class="no-results">No matches found in this category. Try switching filter tabs above or searching everyday words like "change", "list", "text", "mistake", "window", or "game".</div>';
                 return;
             }
             
-            hits.forEach(hit => {
+            const frag = document.createDocumentFragment();
+            hits.slice(0, 60).forEach(hit => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'search-result-item';
                 
                 let pathStr = hit.chapter || '';
-                if (hit.section) pathStr += ' > ' + hit.section;
+                if (hit.section && hit.section !== hit.title) pathStr += ' › ' + hit.section;
                 
                 itemDiv.innerHTML = '<div class="result-meta">' +
                     '<span class="result-type">' + hit.type + '</span>' +
@@ -4034,124 +4662,99 @@
                 
                 itemDiv.addEventListener('click', () => {
                     overlay.style.display = 'none';
+                    const targetId = hit.id;
                     clearSearch();
-                    window.location.hash = hit.id;
+                    history.pushState(null, '', '#' + targetId);
+                    scrollToHashTarget('#' + targetId, 'smooth', document.body);
                 });
                 
-                resultsList.appendChild(itemDiv);
+                frag.appendChild(itemDiv);
             });
-        });
+            resultsList.appendChild(frag);
+        }
+
+        searchInput.addEventListener('input', runSearchQuery);
         
         function escapeRegExp(string) {
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
+        // Code Zoom Modal (<dialog closedby="any">)
         function closeCodeZoom() {
-            const modal = document.getElementById('code-zoom-modal');
-            if (modal) {
-                modal.remove();
+            if (codeZoomDialog && codeZoomDialog.open) {
+                codeZoomDialog.close();
             }
         }
 
         function toggleCodeZoom(btn) {
             const sourceWrapper = btn.closest('.code-wrapper');
-            const existingModal = document.getElementById('code-zoom-modal');
-            if (existingModal) {
-                existingModal.remove();
-                return;
+            if (!sourceWrapper || !codeZoomDialog) return;
+            const langEl = document.getElementById('codeZoomLang');
+            const codeEl = document.getElementById('codeZoomCode');
+            const copyBtn = document.getElementById('codeZoomCopyBtn');
+            const srcCode = sourceWrapper.querySelector('code');
+
+            if (langEl) langEl.textContent = sourceWrapper.querySelector('.code-lang')?.textContent || 'V';
+            if (codeEl && srcCode) {
+                codeEl.className = srcCode.className;
+                codeEl.textContent = srcCode.textContent;
+                if (window.Prism) Prism.highlightElement(codeEl);
             }
-
-            const modal = document.createElement('div');
-            modal.id = 'code-zoom-modal';
-            modal.className = 'code-zoom-modal active';
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    closeCodeZoom();
-                }
-            });
-
-            const panel = document.createElement('div');
-            panel.className = 'code-zoom-panel';
-
-            const wrapper = document.createElement('div');
-            wrapper.className = 'code-wrapper code-wrapper-zoomed';
-
-            const header = document.createElement('div');
-            header.className = 'code-header';
-
-            const lang = document.createElement('span');
-            lang.className = 'code-lang';
-            lang.textContent = sourceWrapper.querySelector('.code-lang').textContent;
-            header.appendChild(lang);
-
-            const actions = document.createElement('div');
-            actions.className = 'code-actions';
-
-            const closeBtn = document.createElement('button');
-            closeBtn.className = 'btn-close-zoom';
-            closeBtn.title = 'Close Zoom';
-            closeBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Close';
-            closeBtn.addEventListener('click', closeCodeZoom);
-            actions.appendChild(closeBtn);
-
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'btn-copy';
-            copyBtn.title = 'Copy Code';
-            copyBtn.innerHTML = '<svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy';
-            copyBtn.onclick = () => copyCode(copyBtn);
-            actions.appendChild(copyBtn);
-
-            header.appendChild(actions);
-            wrapper.appendChild(header);
-
-            const pre = document.createElement('pre');
-            const code = document.createElement('code');
-            code.className = sourceWrapper.querySelector('code').className;
-            code.textContent = sourceWrapper.querySelector('code').innerText;
-            pre.appendChild(code);
-            wrapper.appendChild(pre);
-            panel.appendChild(wrapper);
-            modal.appendChild(panel);
-            document.body.appendChild(modal);
-            if (window.Prism) {
-                Prism.highlightElement(code);
+            if (copyBtn && srcCode) {
+                copyBtn.onclick = () => {
+                    navigator.clipboard.writeText(srcCode.textContent).then(() => showToast('Code copied to clipboard'));
+                };
             }
+            codeZoomDialog.showModal();
         }
         
-        // Copy Code utility
+        // Copy Code & V Playground utilities (dynamic base64 saves 529 KB of HTML!)
+        function encodePlaygroundBase64(codeText) {
+            const bytes = new TextEncoder().encode(codeText);
+            let binary = '';
+            for (let i = 0; i < bytes.length; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary);
+        }
+
+        function runInPlayground(btn) {
+            const codeBlock = btn.closest('.code-wrapper')?.querySelector('code');
+            if (!codeBlock) return;
+            const base64 = encodePlaygroundBase64(codeBlock.textContent);
+            window.open(`https://play.vlang.io/?base64=${encodeURIComponent(base64)}`, '_blank', 'noopener,noreferrer');
+        }
+
         function copyCode(btn) {
-            const codeBlock = btn.closest('.code-wrapper').querySelector('code');
-            
-            navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            const codeBlock = btn.closest('.code-wrapper')?.querySelector('code');
+            if (!codeBlock) return;
+            navigator.clipboard.writeText(codeBlock.textContent).then(() => {
                 const originalText = btn.innerHTML;
-                btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+                btn.innerHTML = `<svg class="icon" width="14" height="14"><use href="#i-check"></use></svg> Copied!`;
                 btn.style.color = '#34d399';
                 setTimeout(() => {
                     btn.innerHTML = originalText;
                     btn.style.color = '';
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
+                }, 1800);
             });
         }
 
         function copyAndOpenPlayground(btn) {
-            const codeBlock = btn.closest('.code-wrapper').querySelector('code');
-            const codeText = codeBlock.innerText;
+            const codeBlock = btn.closest('.code-wrapper')?.querySelector('code');
+            if (!codeBlock) return;
+            const codeText = codeBlock.textContent;
+            const base64 = encodePlaygroundBase64(codeText);
             navigator.clipboard.writeText(codeText).then(() => {
                 const originalText = btn.innerHTML;
-                btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+                btn.innerHTML = `<svg class="icon" width="14" height="14"><use href="#i-check"></use></svg> Copied!`;
                 btn.style.color = '#34d399';
                 setTimeout(() => {
                     btn.innerHTML = originalText;
                     btn.style.color = '';
-                    const base64 = btoa(unescape(encodeURIComponent(codeText)));
-                    window.open(`https://play.vlang.io/?base64=${encodeURIComponent(base64)}`, '_blank');
-                }, 800);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                const base64 = btoa(unescape(encodeURIComponent(codeText)));
-                window.open(`https://play.vlang.io/?base64=${encodeURIComponent(base64)}`, '_blank');
+                    window.open(`https://play.vlang.io/?base64=${encodeURIComponent(base64)}`, '_blank', 'noopener,noreferrer');
+                }, 500);
+            }).catch(() => {
+                window.open(`https://play.vlang.io/?base64=${encodeURIComponent(base64)}`, '_blank', 'noopener,noreferrer');
             });
         }
 
@@ -4170,10 +4773,13 @@
                 });
             });
 
-            const headings = Array.from(document.querySelectorAll('.lesson-title'));
-            headings.forEach((heading, index) => {
-                const lessonIndex = lessonEntries.findIndex(entry => entry.id === heading.id);
-                if (lessonIndex === -1) return;
+            const lessonIdxMap = new Map();
+            lessonEntries.forEach((entry, idx) => lessonIdxMap.set(entry.id, idx));
+
+            const headings = Array.from(document.querySelectorAll('h3.lesson-title'));
+            headings.forEach(heading => {
+                const lessonIndex = lessonIdxMap.get(heading.id);
+                if (lessonIndex === undefined) return;
 
                 const prevEntry = lessonIndex > 0 ? lessonEntries[lessonIndex - 1] : null;
                 const nextEntry = lessonIndex < lessonEntries.length - 1 ? lessonEntries[lessonIndex + 1] : null;
@@ -4181,24 +4787,17 @@
                 const nav = document.createElement('div');
                 nav.className = 'lesson-nav';
                 const prevHtml = prevEntry
-                    ? `<a href="#${prevEntry.id}"><span class="nav-label">Previous</span><br />${prevEntry.title}</a>`
+                    ? `<a href="#${prevEntry.id}"><span class="nav-label">← Previous Lesson</span><br />${prevEntry.title}</a>`
                     : '<span class="nav-label">Start of guide</span>';
                 const nextHtml = nextEntry
-                    ? `<a href="#${nextEntry.id}"><span class="nav-label">Next</span><br />${nextEntry.title}</a>`
+                    ? `<a href="#${nextEntry.id}"><span class="nav-label">Next Lesson →</span><br />${nextEntry.title}</a>`
                     : '<span class="nav-label">End of guide</span>';
-                nav.innerHTML = `
-                    <div>
-                        ${prevHtml}
-                    </div>
-                    <div style="text-align:right;">
-                        ${nextHtml}
-                    </div>
-                `;
+                nav.innerHTML = `<div>${prevHtml}</div><div style="text-align:right;">${nextHtml}</div>`;
 
                 let insertAfter = heading;
                 let sibling = heading.nextElementSibling;
                 while (sibling) {
-                    if (sibling.classList && (sibling.classList.contains('lesson-title') || sibling.classList.contains('section-title') || sibling.classList.contains('chapter-title'))) {
+                    if (sibling.classList && (sibling.classList.contains('lesson-title') || sibling.classList.contains('section-title') || sibling.classList.contains('chapter-title') || sibling.classList.contains('under-the-hood-details'))) {
                         break;
                     }
                     insertAfter = sibling;
@@ -4221,14 +4820,10 @@
             const bookmarksItems = document.getElementById('bookmarksItems');
             const bookmarksHeading = bookmarksSec ? bookmarksSec.querySelector('.chapter-heading') : null;
             
-            // Highlight active state on all page buttons
+            const bookmarkedIds = new Set(bookmarks.map(b => b.id));
             document.querySelectorAll('.btn-bookmark').forEach(btn => {
                 const id = btn.getAttribute('data-id');
-                if (bookmarks.some(b => b.id === id)) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
+                btn.classList.toggle('active', bookmarkedIds.has(id));
             });
 
             if (bookmarks.length === 0) {
@@ -4263,7 +4858,7 @@
                 link.dataset.target = b.id;
                 link.innerHTML = `<span class="bullet">🔖</span> ${b.title}`;
                 
-                link.addEventListener('click', (e) => {
+                link.addEventListener('click', () => {
                     if (window.innerWidth <= 1024) {
                         document.getElementById('sidebar').classList.remove('open');
                     }
@@ -4287,7 +4882,7 @@
             updateBookmarksUI();
         }
 
-        // Search Keyboard Shortcut (Ctrl+K or /)
+        // Keyboard Shortcuts (/, Ctrl+K, Ctrl+P, D, L, F, Esc)
         document.addEventListener('keydown', (e) => {
             const activeElement = document.activeElement;
             const isTypingTarget = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT' || activeElement.isContentEditable);
@@ -4295,6 +4890,8 @@
             const isSlash = e.key === '/' && !isTypingTarget;
             const isCommandPaletteShortcut = (e.key === 'p' || e.key === 'P') && (e.metaKey || e.ctrlKey) && !e.altKey && !isTypingTarget;
             const isFocusShortcut = (e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && !isTypingTarget;
+            const isDictShortcut = (e.key === 'd' || e.key === 'D') && !e.metaKey && !e.ctrlKey && !e.altKey && !isTypingTarget;
+            const isLiteShortcut = (e.key === 'l' || e.key === 'L') && !e.metaKey && !e.ctrlKey && !e.altKey && !isTypingTarget;
             const isEscapeShortcut = e.key === 'Escape' && document.body.classList.contains('focus-mode') && !isTypingTarget;
 
             if (isK || isSlash) {
@@ -4302,19 +4899,19 @@
                 const search = document.getElementById('searchInput');
                 search.focus();
                 search.select();
-            }
-
-            if (isCommandPaletteShortcut) {
+            } else if (isCommandPaletteShortcut) {
                 e.preventDefault();
                 openCommandPalette();
-            }
-
-            if (isFocusShortcut) {
+            } else if (isDictShortcut) {
+                e.preventDefault();
+                openDictionaryModal();
+            } else if (isLiteShortcut) {
+                e.preventDefault();
+                toggleLiteMode();
+            } else if (isFocusShortcut) {
                 e.preventDefault();
                 toggleFocusMode();
-            }
-
-            if (isEscapeShortcut) {
+            } else if (isEscapeShortcut) {
                 e.preventDefault();
                 toggleFocusMode(false);
             }
@@ -4330,16 +4927,11 @@
             document.getElementById('contentBody').style.fontSize = contentFontSize + 'px';
             try { localStorage.setItem('contentFontSize', contentFontSize); } catch(e) {}
 
-            // Update the label with a bounce animation
             const label = document.getElementById('fontSizeLabel');
             if (label) {
                 label.textContent = contentFontSize + 'px';
-                label.classList.remove('bump');
-                void label.offsetWidth; // force reflow to restart animation
-                label.classList.add('bump');
             }
 
-            // Dim / disable buttons at limits
             const dec = document.getElementById('btnFontDec');
             const inc = document.getElementById('btnFontInc');
             if (dec) dec.disabled = contentFontSize <= FONT_MIN;
@@ -4350,52 +4942,116 @@
         document.getElementById('btnFontInc').addEventListener('click', () => applyFontSize(contentFontSize + 1));
         document.getElementById('btnFontDec').addEventListener('click', () => applyFontSize(contentFontSize - 1));
 
-        // Ctrl+[ and Ctrl+] for font size
         document.addEventListener('keydown', (e) => {
             if ((e.metaKey || e.ctrlKey) && e.key === ']') { e.preventDefault(); applyFontSize(contentFontSize + 1); }
             if ((e.metaKey || e.ctrlKey) && e.key === '[') { e.preventDefault(); applyFontSize(contentFontSize - 1); }
         });
 
-
-
-        // Inject reading time after each chapter h1
+        // Inject reading time after each chapter h1 using zero-layout textContent
         function injectReadingTimes() {
             document.querySelectorAll('h1.chapter-title').forEach(h1 => {
-                // Count all text within the next sibling section
-                const section = h1.closest('section') || h1.parentElement;
-                const text = section ? section.innerText : '';
-                const words = text.trim().split(/\s+/).length;
-                const minutes = Math.ceil(words / 200);
                 if (h1.querySelector('.reading-time')) return;
+                const section = h1.closest('section') || h1.parentElement;
+                const text = section ? section.textContent : '';
+                const words = text.trim().split(/\s+/).length;
+                const minutes = Math.max(1, Math.ceil(words / 220));
                 const badge = document.createElement('span');
                 badge.className = 'reading-time';
-                badge.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ' + minutes + ' min read';
-
+                badge.textContent = `⏱ ${minutes} min read`;
                 h1.appendChild(badge);
             });
         }
 
-        // Trigger initial highlight and expand on load
-        setTimeout(() => {
-            if (window.Prism) {
-                Prism.highlightAll();
+        // Cooperative main-thread yielding helper (performance guide)
+        function yieldToMain() {
+            if (globalThis.scheduler?.yield) {
+                return scheduler.yield();
             }
+            return new Promise(resolve => setTimeout(resolve, 0));
+        }
+
+        // Lazy Syntax Highlighting via IntersectionObserver + scheduler.yield()
+        function initLazySyntaxHighlighting() {
+            const codeElements = Array.from(document.querySelectorAll('pre > code[class*="language-"]'));
+            if (!codeElements.length) return;
+
+            const highlightQueue = [];
+            let isDraining = false;
+
+            async function drainHighlightQueue() {
+                if (isDraining) return;
+                isDraining = true;
+                let count = 0;
+                while (highlightQueue.length > 0) {
+                    const codeEl = highlightQueue.shift();
+                    if (codeEl && !codeEl.dataset.highlighted && window.Prism) {
+                        codeEl.dataset.highlighted = 'true';
+                        Prism.highlightElement(codeEl);
+                        count++;
+                        if (count % 4 === 0) {
+                            await yieldToMain();
+                        }
+                    }
+                }
+                isDraining = false;
+            }
+
+            if ('IntersectionObserver' in window) {
+                const codeObserver = new IntersectionObserver((entries, obs) => {
+                    let added = false;
+                    for (const entry of entries) {
+                        if (entry.isIntersecting) {
+                            obs.unobserve(entry.target);
+                            highlightQueue.push(entry.target);
+                            added = true;
+                        }
+                    }
+                    if (added) drainHighlightQueue();
+                }, { rootMargin: '400px 0px' });
+
+                codeElements.forEach(el => codeObserver.observe(el));
+            } else {
+                highlightQueue.push(...codeElements);
+                drainHighlightQueue();
+            }
+        }
+
+        // Non-blocking sliced startup initialization
+        async function initializeInteractiveGuide() {
             applySidebarWidth(sidebarWidth);
             loadCompletedLessons();
-            attachHeadingActions();
-            renderLessonNavigation();
-            renderTableOfContents();
-            renderQuickJump();
-            renderChapterProgress();
-            renderBreadcrumbs();
-            updateBookmarksUI();
-            injectReadingTimes();
             updateSearchClearButton();
+            updateBookmarksUI();
+            renderBreadcrumbs();
             restoreReadingState();
             showContinueReadingCard();
             updateBtnTopVisibility();
-            window.dispatchEvent(new Event('scroll'));
-        }, 100);
+
+            await yieldToMain();
+            attachHeadingActions();
+            renderChapterProgress();
+
+            await yieldToMain();
+            renderTableOfContents();
+            renderQuickJump();
+            injectReadingTimes();
+
+            await yieldToMain();
+            renderLessonNavigation();
+            initHeadingObserver();
+            initLazySyntaxHighlighting();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const modalParam = urlParams.get('modal');
+            if (modalParam === 'dictionary') openDictionaryModal();
+            if (modalParam === 'projects') openProjectsModal();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeInteractiveGuide);
+        } else {
+            initializeInteractiveGuide();
+        }
     </script>
 </body>
 </html>

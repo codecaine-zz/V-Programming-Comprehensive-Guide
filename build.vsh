@@ -4,15 +4,12 @@ import os
 import strings
 import regex
 import json2
-import net.urllib
-import encoding.base64
 
 // Structs for search index and structure JSON
 struct Lesson {
 	id string
 mut:
-	title   string
-	content string
+	title string
 }
 
 struct Section {
@@ -34,6 +31,7 @@ struct SearchIndexEntry {
 	id      string
 	title   string
 	typ     string @[json: 'type']
+mut:
 	content string
 	chapter string
 	section string
@@ -106,75 +104,14 @@ fn normalize_code_language(language string) string {
 fn generate_code_block_html(code_language string, code_str string) string {
 	code_html := escape_html(code_str)
 	mut playground_btn := ''
-	if code_language.to_lower() == 'v' || code_language.to_lower() == 'vlang' {
-		base64_code := base64.encode_str(code_str)
-		playground_url := 'https://play.vlang.io/?base64=' + urllib.query_escape(base64_code)
-		playground_btn = '<a href="${playground_url}" target="_blank" class="btn-playground" title="Run in V Playground">
-				<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-				Run
-			</a>
-			<button class="btn-playground-copy" onclick="copyAndOpenPlayground(this)" title="Copy Code & Open V Playground">
-				<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-				Copy &amp; Open
-			</button>'
+	lang_lower := code_language.to_lower().trim_space()
+	if lang_lower == 'v' || lang_lower == 'vlang' {
+		playground_btn = '<button type="button" class="btn-playground" onclick="runInPlayground(this)" title="Run in V Playground"><svg class="icon" width="14" height="14"><use href="#i-play"></use></svg> Run</button><button type="button" class="btn-playground-copy" onclick="copyAndOpenPlayground(this)" title="Copy Code &amp; Open V Playground"><svg class="icon" width="14" height="14"><use href="#i-external"></use></svg> Copy &amp; Open</button>'
 	}
 
 	normalized_language := normalize_code_language(code_language)
-	return '<div class="code-wrapper">
-			<div class="code-header">
-				<span class="code-lang">${code_language}</span>
-				<div class="code-actions">
-					${playground_btn}
-					<button type="button" class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code" aria-label="Zoom code block">
-						<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle><path d="M11 8v6"></path><path d="M8 11h6"></path></svg>
-						Zoom
-					</button>
-					<button type="button" class="btn-copy" onclick="copyCode(this)" title="Copy Code" aria-label="Copy code block">
-						<svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-						Copy
-					</button>
-				</div>
-			</div>
-			<pre><code class="language-${normalized_language}">${code_html}</code></pre>
-		</div>\n'
-}
-
-fn normalize_title_for_comparison(text string) string {
-	mut res := text
-	if res.to_lower().starts_with('lesson:') {
-		res = res['lesson:'.len..].trim_space()
-	}
-	if res.contains('(') {
-		idx := res.index('(') or { res.len }
-		res = res[..idx].trim_space()
-	}
-
-	mut clean := strings.new_builder(res.len)
-	lower := res.to_lower()
-	for i in 0 .. lower.len {
-		c := lower[i]
-		if (c >= `a` && c <= `z`) || (c >= `0` && c <= `9`) || c == `_` || c == ` ` || c == `-` {
-			clean.write_u8(c)
-		}
-	}
-
-	mut final_builder := strings.new_builder(clean.len)
-	clean_str := clean.str()
-	mut last_was_space := false
-	for i in 0 .. clean_str.len {
-		c := clean_str[i]
-		if c == ` ` {
-			if !last_was_space {
-				final_builder.write_u8(` `)
-				last_was_space = true
-			}
-		} else {
-			final_builder.write_u8(c)
-			last_was_space = false
-		}
-	}
-
-	return final_builder.str().trim_space()
+	display_lang := if code_language.trim_space() == '' { 'text' } else { code_language.trim_space() }
+	return '<div class="code-wrapper"><div class="code-header"><span class="code-lang">${escape_html(display_lang)}</span><div class="code-actions">${playground_btn}<button type="button" class="btn-zoom" onclick="toggleCodeZoom(this)" title="Zoom Code" aria-label="Zoom code block"><svg class="icon" width="14" height="14"><use href="#i-zoom"></use></svg> Zoom</button><button type="button" class="btn-copy" onclick="copyCode(this)" title="Copy Code" aria-label="Copy code block"><svg class="icon copy-icon" width="14" height="14"><use href="#i-copy"></use></svg> Copy</button></div></div><pre><code class="language-${normalized_language}">${code_html}</code></pre></div>\n'
 }
 
 struct LinkInfo {
@@ -287,7 +224,7 @@ fn parse_inline(text string) string {
 		idx := index_str.int()
 		if idx < links.len {
 			link_info := links[idx]
-			formatted := '<a href="${link_info.href}"${link_info.target_attr}>${link_info.link_text}</a>'
+			formatted := '<a href="${link_info.href}"${link_info.target_attr}>${parse_inline_simple(link_info.link_text)}</a>'
 			result = result[..start] + formatted + result[end..]
 		} else {
 			break
@@ -315,29 +252,97 @@ fn parse_inline(text string) string {
 	return result
 }
 
-fn get_alert_icon(typ string) string {
-	return match typ {
-		'note' { '<path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a.75.75 0 0 0-.75.75v5.25a.75.75 0 0 0 1.5 0V2.25A.75.75 0 0 0 8 1.5ZM8.75 11a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>' }
-		'tip' { '<path d="M8 1.5c-2.363 0-4 1.83-4 3.75 0 .885.342 1.684.97 2.31l.01.01c.28.28.483.636.597 1.02a.25.25 0 0 1-.24.32H3.75a.75.75 0 0 0 0 1.5h1.223a.25.25 0 0 1 .24.32c-.114.384-.316.74-.596 1.02l-.01.01c-.628.626-.97 1.425-.97 2.31 0 1.92 1.637 3.75 4 3.75s4-1.83 4-3.75c0-.885-.342-1.684-.97-2.31l-.01-.01a2.915 2.915 0 0 0-.596-1.02.25.25 0 0 1 .24-.32h1.223a.75.75 0 0 0 0-1.5H10.74a.25.25 0 0 1-.24-.32c.114-.384.316-.74.596-1.02l.01-.01c.628-.626.97-1.425.97-2.31 0-1.92-1.637-3.75-4-3.75ZM6.5 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H7a.5.5 0 0 1-.5-.5ZM7 8a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1A.5.5 0 0 1 7 8Z"></path>' }
-		'important' { '<path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm1.5 0a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm7.25-3.25v3.5a.75.75 0 0 1-1.5 0v-3.5a.75.75 0 0 1 1.5 0ZM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path>' }
-		'warning' { '<path d="M6.457 1.047c.659-1.14 2.427-1.14 3.086 0l6.03 10.437C16.233 12.624 15.349 14 14.03 14H1.97c-1.319 0-2.204-1.376-1.543-2.516L6.457 1.047ZM8 4c-.552 0-1 .448-1 1v3c0 .552.448 1 1 1s1-.448 1-1V5c0-.552-.448-1-1-1Zm0 6.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"></path>' }
-		'caution' { '<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14Zm0 1.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Zm0-9a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 8 7.5ZM8 4.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5Z"></path>' }
-		'exercise' { '<path d="M8 1.5A6.5 6.5 0 1 0 14.5 8 6.507 6.507 0 0 0 8 1.5Zm.75 3.25a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 1.5 0Zm0 4.5a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"></path>' }
-		'solution' { '<path d="M13.78 4.22a.75.75 0 0 1 0 1.06L6.56 12.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.97 2.97 6.97-8.97a.75.75 0 0 1 1.06 0Z"></path>' }
-		'output' { '<path d="M5.75 3a.75.75 0 0 0 0 1.5h4.5A.75.75 0 0 0 10.25 3h-4.5Zm-2.5 4.5A.75.75 0 0 0 3 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5Zm7.5 0A.75.75 0 0 0 10.5 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5ZM8 10.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 10.25Z"></path>' }
-		else { '' }
+fn parse_inline_simple(text string) string {
+	mut result := text
+	mut re_bold := regex.regex_opt(r'\*\*([^\*]+)\*\*') or { panic(err) }
+	for {
+		start, end := re_bold.find(result)
+		if start < 0 {
+			break
+		}
+		val := re_bold.get_group_by_id(result, 0)
+		result = result[..start] + '<strong>' + val + '</strong>' + result[end..]
 	}
+	return result
+}
+
+fn is_table_row(trimmed string) bool {
+	return trimmed.starts_with('|') && trimmed.ends_with('|') && trimmed.len > 2
+}
+
+fn is_table_divider(trimmed string) bool {
+	if !is_table_row(trimmed) {
+		return false
+	}
+	inner := trimmed[1..trimmed.len - 1].trim_space()
+	if inner == '' {
+		return false
+	}
+	for i in 0 .. inner.len {
+		c := inner[i]
+		if c != `-` && c != `:` && c != `|` && c != ` ` {
+			return false
+		}
+	}
+	return inner.contains('-')
+}
+
+fn split_table_cells(row string) []string {
+	inner := row[1..row.len - 1]
+	parts := inner.split('|')
+	mut cells := []string{cap: parts.len}
+	for part in parts {
+		cells << part.trim_space()
+	}
+	return cells
+}
+
+fn render_table_html(rows []string) string {
+	if rows.len == 0 {
+		return ''
+	}
+	mut sb := strings.new_builder(rows.len * 80)
+	sb.write_string('<div class="table-wrap"><table class="doc-table">')
+
+	mut body_start := 0
+	if rows.len >= 2 && is_table_divider(rows[1].trim_space()) {
+		header_cells := split_table_cells(rows[0].trim_space())
+		sb.write_string('<thead><tr>')
+		for cell in header_cells {
+			sb.write_string('<th>${parse_inline(cell)}</th>')
+		}
+		sb.write_string('</tr></thead>')
+		body_start = 2
+	}
+
+	sb.write_string('<tbody>')
+	for i in body_start .. rows.len {
+		r := rows[i].trim_space()
+		if is_table_divider(r) {
+			continue
+		}
+		cells := split_table_cells(r)
+		sb.write_string('<tr>')
+		for cell in cells {
+			sb.write_string('<td>${parse_inline(cell)}</td>')
+		}
+		sb.write_string('</tr>')
+	}
+	sb.write_string('</tbody></table></div>\n')
+	return sb.str()
 }
 
 struct Parser {
 mut:
-	html          strings.Builder
-	curr_chap_idx int = -1
-	curr_sec_idx  int = -1
-	curr_less_idx int = -1
+	html            strings.Builder
+	curr_chap_idx   int = -1
+	curr_sec_idx    int = -1
+	curr_less_idx   int = -1
+	curr_search_idx int = -1
 
 	search_index []SearchIndexEntry
 	structure    []Chapter
+	used_slugs   map[string]int
 
 	in_code_block bool
 	code_language string
@@ -349,6 +354,35 @@ mut:
 
 	in_list   bool
 	list_type string
+
+	in_table   bool
+	table_rows []string
+
+	in_quick_access   bool
+	in_under_the_hood bool
+}
+
+fn (mut p Parser) unique_slug(base_slug string) string {
+	slug := if base_slug == '' { 'section' } else { base_slug }
+	count := p.used_slugs[slug]
+	p.used_slugs[slug] = count + 1
+	if count == 0 {
+		return slug
+	}
+	return '${slug}-${count + 1}'
+}
+
+fn (mut p Parser) append_search_text(text string) {
+	if p.curr_search_idx < 0 || p.curr_search_idx >= p.search_index.len {
+		return
+	}
+	if p.search_index[p.curr_search_idx].content.len > 650 {
+		return
+	}
+	clean := text.replace('`', '').replace('*', '').replace('#', '').trim_space()
+	if clean != '' {
+		p.search_index[p.curr_search_idx].content += ' ' + clean
+	}
 }
 
 fn (mut p Parser) flush_list() {
@@ -358,52 +392,151 @@ fn (mut p Parser) flush_list() {
 	}
 }
 
+fn (mut p Parser) flush_table() {
+	if p.in_table {
+		p.html.write_string(render_table_html(p.table_rows))
+		p.in_table = false
+		p.table_rows.clear()
+	}
+}
+
+fn (mut p Parser) close_collapsible_sections() {
+	if p.in_quick_access {
+		p.flush_list()
+		p.flush_table()
+		p.flush_blockquote()
+		p.html.write_string('</div></details>\n')
+		p.in_quick_access = false
+	}
+	if p.in_under_the_hood {
+		p.flush_list()
+		p.flush_table()
+		p.flush_blockquote()
+		p.html.write_string('</div></details>\n')
+		p.in_under_the_hood = false
+	}
+}
+
 fn (mut p Parser) flush_blockquote() {
 	if p.in_blockquote {
-		mut parsed_content := ''
+		mut parsed_content := strings.new_builder(256)
 		mut block_code_content := []string{}
 		mut in_block_code := false
 		mut block_code_language := ''
+		mut block_table_rows := []string{}
+		mut in_block_list := false
+		mut block_list_type := ''
+
+		mut re_ul := regex.regex_opt(r'^\s*-\s+(.*)') or { panic(err) }
+		mut re_ol := regex.regex_opt(r'^\s*\d+\.\s+(.*)') or { panic(err) }
 
 		for b_line in p.blockquote_content {
 			trimmed_b_line := b_line.trim_space()
 
 			if trimmed_b_line.starts_with('```') {
+				if in_block_list {
+					parsed_content.write_string('</${block_list_type}>\n')
+					in_block_list = false
+				}
+				if block_table_rows.len > 0 {
+					parsed_content.write_string(render_table_html(block_table_rows))
+					block_table_rows.clear()
+				}
 				if in_block_code {
 					code_str := block_code_content.join('\n')
-					parsed_content += generate_code_block_html(block_code_language, code_str)
+					parsed_content.write_string(generate_code_block_html(block_code_language,
+						code_str))
 					in_block_code = false
 					block_code_content.clear()
 				} else {
 					in_block_code = true
 					block_code_language = trimmed_b_line[3..].trim_space()
 				}
-			} else if in_block_code {
+				continue
+			}
+
+			if in_block_code {
 				block_code_content << b_line
-			} else {
-				if trimmed_b_line != '' {
-					parsed_content += '<p>${parse_inline(b_line)}</p>\n'
+				continue
+			}
+
+			if is_table_row(trimmed_b_line) {
+				if in_block_list {
+					parsed_content.write_string('</${block_list_type}>\n')
+					in_block_list = false
 				}
+				block_table_rows << trimmed_b_line
+				p.append_search_text(trimmed_b_line)
+				continue
+			} else if block_table_rows.len > 0 {
+				parsed_content.write_string(render_table_html(block_table_rows))
+				block_table_rows.clear()
+			}
+
+			s_ul, _ := re_ul.find(trimmed_b_line)
+			s_ol, _ := re_ol.find(trimmed_b_line)
+			if s_ul == 0 {
+				item_text := re_ul.get_group_by_id(trimmed_b_line, 0)
+				if !in_block_list || block_list_type != 'ul' {
+					if in_block_list {
+						parsed_content.write_string('</${block_list_type}>\n')
+					}
+					parsed_content.write_string('<ul>\n')
+					in_block_list = true
+					block_list_type = 'ul'
+				}
+				parsed_content.write_string('<li>${parse_inline(item_text)}</li>\n')
+				p.append_search_text(item_text)
+				continue
+			} else if s_ol == 0 {
+				item_text := re_ol.get_group_by_id(trimmed_b_line, 0)
+				if !in_block_list || block_list_type != 'ol' {
+					if in_block_list {
+						parsed_content.write_string('</${block_list_type}>\n')
+					}
+					parsed_content.write_string('<ol>\n')
+					in_block_list = true
+					block_list_type = 'ol'
+				}
+				parsed_content.write_string('<li>${parse_inline(item_text)}</li>\n')
+				p.append_search_text(item_text)
+				continue
+			} else if in_block_list {
+				parsed_content.write_string('</${block_list_type}>\n')
+				in_block_list = false
+			}
+
+			if trimmed_b_line != '' {
+				parsed_content.write_string('<p>${parse_inline(b_line)}</p>\n')
+				p.append_search_text(b_line)
 			}
 		}
 
+		if in_block_list {
+			parsed_content.write_string('</${block_list_type}>\n')
+		}
+		if block_table_rows.len > 0 {
+			parsed_content.write_string(render_table_html(block_table_rows))
+			block_table_rows.clear()
+		}
 		if in_block_code && block_code_content.len > 0 {
 			code_str := block_code_content.join('\n')
-			parsed_content += generate_code_block_html(block_code_language, code_str)
+			parsed_content.write_string(generate_code_block_html(block_code_language,
+				code_str))
 		}
 
-		if p.alert_type != '' {
-			p.html.write_string('<div class="alert alert-${p.alert_type}">
-					<div class="alert-title">
-						<svg class="alert-icon" viewBox="0 0 16 16" width="16" height="16">
-							${get_alert_icon(p.alert_type)}
-						</svg>
-						<span>${p.alert_type.to_upper()}</span>
-					</div>
-					<div class="alert-content">${parsed_content}</div>
-				</div>\n')
+		body_html := parsed_content.str()
+		if p.alert_type == 'solution' || p.alert_type == 'output' {
+			label := if p.alert_type == 'solution' {
+				'SOLUTION (Click to Reveal / Hide)'
+			} else {
+				'EXPECTED OUTPUT (Click to Reveal / Hide)'
+			}
+			p.html.write_string('<details class="alert alert-${p.alert_type} solution-details"><summary class="alert-title"><svg class="alert-icon" viewBox="0 0 16 16" width="16" height="16"><use href="#i-alert-${p.alert_type}"></use></svg><span>${label}</span></summary><div class="alert-content">${body_html}</div></details>\n')
+		} else if p.alert_type != '' {
+			p.html.write_string('<div class="alert alert-${p.alert_type}"><div class="alert-title"><svg class="alert-icon" viewBox="0 0 16 16" width="16" height="16"><use href="#i-alert-${p.alert_type}"></use></svg><span>${p.alert_type.to_upper()}</span></div><div class="alert-content">${body_html}</div></div>\n')
 		} else {
-			p.html.write_string('<blockquote>${parsed_content}</blockquote>\n')
+			p.html.write_string('<blockquote>${body_html}</blockquote>\n')
 		}
 
 		p.in_blockquote = false
@@ -415,7 +548,8 @@ fn (mut p Parser) flush_blockquote() {
 fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndexEntry) {
 	lines := md.split_into_lines()
 	mut p := Parser{
-		html: strings.new_builder(md.len)
+		html:       strings.new_builder(md.len)
+		used_slugs: map[string]int{}
 	}
 
 	mut re_ul := regex.regex_opt(r'^\s*-\s+(.*)') or { panic(err) }
@@ -428,13 +562,18 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 		// Code blocks
 		if trimmed.starts_with('```') {
 			p.flush_list()
+			p.flush_table()
 			p.flush_blockquote()
 			if p.in_code_block {
 				code_str := p.code_content.join('\n')
 				p.html.write_string(generate_code_block_html(p.code_language, code_str))
-
-				if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 && p.curr_less_idx >= 0 {
-					p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[p.curr_less_idx].content += ' [CODE:${p.code_language}]'
+				if p.code_content.len > 0 {
+					preview_lines := if p.code_content.len > 6 {
+						p.code_content[..6].join(' ')
+					} else {
+						p.code_content.join(' ')
+					}
+					p.append_search_text(preview_lines)
 				}
 				p.in_code_block = false
 				p.code_content.clear()
@@ -453,6 +592,7 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 		// Blockquotes & GitHub Alerts
 		if trimmed.starts_with('>') {
 			p.flush_list()
+			p.flush_table()
 			p.in_blockquote = true
 			mut clean_line := trimmed[1..].trim_space()
 
@@ -490,6 +630,17 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 			p.flush_blockquote()
 		}
 
+		// Markdown Tables
+		if is_table_row(trimmed) {
+			p.flush_list()
+			p.in_table = true
+			p.table_rows << trimmed
+			p.append_search_text(trimmed)
+			continue
+		} else if p.in_table {
+			p.flush_table()
+		}
+
 		// Lists
 		s_ul, _ := re_ul.find(line)
 		s_ol, _ := re_ol.find(line)
@@ -503,6 +654,7 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 				p.list_type = 'ul'
 			}
 			p.html.write_string('<li>${parse_inline(content)}</li>\n')
+			p.append_search_text(content)
 			continue
 		} else if s_ol == 0 {
 			content := re_ol.get_group_by_id(line, 0)
@@ -513,6 +665,7 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 				p.list_type = 'ol'
 			}
 			p.html.write_string('<li>${parse_inline(content)}</li>\n')
+			p.append_search_text(content)
 			continue
 		} else {
 			p.flush_list()
@@ -523,6 +676,13 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 		}
 
 		if trimmed == '---' {
+			if p.in_quick_access {
+				p.flush_list()
+				p.flush_table()
+				p.flush_blockquote()
+				p.html.write_string('</div></details>\n')
+				p.in_quick_access = false
+			}
 			p.html.write_string('<hr />\n')
 			continue
 		}
@@ -532,10 +692,15 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 		if s_h == 0 {
 			h := re_h.get_group_by_id(line, 0)
 			title := re_h.get_group_by_id(line, 1).trim_space()
-			slug := slugify(title)
+			base_slug := slugify(title)
 			level := h.len
 
+			if level <= 2 {
+				p.close_collapsible_sections()
+			}
+
 			if level == 1 {
+				slug := p.unique_slug(base_slug)
 				if title.starts_with('Chapter ') && title.contains(':') {
 					mut chap_num := ''
 					mut chap_name := title
@@ -563,21 +728,47 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 						title:   'Chapter ${chap_num}: ${chap_name}'
 						typ:     'chapter'
 						content: title
+						chapter: chap_name
 					}
+					p.curr_search_idx = p.search_index.len - 1
 				} else {
-					p.html.write_string('<h1 class="doc-main-title" id="${slug}">${escape_html(title)}</h1>\n')
+					// Chapter 0: Start Here & Overview
+					p.structure << Chapter{
+						id:       slug
+						number:   '0'
+						title:    'Start Here & Quick Reference'
+						sections: []
+					}
+					p.curr_chap_idx = p.structure.len - 1
+					p.curr_sec_idx = -1
+					p.curr_less_idx = -1
+
+					p.html.write_string('<section id="chap-wrapper-${slug}" class="chapter-section intro-section" data-chapter-id="${slug}">\n')
+					p.html.write_string('<h1 class="doc-main-title" id="${slug}" data-chapter-id="${slug}">${escape_html(title)}</h1>\n')
 					p.search_index << SearchIndexEntry{
 						id:      slug
 						title:   title
-						typ:     'title'
+						typ:     'chapter'
 						content: title
+						chapter: 'Start Here & Quick Reference'
 					}
+					p.curr_search_idx = p.search_index.len - 1
 				}
 			} else if level == 2 {
 				if title == 'Code Examples Index' || title == 'Table of Contents' {
+					slug := p.unique_slug(base_slug)
+					p.html.write_string('<h2 class="section-title" id="${slug}">${escape_html(title)}</h2>\n')
 					continue
 				}
 
+				if title == 'Quick Access' {
+					slug := p.unique_slug(base_slug)
+					p.html.write_string('<details class="quick-access-details" id="${slug}"><summary class="quick-access-summary"><svg class="icon" width="16" height="16"><use href="#i-compass"></use></svg><span>Quick Access — Jump to any lesson in this chapter</span></summary><div class="quick-access-body">\n')
+					p.in_quick_access = true
+					continue
+				}
+
+				slug := p.unique_slug(base_slug)
 				mut current_chapter_title := ''
 				if p.curr_chap_idx >= 0 {
 					current_chapter_title = p.structure[p.curr_chap_idx].title
@@ -591,99 +782,101 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 					p.curr_less_idx = -1
 				}
 
-				p.html.write_string('<h2 class="section-title" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 {
-					p.structure[p.curr_chap_idx].id
+				chap_id := if p.curr_chap_idx >= 0 { p.structure[p.curr_chap_idx].id } else { '' }
+				if title.starts_with('Under the Hood') {
+					p.html.write_string('<details class="under-the-hood-details"><summary class="under-the-hood-summary"><h2 class="section-title" id="${slug}" data-chapter-id="${chap_id}">${escape_html(title)}</h2><span class="uth-badge">🔧 Optional Deep Dive — Click to Expand / Collapse</span></summary><div class="under-the-hood-body">\n')
+					p.in_under_the_hood = true
 				} else {
-					''
-				}}">${escape_html(title)}</h2>\n')
+					p.html.write_string('<h2 class="section-title" id="${slug}" data-chapter-id="${chap_id}">${escape_html(title)}</h2>\n')
+				}
 
+				sec_type := if title.contains('Glossary') || title.contains('Dictionary') {
+					'dictionary'
+				} else {
+					'section'
+				}
 				p.search_index << SearchIndexEntry{
 					id:      slug
 					title:   title
-					typ:     'section'
+					typ:     sec_type
 					content: title
 					chapter: current_chapter_title
+					section: title
 				}
+				p.curr_search_idx = p.search_index.len - 1
 			} else if level == 3 {
-				mut is_lesson := false
 				mut clean_title := title
 				if title.starts_with('Lesson:') {
-					is_lesson = true
 					clean_title = title[7..].trim_space()
 				}
-
-				mut duplicate_idx := -1
-				if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 {
-					lessons := p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons
-					if lessons.len > 0 {
-						last_lesson := lessons[lessons.len - 1]
-						if normalize_title_for_comparison(last_lesson.title) == normalize_title_for_comparison(title) {
-							duplicate_idx = lessons.len - 1
-						}
-					}
-				}
+				slug := p.unique_slug(slugify(clean_title))
 
 				mut current_chapter_title := ''
+				mut current_chapter_num := ''
 				mut current_section_title := ''
 				if p.curr_chap_idx >= 0 {
 					current_chapter_title = p.structure[p.curr_chap_idx].title
+					current_chapter_num = p.structure[p.curr_chap_idx].number
 					if p.curr_sec_idx >= 0 {
 						current_section_title = p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].title
 					}
 				}
 
-				if duplicate_idx >= 0 {
-					if is_lesson {
-						p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[duplicate_idx].title = clean_title
-					}
-					p.curr_less_idx = duplicate_idx
+				is_conceptual_sub := current_chapter_num == '0'
+					|| current_section_title.starts_with('Under the Hood')
+					|| current_section_title.starts_with('Deep Dive')
+					|| current_section_title.starts_with('Featured Real-World')
 
-					lesson_class := if is_lesson { ' lesson-header' } else { '' }
-					p.html.write_string('<h3 class="lesson-subtitle${lesson_class}" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 {
-						p.structure[p.curr_chap_idx].id
+				chap_id := if p.curr_chap_idx >= 0 { p.structure[p.curr_chap_idx].id } else { '' }
+
+				if is_conceptual_sub {
+					p.html.write_string('<h3 class="sub-heading" id="${slug}" data-chapter-id="${chap_id}">${escape_html(clean_title)}</h3>\n')
+					sub_type := if current_section_title.contains('Glossary')
+						|| current_section_title.contains('Dictionary') {
+						'dictionary'
 					} else {
-						''
-					}}">
-						<span>${escape_html(clean_title)}</span>
-						<button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark(\'${slug}\', \'${escape_html(clean_title).replace("'",
-						"\\'")}\')" title="Bookmark lesson">
-							<svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-						</button>
-					</h3>\n')
-				} else {
-					lesson := Lesson{
+						'section'
+					}
+					p.search_index << SearchIndexEntry{
 						id:      slug
 						title:   clean_title
-						content: ''
+						typ:     sub_type
+						content: clean_title
+						chapter: current_chapter_title
+						section: current_section_title
+					}
+					p.curr_search_idx = p.search_index.len - 1
+				} else {
+					lesson := Lesson{
+						id:    slug
+						title: clean_title
 					}
 					if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 {
 						p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons << lesson
 						p.curr_less_idx = p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons.len - 1
 					}
 
-					lesson_class := if is_lesson { ' lesson-header' } else { '' }
-					p.html.write_string('<h3 class="lesson-title${lesson_class}" id="${slug}" data-chapter-id="${if p.curr_chap_idx >= 0 {
-						p.structure[p.curr_chap_idx].id
-					} else {
-						''
-					}}">
-						<span>${escape_html(clean_title)}</span>
-						<button class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark(\'${slug}\', \'${escape_html(clean_title).replace("'",
-						"\\'")}\')" title="Bookmark lesson">
-							<svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-						</button>
-					</h3>\n')
+					escaped_js_title := escape_html(clean_title).replace("'", "\\'")
+					p.html.write_string('<h3 class="lesson-title" id="${slug}" data-chapter-id="${chap_id}"><span>${escape_html(clean_title)}</span><button type="button" class="btn-bookmark" data-id="${slug}" onclick="toggleBookmark(\'${slug}\', \'${escaped_js_title}\')" title="Bookmark lesson" aria-label="Bookmark lesson"><svg class="bookmark-icon" viewBox="0 0 24 24" width="16" height="16"><use href="#i-bookmark"></use></svg></button></h3>\n')
 
+					entry_type := if current_chapter_num == '15'
+						|| clean_title.starts_with('Exercise ') {
+						'exercise'
+					} else {
+						'lesson'
+					}
 					p.search_index << SearchIndexEntry{
 						id:      slug
 						title:   clean_title
-						typ:     'lesson'
+						typ:     entry_type
 						content: clean_title
 						chapter: current_chapter_title
 						section: current_section_title
 					}
+					p.curr_search_idx = p.search_index.len - 1
 				}
 			} else {
+				slug := p.unique_slug(base_slug)
 				p.html.write_string('<h${level} id="${slug}">${escape_html(title)}</h${level}>\n')
 			}
 			continue
@@ -700,19 +893,13 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 			if idx_start_bracket > 0 && idx_end_bracket > idx_start_bracket
 				&& idx_start_paren > idx_end_bracket && idx_end_paren > idx_start_paren {
 				rel_path := line[idx_start_bracket + 1..idx_end_bracket]
-				mut abs_path := line[idx_start_paren + 1..idx_end_paren]
-				if !abs_path.starts_with('http') && !abs_path.starts_with('file://')
-					&& !abs_path.starts_with('#') {
-					abs_path = get_github_url(abs_path)
+				mut resolved_url := line[idx_start_paren + 1..idx_end_paren]
+				if !resolved_url.starts_with('http') && !resolved_url.starts_with('file://')
+					&& !resolved_url.starts_with('#') {
+					resolved_url = get_github_url(resolved_url)
 				}
-				p.html.write_string('<div class="file-location">
-				<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-				<span>File: </span><a href="${abs_path}" target="_blank" rel="noopener noreferrer">${escape_html(rel_path)}</a>
-			</div>\n')
-				if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 && p.curr_less_idx >= 0 {
-					p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[p.curr_less_idx].content +=
-						' File location: ' + rel_path
-				}
+				p.html.write_string('<div class="file-location"><svg class="icon" width="14" height="14"><use href="#i-file"></use></svg><span>File: </span><a href="${resolved_url}" target="_blank" rel="noopener noreferrer">${escape_html(rel_path)}</a></div>\n')
+				p.append_search_text(rel_path)
 				continue
 			}
 		}
@@ -720,13 +907,12 @@ fn parse_markdown_to_html_and_index(md string) (string, []Chapter, []SearchIndex
 		// Regular Paragraphs
 		parsed_line := parse_inline(line)
 		p.html.write_string('<p>${parsed_line}</p>\n')
-		if p.curr_chap_idx >= 0 && p.curr_sec_idx >= 0 && p.curr_less_idx >= 0 {
-			p.structure[p.curr_chap_idx].sections[p.curr_sec_idx].lessons[p.curr_less_idx].content +=
-				' ' + line
-		}
+		p.append_search_text(line)
 	}
 
+	p.close_collapsible_sections()
 	p.flush_list()
+	p.flush_table()
 	p.flush_blockquote()
 	p.html.write_string('</section>\n')
 
